@@ -15,10 +15,10 @@ public class BaseViewController: UIViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        configureuI()
+        configureUI()
     }
     
-    func configureuI(){
+    func configureUI(){
         view.backgroundColor = .color.gomsBackground.color
         addView()
         setLayout()
