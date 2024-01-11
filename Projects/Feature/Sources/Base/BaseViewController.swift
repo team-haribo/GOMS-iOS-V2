@@ -18,7 +18,7 @@ public class BaseViewController: UIViewController {
         configureUI()
     }
     
-    func configureUI() {
+    func configureUI(){
         view.backgroundColor = .color.gomsBackground.color
         addView()
         setLayout()
