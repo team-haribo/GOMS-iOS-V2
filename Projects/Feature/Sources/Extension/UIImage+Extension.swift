@@ -9,13 +9,5 @@
 import UIKit
 
 extension UIImage {
-    enum Images {
-        static let goms = UIImage(resource: .GOMS_GOMS)
-        static let logo = UIImage(resource: .gomsLogo)
-        static let QRIcon = UIImage(resource: .gomsQRIcon)
-        static let settingIcon = UIImage(resource: .gomsSettingIcon)
-        static let whiteLogo = UIImage(resource: .gomsWhiteLogo)
-    }
-    
     static let image = FeatureAsset.Images.self
 }

@@ -63,7 +63,7 @@ public final class MainViewController: BaseViewController {
     // MARK: - Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .color.gomsInformation.color
+        view.backgroundColor = .color.gomsNegative.color
     }
     
     // MARK: - Add View

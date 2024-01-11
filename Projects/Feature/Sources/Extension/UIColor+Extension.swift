@@ -9,14 +9,5 @@
 import UIKit
 
 extension UIColor {
-    enum Colors {
-        static let information = UIColor(resource: .gomsInformation)
-        static let negative  = UIColor(resource: .gomsNegative)
-        static let primary = UIColor(resource: .gomsPrimary)
-        static let secondary = UIColor(resource: .gomsSecondary)
-        static let tertiary = UIColor(resource: .gomsTertiary)
-        static let background = UIColor(resource: .gomsBackground)
-    }
-    
     static let color = FeatureAsset.Colors.self
 }
