@@ -18,14 +18,14 @@ public final class MainViewController: BaseViewController {
     }
     
     private let profileView = UIView().then {
-        $0.backgroundColor = .color.gomsTertiary.color
+        $0.backgroundColor = .color.gomsBackground.color
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 12
         $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.color.gomsSecondary.color.cgColor
+        $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
     }
     
-    let profileImageView = UIImageView()
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 64, height: 64))
     
     let nameLabel = UILabel().then {
         $0.text = "홍길동"
@@ -75,8 +75,11 @@ public final class MainViewController: BaseViewController {
     // MARK: - Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.barTintColor = UIColor.systemPink
-        view.backgroundColor = .color.gomsBackground.color
+    }
+    
+    // MARK: - Configure UI
+    override func configureUI() {
+        
     }
     
     // MARK: - Add View
