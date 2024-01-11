@@ -72,7 +72,7 @@ Tuist/Dependencies
 # Created by https://www.toptal.com/developers/gitignore/api/swiftpackagemanager,swift,xcode,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=swiftpackagemanager,swift,xcode,macos
 
-.swp
+*.swp
 
 ### macOS ###
 # General
@@ -209,5 +209,5 @@ xcuserdata
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
-p
+
 # End of https://www.toptal.com/developers/gitignore/api/swiftpackagemanager,swift,xcode,macos
