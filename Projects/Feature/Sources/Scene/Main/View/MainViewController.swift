@@ -25,7 +25,9 @@ public final class MainViewController: BaseViewController {
         $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
     }
     
-    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 64, height: 64))
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 64, height: 64)).then {
+        $0.image = UIImage(systemName: "person.crop.circle.fill")
+    }
     
     let nameLabel = UILabel().then {
         $0.text = "홍길동"
@@ -35,11 +37,13 @@ public final class MainViewController: BaseViewController {
     
     let studentIDLabel = UILabel().then {
         $0.text = "1학년 5반 1번"
+        $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 16, weight: .regular)
     }
     
     let myOutingStatusLabel = UILabel().then {
         $0.text = "외출 대기 중"
+        $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
@@ -79,11 +83,13 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Configure UI
     override func configureUI() {
-        
+        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
+        profileImageView.clipsToBounds = true
     }
     
     // MARK: - Add View
     override func addView() {
+        [profileImageView, nameLabel, studentIDLabel, myOutingStatusLabel].forEach { profileView.addSubview($0) }
         [logo, settingButton, profileView].forEach { view.addSubview($0) }
     }
     
@@ -103,6 +109,29 @@ public final class MainViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(logo.snp.bottom).offset(32)
             $0.height.equalTo(96)
+        }
+        
+        profileImageView.snp.makeConstraints {
+            $0.height.width.equalTo(64)
+            $0.leading.equalToSuperview().inset(16)
+            $0.centerY.equalToSuperview()
+        }
+        
+        nameLabel.snp.makeConstraints {
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
+            $0.top.equalToSuperview().inset(15)
+            $0.height.equalTo(32)
+        }
+        
+        studentIDLabel.snp.makeConstraints {
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
+            $0.bottom.equalToSuperview().inset(15)
+            $0.height.equalTo(28)
+        }
+        
+        myOutingStatusLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(16)
         }
     }
 }
