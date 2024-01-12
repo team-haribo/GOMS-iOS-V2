@@ -78,7 +78,7 @@ public final class MainViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 16, weight: .regular)
     }
     
-    private let QRButton = UIButton()
+    private let qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64))
     
     // MARK: - Selectors
     @objc func settingButtonTapped() {
@@ -94,13 +94,16 @@ public final class MainViewController: BaseViewController {
     override func configureUI() {
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
+        
+        qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
+        qrButton.clipsToBounds = true
     }
     
     // MARK: - Add View
     override func addView() {
         [profileImageView, nameLabel, studentIDLabel, myOutingStatusLabel].forEach { profileView.addSubview($0) }
         [ latecomerLabel ].forEach { latecomerView.addSubview($0) }
-        [logo, settingButton, profileView, latecomerView].forEach { view.addSubview($0) }
+        [logo, settingButton, profileView, latecomerView, qrButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -154,6 +157,12 @@ public final class MainViewController: BaseViewController {
             $0.top.equalToSuperview().inset(16)
             $0.leading.equalToSuperview().inset(16)
             $0.height.equalTo(40)
+        }
+        
+        qrButton.snp.makeConstraints {
+            $0.height.width.equalTo(64)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
         }
     }
 }
