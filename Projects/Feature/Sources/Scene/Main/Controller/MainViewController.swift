@@ -17,35 +17,7 @@ public final class MainViewController: BaseViewController {
         $0.setBackgroundImage(.image.gomsSettingIcon.image, for: .normal)
     }
     
-    private let profileView = UIView().then {
-        $0.backgroundColor = .color.gomsBackground.color
-        $0.clipsToBounds = true
-        $0.layer.cornerRadius = 12
-        $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
-    }
-    
-    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 64, height: 64)).then {
-        $0.image = UIImage(systemName: "person.crop.circle.fill")
-    }
-    
-    let nameLabel = UILabel().then {
-        $0.text = "홍길동"
-        $0.textColor = .white
-        $0.font = UIFont.pretendard(size: 19, weight: .semibold)
-    }
-    
-    let studentIDLabel = UILabel().then {
-        $0.text = "1학년 5반 1번"
-        $0.textColor = .color.gomsTertiary.color
-        $0.font = UIFont.pretendard(size: 16, weight: .regular)
-    }
-    
-    let myOutingStatusLabel = UILabel().then {
-        $0.text = "외출 대기 중"
-        $0.textColor = .color.gomsTertiary.color
-        $0.font = UIFont.pretendard(size: 19, weight: .semibold)
-    }
+    private let profileView = ProfileCardView()
     
     private let latecomerView = UIView().then {
         $0.backgroundColor = .color.gomsBackground.color
@@ -92,8 +64,8 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Configure UI
     override func configureUI() {
-        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
-        profileImageView.clipsToBounds = true
+        profileView.clipsToBounds = true
+        profileView.layer.cornerRadius = 12
         
         qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
         qrButton.clipsToBounds = true
@@ -101,7 +73,6 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileImageView, nameLabel, studentIDLabel, myOutingStatusLabel].forEach { profileView.addSubview($0) }
         [ latecomerLabel ].forEach { latecomerView.addSubview($0) }
         [logo, settingButton, profileView, latecomerView, qrButton].forEach { view.addSubview($0) }
     }
@@ -123,30 +94,7 @@ public final class MainViewController: BaseViewController {
             $0.top.equalTo(logo.snp.bottom).offset(32)
             $0.height.equalTo(96)
         }
-        
-        profileImageView.snp.makeConstraints {
-            $0.height.width.equalTo(64)
-            $0.leading.equalToSuperview().inset(16)
-            $0.centerY.equalToSuperview()
-        }
-        
-        nameLabel.snp.makeConstraints {
-            $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
-            $0.top.equalToSuperview().inset(15)
-            $0.height.equalTo(32)
-        }
-        
-        studentIDLabel.snp.makeConstraints {
-            $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
-            $0.bottom.equalToSuperview().inset(15)
-            $0.height.equalTo(28)
-        }
-        
-        myOutingStatusLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(16)
-        }
-        
+
         latecomerView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(profileView.snp.bottom).offset(32)
