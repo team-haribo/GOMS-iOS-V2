@@ -47,7 +47,13 @@ public final class MainViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
-    private let latecomerView = UIView()
+    private let latecomerView = UIView().then {
+        $0.backgroundColor = .color.gomsBackground.color
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 12
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
+    }
     
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
@@ -75,6 +81,9 @@ public final class MainViewController: BaseViewController {
     private let QRButton = UIButton()
     
     // MARK: - Selectors
+    @objc func settingButtonTapped() {
+        // Setting ViewController 이동
+    }
 
     // MARK: - Life Cycle
     public override func viewDidLoad() {
@@ -90,7 +99,8 @@ public final class MainViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         [profileImageView, nameLabel, studentIDLabel, myOutingStatusLabel].forEach { profileView.addSubview($0) }
-        [logo, settingButton, profileView].forEach { view.addSubview($0) }
+        [ latecomerLabel ].forEach { latecomerView.addSubview($0) }
+        [logo, settingButton, profileView, latecomerView].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -132,6 +142,18 @@ public final class MainViewController: BaseViewController {
         myOutingStatusLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(16)
+        }
+        
+        latecomerView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(profileView.snp.bottom).offset(32)
+            $0.height.equalTo(216)
+        }
+        
+        latecomerLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(16)
+            $0.leading.equalToSuperview().inset(16)
+            $0.height.equalTo(40)
         }
     }
 }
