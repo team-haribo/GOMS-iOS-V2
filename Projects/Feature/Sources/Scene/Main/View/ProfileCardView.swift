@@ -16,6 +16,7 @@ final class ProfileCardView: UIView {
     // MARK: - Properties
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 64, height: 64)).then {
         $0.image = UIImage(systemName: "person.crop.circle.fill")
+        $0.tintColor = .color.gomsSecondary.color
     }
     
     let nameLabel = UILabel().then {
@@ -24,12 +25,12 @@ final class ProfileCardView: UIView {
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
-    let studentIDLabel = UILabel().then {
-        $0.text = "1학년 5반 1번"
+    let studentInformationLabel = UILabel().then {
+        $0.text = "7기 | SW개발"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 16, weight: .regular)
     }
-    
+
     let myOutingStatusLabel = UILabel().then {
         $0.text = "외출 대기 중"
         $0.textColor = .color.gomsTertiary.color
@@ -56,11 +57,13 @@ final class ProfileCardView: UIView {
         self.backgroundColor = .color.gomsBackground.color
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
+        self.clipsToBounds = true
+        self.layer.cornerRadius = 12
     }
     
     // MARK: - Add View
     private func addView() {
-        [profileImageView, nameLabel, studentIDLabel, myOutingStatusLabel].forEach { self.addSubview($0) }
+        [profileImageView, nameLabel, studentInformationLabel, myOutingStatusLabel].forEach { self.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -77,9 +80,9 @@ final class ProfileCardView: UIView {
             $0.height.equalTo(32)
         }
         
-        studentIDLabel.snp.makeConstraints {
+        studentInformationLabel.snp.makeConstraints {
             $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
-            $0.bottom.equalToSuperview().inset(15)
+            $0.bottom.equalToSuperview().inset(16)
             $0.height.equalTo(28)
         }
         
