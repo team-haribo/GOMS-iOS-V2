@@ -14,6 +14,8 @@ import Then
 final class OutingStatusCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Properties
+    static let identifier = "OutingStatusCell"
+    
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 28, height: 28)).then {
         $0.image = UIImage(systemName: "person.crop.circle.fill")
     }
@@ -24,8 +26,8 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
-    let studentIDLabel = UILabel().then {
-        $0.text = "1학년 5반 1번"
+    let studentInformationLabel = UILabel().then {
+        $0.text = "7기 | IOT"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
@@ -50,7 +52,7 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Add View
     private func addView() {
-        [profileImageView, nameLabel, studentIDLabel].forEach { contentView.addSubview($0) }
+        [profileImageView, nameLabel, studentInformationLabel].forEach { contentView.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -67,7 +69,7 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
             $0.centerY.equalToSuperview()
         }
         
-        studentIDLabel.snp.makeConstraints {
+        studentInformationLabel.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.centerY.equalToSuperview()
             $0.leading.equalTo(nameLabel.snp.trailing).offset(16)
