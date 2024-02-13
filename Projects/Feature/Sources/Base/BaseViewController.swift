@@ -12,7 +12,8 @@ import SnapKit
 import Then
 
 public class BaseViewController: UIViewController {
-
+    let bounds = UIScreen.main.bounds
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
