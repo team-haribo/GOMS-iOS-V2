@@ -1,6 +1,6 @@
 import UIKit
 
-public class PasswordResetViewController: BaseViewController {
+public class PasswordResetViewController: BaseViewController, UITextFieldDelegate {
     let titleText = UILabel().then {
         $0.text = "비밀번호 재설정"
         $0.font = UIFont.pretendard(size: 29, weight: .bold)
@@ -38,7 +38,7 @@ public class PasswordResetViewController: BaseViewController {
         $0.layer.cornerRadius = 12
         $0.setTitle("인증번호 받기", for: .normal)
         $0.setTitleColor(.white, for: .normal)
-        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .regular)
+        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
         $0.addTarget(self, action: #selector(certificationButtonDidTap), for: .touchUpInside)
     }
     
@@ -55,6 +55,8 @@ public class PasswordResetViewController: BaseViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        emailTextField.delegate = self
     }
     
     // MARK: AddView
@@ -110,13 +112,20 @@ public class PasswordResetViewController: BaseViewController {
     
     @objc func keyboardWillShow(_ sender: Notification) {
         emailTextField.frame.origin.y = bounds.height/3.1472868217
-        defaultDomain.frame.origin.y = bounds.height/2.9420289855
+        defaultDomain.frame.origin.y = bounds.height/2.9103942652
         certificationButton.frame.origin.y = bounds.height/1.8971962617
     }
 
     @objc func keyboardWillHide(_ sender: Notification) {
         emailTextField.frame.origin.y = bounds.height/2.2745098039
-        defaultDomain.frame.origin.y = bounds.height/2.1653333333
+        defaultDomain.frame.origin.y = bounds.height/2.1481481481
         certificationButton.frame.origin.y = bounds.height/1.2971246006
+    }
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == emailTextField {
+            emailTextField.textColor = .black
+        }
+        return true
     }
 }

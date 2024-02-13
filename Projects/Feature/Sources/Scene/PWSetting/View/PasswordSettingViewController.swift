@@ -47,7 +47,7 @@ class PasswordSettingViewController: BaseViewController {
         $0.layer.cornerRadius = 12
         $0.setTitle("완료", for: .normal)
         $0.setTitleColor(.white, for: .normal)
-        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .regular)
+        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
         $0.addTarget(self, action: #selector(completeButtonDidTap), for: .touchUpInside)
     }
     

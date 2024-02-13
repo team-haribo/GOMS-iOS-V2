@@ -52,7 +52,7 @@ class InputNumViewController: BaseViewController, UITextFieldDelegate {
         $0.frame = CGRect(x: 0, y: 0, width: 42, height: 48)
         $0.setTitle("재발송", for: .normal)
         $0.setTitleColor(.color.gomsInformation.color, for: .normal)
-        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .regular)
+        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
         $0.addTarget(self, action: #selector(reSendButtonDidTap), for: .touchUpInside)
     }
     
@@ -63,7 +63,7 @@ class InputNumViewController: BaseViewController, UITextFieldDelegate {
         $0.layer.cornerRadius = 12
         $0.setTitle("인증", for: .normal)
         $0.setTitleColor(.white, for: .normal)
-        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .regular)
+        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
         $0.addTarget(self, action: #selector(certiCompleteButtonDidTap), for: .touchUpInside)
     }
     
