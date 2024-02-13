@@ -25,6 +25,7 @@ public class IntroViewController: BaseViewController {
         $0.layer.cornerRadius = 12
         $0.setTitle("로그인", for: .normal)
         $0.setTitleColor(.white, for: .normal)
+        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
         $0.addTarget(self, action: #selector(signInButtonDidTap), for: .touchUpInside)
     }
     
@@ -48,6 +49,7 @@ public class IntroViewController: BaseViewController {
         $0.frame = CGRect(x: 0, y: 0, width: 35, height: 48)
         $0.setTitle("회원가입", for: .normal)
         $0.setTitleColor(.color.gomsInformation.color, for: .normal)
+        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .regular)
         $0.addTarget(self, action: #selector(signUpButtonDidTap), for: .touchUpInside)
     }
     
