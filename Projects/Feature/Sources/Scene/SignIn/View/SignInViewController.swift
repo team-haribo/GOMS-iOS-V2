@@ -120,27 +120,9 @@ public class SignInViewController: BaseViewController {
         if traitCollection.userInterfaceStyle == .dark {
             // Dark Mode
             titleText.textColor = .white
-            let fullText = titleText.text ?? ""
-            let attribtuedString = NSMutableAttributedString(string: fullText)
-            let range = (fullText as NSString).range(of: "수요 외출제")
-            attribtuedString.addAttribute(
-                .foregroundColor,
-                value: UIColor.color.gomsPrimary.color,
-                range: range
-            )
-            titleText.attributedText = attribtuedString
         } else {
             // Light Mode
             titleText.textColor = .black
-            let fullText = titleText.text ?? ""
-            let attribtuedString = NSMutableAttributedString(string: fullText)
-            let range = (fullText as NSString).range(of: "수요 외출제")
-            attribtuedString.addAttribute(
-                .foregroundColor,
-                value: UIColor.color.gomsPrimary.color,
-                range: range
-            )
-            titleText.attributedText = attribtuedString
         }
     }
     
