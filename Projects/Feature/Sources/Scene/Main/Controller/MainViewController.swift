@@ -11,6 +11,8 @@ import UIKit
 public final class MainViewController: BaseViewController, UICollectionViewDelegate {
     
     // MARK: - Properties
+    let scrollView = UIScrollView()
+    
     private let logo = UIImageView(image: .image.gomsLogo.image)
     
     private let settingButton = UIButton().then {
@@ -76,7 +78,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     private lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingStatusFlowLayout).then {
         $0.backgroundColor = .clear
-        $0.isScrollEnabled = true
+        $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
         $0.clipsToBounds = true
@@ -105,6 +107,21 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         super.viewDidLoad()
         setCollectionView()
         setDatas()
+        adjustContentSize()
+    }
+    
+    private func adjustContentSize() {
+        let totalContentHeight = calculateTotalContentHeight()
+        scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: totalContentHeight)
+    }
+
+    private func calculateTotalContentHeight() -> CGFloat {
+        var totalHeight: CGFloat = 0
+        totalHeight += profileView.frame.height
+        totalHeight += latecomerView.frame.height
+        totalHeight += outingStatusView.frame.height
+        totalHeight += outingStatusCollectionView.frame.height
+        return totalHeight
     }
     
     // MARK: - CollectionView Setting
@@ -129,8 +146,9 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     // MARK: - Add View
     override func addView() {
         [latecomerLabel, latecomerStackView].forEach { latecomerView.addSubview($0) }
-        [outingStatusLabel, moreOutingStatusButton, dividingLineView, numberOfPeopleOutingLabel].forEach { outingStatusView.addSubview($0) }
-        [logo, settingButton, profileView, latecomerView, outingStatusView, outingStatusCollectionView, qrButton].forEach { view.addSubview($0) }
+        [outingStatusLabel, moreOutingStatusButton, dividingLineView, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
+        [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
+        [logo, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -149,16 +167,24 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
             $0.height.equalTo(21.88972)
         }
         
+        scrollView.snp.makeConstraints {
+            $0.top.equalTo(logo.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview()
+        }
+        
         profileView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(logo.snp.bottom).offset(16)
+            $0.top.equalToSuperview().inset(16)
             $0.height.equalTo(96)
+            $0.centerX.equalToSuperview()
         }
 
         latecomerView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(profileView.snp.bottom).offset(32)
             $0.height.equalTo(216)
+            $0.centerX.equalToSuperview()
         }
         
         latecomerLabel.snp.makeConstraints {
@@ -176,7 +202,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         outingStatusView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(latecomerView.snp.bottom).offset(32)
-            $0.height.equalTo(100)
+            $0.height.equalTo(700)
+            $0.centerX.equalToSuperview()
         }
         
         outingStatusLabel.snp.makeConstraints {
@@ -205,7 +232,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         
         outingStatusCollectionView.snp.makeConstraints {
             $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset(14)
-            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(300)
+            $0.leading.trailing.equalToSuperview().inset(16)
         }
         
         qrButton.snp.makeConstraints {

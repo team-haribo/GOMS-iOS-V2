@@ -44,7 +44,7 @@ final class LatecomerView: UIView {
     }
     
     // MARK: - Configure UI
-    func configureUI(_ name: String, _ studentInformation: String) {
+    private func configureUI(_ name: String, _ studentInformation: String) {
         self.backgroundColor = .clear
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true

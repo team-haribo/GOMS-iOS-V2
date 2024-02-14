@@ -30,7 +30,6 @@ final class LatecomerStackView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - Setting
     private func set() {
         self.backgroundColor = .clear
