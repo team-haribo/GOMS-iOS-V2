@@ -39,6 +39,28 @@ public class SettingViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
+    let passwordResetView = UIView().then {
+        $0.backgroundColor = .color.gomsBackground.color
+    }
+    
+    let passwordResetLabel = UILabel().then {
+        $0.text = "비밀번호 재설정"
+        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
+    }
+    
+    let chevronImage = UIImageView().then {
+        $0.image = UIImage(systemName: "chevron.right")
+        $0.tintColor = .black
+    }
+    
+    let resetViewLineView = UIView(frame: CGRect(x: 0, y: 0, width: 335, height: 1)).then {
+        $0.backgroundColor = UIColor(cgColor: CGColor(red: 0, green: 0, blue: 0, alpha: 0.15))
+    }
+    
+    let resetViewLineView2 = UIView(frame: CGRect(x: 0, y: 0, width: 335, height: 1)).then {
+        $0.backgroundColor = UIColor(cgColor: CGColor(red: 0, green: 0, blue: 0, alpha: 0.15))
+    }
+    
     // MARK: ViewDidLoad
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,8 +73,9 @@ public class SettingViewController: BaseViewController {
     
     // MARK: AddView
     override func addView() {
-        [profileView].forEach { view.addSubview($0) }
+        [profileView, passwordResetView, resetViewLineView, resetViewLineView2].forEach { view.addSubview($0) }
         [profileImage, editButton, nameLabel, classLabel, tardyLabel, tardyCountLabel].forEach { profileView.addSubview($0) }
+        [passwordResetLabel, chevronImage].forEach { passwordResetView.addSubview($0) }
     }
     
     // MARK: SetLayout
@@ -94,6 +117,39 @@ public class SettingViewController: BaseViewController {
         tardyCountLabel.snp.makeConstraints {
             $0.bottom.equalToSuperview().inset(21)
             $0.right.equalToSuperview().inset(0)
+        }
+        
+        passwordResetView.snp.makeConstraints {
+            $0.height.equalTo(72)
+            $0.top.equalToSuperview().offset(233)
+            $0.left.equalToSuperview().offset(20)
+            $0.right.equalToSuperview().inset(20)
+        }
+        
+        passwordResetLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.left.equalToSuperview().offset(8)
+        }
+        
+        chevronImage.snp.makeConstraints {
+            $0.height.equalTo(24)
+            $0.width.equalTo(18)
+            $0.centerY.equalToSuperview()
+            $0.right.equalToSuperview().inset(8)
+        }
+        
+        resetViewLineView.snp.makeConstraints {
+            $0.height.equalTo(1)
+            $0.bottom.equalTo(passwordResetView.snp.top).inset(0)
+            $0.left.equalToSuperview().offset(20)
+            $0.right.equalToSuperview().inset(20)
+        }
+        
+        resetViewLineView2.snp.makeConstraints {
+            $0.height.equalTo(1)
+            $0.top.equalTo(passwordResetView.snp.bottom).offset(0)
+            $0.left.equalToSuperview().offset(20)
+            $0.right.equalToSuperview().inset(20)
         }
     }
     
