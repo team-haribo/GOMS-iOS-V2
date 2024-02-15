@@ -99,42 +99,42 @@ class SignInViewController: BaseViewController, UITextFieldDelegate {
     override func setLayout() {
         titleText.snp.makeConstraints {
             $0.top.equalToSuperview().offset((bounds.height)/8.12)
-            $0.left.equalToSuperview().offset(20)
+            $0.leading.equalToSuperview().offset(20)
         }
         
         emailTextField.snp.makeConstraints {
             $0.height.equalTo(64)
             $0.top.equalToSuperview().offset((bounds.height)/2.5942492013)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().inset(20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20)
         }
         
         defaultDomain.snp.makeConstraints {
             $0.centerY.equalTo(emailTextField)
-            $0.right.equalTo(emailTextField.snp.right).inset(16)
+            $0.trailing.equalTo(emailTextField.snp.trailing).inset(16)
         }
         
         passwordTextField.snp.makeConstraints {
             $0.height.equalTo(64)
             $0.top.equalTo(emailTextField.snp.bottom).offset((bounds.height)/33.8333333333)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().inset(20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20)
         }
         
         passwordResetLabel.snp.makeConstraints {
             $0.top.equalTo(passwordTextField.snp.bottom).offset((bounds.height)/67.6666666667)
-            $0.left.equalToSuperview().offset((bounds.width)/13.3928571429)
+            $0.leading.equalToSuperview().offset((bounds.width)/13.3928571429)
         }
         
         passwordResetButton.snp.makeConstraints {
             $0.top.equalTo(passwordTextField.snp.bottom).offset((bounds.height)/162.4)
-            $0.right.equalToSuperview().inset((bounds.width)/13.3928571429)
+            $0.trailing.equalToSuperview().inset((bounds.width)/13.3928571429)
         }
         
         signInButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.bottom.equalToSuperview().inset((bounds.height)/5.884057971)
-            $0.left.right.equalToSuperview().inset((bounds.width)/18.75)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width)/18.75)
         }
     }
     

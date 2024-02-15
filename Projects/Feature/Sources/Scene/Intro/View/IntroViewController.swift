@@ -92,7 +92,7 @@ public class IntroViewController: BaseViewController {
         signInButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.bottom.equalToSuperview().inset((bounds.height)/5.884057971)
-            $0.left.right.equalToSuperview().inset((bounds.width)/18.75)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width)/18.75)
         }
         
         firstTimeText.snp.makeConstraints {
@@ -103,15 +103,15 @@ public class IntroViewController: BaseViewController {
         firstTimeLine1.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.top.equalTo(signInButton.snp.bottom).offset((bounds.height)/32.48)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalTo(firstTimeText.snp.left).offset(-4)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalTo(firstTimeText.snp.leading).offset(-4)
         }
         
         firstTimeLine2.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.top.equalTo(signInButton.snp.bottom).offset((bounds.height)/32.48)
-            $0.left.equalTo(firstTimeText.snp.right).offset(4)
-            $0.right.equalToSuperview().inset(20)
+            $0.leading.equalTo(firstTimeText.snp.trailing).offset(4)
+            $0.trailing.equalToSuperview().inset(20)
         }
         
         signUpButton.snp.makeConstraints {
