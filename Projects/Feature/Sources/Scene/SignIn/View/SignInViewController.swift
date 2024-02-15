@@ -1,6 +1,6 @@
 import UIKit
 
-public class SignInViewController: BaseViewController, UITextFieldDelegate {
+class SignInViewController: BaseViewController, UITextFieldDelegate {
     let titleText = UILabel().then {
         $0.text = "로그인"
         $0.font = UIFont.pretendard(size: 29, weight: .bold)
@@ -76,7 +76,7 @@ public class SignInViewController: BaseViewController, UITextFieldDelegate {
     }
     
     // MARK: ViewDidLoad
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
