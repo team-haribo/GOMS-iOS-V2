@@ -16,6 +16,8 @@ public class BaseViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        addView()
+        setLayout()
     }
     
     func configureUI(){
