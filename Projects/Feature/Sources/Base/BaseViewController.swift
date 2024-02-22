@@ -16,6 +16,7 @@ public class BaseViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        configNavigation()
         addView()
         setLayout()
     }
@@ -26,6 +27,7 @@ public class BaseViewController: UIViewController {
         setLayout()
     }
     
+    func configNavigation() {}
     func addView() {}
     func setLayout() {}
 }
