@@ -13,7 +13,7 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Properties
     let scrollView = UIScrollView()
     
-    private let logo = UIImageView(image: .image.gomsLogo.image)
+    private let logo = UIImageView(image: .image.gomsAdminLogo.image)
     
     private let studentManagementButton = StudentManagementButton()
     
@@ -53,12 +53,11 @@ public class AdminMainViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 24, weight: .bold)
     }
     
-    private lazy var moreOutingStatusButton = UIButton().then {
+    private lazy var managementButton = UIButton().then {
         $0.backgroundColor = .clear
-        $0.setTitle("더보기", for: .normal)
+        $0.setTitle("인원 관리하기", for: .normal)
         $0.setTitleColor(.color.gomsTertiary.color, for: .normal)
         $0.titleLabel?.font = .pretendard(size: 16, weight: .regular)
-        $0.addTarget(self, action: #selector(moreOutingStatusButtonTapped), for: .touchUpInside)
     }
     
     private let dividingLineView = UIView().then {
@@ -94,7 +93,5 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 }
