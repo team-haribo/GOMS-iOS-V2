@@ -47,7 +47,7 @@ public final class AdminOutingStatusViewController: BaseViewController {
     private func setCollectionView() {
         self.outingListCollectionView.dataSource = self
         
-        outingListCollectionView.register(OutingListCollectionViewCell.self, forCellWithReuseIdentifier: OutingListCollectionViewCell.identifier)
+        outingListCollectionView.register(AdminOutingStatusCollectionViewCell.self, forCellWithReuseIdentifier: AdminOutingStatusCollectionViewCell.identifier)
     }
     
     // MARK: - Configure UI
@@ -94,10 +94,12 @@ public final class AdminOutingStatusViewController: BaseViewController {
 
 extension AdminOutingStatusViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        <#code#>
+        return 10
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        <#code#>
+        let cell = outingListCollectionView.dequeueReusableCell(withReuseIdentifier: AdminOutingStatusCollectionViewCell.identifier, for: indexPath) as! AdminOutingStatusCollectionViewCell
+        
+        return cell
     }
 }

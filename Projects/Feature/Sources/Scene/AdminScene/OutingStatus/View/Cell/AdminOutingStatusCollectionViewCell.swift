@@ -109,7 +109,6 @@ final class AdminOutingStatusCollectionViewCell: UICollectionViewCell {
         deleteButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(16)
             $0.top.bottom.equalToSuperview().inset(24)
-            $0.leading.equalTo(outingTime.snp.trailing).offset(97)
         }
         
         bottomView.snp.makeConstraints {

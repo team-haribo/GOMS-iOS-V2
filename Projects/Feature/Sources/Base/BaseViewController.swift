@@ -27,7 +27,7 @@ public class BaseViewController: UIViewController {
         setLayout()
     }
     
-    func configNavigation()
+    func configNavigation() {}
     func addView() {}
     func setLayout() {}
 }
