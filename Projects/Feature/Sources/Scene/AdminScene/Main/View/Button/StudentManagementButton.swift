@@ -21,10 +21,15 @@ final class StudentManagementButton: UIButton {
     
     private func setupButton() {
         var config = UIButton.Configuration.filled()
-        config.title = "학생 관리"
+        
+        var titleContainer = AttributeContainer()
+        titleContainer.font = UIFont.pretendard(size: 16, weight: .semibold)
+        
+        config.attributedTitle = AttributedString("학생 관리", attributes: titleContainer) 
         config.baseForegroundColor = .color.gomsSecondary.color
         config.image = .image.gomsAdminIcon.image
         config.imagePadding = 3.18
+        config.baseBackgroundColor = .clear
         
         self.configuration = config
     }

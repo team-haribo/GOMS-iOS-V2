@@ -86,12 +86,165 @@ public class AdminMainViewController: BaseViewController {
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
     
-    private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64)).then {
-        $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
-    }
+    private lazy var qrButton = AdminQRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64))
 
     // MARK: - Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setCollectionView()
+        setDatas()
+        adjustContentSize()
+    }
+    
+    private func adjustContentSize() {
+        let totalContentHeight = calculateTotalContentHeight()
+        scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: totalContentHeight)
+    }
+
+    private func calculateTotalContentHeight() -> CGFloat {
+        var totalHeight: CGFloat = 0
+        totalHeight += profileView.frame.height
+        totalHeight += latecomerView.frame.height
+        totalHeight += outingStatusView.frame.height
+        totalHeight += outingStatusCollectionView.frame.height
+        return totalHeight
+    }
+    
+    // MARK: - CollectionView Setting
+    private func setCollectionView() {
+        self.outingStatusCollectionView.dataSource = self
+        
+        outingStatusCollectionView.register(OutingStatusCollectionViewCell.self, forCellWithReuseIdentifier: OutingStatusCollectionViewCell.identifier)
+    }
+    
+    // MARK: - Data Setting
+    private func setDatas() {
+        // Data Setting
+    }
+    
+    // MARK: - Configure UI
+    override func configureUI() {
+        qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
+        qrButton.clipsToBounds = true
+    }
+    
+    // MARK: - Add View
+    override func addView() {
+        [latecomerLabel, latecomerStackView].forEach { latecomerView.addSubview($0) }
+        [outingStatusLabel, managementButton, dividingLineView, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
+        [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
+        [logo, studentManagementButton, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
+    }
+    
+    // MARK: - Layout
+    override func setLayout() {
+        logo.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(56)
+            $0.width.equalTo(127)
+        }
+        
+        studentManagementButton.snp.makeConstraints {
+            $0.leading.equalTo(logo.snp.trailing).offset(66.86)
+            $0.height.equalTo(32)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(12)
+            $0.width.equalTo(132)
+        }
+        
+        settingButton.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.width.equalTo(22.21877)
+            $0.height.equalTo(21.88972)
+        }
+        
+        scrollView.snp.makeConstraints {
+            $0.top.equalTo(logo.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview()
+        }
+        
+        profileView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.top.equalToSuperview().inset(16)
+            $0.height.equalTo(96)
+            $0.centerX.equalToSuperview()
+        }
+
+        latecomerView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(profileView.snp.bottom).offset(32)
+            $0.height.equalTo(216)
+            $0.centerX.equalToSuperview()
+        }
+        
+        latecomerLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(16)
+            $0.leading.equalToSuperview().inset(16)
+            $0.height.equalTo(40)
+        }
+        
+        latecomerStackView.snp.makeConstraints {
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset(16)
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalToSuperview().inset(16)
+        }
+        
+        outingStatusView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(latecomerView.snp.bottom).offset(32)
+            $0.height.equalTo(700)
+            $0.centerX.equalToSuperview()
+        }
+        
+        outingStatusLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(16)
+            $0.height.equalTo(40)
+            $0.top.equalToSuperview().inset(16)
+        }
+        
+        managementButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.top.equalToSuperview().inset(16)
+            $0.height.equalTo(40)
+        }
+        
+        dividingLineView.snp.makeConstraints {
+            $0.height.equalTo(1)
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(outingStatusLabel.snp.bottom).offset(4)
+        }
+        
+        numberOfPeopleOutingLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(16)
+            $0.top.equalTo(dividingLineView.snp.bottom).offset(6)
+            $0.height.equalTo(28)
+        }
+        
+        outingStatusCollectionView.snp.makeConstraints {
+            $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset(14)
+            $0.height.equalTo(300)
+            $0.leading.trailing.equalToSuperview().inset(16)
+        }
+        
+        qrButton.snp.makeConstraints {
+            $0.height.width.equalTo(64)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
+        }
+    }
+}
+
+// MARK: - MainViewController Extension
+extension AdminMainViewController: UICollectionViewDataSource {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
+        
+        return cell
     }
 }
