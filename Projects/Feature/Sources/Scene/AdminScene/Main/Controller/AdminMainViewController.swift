@@ -15,13 +15,13 @@ public class AdminMainViewController: BaseViewController {
     
     private let logo = UIImageView(image: .image.gomsLogo.image)
     
-    private let studentManagementButton = UIButton()
+    private let studentManagementButton = StudentManagementButton()
     
     private let settingButton = UIButton().then {
         $0.setBackgroundImage(.image.gomsSettingIcon.image, for: .normal)
     }
     
-    private let profileView = ProfileCardView()
+    private let profileView = AdminProfileCardView()
     
     private let latecomerView = UIView().then {
         $0.backgroundColor = .color.gomsBackground.color
@@ -91,13 +91,10 @@ public class AdminMainViewController: BaseViewController {
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
 
+    // MARK: - Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
-    
-
-   
-
 }
