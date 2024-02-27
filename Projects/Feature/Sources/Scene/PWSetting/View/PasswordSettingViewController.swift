@@ -74,33 +74,33 @@ class PasswordSettingViewController: BaseViewController {
     override func setLayout() {
         titleText.snp.makeConstraints {
             $0.top.equalToSuperview().offset((bounds.height)/8.12)
-            $0.left.equalToSuperview().offset(20)
+            $0.leading.equalToSuperview().offset(20)
         }
         
         passwordTextField.snp.makeConstraints {
             $0.height.equalTo(64)
             $0.top.equalToSuperview().offset((bounds.height)/2.5942492013)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().inset(20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20)
         }
         
         passwordCheckTextField.snp.makeConstraints {
             $0.height.equalTo(64)
             $0.top.equalTo(passwordTextField.snp.bottom).offset((bounds.height)/33.8333333333)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().inset(20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20)
         }
         
         infoLabel.snp.makeConstraints {
             $0.top.equalTo(passwordCheckTextField.snp.bottom).offset((bounds.height)/101.5)
-            $0.left.equalToSuperview().offset(28)
+            $0.leading.equalToSuperview().offset(28)
         }
         
         completeButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.bottom.equalToSuperview().inset((bounds.height)/5.884057971)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().inset(20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20)
         }
     }
     

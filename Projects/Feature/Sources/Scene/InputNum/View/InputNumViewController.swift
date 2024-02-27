@@ -100,7 +100,7 @@ class InputNumViewController: BaseViewController, UITextFieldDelegate {
     override func setLayout() {
         titleText.snp.makeConstraints {
             $0.top.equalToSuperview().offset((bounds.height)/8.12)
-            $0.left.equalToSuperview().offset(20)
+            $0.leading.equalToSuperview().offset(20)
         }
         
         let spacing = (UIScreen.main.bounds.width - 72 * 4 - 20 * 2) / 3
@@ -109,42 +109,42 @@ class InputNumViewController: BaseViewController, UITextFieldDelegate {
             $0.width.equalTo(72)
             $0.height.equalTo(64)
             $0.top.equalToSuperview().offset((bounds.height)/2.01990049751)
-            $0.left.equalToSuperview().offset((bounds.width)/18.75)
+            $0.leading.equalToSuperview().offset((bounds.width)/18.75)
         }
         
         secondCNum.snp.makeConstraints {
             $0.width.height.equalTo(firstCNum)
             $0.top.equalTo(firstCNum)
-            $0.left.equalTo(firstCNum.snp.right).offset(spacing)
+            $0.leading.equalTo(firstCNum.snp.trailing).offset(spacing)
         }
 
         thirdCNum.snp.makeConstraints {
             $0.width.height.equalTo(firstCNum)
             $0.top.equalTo(firstCNum)
-            $0.left.equalTo(secondCNum.snp.right).offset(spacing)
+            $0.leading.equalTo(secondCNum.snp.trailing).offset(spacing)
         }
 
         fourthCNum.snp.makeConstraints {
             $0.width.height.equalTo(firstCNum)
             $0.top.equalTo(firstCNum)
-            $0.right.equalToSuperview().inset((bounds.width)/18.75)
+            $0.trailing.equalToSuperview().inset((bounds.width)/18.75)
         }
         
         timerLabel.snp.makeConstraints {
             $0.top.equalTo(firstCNum.snp.bottom).offset((bounds.height)/67.6666666667)
-            $0.left.equalToSuperview().offset((bounds.width)/13.3928571429)
+            $0.leading.equalToSuperview().offset((bounds.width)/13.3928571429)
         }
         
         reSendButton.snp.makeConstraints {
             $0.top.equalTo(fourthCNum.snp.bottom).offset((bounds.height)/162.4)
-            $0.right.equalToSuperview().inset((bounds.width)/13.3928571429)
+            $0.trailing.equalToSuperview().inset((bounds.width)/13.3928571429)
         }
         
         certifiCompleteButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.bottom.equalToSuperview().inset((bounds.height)/5.884057971)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().inset(20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20)
         }
     }
     

@@ -70,26 +70,26 @@ public class PasswordResetViewController: BaseViewController, UITextFieldDelegat
     override func setLayout() {
         titleText.snp.makeConstraints {
             $0.top.equalToSuperview().offset((bounds.height)/8.12)
-            $0.left.equalToSuperview().offset(20)
+            $0.leading.equalToSuperview().offset(20)
         }
 
         emailTextField.snp.makeConstraints {
             $0.height.equalTo(64)
             $0.top.equalToSuperview().offset((bounds.height)/2.2745098039)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().inset(20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20)
         }
         
         defaultDomain.snp.makeConstraints {
             $0.centerY.equalTo(emailTextField)
-            $0.right.equalTo(emailTextField.snp.right).inset(16)
+            $0.trailing.equalTo(emailTextField.snp.trailing).inset(16)
         }
         
         certificationButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.bottom.equalToSuperview().inset((bounds.height)/5.884057971)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().inset(20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20)
         }
     }
     
