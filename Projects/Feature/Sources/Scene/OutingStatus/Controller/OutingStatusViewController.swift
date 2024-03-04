@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import Moya
+import Service
 
 public final class OutingStatusViewController: BaseViewController {
+    
+    private var viewModel: OutingStatusViewModel!
     
     // MARK: - Properties
     private let searchController = UISearchController(searchResultsController: nil).then {
@@ -50,6 +54,11 @@ public final class OutingStatusViewController: BaseViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        
+        let provider = MoyaProvider<OutingServices>()
+        viewModel = OutingStatusViewModel(outingService: provider)
+        viewModel.delegate = self
+        viewModel.fetchOutingList(authorization: "yourAuthorizationToken")
     }
     
     // MARK: - CollectionView Setting
@@ -108,14 +117,48 @@ public final class OutingStatusViewController: BaseViewController {
     }
 }
 
+//extension OutingStatusViewController: UICollectionViewDataSource {
+//    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return 10
+//    }
+//    
+//    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = outingListCollectionView.dequeueReusableCell(withReuseIdentifier: OutingListCollectionViewCell.identifier, for: indexPath) as! OutingListCollectionViewCell
+//        
+//        return cell
+//    }
+//}
+
+
 extension OutingStatusViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return viewModel.numberOfOutingList()
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = outingListCollectionView.dequeueReusableCell(withReuseIdentifier: OutingListCollectionViewCell.identifier, for: indexPath) as! OutingListCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "OutingListCollectionViewCell", for: indexPath) as? OutingListCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        
+        if let outing = viewModel.outing(at: indexPath.row) {
+            // 셀에 데이터 할당
+            cell.configure(with: outing)
+        }
         
         return cell
     }
 }
+
+extension OutingStatusViewController: OutingStatusViewModelDelegate {
+    func outingListDidUpdate() {
+        // 외출자 리스트가 업데이트되었을 때 호출되는 메서드
+        // 외출자 리스트가 변경되었으므로 뷰를 업데이트해야 함
+        outingListCollectionView.reloadData()
+    }
+    
+    func handleError(_ error: Error) {
+        // 에러 핸들링
+        print("Error occurred: \(error)")
+    }
+}
+

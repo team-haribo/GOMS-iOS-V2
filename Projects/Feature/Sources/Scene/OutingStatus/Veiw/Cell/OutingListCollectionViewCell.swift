@@ -10,6 +10,7 @@ import UIKit
 
 import SnapKit
 import Then
+import Service
 
 final class OutingListCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
@@ -21,13 +22,13 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     }
     
     let nameLabel = UILabel().then {
-        $0.text = "홍길동"
+//        $0.text = "홍길동"
         $0.textColor = .color.gomsSecondary.color
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
     let studentInformationLabel = UILabel().then {
-        $0.text = "7기 | IOT"
+//        $0.text = "7기 | IOT"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
@@ -61,6 +62,12 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     // MARK: - Configure UI
     private func configureUI() {
         self.backgroundColor = .clear
+    }
+    
+    func configure(with outing: OutingListResponse) {
+        // 외출 정보를 이용하여 UI 요소들을 업데이트합니다.
+        nameLabel.text = outing.name
+        studentInformationLabel.text = outing.major
     }
     
     // MARK: - Add View

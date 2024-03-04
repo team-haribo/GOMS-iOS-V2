@@ -30,7 +30,7 @@ public final class SplashViewController: BaseViewController {
     }
     
     private func navigateToSignIn() {
-        let signInVC = SignInViewController()
+        let signInVC = MainViewController()
         signInVC.modalPresentationStyle = .fullScreen
         present(signInVC, animated: false, completion: nil)
     }

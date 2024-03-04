@@ -8,16 +8,16 @@
 
 import Foundation
 
-struct OutingListModel: Codable {
-    let data: OutingListResponse
+public struct OutingListModel: Codable {
+    public let data: OutingListResponse
 }
 
-struct OutingListResponse: Codable {
-    let accountIdx: UUID
-    let name: String
-    let major: String
-    let grade: Int
-    let gender: Int
-    let profileUrl: String?
-    let createdTime: Data
+public struct OutingListResponse: Codable {
+    public let accountIdx: UUID
+    public let name: String
+    public let major: String
+    public let grade: Int
+    public let gender: Int
+    public let profileUrl: String?
+    public let createdTime: Data
 }
