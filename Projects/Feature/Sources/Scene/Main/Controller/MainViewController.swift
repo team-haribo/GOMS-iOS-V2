@@ -7,8 +7,13 @@
 //
 
 import UIKit
+import Moya
+import Service
 
 public final class MainViewController: BaseViewController, UICollectionViewDelegate {
+    
+    // MARK: - Network
+    private let authProvider = MoyaProvider<OutingServices>()
     
     // MARK: - Properties
     let scrollView = UIScrollView()
