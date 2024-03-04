@@ -9,7 +9,7 @@
 import Foundation
 
 struct LatecomerModel: Codable {
-    
+    // 외출자 list data
 }
 
 struct LatecomerResponse: Codable {
