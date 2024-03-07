@@ -28,32 +28,32 @@ public class UserProfileViewController: BaseViewController {
     let userName = UILabel().then {
         $0.text = "홍길동"
         $0.textColor = .white
-        $0.font = UIFont.pretendard(size: 19, weight: .semibold)
+        $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
     let userGradeDepartment = UILabel().then {
         $0.text = "7기ㅣIoT"
         $0.textColor = .color.gomsSecondary.color
-        $0.font = UIFont.pretendard(size: 16, weight: .regular)
+        $0.font = .pretendard(size: 16, weight: .regular)
     }
     
     let perceptionCount = UILabel().then {
         $0.text = "지각 횟수"
         $0.textColor = .color.gomsSecondary.color
-        $0.font = UIFont.pretendard(size: 16, weight: .regular)
+        $0.font = .pretendard(size: 16, weight: .regular)
     }
     
     
     let perceptionNum = UILabel().then {
         $0.text = "11"
         $0.textColor = .color.gomsNegative.color
-        $0.font = UIFont.pretendard(size: 19, weight: .semibold)
+        $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
     let perceptionText = UILabel().then {
         $0.text = "번"
-        $0.textColor = UIColor.white
-        $0.font = UIFont.pretendard(size: 19, weight: .semibold)
+        $0.textColor = .white
+        $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
     let line1View = UIView().then {
@@ -65,12 +65,12 @@ public class UserProfileViewController: BaseViewController {
     
     let repassword : UIButton = UIButton().then {
         $0.setTitle("비밀번호 재설정", for: .normal)
-        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
+        $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
     }
     
     let pushcheckText = UILabel().then {
         $0.text = "외출제 푸시 알람"
-        $0.textColor = UIColor.white
+        $0.textColor = .white
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
@@ -88,14 +88,14 @@ public class UserProfileViewController: BaseViewController {
     
     let cameranowonText = UILabel().then {
         $0.text = "카메라 바로 켜기"
-        $0.textColor = UIColor.white
-        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
+        $0.textColor = .white
+        $0.font = .pretendard(size: 16, weight: .semibold)
     }
     
     let cameranowonDescription = UILabel().then {
         $0.text = "앱을 실행하면 즉시 카메라가 켜져요"
         $0.textColor = .color.gomsTertiary.color
-        $0.font = UIFont.pretendard(size: 12, weight: .regular)
+        $0.font = .pretendard(size: 12, weight: .regular)
     }
     
     let cameranowontoggleButton: UISwitch = UISwitch().then {
@@ -106,14 +106,14 @@ public class UserProfileViewController: BaseViewController {
     
     let lightmodeText = UILabel().then {
         $0.text = "라이트 모드 켜기"
-        $0.textColor = UIColor.white
-        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
+        $0.textColor = .white
+        $0.font = .pretendard(size: 16, weight: .semibold)
     }
     
     let lightmodeDescription = UILabel().then {
         $0.text = "앱 테마를 라이트 모드로 만들어요"
         $0.textColor = .color.gomsTertiary.color
-        $0.font = UIFont.pretendard(size: 12, weight: .regular)
+        $0.font = .pretendard(size: 12, weight: .regular)
     }
     
     let lightmodetoggleButton: UISwitch = UISwitch().then {
@@ -126,7 +126,7 @@ public class UserProfileViewController: BaseViewController {
         $0.backgroundColor = .systemRed
         $0.layer.cornerRadius = 12
         $0.setTitle("로그아웃", for: .normal)
-        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
+        $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
         $0.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
     }
     
