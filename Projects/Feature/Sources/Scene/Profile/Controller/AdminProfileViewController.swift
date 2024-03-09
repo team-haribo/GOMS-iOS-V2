@@ -29,32 +29,32 @@ public class AdminProfileViewController: BaseViewController {
     let userName = UILabel().then {
         $0.text = "홍길동"
         $0.textColor = .white
-        $0.font = UIFont.pretendard(size: 19, weight: .semibold)
+        $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
     let userGradeDepartment = UILabel().then {
         $0.text = "7기ㅣIoT"
         $0.textColor = .color.gomsSecondary.color
-        $0.font = UIFont.pretendard(size: 16, weight: .regular)
+        $0.font = .pretendard(size: 16, weight: .regular)
     }
     
     let perceptionCount = UILabel().then {
         $0.text = "지각 횟수"
         $0.textColor = .color.gomsSecondary.color
-        $0.font = UIFont.pretendard(size: 16, weight: .regular)
+        $0.font = .pretendard(size: 16, weight: .regular)
     }
     
     
     let perceptionNum = UILabel().then {
         $0.text = "11"
         $0.textColor = .color.gomsNegative.color
-        $0.font = UIFont.pretendard(size: 19, weight: .semibold)
+        $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
     let perceptionText = UILabel().then {
         $0.text = "번"
-        $0.textColor = UIColor.white
-        $0.font = UIFont.pretendard(size: 19, weight: .semibold)
+        $0.textColor = .white
+        $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
     let line1View = UIView().then {
@@ -71,14 +71,14 @@ public class AdminProfileViewController: BaseViewController {
     
     let generateQRcodeText = UILabel().then {
         $0.text = "QR 생성 바로 켜기"
-        $0.textColor = UIColor.white
-        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
+        $0.textColor = .white
+        $0.font = .pretendard(size: 16, weight: .semibold)
     }
     
     let generateQRcodeDescription = UILabel().then {
         $0.text = "앱을 실행하면 즉시 QR코드를 생성해요"
         $0.textColor = .color.gomsTertiary.color
-        $0.font = UIFont.pretendard(size: 12, weight: .regular)
+        $0.font = .pretendard(size: 12, weight: .regular)
     }
     
     let generateQRcodetoggleButton: UISwitch = UISwitch().then {
@@ -89,7 +89,7 @@ public class AdminProfileViewController: BaseViewController {
     
     let lightmodeText = UILabel().then {
         $0.text = "라이트 모드 켜기"
-        $0.textColor = UIColor.white
+        $0.textColor = .white
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
 
     }
@@ -97,7 +97,7 @@ public class AdminProfileViewController: BaseViewController {
     let lightmodeDescription = UILabel().then {
         $0.text = "앱 테마를 라이트 모드로 만들어요"
         $0.textColor = .color.gomsTertiary.color
-        $0.font = UIFont.pretendard(size: 12, weight: .regular)
+        $0.font = .pretendard(size: 12, weight: .regular)
     }
     
     let lightmodetoggleButton: UISwitch = UISwitch().then {
@@ -110,7 +110,7 @@ public class AdminProfileViewController: BaseViewController {
         $0.backgroundColor = .systemRed
         $0.layer.cornerRadius = 12
         $0.setTitle("로그아웃", for: .normal)
-        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
+        $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
         $0.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
     }
     
@@ -138,9 +138,10 @@ public class AdminProfileViewController: BaseViewController {
 
         let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
 
+        cancelAction.setValue(UIColor.color.gomsInformation.color, forKey: "titleTextColor")
+        confirmAction.setValue(UIColor.color.gomsInformation.color, forKey: "titleTextColor")
         alertController.addAction(confirmAction)
         alertController.addAction(cancelAction)
-
 
         alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         
@@ -148,18 +149,16 @@ public class AdminProfileViewController: BaseViewController {
     }
 
 
-
+    // #로그아웃 버튼 클릭시 작동되는 함수
     func performLogout() {
-        // 로그아웃 버튼누르면 작동되는부분
     }
     
-
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .black
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
-                self.navigationItem.backBarButtonItem = backBarButtonItem
+        self.navigationItem.backBarButtonItem = backBarButtonItem
     }
     
     override func addView() {
