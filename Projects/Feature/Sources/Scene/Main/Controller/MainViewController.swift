@@ -22,7 +22,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private let profileView = ProfileCardView()
     
     private let latecomerView = UIView().then {
-        $0.backgroundColor = .color.gomsBackground.color
+        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 12
         $0.layer.borderWidth = 1
@@ -31,14 +31,14 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
-        $0.textColor = .white
+        $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 24, weight: .bold)
     }
     
     private let latecomerStackView = LatecomerStackView()
     
     private let outingStatusView = UIView().then {
-        $0.backgroundColor = .color.gomsBackground.color
+        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 12
         $0.layer.borderWidth = 1
@@ -47,7 +47,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출 현황"
-        $0.textColor = .white
+        $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 24, weight: .bold)
     }
     
@@ -77,7 +77,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
     
     private lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingStatusFlowLayout).then {
-        $0.backgroundColor = .clear
+        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
@@ -103,25 +103,16 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
 
     // MARK: - Life Cycle
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        scrollView.updateContentSize()
+        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
         setDatas()
-        adjustContentSize()
-    }
-    
-    private func adjustContentSize() {
-        let totalContentHeight = calculateTotalContentHeight()
-        scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: totalContentHeight)
-    }
-
-    private func calculateTotalContentHeight() -> CGFloat {
-        var totalHeight: CGFloat = 0
-        totalHeight += profileView.frame.height
-        totalHeight += latecomerView.frame.height
-        totalHeight += outingStatusView.frame.height
-        totalHeight += outingStatusCollectionView.frame.height
-        return totalHeight
     }
     
     // MARK: - CollectionView Setting
