@@ -43,7 +43,7 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     }
     
     private let bottomView = UIView().then {
-        $0.backgroundColor = .white.withAlphaComponent(0.15)
+        $0.setDynamicBackgroundColor(darkModeColor: .white.withAlphaComponent(0.15), lightModeColor: .black.withAlphaComponent(0.15))
     }
     
     // MARK: - Initializer
