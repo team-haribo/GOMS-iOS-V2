@@ -1,6 +1,8 @@
 import UIKit
 
 class PasswordSettingViewController: BaseViewController {
+    var userEmail: String?
+    
     let titleText = UILabel().then {
         $0.text = "비밀번호 재설정"
         $0.font = UIFont.pretendard(size: 29, weight: .bold)

@@ -1,6 +1,9 @@
 import UIKit
+import Moya
 
-class SignInViewController: BaseViewController, UITextFieldDelegate {
+public class SignInViewController: BaseViewController, UITextFieldDelegate {
+    private let authProvider = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))])
+    
     let titleText = UILabel().then {
         $0.text = "로그인"
         $0.font = UIFont.pretendard(size: 29, weight: .bold)
@@ -76,7 +79,7 @@ class SignInViewController: BaseViewController, UITextFieldDelegate {
     }
     
     // MARK: ViewDidLoad
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
@@ -151,8 +154,9 @@ class SignInViewController: BaseViewController, UITextFieldDelegate {
     
     // MARK: Action
     @objc func signInButtonDidTap() {
-        let mainVC = MainViewController()
-        navigationController?.pushViewController(mainVC, animated: true)
+        signIn()
+//        let mainVC = MainViewController()
+//        navigationController?.pushViewController(mainVC, animated: true)
     }
     
     @objc func passwordResetButtonDidTap() {
@@ -187,3 +191,36 @@ class SignInViewController: BaseViewController, UITextFieldDelegate {
         return true
     }
 }
+
+extension SignInViewController {
+    func signIn() {
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            print("Email or password is nil")
+            return
+        }
+        
+        let header = SignInRequest.Header(Authorization: "authToken") 
+        let body = SignInRequest.Body(email: email, password: password)
+        let param = SignInRequest(header: header, body: body)
+        print("Sending SignIn request with parameters: \(param)")
+        
+        authProvider.request(.signIn(param: param)) { [weak self] response in
+            switch response {
+            case .success(let result):
+                do {
+                    let signInModel = try result.map(SignInModel.self)
+                    print("SignIn successful. Response: \(signInModel)")
+                    
+                    let mainVC = MainViewController()
+                    self?.navigationController?.pushViewController(mainVC, animated: true)
+                    
+                } catch {
+                    print("Error mapping SignIn response:", error.localizedDescription)
+                }
+            case .failure(let error):
+                print("SignIn request failed:", error.localizedDescription)
+            }
+        }
+    }
+}
+

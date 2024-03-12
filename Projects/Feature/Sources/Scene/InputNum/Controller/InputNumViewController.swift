@@ -1,6 +1,10 @@
 import UIKit
+import Moya
 
 class InputNumViewController: BaseViewController, UITextFieldDelegate {
+    private let authProvider = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))])
+    var userEmail: String?
+    
     let titleText = UILabel().then {
         $0.text = "인증번호 입력"
         $0.font = UIFont.pretendard(size: 29, weight: .bold)
@@ -229,8 +233,17 @@ class InputNumViewController: BaseViewController, UITextFieldDelegate {
     }
     
     @objc func certiCompleteButtonDidTap() {
-        let settingVC = PasswordSettingViewController()
-        navigationController?.pushViewController(settingVC, animated: true)
+        guard let code1 = firstCNum.text, !code1.isEmpty,
+              let code2 = secondCNum.text, !code2.isEmpty,
+              let code3 = thirdCNum.text, !code3.isEmpty,
+              let code4 = fourthCNum.text, !code4.isEmpty else {
+            print("인증 코드를 입력하세요.")
+            return
+        }
+        
+        let code = code1 + code2 + code3 + code4
+        
+        verifyEmail(with: code)
     }
     
     @objc func keyboardWillShow(_ sender: Notification) {
@@ -249,5 +262,52 @@ class InputNumViewController: BaseViewController, UITextFieldDelegate {
         timerLabel.frame.origin.y = bounds.height/1.7424892704
         reSendButton.frame.origin.y = bounds.height/1.7424892704
         certifiCompleteButton.frame.origin.y = bounds.height/1.2971246006
+    }
+}
+
+//extension InputNumViewController {
+//    func verifyEmail(with code: String) {
+//        guard let email = userEmail else {
+//            print("Email is nil")
+//            return
+//        }
+//        
+//        let header = EmailVerifyRequest.Header(Authorization: "authToken")
+//        
+//        let body = EmailVerifyRequest.Body(email: email, code: code)
+//        let param = EmailVerifyRequest(header: header, body: body)
+//        
+//        authProvider.request(.emailVerify(param: param)) { [weak self] response in
+//            switch response {
+//            case .success(let result):
+//                let settingVC = PasswordSettingViewController()
+//                self?.navigationController?.pushViewController(settingVC, animated: true)
+//            case .failure(let error):
+//                print("Email verification request failed:", error.localizedDescription)
+//            }
+//        }
+//    }
+//}
+
+extension InputNumViewController {
+    func verifyEmail(with code: String) {
+        guard let email = userEmail else {
+            print("Email is nil")
+            return
+        }
+        
+        let queryString = EmailVerifyRequest.QueryString(email: email, authCode: code)
+        let request = EmailVerifyRequest(queryString: queryString)
+        
+        authProvider.request(.emailVerify(param: request)) { [weak self] response in
+            switch response {
+            case .success(let result):
+                print("Email verification successful")
+                let settingVC = PasswordSettingViewController()
+                self?.navigationController?.pushViewController(settingVC, animated: true)
+            case .failure(let error):
+                print("Email verification failed:", error.localizedDescription)
+            }
+        }
     }
 }

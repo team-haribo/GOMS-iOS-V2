@@ -1,6 +1,9 @@
 import UIKit
+import Moya
 
 public class SignUpViewController: BaseViewController, UITextFieldDelegate {
+    private let authProvider = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))])
+    
     let titleText = UILabel().then {
         $0.text = "회원가입"
         $0.font = UIFont.pretendard(size: 29, weight: .bold)
@@ -166,8 +169,8 @@ public class SignUpViewController: BaseViewController, UITextFieldDelegate {
     
     // MARK: Action
     @objc func certificationButtonDidTap() {
-        let inputVC = InputNumViewController()
-        navigationController?.pushViewController(inputVC, animated: true)
+        signUp()
+        print("Certification Button Tap!")
     }
     
     @objc func genderSelectButtonDidTap() {
@@ -226,5 +229,58 @@ public class SignUpViewController: BaseViewController, UITextFieldDelegate {
             emailTextField.textColor = .black
         }
         return true
+    }
+    
+    var userData: SignUpModel?
+}
+
+// MARK: Network
+extension SignUpViewController {
+    func validateInput(name: String?, email: String?) -> Bool {
+        let nameRegex = "^[a-zA-Z]{2,}$"
+        let emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        
+        guard let name = name, let email = email else {
+            return false
+        }
+            
+        let nameIsValid = NSPredicate(format: "SELF MATCHES %@", nameRegex).evaluate(with: name)
+        let emailIsValid = NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email)
+        
+        return nameIsValid && emailIsValid
+    }
+    
+    func signUp() {
+        guard let name = nameTextField.text, let email = emailTextField.text else {
+            print("Name or email is nil")
+            return
+        }
+        
+        guard validateInput(name: name, email: email) else {
+            let alert = UIAlertController(title: "입력 오류", message: "올바른 이름과 이메일을 입력하세요.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        let header = SignUpRequest.Header(Authorization: "authToken")
+        let body = SignUpRequest.Body(email: email, password: "password", name: name, gender: "gender", Major: "major")
+        let param = SignUpRequest(header: header, body: body)
+        print(param)
+
+        authProvider.request(.signUp(param: param)) { response in
+            switch response {
+            case .success(let result):
+                do {
+                    self.userData = try result.map(SignUpModel.self)
+                    let inputVC = InputNumViewController()
+                    self.navigationController?.pushViewController(inputVC, animated: true)
+                } catch(let err) {
+                    print(err.localizedDescription)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
     }
 }
