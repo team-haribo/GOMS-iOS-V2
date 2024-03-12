@@ -9,7 +9,6 @@ enum AuthServices {
     case emailVerify(param: EmailVerifyRequest)
 }
 
-
 extension AuthServices: TargetType {
     public var baseURL: URL {
         return URL(string: BaseURL.baseURL)!
