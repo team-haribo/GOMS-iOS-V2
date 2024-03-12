@@ -21,7 +21,7 @@ final class AdminProfileCardView: UIView {
     
     let nameLabel = UILabel().then {
         $0.text = "홍길동"
-        $0.textColor = .white
+        $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
@@ -54,7 +54,7 @@ final class AdminProfileCardView: UIView {
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
         
-        self.backgroundColor = .color.gomsBackground.color
+        self.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
         self.clipsToBounds = true

@@ -22,7 +22,7 @@ public class BaseViewController: UIViewController {
     }
     
     func configureUI(){
-        view.backgroundColor = .color.gomsBackground.color
+        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
         addView()
         setLayout()
     }

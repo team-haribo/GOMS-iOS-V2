@@ -21,13 +21,13 @@ final class ProfileCardView: UIView {
     
     let nameLabel = UILabel().then {
         $0.text = "홍길동"
-        $0.textColor = .white
+        $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
     let studentInformationLabel = UILabel().then {
         $0.text = "7기 | SW개발"
-        $0.textColor = .color.gomsTertiary.color
+        $0.setDynamicTextColor(darkModeColor: .color.gomsTertiary.color, lightModeColor: .color.gomsSecondary.color)
         $0.font = UIFont.pretendard(size: 16, weight: .regular)
     }
 
@@ -54,7 +54,7 @@ final class ProfileCardView: UIView {
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
         
-        self.backgroundColor = .color.gomsBackground.color
+        self.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
         self.clipsToBounds = true

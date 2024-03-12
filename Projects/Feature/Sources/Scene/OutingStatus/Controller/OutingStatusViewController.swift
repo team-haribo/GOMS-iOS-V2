@@ -17,7 +17,7 @@ public final class OutingStatusViewController: BaseViewController {
     
     private let mainLabel = UILabel().then {
         $0.text = "검색 결과"
-        $0.textColor = .white
+        $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = .pretendard(size: 18, weight: .semibold)
     }
     
@@ -61,6 +61,7 @@ public final class OutingStatusViewController: BaseViewController {
 
     // MARK: - Configure UI
     override func configureUI() {
+        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
         qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
         qrButton.clipsToBounds = true
     }
