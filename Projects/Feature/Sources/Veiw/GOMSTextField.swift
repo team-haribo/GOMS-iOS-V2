@@ -34,7 +34,7 @@ public class GOMSTextField: UITextField {
         self.clipsToBounds = true
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.15).cgColor
-        self.addPadding()
+        self.addPadding(paddingFrame: CGRect(x: 0, y: 0, width: 16, height: self.frame.height))
     }
     
     private func setupPlaceholder() {
