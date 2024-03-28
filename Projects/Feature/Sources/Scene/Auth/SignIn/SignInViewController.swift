@@ -11,113 +11,90 @@ import UIKit
 public final class SignInViewController: BaseViewController {
 
     // MARK: - Properties
-    private let gomsLogoImage = UIImageView(image: .image.gomsGoms.image)
+    private let emailTextField = GOMSTextField()
     
-    private let mainLable = UILabel().then {
-        let range = NSRange(location: 0, length: 6)
-        $0.text = "수요 외출제 관리 서비스"
-        $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
-        $0.setTextColor(.color.gomsPrimary.color, range: range)
-        $0.font = .pretendard(size: 19, weight: .semibold)
-    }
+    private let passwordTextField = GOMSTextField()
     
-    private let descriptionLabel = UILabel().then {
-        $0.text = "앱으로 간편하게 GSM의\n수요 외출제를 이용해 보세요!"
-        $0.numberOfLines = 2
-        $0.setLineSpacing(spacing: 7)
-        $0.textAlignment = .center
+    private let findPasswordLabel = UILabel().then {
+        $0.text = "비밀번호를 잊으셨나요?"
         $0.textColor = .color.gomsTertiary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
     
-    private let loginButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "로그인")
-    
-    private let divLineView1 = UIView().then {
-        $0.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.15)
-    }
-    
-    private let firstText = UILabel().then {
-        $0.text = "처음이라면"
-        $0.font = .pretendard(size: 12, weight: .regular)
-        $0.textColor = .color.gomsTertiary.color
-    }
-    
-    private let divLineView2 = UIView().then {
-        $0.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.15)
-    }
-    
-    private let signUpButton = UIButton().then {
-        $0.setTitle("회원가입", for: .normal)
+    private let findPasswordButton = UIButton().then {
+        $0.setTitle("비밀번호 찾기", for: .normal)
         $0.backgroundColor = .clear
         $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .regular)
         $0.setTitleColor(.color.gomsInformation.color, for: .normal)
     }
+    
+    private let authenticationNumberButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기")
+    
     
     // MARK: - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
     }
     
+    // MARK: - Seletors
+    @objc func findPasswordButtonTapped() {
+        let findPasswordVC = FindPasswordViewController()
+        navigationController?.pushViewController(findPasswordVC, animated: true)
+    }
+    
+    @objc func authenticationNumberButtonTapped() {
+        let authenticationNumberVC = AuthenticationNumberViewController()
+        navigationController?.pushViewController(authenticationNumberVC, animated: true)
+    }
+    
+    // MARK: - Navigaiton
+    override func configNavigation() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "로그인"
+    }
+    
     // MARK: - Configure UI
     override func configureUI() {
-        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
+        
     }
     
     // MARK: - Add View
     override func addView() {
-        [gomsLogoImage, mainLable, descriptionLabel, loginButton, divLineView1, firstText, divLineView2, signUpButton].forEach { view.addSubview($0) }
+        [emailTextField, passwordTextField, findPasswordLabel, findPasswordButton, authenticationNumberButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
     override func setLayout() {
-        gomsLogoImage.snp.makeConstraints {
+        emailTextField.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(64)
+            $0.top.equalToSuperview().inset(241)
             $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview().inset(258)
-            $0.width.height.equalTo(80)
         }
         
-        mainLable.snp.makeConstraints {
-            $0.height.equalTo(32)
+        passwordTextField.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(64)
+            $0.top.equalTo(emailTextField.snp.bottom).offset(24)
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(gomsLogoImage.snp.bottom).offset(56)
         }
         
-        descriptionLabel.snp.makeConstraints {
-            $0.height.equalTo(56)
-            $0.centerX.equalToSuperview()
-            $0.top.equalTo(mainLable.snp.bottom).offset(8)
+        findPasswordLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(passwordTextField.snp.bottom)
+            $0.leading.equalToSuperview().inset(28)
         }
         
-        loginButton.snp.makeConstraints {
+        findPasswordButton.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.trailing.equalToSuperview().inset(28)
+            $0.top.equalTo(passwordTextField.snp.bottom)
+        }
+        
+        authenticationNumberButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(136)
-        }
-        
-        firstText.snp.makeConstraints {
-            $0.height.equalTo(20)
-            $0.centerX.equalToSuperview()
-            $0.top.equalTo(loginButton.snp.bottom).offset(18)
-        }
-        
-        divLineView1.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(20)
-            $0.top.equalTo(loginButton.snp.bottom).offset(27.5)
-            $0.trailing.equalTo(firstText.snp.leading).offset(-4)
-            $0.height.equalTo(1)
-        }
-        
-        divLineView2.snp.makeConstraints {
-            $0.trailing.equalToSuperview()
-            $0.top.equalTo(loginButton.snp.bottom).offset(27.5)
-            $0.height.equalTo(1)
-            $0.leading.equalTo(firstText.snp.trailing).offset(4)
-        }
-        
-        signUpButton.snp.makeConstraints {
-            $0.height.equalTo(48)
-            $0.top.equalTo(firstText.snp.bottom).offset(2)
-            $0.centerX.equalToSuperview().inset(50)
+            $0.bottom.equalToSuperview().inset(138)
         }
     }
 }
