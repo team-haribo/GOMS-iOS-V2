@@ -48,11 +48,12 @@ public final class IntroViewController: BaseViewController {
         $0.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.15)
     }
     
-    private let signUpButton = UIButton().then {
+    private lazy var signUpButton = UIButton().then {
         $0.setTitle("회원가입", for: .normal)
         $0.backgroundColor = .clear
         $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .regular)
         $0.setTitleColor(.color.gomsInformation.color, for: .normal)
+        $0.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Life Cycel
@@ -64,6 +65,11 @@ public final class IntroViewController: BaseViewController {
     @objc func loginButtonTapped() {
         let signInVC = SignInViewController()
         navigationController?.pushViewController(signInVC, animated: true)
+    }
+    
+    @objc func signUpButtonTapped() {
+        let signUpVC = SignUpViewController()
+        navigationController?.pushViewController(signUpVC, animated: true)
     }
     
     // MARK: - Configure UI
