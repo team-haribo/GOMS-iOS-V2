@@ -44,7 +44,6 @@ public final class AuthenticationNumberViewController: BaseViewController {
     // MARK: - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
-
     }
 
     // MARK: - Navigation
