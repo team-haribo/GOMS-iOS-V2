@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension UITextField {
+public extension UITextField {
     
     func addPadding(paddingFrame: CGRect) {
         let paddingView = UIView(frame: paddingFrame)
@@ -16,5 +16,15 @@ extension UITextField {
         self.leftViewMode = .always
         self.rightView = paddingView
         self.rightViewMode = .always
+    }
+    
+    func setPlaceholderColor(_ placeholderColor: UIColor) {
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder ?? "",
+            attributes: [
+                .foregroundColor: placeholderColor,
+                .font: font
+            ].compactMapValues { $0 }
+        )
     }
 }

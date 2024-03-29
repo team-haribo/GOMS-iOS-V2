@@ -37,6 +37,7 @@ public final class PasswordSettingViewController: BaseViewController {
     
     // MARK: - Navigation
     override func configNavigation() {
+        super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "비밀번호 설정"
     }

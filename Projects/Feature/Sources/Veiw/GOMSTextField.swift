@@ -11,6 +11,9 @@ import UIKit
 public class GOMSTextField: UITextField {
     
     var placeholderString: String?
+    
+    let lightBackground = UIColor(red: 0.967, green: 0.97, blue: 0.973, alpha: 1).cgColor
+    let darkBackground = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1).cgColor
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -40,6 +43,7 @@ public class GOMSTextField: UITextField {
     private func setupPlaceholder() {
         if let placeholderText = placeholderString {
             self.placeholder = placeholderText
+            self.setPlaceholderColor(.color.gomsTertiary.color)
         }
     }
 }

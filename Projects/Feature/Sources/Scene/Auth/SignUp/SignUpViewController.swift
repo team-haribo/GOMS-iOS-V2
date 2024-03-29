@@ -85,14 +85,11 @@ public final class SignUpViewController: BaseViewController {
         navigationController?.pushViewController(authenticationNumberVC, animated: true)
     }
     
+    // MARK: - Navigation
     override func configNavigation() {
+        super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "회원가입"
-    }
-    
-    // MARK: - Configure UI
-    override func configureUI() {
-        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
     }
     
     // MARK: - Add View

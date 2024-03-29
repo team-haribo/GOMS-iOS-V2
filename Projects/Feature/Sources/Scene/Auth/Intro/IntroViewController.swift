@@ -35,7 +35,7 @@ public final class IntroViewController: BaseViewController {
     }
     
     private let divLineView1 = UIView().then {
-        $0.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.15)
+        $0.setDynamicBackgroundColor(darkModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.15), lightModeColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.05))
     }
     
     private let firstText = UILabel().then {
@@ -45,7 +45,7 @@ public final class IntroViewController: BaseViewController {
     }
     
     private let divLineView2 = UIView().then {
-        $0.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.15)
+        $0.setDynamicBackgroundColor(darkModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.15), lightModeColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.05))
     }
     
     private lazy var signUpButton = UIButton().then {
@@ -72,11 +72,6 @@ public final class IntroViewController: BaseViewController {
         navigationController?.pushViewController(signUpVC, animated: true)
     }
     
-    // MARK: - Configure UI
-    override func configureUI() {
-        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
-    }
-    
     // MARK: - Add View
     override func addView() {
         [gomsLogoImage, mainLable, descriptionLabel, loginButton, divLineView1, firstText, divLineView2, signUpButton].forEach { view.addSubview($0) }
@@ -86,25 +81,26 @@ public final class IntroViewController: BaseViewController {
     override func setLayout() {
         gomsLogoImage.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview().inset(258)
+            $0.top.equalTo(bounds.height * 0.3)
             $0.width.height.equalTo(80)
         }
         
         mainLable.snp.makeConstraints {
             $0.height.equalTo(32)
-            $0.centerX.equalToSuperview()
+            $0.centerX.equalTo(bounds.width * 0.5)
             $0.top.equalTo(gomsLogoImage.snp.bottom).offset(56)
         }
         
         descriptionLabel.snp.makeConstraints {
             $0.height.equalTo(56)
-            $0.centerX.equalToSuperview()
+            $0.centerX.equalTo(bounds.width * 0.5)
             $0.top.equalTo(mainLable.snp.bottom).offset(8)
         }
         
         loginButton.snp.makeConstraints {
             $0.height.equalTo(48)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(136)
         }
         
@@ -115,14 +111,14 @@ public final class IntroViewController: BaseViewController {
         }
         
         divLineView1.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(20)
+            $0.leading.equalTo(bounds.width * 0.05)
             $0.top.equalTo(loginButton.snp.bottom).offset(27.5)
             $0.trailing.equalTo(firstText.snp.leading).offset(-4)
             $0.height.equalTo(1)
         }
         
         divLineView2.snp.makeConstraints {
-            $0.trailing.equalToSuperview()
+            $0.trailing.equalTo(-bounds.width * 0.05)
             $0.top.equalTo(loginButton.snp.bottom).offset(27.5)
             $0.height.equalTo(1)
             $0.leading.equalTo(firstText.snp.trailing).offset(4)
@@ -131,7 +127,7 @@ public final class IntroViewController: BaseViewController {
         signUpButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.top.equalTo(firstText.snp.bottom).offset(2)
-            $0.centerX.equalToSuperview().inset(50)
+            $0.centerX.equalTo(bounds.width * 0.5)
         }
     }
 }

@@ -11,23 +11,25 @@ import SnapKit
 import Then
 
 public class BaseViewController: UIViewController {
+    
     let bounds = UIScreen.main.bounds
-  
+
     public override func viewDidLoad() {
         super.viewDidLoad()
-        configureUI()
-        configNavigation()
-        addView()
-        setLayout()
-    }
-    
-    func configureUI(){
+        
         view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
+        configNavigation()
+        configureUI()
         addView()
         setLayout()
     }
     
-    func configNavigation() {}
+    func configNavigation() {
+        let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
+        navigationItem.backBarButtonItem = backBarButtonItem
+    }
+    
+    func configureUI() {}
     func addView() {}
     func setLayout() {}
 }

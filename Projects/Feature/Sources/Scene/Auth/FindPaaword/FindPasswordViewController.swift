@@ -26,8 +26,15 @@ public final class FindPasswordViewController: BaseViewController {
         super.viewDidLoad()
     }
     
+    // MARK: - Selectors
+    @objc func authButtonTapped() {
+        let authenticationNumberVC = AuthenticationNumberViewController()
+        navigationController?.pushViewController(authenticationNumberVC, animated: true)
+    }
+    
     // MARK: - Navigation
     override func configNavigation() {
+        super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "비밀번호 재설정"
     }
