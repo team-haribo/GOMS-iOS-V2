@@ -440,24 +440,26 @@ public class AdminProfileViewController: BaseViewController {
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: {(ACTION:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
             print("다크(default) 모드로 변경")
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .dark
+                self?.themesettingText.text = "다크(기본)"
             }
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: {(ACTION:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
             print("라이트(Light) 모드로 변경")
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .light
+                self?.themesettingText.text = "라이트"
             }
         }))
-        actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: {(ACTION:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
             print("시스템 기본(basics) 테마로 변경")
-            
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .unspecified
+                self?.themesettingText.text = "시스템 테마 설정"
             }
         }))
         
@@ -465,76 +467,39 @@ public class AdminProfileViewController: BaseViewController {
         
         self.present(actionSheet, animated: true, completion: nil)
     }
-    
     @objc func logoutButtonTapped() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         
         let titleAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white,
-            .font: UIFont.boldSystemFont(ofSize: 15)
+            .foregroundColor: UIColor.color.gomsTextDefault.color,
+            .font: UIFont.pretendard(size: 17, weight: .semibold)
         ]
-        let attributedTitle = NSAttributedString(string: "로그아웃", attributes: titleAttributes)
+        let attributedTitle = NSAttributedString(string: "로그아웃\n", attributes: titleAttributes)
         alertController.setValue(attributedTitle, forKey: "attributedTitle")
         
         let messageAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white,
-            .font: UIFont.systemFont(ofSize: 13)
+            .foregroundColor: UIColor.color.gomsTextDefault.color,
+            .font: UIFont.pretendard(size: 13, weight: .regular)
         ]
-        let logoutText: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.color.gomsNegative.color,
-            .font: UIFont.pretendard(size: 17, weight: .semibold)
-        ]
-        
-        
         let attributedMessage = NSAttributedString(string: "로그아웃 하시겠습니까?", attributes: messageAttributes)
         alertController.setValue(attributedMessage, forKey: "attributedMessage")
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
         
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
             print("로그아웃 버튼이 확인되었습니다.")
             self?.performLogout()
         }
-        
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-        
         alertController.addAction(confirmAction)
-        alertController.addAction(cancelAction)
         
-        alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .color.gomsTheme.color
         
         self.present(alertController, animated: true, completion: nil)
     }
     
     
-    // #로그아웃 버튼 클릭시 작동되는 함수
     func performLogout() {
-        let alertController = UIAlertController(title: "로그아웃", message: "로그아웃하시겠습니까?", preferredStyle: .alert)
-        
-        // 라이트 버튼 추가
-        alertController.addAction(UIAlertAction(title: "라이트", style: .default, handler: { (_) in
-            // 라이트 버튼을 선택한 경우의 동작을 여기에 추가
-            print("라이트 버튼을 선택했습니다.")
-        }))
-        
-        // 다크 버튼 추가
-        alertController.addAction(UIAlertAction(title: "다크", style: .default, handler: { (_) in
-            // 다크 버튼을 선택한 경우의 동작을 여기에 추가
-            print("다크 버튼을 선택했습니다.")
-            
-        }))
-        
-        // 기본 버튼 추가
-        alertController.addAction(UIAlertAction(title: "기본", style: .default, handler: { (_) in
-            // 기본 버튼을 선택한 경우의 동작을 여기에 추가
-            print("기본 버튼을 선택했습니다.")
-        }))
-        
-        // 취소 버튼 추가
-        alertController.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { (_) in
-            // 취소 버튼을 선택한 경우의 동작을 여기에 추가
-            print("취소 버튼을 선택했습니다.")
-        }))
-        
-        self.present(alertController, animated: true, completion: nil)
     }
     
     
@@ -546,9 +511,6 @@ public class AdminProfileViewController: BaseViewController {
         overrideUserInterfaceStyle = nextMode
         setNeedsStatusBarAppearanceUpdate()
     }
-    
-    
-    
     
     
     public override func viewDidLoad() {
