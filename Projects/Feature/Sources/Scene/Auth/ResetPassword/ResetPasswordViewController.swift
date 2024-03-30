@@ -28,7 +28,9 @@ public final class ResetPasswordViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    private let signUpButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "회원가입")
+    private lazy var doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "완료").then {
+        $0.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+    }
     
     // MARK: - Life Cycel
     public override func viewDidLoad() {
@@ -38,7 +40,20 @@ public final class ResetPasswordViewController: BaseViewController {
         checkPasswordTextField.delegate = self
     }
     
-    // MARK: - Seletor
+    // MARK: - Seletors
+    @objc func doneButtonTapped() {
+        let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
+        
+        let check = UIAlertAction(title: "확인", style: .default) { action in
+            let loginVC = SignInViewController()
+            self.navigationController?.pushViewController(loginVC, animated: true)
+        }
+        
+        alert.addAction(check)
+        
+        present(alert, animated: true)
+    }
+    
     @objc override func keyboardWillShow(_ sender: Notification) {
         textFieldStackView.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
@@ -46,7 +61,7 @@ public final class ResetPasswordViewController: BaseViewController {
             $0.top.equalTo(bounds.height * 0.22)
         }
         
-        signUpButton.snp.remakeConstraints {
+        doneButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.41)
@@ -61,7 +76,7 @@ public final class ResetPasswordViewController: BaseViewController {
             $0.top.equalTo(bounds.height * 0.35)
         }
         
-        signUpButton.snp.remakeConstraints {
+        doneButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.16)
@@ -79,7 +94,7 @@ public final class ResetPasswordViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
-        [textFieldStackView, conditionsLabel, signUpButton].forEach { view.addSubview($0) }
+        [textFieldStackView, conditionsLabel, doneButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -104,7 +119,7 @@ public final class ResetPasswordViewController: BaseViewController {
             $0.leading.equalTo(bounds.width * 0.07)
         }
         
-        signUpButton.snp.makeConstraints {
+        doneButton.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.16)

@@ -13,32 +13,31 @@ import Then
 public class BaseViewController: UIViewController {
     
     let bounds = UIScreen.main.bounds
-
-    public override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
         
         configNavigation()
+    }
+
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+
         setupKeyboardEvent()
         configureUI()
         addView()
         setLayout()
     }
     
-    @objc func keyboardWillShow(_ sender: Notification) {
-        
-    }
+    @objc func keyboardWillShow(_ sender: Notification) { }
     
-    @objc func keyboardWillHide(_ sender: Notification) {
-        
-    }
+    @objc func keyboardWillHide(_ sender: Notification) { }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
-    
-    
     
     func configNavigation() {
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
