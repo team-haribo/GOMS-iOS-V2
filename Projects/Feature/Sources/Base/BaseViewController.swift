@@ -18,15 +18,42 @@ public class BaseViewController: UIViewController {
         super.viewDidLoad()
         
         view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
+        
         configNavigation()
+        setupKeyboardEvent()
         configureUI()
         addView()
         setLayout()
     }
     
+    @objc func keyboardWillShow(_ sender: Notification) {
+        
+    }
+    
+    @objc func keyboardWillHide(_ sender: Notification) {
+        
+    }
+    
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
+    
+    
     func configNavigation() {
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
         navigationItem.backBarButtonItem = backBarButtonItem
+    }
+    
+    func setupKeyboardEvent() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
     
     func configureUI() {}

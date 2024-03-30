@@ -48,6 +48,7 @@ public final class FindPasswordViewController: BaseViewController {
     // MARK: - Layout
     override func setLayout() {
         defaultDomain.snp.makeConstraints {
+        
             $0.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(28)
             $0.centerY.equalToSuperview()

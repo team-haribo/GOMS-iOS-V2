@@ -48,8 +48,9 @@ public final class AuthenticationNumberViewController: BaseViewController {
 
     // MARK: - Navigation
     override func configNavigation() {
+        super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "회원가입"
+        navigationItem.title = "인증번호 입력"
     }
     
     // MARK: - Configure UI

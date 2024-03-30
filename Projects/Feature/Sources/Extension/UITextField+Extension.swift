@@ -27,4 +27,18 @@ public extension UITextField {
             ].compactMapValues { $0 }
         )
     }
+    
+    func setTextFieldBackgroundColor(lightModeColor: UIColor, darkModeColor: UIColor) {
+        let backgroundColor = UIColor { (traitCollection: UITraitCollection) -> UIColor in
+            return traitCollection.userInterfaceStyle == .dark ? darkModeColor : lightModeColor
+        }
+        self.backgroundColor = backgroundColor
+    }
+    
+    func setBorderColorMode(lightModeColor: UIColor, darkModeColor: UIColor) {
+        let borderColor = UIColor { (traitCollection: UITraitCollection) -> UIColor in
+            return traitCollection.userInterfaceStyle == .dark ? darkModeColor : lightModeColor
+        }
+        self.layer.borderColor = borderColor.cgColor
+    }
 }
