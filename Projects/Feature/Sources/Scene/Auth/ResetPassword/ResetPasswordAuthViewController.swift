@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class ResetPasswordViewController: BaseViewController {
+public final class ResetPasswordAuthViewController: BaseViewController, UITextFieldDelegate {
     
     // MARK: - Properties
     private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이메일")
@@ -24,12 +24,46 @@ public final class ResetPasswordViewController: BaseViewController {
     // MARK:  - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emailTextField.delegate = self
     }
     
     // MARK: - Selectors
     @objc func authButtonTapped() {
         let authenticationNumberVC = AuthenticationNumberViewController()
         navigationController?.pushViewController(authenticationNumberVC, animated: true)
+    }
+    
+    @objc override func keyboardWillShow(_ sender: Notification) {
+        emailTextField.snp.remakeConstraints {
+            $0.top.equalTo(bounds.height * 0.31)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.height.equalTo(64)
+        }
+        
+        authButton.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.height.equalTo(48)
+            $0.bottom.equalTo(-bounds.height * 0.41)
+        }
+    }
+
+    @objc override func keyboardWillHide(_ sender: Notification) {
+        emailTextField.snp.remakeConstraints{
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.height.equalTo(64)
+            $0.top.equalTo(bounds.height * 0.43)
+        }
+        
+        authButton.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.height.equalTo(48)
+            $0.bottom.equalTo(-bounds.height * 0.16)
+        }
     }
     
     // MARK: - Navigation
@@ -48,22 +82,23 @@ public final class ResetPasswordViewController: BaseViewController {
     // MARK: - Layout
     override func setLayout() {
         defaultDomain.snp.makeConstraints {
-        
             $0.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(28)
             $0.centerY.equalToSuperview()
         }
         
         emailTextField.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
             $0.height.equalTo(64)
-            $0.top.equalToSuperview().inset(309)
+            $0.top.equalTo(bounds.height * 0.43)
         }
         
         authButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
             $0.height.equalTo(48)
-            $0.bottom.equalToSuperview().inset(138)
+            $0.bottom.equalTo(-bounds.height * 0.16)
         }
     }
 }

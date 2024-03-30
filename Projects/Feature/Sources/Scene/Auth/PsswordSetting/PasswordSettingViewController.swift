@@ -33,8 +33,42 @@ public final class PasswordSettingViewController: BaseViewController {
     // MARK: - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        passwordTextField.delegate = self
+        checkPasswordTextField.delegate = self
     }
     
+    // MARK: - Seletor
+    @objc override func keyboardWillShow(_ sender: Notification) {
+        textFieldStackView.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(bounds.height * 0.22)
+        }
+        
+        signUpButton.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.bottom.equalTo(-bounds.height * 0.41)
+            $0.height.equalTo(48)
+        }
+    }
+
+    @objc override func keyboardWillHide(_ sender: Notification) {
+        textFieldStackView.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(bounds.height * 0.35)
+        }
+        
+        signUpButton.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.bottom.equalTo(-bounds.height * 0.16)
+            $0.height.equalTo(48)
+        }
+    }
+
     // MARK: - Navigation
     override func configNavigation() {
         super.configNavigation()
@@ -59,20 +93,35 @@ public final class PasswordSettingViewController: BaseViewController {
         }
         
         textFieldStackView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().inset(237)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(bounds.height * 0.35)
         }
         
         conditionsLabel.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.top.equalTo(textFieldStackView.snp.bottom)
-            $0.leading.equalToSuperview().inset(28)
+            $0.leading.equalTo(bounds.width * 0.07)
         }
         
         signUpButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().inset(138)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.bottom.equalTo(-bounds.height * 0.16)
             $0.height.equalTo(48)
         }
+    }
+}
+
+extension PasswordSettingViewController: UITextFieldDelegate {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if passwordTextField.text != "", checkPasswordTextField.text != "" {
+            checkPasswordTextField.resignFirstResponder()
+            return true
+        } else if passwordTextField.text != "" {
+            checkPasswordTextField.becomeFirstResponder()
+            return true
+        }
+        return false
     }
 }

@@ -56,7 +56,7 @@ public final class SignInViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func findPasswordButtonTapped() {
-        let findPasswordVC = ResetPasswordViewController()
+        let findPasswordVC = ResetPasswordAuthViewController()
         navigationController?.pushViewController(findPasswordVC, animated: true)
     }
     
