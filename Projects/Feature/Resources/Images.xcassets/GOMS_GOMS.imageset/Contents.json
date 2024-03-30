@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "GOMS.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "GOMS.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
