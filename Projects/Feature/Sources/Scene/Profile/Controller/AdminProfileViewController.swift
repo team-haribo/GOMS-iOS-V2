@@ -438,6 +438,7 @@ public class AdminProfileViewController: BaseViewController {
     }
     
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {
+        updateImage(isActionSheetShowing: true)
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
@@ -445,6 +446,7 @@ public class AdminProfileViewController: BaseViewController {
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .dark
                 self?.themesettingText.text = "다크(기본)"
+                
             }
         }))
         
@@ -453,6 +455,7 @@ public class AdminProfileViewController: BaseViewController {
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .light
                 self?.themesettingText.text = "라이트"
+                
             }
         }))
         actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
@@ -460,10 +463,13 @@ public class AdminProfileViewController: BaseViewController {
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .unspecified
                 self?.themesettingText.text = "시스템 테마 설정"
+                
             }
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
+            self?.updateImage(isActionSheetShowing: false)
+        }))
         
         self.present(actionSheet, animated: true, completion: nil)
     }
@@ -502,8 +508,13 @@ public class AdminProfileViewController: BaseViewController {
     func performLogout() {
     }
     
-    
-    
+    @objc func updateImage(isActionSheetShowing: Bool) {
+        if isActionSheetShowing {
+            themesettingImg.image = UIImage.image.gomsTopButton.image
+        } else {
+            themesettingImg.image = UIImage.image.gomsBottomButton.image
+        }
+    }
     
     @objc func themaChang() {
         let isDarkMode = traitCollection.userInterfaceStyle == .dark
