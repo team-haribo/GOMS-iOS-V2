@@ -80,8 +80,8 @@ public class UserProfileViewController: BaseViewController {
         $0.backgroundColor = .color.gomsTheme.color
         $0.addTarget(self, action: #selector(ShowActionSheetClick), for: .touchUpInside)
         $0.layer.cornerRadius = 12
-        //$0.layer.borderColor = UIColor.color.gomsDivider.color.cgColor
-        //$0.layer.borderWidth = 1.0
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.color.gomsDivider.color.cgColor
     }
     let themesettingText = UILabel().then {
         $0.text = "시스템 테마 설정"
@@ -160,6 +160,7 @@ public class UserProfileViewController: BaseViewController {
     }
     
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {
+        updateImage(isActionSheetShowing: true)
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
@@ -167,6 +168,7 @@ public class UserProfileViewController: BaseViewController {
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .dark
                 self?.themesettingText.text = "다크(기본)"
+                
             }
         }))
         
@@ -175,6 +177,7 @@ public class UserProfileViewController: BaseViewController {
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .light
                 self?.themesettingText.text = "라이트"
+                
             }
         }))
         actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
@@ -182,14 +185,17 @@ public class UserProfileViewController: BaseViewController {
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .unspecified
                 self?.themesettingText.text = "시스템 테마 설정"
+                
             }
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
+            self?.updateImage(isActionSheetShowing: false)
+        }))
         
         self.present(actionSheet, animated: true, completion: nil)
     }
-    
+
     @objc func logoutButtonTapped() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         
@@ -227,8 +233,13 @@ public class UserProfileViewController: BaseViewController {
         let alertController = UIAlertController(title: "로그아웃", message: "로그아웃하시겠습니까?", preferredStyle: .alert)
     }
     
-    
-    
+    @objc func updateImage(isActionSheetShowing: Bool) {
+        if isActionSheetShowing {
+            themesettingImg.image = UIImage.image.gomsTopButton.image
+        } else {
+            themesettingImg.image = UIImage.image.gomsBottomButton.image
+        }
+    }
     
     @objc func themaChang() {
         let isDarkMode = traitCollection.userInterfaceStyle == .dark
@@ -247,6 +258,7 @@ public class UserProfileViewController: BaseViewController {
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
         self.navigationItem.backBarButtonItem = backBarButtonItem
     }
+    
     
     
     override func addView() {

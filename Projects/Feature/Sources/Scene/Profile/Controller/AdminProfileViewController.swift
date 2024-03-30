@@ -391,8 +391,8 @@ public class AdminProfileViewController: BaseViewController {
         $0.backgroundColor = .color.gomsTheme.color
         $0.addTarget(self, action: #selector(ShowActionSheetClick), for: .touchUpInside)
         $0.layer.cornerRadius = 12
-        //$0.layer.borderColor = UIColor.color.gomsDivider.color.cgColor
-        //$0.layer.borderWidth = 1.0
+        $0.layer.borderColor = UIColor.color.gomsDivider.color.cgColor
+        $0.layer.borderWidth = 1.0
     }
     let themesettingText = UILabel().then {
         $0.text = "시스템 테마 설정"
