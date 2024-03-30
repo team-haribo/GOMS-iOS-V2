@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class FindPasswordViewController: BaseViewController {
+public final class ResetPasswordViewController: BaseViewController {
     
     // MARK: - Properties
     private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이메일")
