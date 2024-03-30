@@ -20,13 +20,14 @@ public class GOMSTextFieldButton: UIButton {
     }
     
     func setButton(withTitle title: String) {
-        backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+        backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05)
         setTitle(title, for: .normal)
         setTitleColor(.color.gomsTertiary.color, for: .normal)
         titleLabel?.font = .pretendard(size: 16, weight: .regular)
         layer.masksToBounds = true
         layer.cornerRadius = 12
         layer.borderWidth = 1
+        layer.borderColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1).cgColor
         contentHorizontalAlignment = .leading
         contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }

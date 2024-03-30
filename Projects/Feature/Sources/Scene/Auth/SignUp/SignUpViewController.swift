@@ -50,11 +50,11 @@ public final class SignUpViewController: BaseViewController {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let menAction = UIAlertAction(title: "남성", style: .default) { _ in
             self.genderTextField.setTitle("남성", for: .normal)
-            self.genderTextField.setTitleColor(.white, for: .normal)
+            self.genderTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
         }
         let womanAction = UIAlertAction(title: "여성", style: .default) { _ in
             self.genderTextField.setTitle("여성", for: .normal)
-            self.genderTextField.setTitleColor(.white, for: .normal)
+            self.genderTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
         }
         
         [ menAction, womanAction ].forEach { alert.addAction($0) }
@@ -65,15 +65,15 @@ public final class SignUpViewController: BaseViewController {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let swAction = UIAlertAction(title: "SW개발과", style: .default) { _ in
             self.departmentTextField.setTitle("SW개발과", for: .normal)
-            self.departmentTextField.setTitleColor(.white, for: .normal)
+            self.departmentTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
         }
         let iotAction = UIAlertAction(title: "스마트IoT과", style: .default) { _ in
             self.departmentTextField.setTitle("스마트IoT과", for: .normal)
-            self.departmentTextField.setTitleColor(.white, for: .normal)
+            self.departmentTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
         }
         let aiAction = UIAlertAction(title: "AI개발과", style: .default) { _ in
             self.departmentTextField.setTitle("AI개발과", for: .normal)
-            self.departmentTextField.setTitleColor(.white, for: .normal)
+            self.departmentTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
         }
         
         [ swAction, iotAction, aiAction ].forEach { alert.addAction($0) }
@@ -128,13 +128,15 @@ public final class SignUpViewController: BaseViewController {
         }
         
         textFieldStackView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(226)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(bounds.height * 0.27)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
         }
         
         authenticationNumberButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().inset(138)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.bottom.equalTo(-bounds.height * 0.16)
             $0.height.equalTo(48)
         }
     }

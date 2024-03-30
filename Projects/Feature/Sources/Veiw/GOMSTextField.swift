@@ -31,6 +31,7 @@ public class GOMSTextField: UITextField {
     }
     
     private func setupTextField() {
+        
         self.setTextFieldBackgroundColor(lightModeColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.05), darkModeColor: UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
         self.font = .pretendard(size: 16, weight: .regular)
         self.layer.cornerRadius = 12

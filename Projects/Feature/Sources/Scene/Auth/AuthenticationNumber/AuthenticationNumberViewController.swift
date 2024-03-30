@@ -44,6 +44,42 @@ public final class AuthenticationNumberViewController: BaseViewController {
     // MARK: - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        authenticationNumberTextField1.delegate = self
+        authenticationNumberTextField2.delegate = self
+        authenticationNumberTextField3.delegate = self
+        authenticationNumberTextField4.delegate = self
+    }
+    
+    // MARK: - Selectors
+    @objc override func keyboardWillShow(_ sender: Notification) {
+        textFieldStackView.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(bounds.height * 0.33)
+        }
+        
+        authButton.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.bottom.equalTo(-bounds.height * 0.42)
+            $0.height.equalTo(48)
+        }
+    }
+    
+    @objc override func keyboardWillHide(_ sender: Notification) {
+        textFieldStackView.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(bounds.height * 0.49)
+        }
+        
+        authButton.snp.remakeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.bottom.equalTo(-bounds.height * 0.16)
+            $0.height.equalTo(48)
+        }
     }
 
     // MARK: - Navigation
@@ -94,26 +130,35 @@ public final class AuthenticationNumberViewController: BaseViewController {
         }
         
         textFieldStackView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().inset(268)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(bounds.height * 0.49)
         }
         
         timeLabel.snp.makeConstraints {
             $0.height.equalTo(48)
-            $0.leading.equalToSuperview().inset(28)
+            $0.leading.equalTo(bounds.width * 0.07)
             $0.top.equalTo(textFieldStackView.snp.bottom)
         }
         
         resendButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.top.equalTo(textFieldStackView.snp.bottom)
-            $0.trailing.equalToSuperview().inset(28)
+            $0.trailing.equalTo(-bounds.width * 0.07)
         }
         
         authButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().inset(138)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.bottom.equalTo(-bounds.height * 0.16)
             $0.height.equalTo(48)
         }
+    }
+}
+
+extension AuthenticationNumberViewController: UITextFieldDelegate {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard textField.text!.count < 1 else { return false }
+        return true
     }
 }
