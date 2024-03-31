@@ -14,4 +14,12 @@ struct SignUpRequest: Codable {
     let name: String
     let gender: String
     let major: String
+    
+    init(_ email: String, _ password: String, _ name: String, _ gender: String, _ major: String) {
+        self.email = email
+        self.password = password
+        self.name = name
+        self.gender = gender
+        self.major = major
+    }
 }
