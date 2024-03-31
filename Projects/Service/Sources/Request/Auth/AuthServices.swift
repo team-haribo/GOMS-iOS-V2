@@ -11,10 +11,10 @@ import Moya
 
 public enum AuthServices {
     case signUp(param: SignUpRequest)
-    case signIn(idToken: String, param: SignInRequest)
-    case refreshToken(idToken: String)
-    case sendAuthNumber(idToken: String, param: SendAuthNumberRequest)
-    case verifyAuthNumber(idToken: String, param: VerifyAuthNumberRequest)
+    case signIn(param: SignInRequest)
+    case refreshToken(refreshToken: String)
+    case sendAuthNumber(param: SendAuthNumberRequest)
+    case verifyAuthNumber(param: VerifyAuthNumberRequest)
 }
 
 extension AuthServices: TargetType {
@@ -58,28 +58,24 @@ extension AuthServices: TargetType {
         switch self {
         case .signUp(let param):
             return .requestJSONEncodable(param)
-        case .signIn(_ , let param):
+        case .signIn(let param):
             return .requestJSONEncodable(param)
         case .refreshToken:
             return .requestPlain
-        case .sendAuthNumber(_ , let param):
+        case .sendAuthNumber(let param):
             return .requestJSONEncodable(param)
-        case .verifyAuthNumber(_ , let param):
+        case .verifyAuthNumber(let param):
             return .requestJSONEncodable(param)
         }
     }
     
     public var headers: [String : String]? {
         switch self {
-        case .signIn(let idToken, _),
-             .sendAuthNumber(let idToken, _),
-             .verifyAuthNumber(let idToken, _):
+        case .refreshToken(let refreshToken):
             return [
-                "idToken": idToken,
+                "refreshToken": refreshToken,
                 "Content-Type": "application/json"
             ]
-        case .refreshToken(let idToken):
-            return ["idToken": idToken]
         default:
             return ["Content-Type": "application/json"]
         }
