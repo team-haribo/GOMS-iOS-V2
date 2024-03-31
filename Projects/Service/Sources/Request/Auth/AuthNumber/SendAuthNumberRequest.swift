@@ -1,0 +1,17 @@
+//
+//  SendAuthNumberRequest.swift
+//  Service
+//
+//  Created by 새미 on 3/31/24.
+//  Copyright © 2024 HARIBO. All rights reserved.
+//
+
+import Foundation
+
+public struct SendAuthNumberRequest: Codable {
+    var email: String
+    
+    init(_ email: String) {
+        self.email = email
+    }
+}

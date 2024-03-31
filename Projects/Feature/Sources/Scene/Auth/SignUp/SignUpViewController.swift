@@ -7,10 +7,14 @@
 //
 
 import UIKit
+import Moya
+import Service
 
 public final class SignUpViewController: BaseViewController {
 
     // MARK: - Properties
+    private let authProvider = MoyaProvider<AuthServices>()
+    
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 32
         $0.axis = .vertical
@@ -18,9 +22,9 @@ public final class SignUpViewController: BaseViewController {
         $0.alignment = .fill
     }
     
-    private let nameTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이름")
+    let nameTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이름")
 
-    private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 64), placeholder: "이메일")
+    let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 64), placeholder: "이메일")
     
     private let defaultDomain = UILabel().then {
         $0.text = "@gsm.hs.kr"
@@ -28,11 +32,11 @@ public final class SignUpViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    private lazy var genderTextField = GOMSTextFieldButton(frame: CGRect(x: 0, y: 0, width: 0, height: 64), title: "성별").then {
+    lazy var genderTextField = GOMSTextFieldButton(frame: CGRect(x: 0, y: 0, width: 0, height: 64), title: "성별").then {
         $0.addTarget(self, action: #selector(genderButtonTapped), for: .touchUpInside)
     }
     
-    private lazy var departmentTextField = GOMSTextFieldButton(frame: CGRect(x: 0, y: 0, width: 0, height: 64), title: "과").then {
+    lazy var departmentTextField = GOMSTextFieldButton(frame: CGRect(x: 0, y: 0, width: 0, height: 64), title: "과").then {
         $0.addTarget(self, action: #selector(departmentButtonTapped), for: .touchUpInside)
     }
     

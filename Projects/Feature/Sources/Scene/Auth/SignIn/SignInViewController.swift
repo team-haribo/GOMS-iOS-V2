@@ -6,11 +6,17 @@
 //  Copyright © 2024 HARIBO. All rights reserved.
 //
 
+import Service
 import UIKit
+import Moya
 
 public final class SignInViewController: BaseViewController {
 
     // MARK: - Properties
+    private let authProvider = MoyaProvider<AuthServices>()
+    
+    var userData: SignInModel?
+    
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 24
         $0.axis = .vertical

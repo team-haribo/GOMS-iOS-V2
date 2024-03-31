@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct SignInModel: Codable {
+public struct SignInModel: Codable {
     let data: SignInResponse
 }
 
-struct SignInResponse: Codable {
+public struct SignInResponse: Codable {
     let accessToken: String
     let refreshToken: String
     let accessTokenExp: String

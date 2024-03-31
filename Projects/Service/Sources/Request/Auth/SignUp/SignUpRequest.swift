@@ -8,12 +8,12 @@
 
 import Foundation
 
-struct SignUpRequest: Codable {
-    let email: String
-    let password: String
-    let name: String
-    let gender: String
-    let major: String
+public struct SignUpRequest: Codable {
+    var email: String
+    var password: String
+    var name: String
+    var gender: String
+    var major: String
     
     init(_ email: String, _ password: String, _ name: String, _ gender: String, _ major: String) {
         self.email = email
