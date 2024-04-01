@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class AuthenticationNumberViewController: BaseViewController {
+public final class AuthNumberViewController: BaseViewController {
     
     // MARK: - Properties
     private lazy var textFieldStackView = UIStackView().then {
@@ -18,13 +18,13 @@ public final class AuthenticationNumberViewController: BaseViewController {
         $0.alignment = .fill
     }
     
-    private let authenticationNumberTextField1 = GOMSTextField()
+    private let authNumberTextField1 = GOMSTextField()
     
-    private let authenticationNumberTextField2 = GOMSTextField()
+    private let authNumberTextField2 = GOMSTextField()
     
-    private let authenticationNumberTextField3 = GOMSTextField()
+    private let authNumberTextField3 = GOMSTextField()
     
-    private let authenticationNumberTextField4 = GOMSTextField()
+    private let authNumberTextField4 = GOMSTextField()
     
     private let timeLabel = UILabel().then {
         $0.text = "5:00"
@@ -45,10 +45,10 @@ public final class AuthenticationNumberViewController: BaseViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        authenticationNumberTextField1.delegate = self
-        authenticationNumberTextField2.delegate = self
-        authenticationNumberTextField3.delegate = self
-        authenticationNumberTextField4.delegate = self
+        authNumberTextField1.delegate = self
+        authNumberTextField2.delegate = self
+        authNumberTextField3.delegate = self
+        authNumberTextField4.delegate = self
     }
     
     // MARK: - Selectors
@@ -91,14 +91,14 @@ public final class AuthenticationNumberViewController: BaseViewController {
     
     // MARK: - Configure UI
     override func configureUI() {
-        let authenticationNumberTextFields = [
-            authenticationNumberTextField1,
-            authenticationNumberTextField2,
-            authenticationNumberTextField3,
-            authenticationNumberTextField4
+        let authNumberTextFields = [
+            authNumberTextField1,
+            authNumberTextField2,
+            authNumberTextField3,
+            authNumberTextField4
         ]
 
-        authenticationNumberTextFields.forEach { textField in
+        authNumberTextFields.forEach { textField in
             textField.font = .pretendard(size: 24, weight: .semibold)
             textField.addPadding(paddingFrame: CGRect(x: 0, y: 0, width: 28, height: 64))
         }
@@ -106,26 +106,26 @@ public final class AuthenticationNumberViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [authenticationNumberTextField1, authenticationNumberTextField2, authenticationNumberTextField3, authenticationNumberTextField4].forEach { textFieldStackView.addArrangedSubview($0) }
+        [authNumberTextField1, authNumberTextField2, authNumberTextField3, authNumberTextField4].forEach { textFieldStackView.addArrangedSubview($0) }
         
         [textFieldStackView, timeLabel, resendButton, authButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
     override func setLayout() {
-        authenticationNumberTextField1.snp.makeConstraints {
+        authNumberTextField1.snp.makeConstraints {
             $0.height.equalTo(72)
         }
         
-        authenticationNumberTextField2.snp.makeConstraints {
+        authNumberTextField2.snp.makeConstraints {
             $0.height.equalTo(72)
         }
         
-        authenticationNumberTextField3.snp.makeConstraints {
+        authNumberTextField3.snp.makeConstraints {
             $0.height.equalTo(72)
         }
         
-        authenticationNumberTextField4.snp.makeConstraints {
+        authNumberTextField4.snp.makeConstraints {
             $0.height.equalTo(72)
         }
         
@@ -156,7 +156,7 @@ public final class AuthenticationNumberViewController: BaseViewController {
     }
 }
 
-extension AuthenticationNumberViewController: UITextFieldDelegate {
+extension AuthNumberViewController: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard textField.text!.count < 1 else { return false }
         return true

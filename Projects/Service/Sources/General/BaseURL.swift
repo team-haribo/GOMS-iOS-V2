@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct BaseURL {
-    static let baseURL = Bundle.main.object(forInfoDictionaryKey: "SERVER_HOST") as! String
+public struct BaseURL {
+    public static let baseURL = Bundle.main.object(forInfoDictionaryKey: "SERVER_HOST") as! String
 }

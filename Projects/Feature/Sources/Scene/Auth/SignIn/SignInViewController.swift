@@ -6,17 +6,11 @@
 //  Copyright © 2024 HARIBO. All rights reserved.
 //
 
-import Service
 import UIKit
-import Moya
 
 public final class SignInViewController: BaseViewController {
 
     // MARK: - Properties
-    private let authProvider = MoyaProvider<AuthServices>()
-    
-    var userData: SignInModel?
-    
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 24
         $0.axis = .vertical
@@ -67,8 +61,8 @@ public final class SignInViewController: BaseViewController {
     }
     
     @objc func authenticationNumberButtonTapped() {
-        let authenticationNumberVC = AuthenticationNumberViewController()
-        navigationController?.pushViewController(authenticationNumberVC, animated: true)
+        let authNumberVC = AuthNumberViewController()
+        navigationController?.pushViewController(authNumberVC, animated: true)
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
@@ -171,3 +165,4 @@ extension SignInViewController: UITextFieldDelegate {
         return false
     }
 }
+
