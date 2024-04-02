@@ -26,8 +26,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
     }
     
-    let repasswordRight = UIImageView().then {
-        $0.image = .image.gomsRightButton.image
+    let repasswordRight = UIButton().then {
+        $0.setImage(.image.gomsRightButton.image, for: .normal)
+        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
     }
     
     let userName = UILabel().then {
@@ -72,6 +73,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.setTitle("비밀번호 재설정", for: .normal)
         $0.setTitleColor(.color.gomsTextDefault.color, for: .normal)
         $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
+        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
         
     }
     
@@ -244,6 +246,12 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         } else {
             themeChangRec.layer.borderColor = UIColor.color.gomsLightModeDivider.color.cgColor
         }
+    }
+    
+    @objc func passwordResetPage() {
+        let testViewController = PasswordResetViewController()
+
+        navigationController?.pushViewController(testViewController, animated: true)
     }
     
     func performLogout() {

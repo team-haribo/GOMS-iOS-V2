@@ -17,8 +17,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
     }
     
-    let repasswordRight = UIImageView().then {
-        $0.image = .image.gomsRightButton.image
+    let repasswordRight = UIButton().then {
+        $0.setImage(.image.gomsRightButton.image, for: .normal)
+        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
     }
     
     
@@ -65,6 +66,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.setTitle("비밀번호 재설정", for: .normal)
         $0.setTitleColor(.color.gomsTextDefault.color, for: .normal)
         $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
+        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
         
     }
     
@@ -219,6 +221,12 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
         self.navigationItem.backBarButtonItem = backBarButtonItem
         imagePickerController.delegate = self
+    }
+    
+    @objc func passwordResetPage() {
+        let testViewController = PasswordResetViewController()
+
+        navigationController?.pushViewController(testViewController, animated: true)
     }
     
     @IBAction func ShowActionSheetProfilImageChange(_ sender: UIButton) {
