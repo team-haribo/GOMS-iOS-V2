@@ -12,7 +12,7 @@ public struct VerifyAuthNumberRequest: Codable {
     var email: String
     var authCode: String
     
-    init(_ email: String, _ authCode: String) {
+    public init(email: String, authCode: String) {
         self.email = email
         self.authCode = authCode
     }

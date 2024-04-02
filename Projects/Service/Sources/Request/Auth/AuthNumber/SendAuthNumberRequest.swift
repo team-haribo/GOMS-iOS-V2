@@ -11,7 +11,7 @@ import Foundation
 public struct SendAuthNumberRequest: Codable {
     var email: String
     
-    init(_ email: String) {
+    public init(email: String) {
         self.email = email
     }
 }

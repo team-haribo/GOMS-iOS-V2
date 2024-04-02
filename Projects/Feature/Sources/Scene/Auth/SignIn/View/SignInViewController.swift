@@ -61,8 +61,8 @@ public final class SignInViewController: BaseViewController {
     }
     
     @objc func authenticationNumberButtonTapped() {
-        let authNumberVC = AuthNumberViewController()
-        navigationController?.pushViewController(authNumberVC, animated: true)
+//        let authNumberVC = AuthNumberViewController()
+//        navigationController?.pushViewController(authNumberVC, animated: true)
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {

@@ -11,6 +11,17 @@ import UIKit
 public final class PasswordSettingViewController: BaseViewController {
 
     // MARK: - Properties
+    private var viewModel = SignUpViewModel()
+    
+    init(viewModel: SignUpViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private let textFieldStackView = UIStackView().then {
         $0.spacing = 32
         $0.axis = .vertical
@@ -28,7 +39,9 @@ public final class PasswordSettingViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    private let signUpButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "회원가입")
+    private lazy var signUpButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "회원가입").then {
+        $0.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+    }
     
     // MARK: - Life Cycel
     public override func viewDidLoad() {
@@ -38,7 +51,11 @@ public final class PasswordSettingViewController: BaseViewController {
         checkPasswordTextField.delegate = self
     }
     
-    // MARK: - Seletor
+    // MARK: - Seletors
+    @objc func signUpButtonTapped() {
+        viewModel.SignUp()
+    }
+    
     @objc override func keyboardWillShow(_ sender: Notification) {
         textFieldStackView.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
@@ -123,5 +140,11 @@ extension PasswordSettingViewController: UITextFieldDelegate {
             return true
         }
         return false
+    }
+    
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == passwordTextField {
+            viewModel.setupPassword(password: textField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
+        }
     }
 }

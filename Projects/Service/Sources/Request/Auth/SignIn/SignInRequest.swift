@@ -12,7 +12,7 @@ public struct SignInRequest: Codable {
     var email: String
     var password: String
     
-    public init(_ email: String, _ password: String) {
+    public init(email: String, password: String) {
         self.email = email
         self.password = password
     }

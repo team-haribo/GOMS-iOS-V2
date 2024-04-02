@@ -15,7 +15,7 @@ public struct SignUpRequest: Codable {
     var gender: String
     var major: String
     
-    init(_ email: String, _ password: String, _ name: String, _ gender: String, _ major: String) {
+    public init(email: String, password: String, name: String, gender: String, major: String) {
         self.email = email
         self.password = password
         self.name = name

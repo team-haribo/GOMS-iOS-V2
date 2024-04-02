@@ -11,6 +11,17 @@ import UIKit
 public final class AuthNumberViewController: BaseViewController {
     
     // MARK: - Properties
+    private var viewModel = SignUpViewModel()
+    
+    init(viewModel: SignUpViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 16
         $0.axis = .horizontal
@@ -32,14 +43,17 @@ public final class AuthNumberViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    private let resendButton = UIButton().then {
+    private lazy var resendButton = UIButton().then {
         $0.setTitle("재발송", for: .normal)
         $0.backgroundColor = .clear
         $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .regular)
         $0.setTitleColor(.color.gomsInformation.color, for: .normal)
+        $0.addTarget(self, action: #selector(resendButtonTapped), for: .touchUpInside)
     }
     
-    private lazy var authButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증")
+    private lazy var authButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증").then {
+        $0.addTarget(self, action: #selector(authButtonTapped), for: .touchUpInside)
+    }
     
     // MARK: - Life Cycel
     public override func viewDidLoad() {
@@ -51,6 +65,17 @@ public final class AuthNumberViewController: BaseViewController {
         authNumberTextField4.delegate = self
     }
     
+    // MARK: - Selectors
+    @objc func resendButtonTapped() {
+        viewModel.sendAuthNumber()
+    }
+    
+    @objc func authButtonTapped() {
+        viewModel.verifyAuthNumber()
+        let setPasswordVC = PasswordSettingViewController(viewModel: viewModel)
+        navigationController?.pushViewController(setPasswordVC, animated: true)
+    }
+
     // MARK: - Selectors
     @objc override func keyboardWillShow(_ sender: Notification) {
         textFieldStackView.snp.remakeConstraints {
@@ -160,5 +185,17 @@ extension AuthNumberViewController: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard textField.text!.count < 1 else { return false }
         return true
+    }
+    
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == authNumberTextField1 {
+            viewModel.setupAuthNumber(authNumber: textField.text ?? "")
+        } else if textField == authNumberTextField2 {
+            viewModel.setupAuthNumber(authNumber: textField.text ?? "")
+        } else if textField == authNumberTextField3 {
+            viewModel.setupAuthNumber(authNumber: textField.text ?? "")
+        } else if textField == authNumberTextField4 {
+            viewModel.setupAuthNumber(authNumber: textField.text ?? "")
+        }
     }
 }
