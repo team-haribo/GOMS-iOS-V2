@@ -8,7 +8,11 @@
 
 import UIKit
 
-public class UserProfileViewController: BaseViewController {
+
+public class UserProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    let imagePickerController = UIImagePickerController()
+    
     let userProfile = UIImageView().then {
         $0.image = .image.gomsProfile.image
         $0.contentMode = .scaleAspectFill
@@ -17,8 +21,9 @@ public class UserProfileViewController: BaseViewController {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    let userProfilepencil = UIImageView().then {
-        $0.image = .image.gomsProfilePencil.image
+    let userProfilepencil = UIButton().then {
+        $0.setImage(.image.gomsProfilePencil.image, for: .normal)
+        $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
     }
     
     let repasswordRight = UIImageView().then {
@@ -83,6 +88,12 @@ public class UserProfileViewController: BaseViewController {
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.color.gomsDivider.color.cgColor
     }
+    
+    let themeChangLine = UIButton().then {
+        $0.backgroundColor = .color.gomsDivider.color
+        $0.layer.cornerRadius = 12
+    }
+    
     let themesettingText = UILabel().then {
         $0.text = "시스템 테마 설정"
         $0.textColor = .color.gomsSecondary.color
@@ -226,8 +237,14 @@ public class UserProfileViewController: BaseViewController {
         
         self.present(alertController, animated: true, completion: nil)
     }
-
     
+    @objc func themaChangline() {
+        if traitCollection.userInterfaceStyle == .dark {
+            themeChangRec.layer.borderColor = UIColor.color.gomsDarkModeDivider.color.cgColor
+        } else {
+            themeChangRec.layer.borderColor = UIColor.color.gomsLightModeDivider.color.cgColor
+        }
+    }
     
     func performLogout() {
         let alertController = UIAlertController(title: "로그아웃", message: "로그아웃하시겠습니까?", preferredStyle: .alert)
@@ -257,7 +274,52 @@ public class UserProfileViewController: BaseViewController {
         
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
         self.navigationItem.backBarButtonItem = backBarButtonItem
+        
+        imagePickerController.delegate = self
     }
+    
+    @IBAction func ShowActionSheetProfilImageChange(_ sender: UIButton) {
+        updateImage(isActionSheetShowing: true)
+        let actionSheet = UIAlertController(title: "프로필 사진 선택", message: nil, preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "갤러리에서 선택", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
+            self?.presentGallery()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "기본 프로필 사용", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
+            self?.userProfile.image = .image.gomsBasicProfile.image        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
+            self?.updateImage(isActionSheetShowing: false)
+        }))
+        
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func presentGallery() {
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                imagePickerController.sourceType = .photoLibrary
+                present(imagePickerController, animated: true, completion: nil)
+            } else {
+                // 앨범 사용 불가 메시지 표시
+                let alertController = UIAlertController(title: "알림", message: "사용할 수 있는 앨범이 없습니다.", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                present(alertController, animated: true, completion: nil)
+            }
+        }
+
+        // 이미지 선택 완료 시 호출되는 UIImagePickerControllerDelegate 메소드
+        public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+                userProfile.image = pickedImage
+            }
+            dismiss(animated: true, completion: nil)
+        }
+
+        // 이미지 선택 취소 시 호출되는 UIImagePickerControllerDelegate 메소드
+        public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            dismiss(animated: true, completion: nil)
+        }
     
     
     
@@ -284,12 +346,13 @@ public class UserProfileViewController: BaseViewController {
             themeChangText,
             themeChangRec,
             themesettingImg,
-            themesettingText
+            themesettingText,
+            themeChangLine
         ].forEach {
             view.addSubview($0)
         }
     }
-    
+
     override func setLayout() {
         userProfile.snp.makeConstraints {
             $0.width.equalTo(64)
@@ -297,12 +360,12 @@ public class UserProfileViewController: BaseViewController {
             $0.leading.equalToSuperview().inset(20)
             $0.top.equalToSuperview().inset(136)
         }
-        
+
         userProfilepencil.snp.makeConstraints {
-            $0.top.equalTo(userName.snp.bottom)
-            $0.leading.equalTo(60)
+            $0.top.equalTo(userGradeDepartment.snp.top)
+            $0.trailing.equalTo(userProfile.snp.trailing)
         }
-        
+
         userName.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(32)
@@ -366,6 +429,13 @@ public class UserProfileViewController: BaseViewController {
             $0.top.equalTo(line2View.snp.top).offset(24)
             $0.leading.equalTo(repassword.snp.leading).offset(8)
         }
+//        themeChangLine.snp.makeConstraints {
+//            $0.width.equalTo(336)
+//            $0.height.equalTo(65)
+//            $0.top.equalTo(themeChangText.snp.bottom).offset(8)ㅋ
+//            $0.leading.equalToSuperview().offset(20)
+//            $0.trailing.equalToSuperview().inset(20)
+//        }
         
         themeChangRec.snp.makeConstraints {
             $0.width.equalTo(335)
@@ -373,8 +443,9 @@ public class UserProfileViewController: BaseViewController {
             $0.top.equalTo(themeChangText.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().inset(20)
-
         }
+        
+        
         
         themesettingText.snp.makeConstraints {
             $0.width.equalTo(106)
