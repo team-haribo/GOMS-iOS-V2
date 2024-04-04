@@ -29,7 +29,6 @@ final class StudentListCollectionViewCell: UICollectionViewCell {
     }
     
     private let editButton = UIButton().then {
-//        $0.setImage(.image.gomsAdminProfilePencil, for: .normal)
         $0.setImage(UIImage(systemName: "pencil.circle"), for: .normal)
         $0.tintColor = .systemBlue
     }
