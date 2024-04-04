@@ -74,7 +74,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.setTitleColor(.color.gomsTextDefault.color, for: .normal)
         $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
         $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
-        
     }
     
     let themeChangText = UILabel().then {
@@ -240,33 +239,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         self.present(alertController, animated: true, completion: nil)
     }
     
-//    @objc func themaChangline() {
-//        if traitCollection.userInterfaceStyle == .dark {
-//            themeChangRec.layer.borderColor = UIColor.color.gomsDarkModeDivider.color.cgColor
-//        } else {
-//            themeChangRec.layer.borderColor = UIColor.color.gomsLightModeDivider.color.cgColor
-//        }
-//    }
-    
-//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-//        super.traitCollectionDidChange(previousTraitCollection)
-//
-//        if traitCollection.userInterfaceStyle == .dark {
-//            themeChangRec.layer.borderColor = UIColor.color.gomsDarkModeDivider.color.cgColor
-//        } else {
-//            themeChangRec.layer.borderColor = UIColor.color.gomsLightModeDivider.color.cgColor
-//        }
-//    }
-
-
-//    func updateBorderColor() {
-//        if traitCollection.userInterfaceStyle == .dark {
-//            themeChangRec.layer.borderColor = UIColor.color.gomsDarkModeDivider.color.cgColor
-//        } else {
-//            themeChangRec.layer.borderColor = UIColor.color.gomsLightModeDivider.color.cgColor
-//        }
-//    }
-    
     @objc func passwordResetPage() {
         let testViewController = PasswordResetViewController()
 
@@ -291,8 +263,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         overrideUserInterfaceStyle = nextMode
         setNeedsStatusBarAppearanceUpdate()
     }
-    
-    
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -328,14 +298,12 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                 imagePickerController.sourceType = .photoLibrary
                 present(imagePickerController, animated: true, completion: nil)
             } else {
-                // 앨범 사용 불가 메시지 표시
                 let alertController = UIAlertController(title: "알림", message: "사용할 수 있는 앨범이 없습니다.", preferredStyle: .alert)
                 alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
                 present(alertController, animated: true, completion: nil)
             }
         }
 
-        // 이미지 선택 완료 시 호출되는 UIImagePickerControllerDelegate 메소드
         public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
                 userProfile.image = pickedImage
@@ -343,12 +311,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             dismiss(animated: true, completion: nil)
         }
 
-        // 이미지 선택 취소 시 호출되는 UIImagePickerControllerDelegate 메소드
         public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             dismiss(animated: true, completion: nil)
         }
-    
-    
     
     override func addView() {
         [
@@ -400,13 +365,12 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(userProfile.snp.top)
             
         }
+        
         userGradeDepartment.snp.makeConstraints {
             $0.width.equalTo(58)
             $0.height.equalTo(28)
             $0.top.equalTo(userName.snp.bottom).offset(4)
             $0.leading.equalTo(userName.snp.leading)
-            
-            
         }
         
         perceptionCount.snp.makeConstraints {
@@ -429,6 +393,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
+        
         line1View.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.bottom.equalTo(userProfile.snp.bottom).offset(32)
@@ -456,14 +421,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(line2View.snp.top).offset(24)
             $0.leading.equalTo(repassword.snp.leading).offset(8)
         }
-//        themeChangLine.snp.makeConstraints {
-//            $0.width.equalTo(336)
-//            $0.height.equalTo(65)
-//            $0.top.equalTo(themeChangText.snp.bottom).offset(8)ㅋ
-//            $0.leading.equalToSuperview().offset(20)
-//            $0.trailing.equalToSuperview().inset(20)
-//        }
-        
+
         themeChangRec.snp.makeConstraints {
             $0.width.equalTo(335)
             $0.height.equalTo(64)
@@ -471,8 +429,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().inset(20)
         }
-        
-        
         
         themesettingText.snp.makeConstraints {
             $0.width.equalTo(106)
@@ -499,12 +455,14 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.leading.equalTo(repassword.snp.leading).offset(8)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
+        
         pushcheckDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
             $0.leading.equalTo(pushcheckText.snp.leading)
             $0.top.equalTo(pushcheckText.snp.bottom)
         }
+        
         pushchecktoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
@@ -516,6 +474,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.leading.equalTo(pushcheckText.snp.leading)
             $0.top.equalTo(pushcheckDescription.snp.bottom).offset(32)
         }
+        
         cameranowonDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)

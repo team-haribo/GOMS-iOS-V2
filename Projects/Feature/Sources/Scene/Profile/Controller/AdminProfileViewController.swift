@@ -1,3 +1,11 @@
+//
+//  AdminProfileViewController.swift
+//  Feature
+//
+//  Created by 서지완 on 3/4/24.
+//  Copyright © 2024 HARIBO. All rights reserved.
+//
+
 import UIKit
 
 public class AdminProfileViewController: BaseViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -21,8 +29,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.setImage(.image.gomsRightButton.image, for: .normal)
         $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
     }
-    
-    
     
     let userName = UILabel().then {
         $0.text = "홍길동"
@@ -58,6 +64,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     let line1View = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
+    
     let line2View = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
@@ -67,7 +74,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.setTitleColor(.color.gomsTextDefault.color, for: .normal)
         $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
         $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
-        
     }
     
     let themeChangText = UILabel().then {
@@ -93,7 +99,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.image = .image.gomsBottomButton.image
     }
     
-    
     let qrmakeonText = UILabel().then {
         $0.text = "QR 생성 바로 켜기"
         $0.textColor = .color.gomsTextDefault.color
@@ -111,8 +116,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
     }
-    
-
     
     let logoutButton = UIButton().then {
         $0.backgroundColor = .systemRed
@@ -147,6 +150,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
                 
             }
         }))
+        
         actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
             print("시스템 기본(basics) 테마로 변경")
             if let window = UIApplication.shared.windows.first {
@@ -162,6 +166,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         
         self.present(actionSheet, animated: true, completion: nil)
     }
+    
     @objc func logoutButtonTapped() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         
@@ -212,7 +217,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         setNeedsStatusBarAppearanceUpdate()
     }
     
-    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -252,14 +256,12 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
                 imagePickerController.sourceType = .photoLibrary
                 present(imagePickerController, animated: true, completion: nil)
             } else {
-                // 앨범 사용 불가 메시지 표시
                 let alertController = UIAlertController(title: "알림", message: "사용할 수 있는 앨범이 없습니다.", preferredStyle: .alert)
                 alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
                 present(alertController, animated: true, completion: nil)
             }
         }
 
-        // 이미지 선택 완료 시 호출되는 UIImagePickerControllerDelegate 메소드
         public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
                 userProfile.image = pickedImage
@@ -267,14 +269,10 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             dismiss(animated: true, completion: nil)
         }
 
-        // 이미지 선택 취소 시 호출되는 UIImagePickerControllerDelegate 메소드
         public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             dismiss(animated: true, completion: nil)
         }
-    
-    
-    
-    
+
     override func addView() {
         [
             userProfile,
@@ -303,8 +301,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
     }
     
-    
-    
     override func setLayout() {
         userProfile.snp.makeConstraints {
             $0.width.equalTo(64)
@@ -325,13 +321,12 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalTo(userProfile.snp.top)
             
         }
+        
         userGradeDepartment.snp.makeConstraints {
             $0.width.equalTo(58)
             $0.height.equalTo(28)
             $0.top.equalTo(userName.snp.bottom).offset(4)
             $0.leading.equalTo(userName.snp.leading)
-            
-            
         }
         
         perceptionCount.snp.makeConstraints {
@@ -354,6 +349,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
+        
         line1View.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.bottom.equalTo(userProfile.snp.bottom).offset(33)
@@ -388,7 +384,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalTo(themeChangText.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().inset(20)
-            
         }
         
         themesettingText.snp.makeConstraints {
@@ -404,8 +399,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalTo(themeChangRec.snp.top).offset(20)
             $0.trailing.equalToSuperview().inset(32)
         }
-        
-        
         
         repasswordRight.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
@@ -434,7 +427,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.height.equalTo(48)
             $0.centerX.equalToSuperview()
             $0.top.equalTo(qrmakeonDescription.snp.top).offset(188)
-            
         }
     }
 }
