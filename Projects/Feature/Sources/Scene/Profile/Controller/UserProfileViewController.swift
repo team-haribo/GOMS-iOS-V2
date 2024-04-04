@@ -88,7 +88,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.addTarget(self, action: #selector(ShowActionSheetClick), for: .touchUpInside)
         $0.layer.cornerRadius = 12
         $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.color.gomsDivider.color.cgColor
+        $0.layer.borderColor = UIColor.color.gomsCoverDivider.color.cgColor
     }
     
     let themeChangLine = UIButton().then {
@@ -240,13 +240,32 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         self.present(alertController, animated: true, completion: nil)
     }
     
-    @objc func themaChangline() {
-        if traitCollection.userInterfaceStyle == .dark {
-            themeChangRec.layer.borderColor = UIColor.color.gomsDarkModeDivider.color.cgColor
-        } else {
-            themeChangRec.layer.borderColor = UIColor.color.gomsLightModeDivider.color.cgColor
-        }
-    }
+//    @objc func themaChangline() {
+//        if traitCollection.userInterfaceStyle == .dark {
+//            themeChangRec.layer.borderColor = UIColor.color.gomsDarkModeDivider.color.cgColor
+//        } else {
+//            themeChangRec.layer.borderColor = UIColor.color.gomsLightModeDivider.color.cgColor
+//        }
+//    }
+    
+//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+//        super.traitCollectionDidChange(previousTraitCollection)
+//
+//        if traitCollection.userInterfaceStyle == .dark {
+//            themeChangRec.layer.borderColor = UIColor.color.gomsDarkModeDivider.color.cgColor
+//        } else {
+//            themeChangRec.layer.borderColor = UIColor.color.gomsLightModeDivider.color.cgColor
+//        }
+//    }
+
+
+//    func updateBorderColor() {
+//        if traitCollection.userInterfaceStyle == .dark {
+//            themeChangRec.layer.borderColor = UIColor.color.gomsDarkModeDivider.color.cgColor
+//        } else {
+//            themeChangRec.layer.borderColor = UIColor.color.gomsLightModeDivider.color.cgColor
+//        }
+//    }
     
     @objc func passwordResetPage() {
         let testViewController = PasswordResetViewController()
@@ -418,7 +437,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         }
         
         repassword.snp.makeConstraints {
-            $0.width.equalTo(117)
+            $0.width.equalTo(117) 
             $0.height.equalTo(28)
             $0.leading.equalTo(userProfile.snp.leading)
             $0.top.equalTo(line1View.snp.top).offset(22)

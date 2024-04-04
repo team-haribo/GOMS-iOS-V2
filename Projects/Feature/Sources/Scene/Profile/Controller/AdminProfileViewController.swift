@@ -80,7 +80,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.backgroundColor = .color.gomsTheme.color
         $0.addTarget(self, action: #selector(ShowActionSheetClick), for: .touchUpInside)
         $0.layer.cornerRadius = 12
-        $0.layer.borderColor = UIColor.color.gomsDivider.color.cgColor
+        $0.layer.borderColor = UIColor.color.gomsCoverDivider.color.cgColor
         $0.layer.borderWidth = 1.0
     }
     let themesettingText = UILabel().then {
