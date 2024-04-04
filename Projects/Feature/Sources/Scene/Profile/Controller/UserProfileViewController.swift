@@ -240,9 +240,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     @objc func passwordResetPage() {
-        let testViewController = PasswordResetViewController()
-
-        navigationController?.pushViewController(testViewController, animated: true)
+//        let testViewController = PasswordResetViewController()
+//
+//        navigationController?.pushViewController(testViewController, animated: true)
     }
     
     func performLogout() {
