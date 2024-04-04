@@ -228,9 +228,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     @objc func passwordResetPage() {
-        let testViewController = PasswordResetViewController()
-
-        navigationController?.pushViewController(testViewController, animated: true)
+//        let testViewController = PasswordResetViewController()
+//
+//        navigationController?.pushViewController(testViewController, animated: true)
     }
     
     @IBAction func ShowActionSheetProfilImageChange(_ sender: UIButton) {
