@@ -51,6 +51,13 @@ public final class AuthNumberViewController: BaseViewController {
         $0.addTarget(self, action: #selector(resendButtonTapped), for: .touchUpInside)
     }
     
+    private let authError = UILabel().then {
+        $0.text = "잘못된 인증번호입니다"
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .regular)
+        $0.isHidden = true
+    }
+    
     private lazy var authButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증").then {
         $0.addTarget(self, action: #selector(authButtonTapped), for: .touchUpInside)
     }
@@ -67,16 +74,20 @@ public final class AuthNumberViewController: BaseViewController {
     
     // MARK: - Selectors
     @objc func resendButtonTapped() {
-        viewModel.sendAuthNumber()
+        
     }
     
     @objc func authButtonTapped() {
-        viewModel.verifyAuthNumber()
-        let setPasswordVC = PasswordSettingViewController(viewModel: viewModel)
-        navigationController?.pushViewController(setPasswordVC, animated: true)
+        viewModel.verifyAuthNumber { success in
+            if success {
+                let setPasswordVC = PasswordSettingViewController(viewModel: self.viewModel)
+                self.navigationController?.pushViewController(setPasswordVC, animated: true)
+            } else {
+                self.authCodeError()
+            }
+        }
     }
-
-    // MARK: - Selectors
+    
     @objc override func keyboardWillShow(_ sender: Notification) {
         textFieldStackView.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
@@ -133,7 +144,7 @@ public final class AuthNumberViewController: BaseViewController {
     override func addView() {
         [authNumberTextField1, authNumberTextField2, authNumberTextField3, authNumberTextField4].forEach { textFieldStackView.addArrangedSubview($0) }
         
-        [textFieldStackView, timeLabel, resendButton, authButton].forEach { view.addSubview($0) }
+        [textFieldStackView, timeLabel, resendButton, authError, authButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -172,6 +183,12 @@ public final class AuthNumberViewController: BaseViewController {
             $0.trailing.equalTo(-bounds.width * 0.07)
         }
         
+        authError.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(textFieldStackView.snp.bottom)
+            $0.leading.equalTo(bounds.width * 0.07)
+        }
+        
         authButton.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
@@ -179,11 +196,27 @@ public final class AuthNumberViewController: BaseViewController {
             $0.height.equalTo(48)
         }
     }
+    
+    func authCodeError() {
+        authNumberTextField1.layer.borderColor = .init(red: 0.89, green: 0.21, blue: 0.13, alpha: 1)
+        authNumberTextField2.layer.borderColor = .init(red: 0.89, green: 0.21, blue: 0.13, alpha: 1)
+        authNumberTextField3.layer.borderColor = .init(red: 0.89, green: 0.21, blue: 0.13, alpha: 1)
+        authNumberTextField4.layer.borderColor = .init(red: 0.89, green: 0.21, blue: 0.13, alpha: 1)
+        authError.isEnabled = false
+    }
 }
 
 extension AuthNumberViewController: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard textField.text!.count < 1 else { return false }
+        
+        let text = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        
+        if !text.isEmpty {
+            authButton.isEnabled = true
+        } else {
+            authButton.isEnabled = false
+        }
         return true
     }
     

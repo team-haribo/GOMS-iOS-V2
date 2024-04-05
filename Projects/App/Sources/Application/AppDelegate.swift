@@ -15,8 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        let baseURL = Bundle.main.object(forInfoDictionaryKey: "SERVER_HOST") as! String
-        print(baseURL)
         return true
     }
 

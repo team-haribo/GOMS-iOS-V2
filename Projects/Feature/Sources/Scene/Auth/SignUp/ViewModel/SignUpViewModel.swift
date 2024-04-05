@@ -25,7 +25,7 @@ public final class SignUpViewModel {
     }
     
     func setupEmail(email: String) {
-        self.email = email
+        self.email = "\(email)@gsm.hs.kr"
     }
     
     func setupGender(gender: String) {
@@ -42,47 +42,63 @@ public final class SignUpViewModel {
     
     func setupPassword(password: String, checkPassword: String) {
         guard password == checkPassword else { return }
-        SignUp()
     }
     
-    func sendAuthNumber() {
+    func sendAuthNumber(completion: @escaping (Bool) -> Void) {
         let param = SendAuthNumberRequest.init(email: email)
         authProvider.request(.sendAuthNumber(param: param)) { response in
             switch response {
             case .success:
                 do {
-                    return
+                    completion(true)
                 }
             case .failure(let err):
                 print(err.localizedDescription)
+                completion(false)
             }
         }
     }
     
-    func verifyAuthNumber() {
-        let param = VerifyAuthNumberRequest.init(email: email, authCode: authnNumber)
-        authProvider.request(.verifyAuthNumber(param: param)) { response in
+    func verifyAuthNumber(completion: @escaping (Bool) -> Void) {
+        authProvider.request(.verifyAuthNumber(emaiil: email, authCode: authnNumber)) { response in
             switch response {
-            case .success:
+            case .success(let result):
                 do {
-                    return
+                    let statusCode = result.statusCode
+                    switch statusCode {
+                    case 200..<300:
+                        print("성공했다 애너ㅑㄹ")
+                        completion(true)
+                    case 404:
+                        print("GOMS 회원이 아닌 사용자가 이메일 인증 요청")
+                        completion(false)
+                    case 429:
+                        print("이메일 요청이 5번을 초과한 경우")
+                        completion(false)
+                    default:
+                        print("")
+                    }
+//                    completion(true)
                 }
+                
             case .failure(let err):
                 print(err.localizedDescription)
+                completion(false)
             }
         }
     }
     
-    func SignUp() {
+    func SignUp(completion: @escaping (Bool) -> Void) {
         let param = SignUpRequest.init(email: email, password: password, name: name, gender: gender, major: major)
         authProvider.request(.signUp(param: param)) { response in
             switch response {
             case .success:
                 do {
-                    return
+                    completion(true)
                 }
             case .failure(let err):
                 print(err.localizedDescription)
+                completion(false)
             }
         }
     }

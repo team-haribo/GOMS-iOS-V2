@@ -14,12 +14,12 @@ public enum AuthServices {
     case signIn(param: SignInRequest)
     case refreshToken(refreshToken: String)
     case sendAuthNumber(param: SendAuthNumberRequest)
-    case verifyAuthNumber(param: VerifyAuthNumberRequest)
+    case verifyAuthNumber(emaiil: String, authCode: String)
 }
 
 extension AuthServices: TargetType {
     public var baseURL: URL {
-        return URL(string: BaseURL.baseURL)!
+        return URL(string: BaseURL.baseURL) ?? URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
     }
     
     public var path: String {
@@ -64,8 +64,10 @@ extension AuthServices: TargetType {
             return .requestPlain
         case .sendAuthNumber(let param):
             return .requestJSONEncodable(param)
-        case .verifyAuthNumber(let param):
-            return .requestJSONEncodable(param)
+        case .verifyAuthNumber(let email, let authCode):
+            return .requestParameters(parameters: ["email": email, "authCode": authCode], encoding: URLEncoding.queryString)
+//        case .verifyAuthNumber(let param):
+//            return .requestJSONEncodable(param)
         }
     }
     

@@ -29,9 +29,13 @@ public final class PasswordSettingViewController: BaseViewController {
         $0.alignment = .fill
     }
     
-    private let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호")
+    private let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
+        $0.isSecureTextEntry = true
+    }
     
-    private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인")
+    private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인").then {
+        $0.isSecureTextEntry = true
+    }
     
     private let conditionsLabel = UILabel().then {
         $0.text = "대/소문자, 특수문자 포함 12자 이상"
@@ -53,7 +57,14 @@ public final class PasswordSettingViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func signUpButtonTapped() {
-        viewModel.SignUp()
+        viewModel.SignUp { success in
+            if success {
+                let signInVC = SignInViewController()
+                self.navigationController?.pushViewController(signInVC, animated: true)
+            } else {
+                print("실패")
+            }
+        }
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
