@@ -48,9 +48,25 @@ public final class SignUpViewModel {
         let param = SendAuthNumberRequest.init(email: email)
         authProvider.request(.sendAuthNumber(param: param)) { response in
             switch response {
-            case .success:
+            case .success(let result):
                 do {
-                    completion(true)
+                    let statusCode = result.statusCode
+                    switch statusCode {
+                    case 204:
+                        print("No Content")
+                        completion(true)
+                    case 404:
+                        print("GOMS 회원이 아닌 사용자가 이메일 인증 요청을 한 경우")
+                        completion(false)
+                    case 429:
+                        print("이메일 요청이 5번을 초과할 경우")
+                        completion(false)
+                    case 500:
+                        print("SERVER ERROR")
+                    default:
+                        print(result)
+                        completion(false)
+                    }
                 }
             case .failure(let err):
                 print(err.localizedDescription)
@@ -67,20 +83,22 @@ public final class SignUpViewModel {
                     let statusCode = result.statusCode
                     switch statusCode {
                     case 200..<300:
-                        print("성공했다 애너ㅑㄹ")
+                        print("OK")
                         completion(true)
                     case 404:
-                        print("GOMS 회원이 아닌 사용자가 이메일 인증 요청")
+                        print("인증 코드를 찾을 수 없을때 / 인증되지 않은 사용자일때 / 찾을 수 없는 사용자 일때")
                         completion(false)
                     case 429:
-                        print("이메일 요청이 5번을 초과한 경우")
+                        print("인증번호 검증 요청이 5번을 초과할 경우")
+                        completion(false)
+                    case 500:
+                        print("SERVER ERROR")
                         completion(false)
                     default:
-                        print("")
+                        print(result)
+                        completion(false)
                     }
-//                    completion(true)
                 }
-                
             case .failure(let err):
                 print(err.localizedDescription)
                 completion(false)
@@ -92,9 +110,20 @@ public final class SignUpViewModel {
         let param = SignUpRequest.init(email: email, password: password, name: name, gender: gender, major: major)
         authProvider.request(.signUp(param: param)) { response in
             switch response {
-            case .success:
+            case .success(let result):
                 do {
-                    completion(true)
+                    let statusCode = result.statusCode
+                    switch statusCode {
+                    case 201:
+                        print("Created")
+                        completion(true)
+                    case 500:
+                        print("SERVER ERROR")
+                        completion(false)
+                    default:
+                        print(result)
+                        completion(false)
+                    }
                 }
             case .failure(let err):
                 print(err.localizedDescription)

@@ -74,12 +74,13 @@ public final class AuthNumberViewController: BaseViewController {
     
     // MARK: - Selectors
     @objc func resendButtonTapped() {
-        
+        viewModel.sendAuthNumber { success in print("인증번호 재발송") }
     }
     
     @objc func authButtonTapped() {
         viewModel.verifyAuthNumber { success in
             if success {
+                self.authCodeSuccess()
                 let setPasswordVC = PasswordSettingViewController(viewModel: self.viewModel)
                 self.navigationController?.pushViewController(setPasswordVC, animated: true)
             } else {
@@ -198,11 +199,21 @@ public final class AuthNumberViewController: BaseViewController {
     }
     
     func authCodeError() {
-        authNumberTextField1.layer.borderColor = .init(red: 0.89, green: 0.21, blue: 0.13, alpha: 1)
-        authNumberTextField2.layer.borderColor = .init(red: 0.89, green: 0.21, blue: 0.13, alpha: 1)
-        authNumberTextField3.layer.borderColor = .init(red: 0.89, green: 0.21, blue: 0.13, alpha: 1)
-        authNumberTextField4.layer.borderColor = .init(red: 0.89, green: 0.21, blue: 0.13, alpha: 1)
-        authError.isEnabled = false
+        timeLabel.isHidden = true
+        authError.isHidden = false
+        let authNumberTextFields = [authNumberTextField1, authNumberTextField2, authNumberTextField3, authNumberTextField4]
+        for textField in authNumberTextFields {
+            textField.layer.borderColor = UIColor(red: 0.89, green: 0.21, blue: 0.13, alpha: 1).cgColor
+        }
+    }
+    
+    func authCodeSuccess() {
+        timeLabel.isHidden = false
+        authError.isHidden = true
+        let authNumberTextFields = [authNumberTextField1, authNumberTextField2, authNumberTextField3, authNumberTextField4]
+        for textField in authNumberTextFields {
+            textField.setBorderColorMode(lightModeColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.05), darkModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.15))
+        }
     }
 }
 

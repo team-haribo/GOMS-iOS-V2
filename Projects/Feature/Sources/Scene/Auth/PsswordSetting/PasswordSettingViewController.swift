@@ -61,8 +61,6 @@ public final class PasswordSettingViewController: BaseViewController {
             if success {
                 let signInVC = SignInViewController()
                 self.navigationController?.pushViewController(signInVC, animated: true)
-            } else {
-                print("실패")
             }
         }
     }

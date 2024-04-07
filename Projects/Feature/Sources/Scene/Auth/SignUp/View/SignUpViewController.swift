@@ -93,11 +93,8 @@ public final class SignUpViewController: BaseViewController {
     @objc func authNumberButtonTapped() {
         viewModel.sendAuthNumber { success in
             if success {
-                
                 let authNumberVC = AuthNumberViewController(viewModel: self.viewModel)
                 self.navigationController?.pushViewController(authNumberVC, animated: true)
-            } else{
-                print("Error!")
             }
         }
     }

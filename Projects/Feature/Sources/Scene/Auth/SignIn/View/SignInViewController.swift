@@ -104,7 +104,6 @@ public final class SignInViewController: BaseViewController {
         super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "로그인"
-        navigationItem.hidesBackButton = true
     }
     
     // MARK: - Add View
