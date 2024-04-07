@@ -14,7 +14,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let imagePickerController = UIImagePickerController()
     
     let userProfile = UIImageView().then {
-        $0.image = .image.gomsProfile.image
+        $0.image = .image.gomsBasicProfile.image
         $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 32
         $0.clipsToBounds = true

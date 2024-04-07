@@ -30,8 +30,8 @@ public final class ResetPasswordAuthViewController: BaseViewController, UITextFi
     
     // MARK: - Selectors
     @objc func authButtonTapped() {
-        let authenticationNumberVC = AuthenticationNumberViewController()
-        navigationController?.pushViewController(authenticationNumberVC, animated: true)
+//        let authNumberVC = AuthNumberViewController()
+//        navigationController?.pushViewController(authNumberVC, animated: true)
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {

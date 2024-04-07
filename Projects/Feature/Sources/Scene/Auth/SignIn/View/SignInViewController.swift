@@ -11,6 +11,8 @@ import UIKit
 public final class SignInViewController: BaseViewController {
 
     // MARK: - Properties
+    private let viewModel = SignInViewModel()
+    
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 24
         $0.axis = .vertical
@@ -26,7 +28,9 @@ public final class SignInViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    private let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호")
+    private let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
+        $0.isSecureTextEntry = true
+    }
     
     private let findPasswordLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 48)).then {
         $0.text = "비밀번호를 잊으셨나요?"
@@ -61,8 +65,8 @@ public final class SignInViewController: BaseViewController {
     }
     
     @objc func authenticationNumberButtonTapped() {
-        let authenticationNumberVC = AuthenticationNumberViewController()
-        navigationController?.pushViewController(authenticationNumberVC, animated: true)
+//        let authNumberVC = AuthNumberViewController()
+//        navigationController?.pushViewController(authNumberVC, animated: true)
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
@@ -100,7 +104,6 @@ public final class SignInViewController: BaseViewController {
         super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "로그인"
-        navigationItem.hidesBackButton = true
     }
     
     // MARK: - Add View
@@ -165,3 +168,4 @@ extension SignInViewController: UITextFieldDelegate {
         return false
     }
 }
+

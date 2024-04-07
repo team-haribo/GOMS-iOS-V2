@@ -11,6 +11,8 @@ import UIKit
 public final class SignUpViewController: BaseViewController {
 
     // MARK: - Properties
+    private let viewModel = SignUpViewModel()
+    
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 32
         $0.axis = .vertical
@@ -18,9 +20,9 @@ public final class SignUpViewController: BaseViewController {
         $0.alignment = .fill
     }
     
-    private let nameTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이름")
-
-    private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 64), placeholder: "이메일")
+    let nameTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이름")
+    
+    let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 64), placeholder: "이메일")
     
     private let defaultDomain = UILabel().then {
         $0.text = "@gsm.hs.kr"
@@ -28,21 +30,24 @@ public final class SignUpViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    private lazy var genderTextField = GOMSTextFieldButton(frame: CGRect(x: 0, y: 0, width: 0, height: 64), title: "성별").then {
+    lazy var genderTextField = GOMSTextFieldButton(frame: CGRect(x: 0, y: 0, width: 0, height: 64), title: "성별").then {
         $0.addTarget(self, action: #selector(genderButtonTapped), for: .touchUpInside)
     }
     
-    private lazy var departmentTextField = GOMSTextFieldButton(frame: CGRect(x: 0, y: 0, width: 0, height: 64), title: "과").then {
+    lazy var majorTextField = GOMSTextFieldButton(frame: CGRect(x: 0, y: 0, width: 0, height: 64), title: "과").then {
         $0.addTarget(self, action: #selector(departmentButtonTapped), for: .touchUpInside)
     }
     
-    private lazy var authenticationNumberButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기").then {
-        $0.addTarget(self, action: #selector(authenticationNumberButtonTapped), for: .touchUpInside)
+    private lazy var authNumberButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기").then {
+        $0.addTarget(self, action: #selector(authNumberButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        nameTextField.delegate = self
+        emailTextField.delegate = self
     }
     
     // MARK: - Selectors
@@ -50,9 +55,13 @@ public final class SignUpViewController: BaseViewController {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let menAction = UIAlertAction(title: "남성", style: .default) { _ in
             self.genderTextField.setTitle("남성", for: .normal)
+            self.genderTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
+            self.viewModel.setupGender(gender: "남성")
         }
         let womanAction = UIAlertAction(title: "여성", style: .default) { _ in
             self.genderTextField.setTitle("여성", for: .normal)
+            self.genderTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
+            self.viewModel.setupGender(gender: "여성")
         }
         
         [ menAction, womanAction ].forEach { alert.addAction($0) }
@@ -62,22 +71,32 @@ public final class SignUpViewController: BaseViewController {
     @objc func departmentButtonTapped() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let swAction = UIAlertAction(title: "SW개발과", style: .default) { _ in
-            self.departmentTextField.setTitle("SW개발과", for: .normal)
+            self.majorTextField.setTitle("SW개발과", for: .normal)
+            self.majorTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
+            self.viewModel.setupMajor(major: "SW개발과")
         }
         let iotAction = UIAlertAction(title: "스마트IoT과", style: .default) { _ in
-            self.departmentTextField.setTitle("스마트IoT과", for: .normal)
+            self.majorTextField.setTitle("스마트IoT과", for: .normal)
+            self.majorTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
+            self.viewModel.setupMajor(major: "스마트IoT과")
         }
         let aiAction = UIAlertAction(title: "AI개발과", style: .default) { _ in
-            self.departmentTextField.setTitle("AI개발과", for: .normal)
+            self.majorTextField.setTitle("AI개발과", for: .normal)
+            self.majorTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
+            self.viewModel.setupMajor(major: "AI개발과")
         }
         
         [ swAction, iotAction, aiAction ].forEach { alert.addAction($0) }
         present(alert, animated: true, completion: nil)
     }
     
-    @objc func authenticationNumberButtonTapped() {
-        let authenticationNumberVC = AuthenticationNumberViewController()
-        navigationController?.pushViewController(authenticationNumberVC, animated: true)
+    @objc func authNumberButtonTapped() {
+        viewModel.sendAuthNumber { success in
+            if success {
+                let authNumberVC = AuthNumberViewController(viewModel: self.viewModel)
+                self.navigationController?.pushViewController(authNumberVC, animated: true)
+            }
+        }
     }
     
     // MARK: - Navigation
@@ -91,11 +110,11 @@ public final class SignUpViewController: BaseViewController {
     override func addView() {
         emailTextField.addSubview(defaultDomain)
         
-        [nameTextField, emailTextField, genderTextField, departmentTextField].forEach {
+        [nameTextField, emailTextField, genderTextField, majorTextField].forEach {
             self.textFieldStackView.addArrangedSubview($0)
         }
         
-        [textFieldStackView, authenticationNumberButton].forEach { view.addSubview($0) }
+        [textFieldStackView, authNumberButton].forEach { view.addSubview($0) }
     }
 
     // MARK: - Layout
@@ -118,7 +137,7 @@ public final class SignUpViewController: BaseViewController {
             $0.height.equalTo(64)
         }
         
-        departmentTextField.snp.makeConstraints {
+        majorTextField.snp.makeConstraints {
             $0.height.equalTo(64)
         }
         
@@ -128,11 +147,32 @@ public final class SignUpViewController: BaseViewController {
             $0.trailing.equalTo(-bounds.width * 0.05)
         }
         
-        authenticationNumberButton.snp.makeConstraints {
+        authNumberButton.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.16)
             $0.height.equalTo(48)
         }
+    }
+}
+
+extension SignUpViewController: UITextFieldDelegate {
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == nameTextField {
+            viewModel.setupName(name: textField.text ?? "")
+        } else if textField == emailTextField {
+            viewModel.setupEmail(email: textField.text ?? "")
+        }
+    }
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let text = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        
+        if !text.isEmpty {
+            authNumberButton.isEnabled = true
+        } else {
+            authNumberButton.isEnabled = false
+        }
+        return true
     }
 }

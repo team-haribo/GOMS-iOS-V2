@@ -39,6 +39,8 @@ public class GOMSTextField: UITextField {
         self.layer.borderWidth = 1
         self.setBorderColorMode(lightModeColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.05), darkModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.15))
         self.addPadding(paddingFrame: CGRect(x: 0, y: 0, width: 16, height: self.frame.height))
+        self.autocorrectionType = .no
+        self.spellCheckingType = .no
     }
     
     private func setupPlaceholder() {

@@ -11,9 +11,9 @@ import SnapKit
 import Then
 
 public class BaseViewController: UIViewController {
-    
+
     let bounds = UIScreen.main.bounds
-    
+
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
