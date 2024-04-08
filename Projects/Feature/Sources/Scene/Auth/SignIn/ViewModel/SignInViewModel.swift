@@ -11,6 +11,7 @@ import Service
 
 public final class SignInViewModel {
     private let authProvider = MoyaProvider<AuthServices>()
+    var userData: SignInModel?
     
     private var email: String = ""
     private var passsword: String = ""
@@ -23,28 +24,25 @@ public final class SignInViewModel {
         self.passsword = password
     }
     
-    func sendAuthNumber(completion: @escaping (Bool) -> Void) {
-        let param = SendAuthNumberRequest.init(email: email)
-        authProvider.request(.sendAuthNumber(param: param)) { response in
-            switch response {
-            case .success:
-                do {
-                    completion(true)
-                }
-            case .failure(let err):
-                print(err.localizedDescription)
-                completion(false)
-            }
-        }
-    }
-    
     func signIn(completion: @escaping (Bool) -> Void) {
         let param = SignInRequest.init(email: email, password: passsword)
         authProvider.request(.signIn(param: param)) { response in
             switch response {
-            case .success:
+            case .success(let result):
                 do {
-                    // 처리
+                    let statusCode = result.statusCode
+                    switch statusCode {
+                    case 200:
+                        print("OK")
+                        completion(true)
+                        // RefreshToken
+                    case 500:
+                        print("SERVER ERROR")
+                        completion(false)
+                    default:
+                        print(result)
+                        completion(false)
+                    }
                 }
             case .failure(let err):
                 print(err.localizedDescription)

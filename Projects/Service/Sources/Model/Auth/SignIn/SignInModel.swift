@@ -8,6 +8,10 @@
 
 import Foundation
 
+public struct SignInModel: Codable {
+    let data: SignInResponse
+}
+
 public struct SignInResponse: Codable {
     let accessToken: String
     let refreshToken: String
