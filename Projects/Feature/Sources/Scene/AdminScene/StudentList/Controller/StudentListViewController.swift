@@ -100,9 +100,7 @@ public class StudentListViewController: BaseViewController {
     
     // MARK: Action
     @objc func filterButtonDidTap(_ sender: Any) {
-        print("버튼이 눌렸습니다!")
-        
-        let bottomSheetVC = BottomSheetViewController(contentViewController: UIViewController(), defaultHeight: 650, cornerRadius: 12, dimmedAlpha: 0.45, isPannedable: true)
+        let bottomSheetVC = FilterBottomSheetViewController(contentViewController: UIViewController(), defaultHeight: 650, cornerRadius: 12, dimmedAlpha: 0.45, isPannedable: true)
         bottomSheetVC.modalPresentationStyle = .overFullScreen
         self.present(bottomSheetVC, animated: false, completion: nil)
     }

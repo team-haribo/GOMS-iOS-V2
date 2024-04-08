@@ -1,6 +1,6 @@
 import UIKit
 
-class BottomSheetViewController: UIViewController {
+class FilterBottomSheetViewController: UIViewController {
     enum BottomSheetViewState {
         case expanded
         case normal
@@ -31,7 +31,7 @@ class BottomSheetViewController: UIViewController {
     
     private let contentViewController: UIViewController
     
-    private lazy var bottomSheetContentVC = BottomSheetContentViewController().then {
+    private lazy var bottomSheetContentVC = FilterBottomSheetContentViewController().then {
         $0.buttonAction = { [weak self] in
             self?.hideBottomSheetAndGoBack()
         }
@@ -58,7 +58,7 @@ class BottomSheetViewController: UIViewController {
         self.configureUI()
         self.configureLayout()
         
-        let contentVC = BottomSheetContentViewController()
+        let contentVC = FilterBottomSheetContentViewController()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -100,7 +100,7 @@ class BottomSheetViewController: UIViewController {
 }
 
 // MARK: Configure
-extension BottomSheetViewController {
+extension FilterBottomSheetViewController {
     private func configureUI() {
         [dimmedView, bottomSheetView].forEach {
             view.addSubview($0)
@@ -144,7 +144,7 @@ extension BottomSheetViewController {
     }
 }
 
-extension BottomSheetViewController {
+extension FilterBottomSheetViewController {
     public func hideBottomSheetAndGoBack() {
         let safeAreaHeight = view.safeAreaLayoutGuide.layoutFrame.height
         let bottomPadding = view.safeAreaInsets.bottom

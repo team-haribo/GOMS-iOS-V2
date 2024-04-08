@@ -1,6 +1,6 @@
 import UIKit
 
-class BottomSheetContentViewController: BaseViewController {
+class FilterBottomSheetContentViewController: BaseViewController {
     private let titleText = UILabel().then {
         $0.text = "필터"
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
