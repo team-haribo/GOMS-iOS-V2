@@ -9,8 +9,10 @@ class BottomSheetContentViewController: BaseViewController {
     private let closeButton = UIButton().then {
         $0.setImage(UIImage(systemName: "xmark"), for: .normal)
         $0.tintColor = .black
-        $0.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(closeButtonDidTap(_:)), for: .touchUpInside)
     }
+    
+    var buttonAction: (() -> Void)?
     
     private let roleView = UIView().then {
         $0.frame = CGRect(x: 0, y: 0, width: 375, height: 112)
@@ -22,11 +24,20 @@ class BottomSheetContentViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
 
-    private let roleStudentButton = UIButton(filterButton: "학생")
+    private var isRoleStudentButtonSelected = false
+    private let roleStudentButton = UIButton(filterButton: "학생").then {
+        $0.addTarget(self, action: #selector(roleStudentButtonDidTap(_:)), for: .touchUpInside)
+    }
     
-    private let roleStudentCouncilButton = UIButton(filterButton: "학생회")
+    private var isRoleStudentCouncilButtonSelected = false
+    private let roleStudentCouncilButton = UIButton(filterButton: "학생회").then {
+        $0.addTarget(self, action: #selector(roleStudentCouncilButtonDidTap(_:)), for: .touchUpInside)
+    }
     
-    private let roleOutingProhibitionButton = UIButton(filterButton: "외출 금지")
+    private var isRoleOutingProhibitionButtonSelected = false
+    private let roleOutingProhibitionButton = UIButton(filterButton: "외출 금지").then {
+        $0.addTarget(self, action: #selector(roleOutingProhibitionButtonDidTap(_:)), for: .touchUpInside)
+    }
     
     private let gradeView = UIView().then {
         $0.frame = CGRect(x: 0, y: 0, width: 375, height: 112)
@@ -38,11 +49,20 @@ class BottomSheetContentViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
-    private let firstGradeButton = UIButton(filterButton: "1학년")
+    private var isFristGradeButtonSelected = false
+    private let firstGradeButton = UIButton(filterButton: "1학년").then {
+        $0.addTarget(self, action: #selector(firstGradeButtonDidTap(_:)), for: .touchUpInside)
+    }
     
-    private let secondGradeButton = UIButton(filterButton: "2학년")
+    private var isSecondGradeButtonSelected = false
+    private let secondGradeButton = UIButton(filterButton: "2학년").then {
+        $0.addTarget(self, action: #selector(secondGradeButtonDidTap(_:)), for: .touchUpInside)
+    }
     
-    private let thirdGradeButton = UIButton(filterButton: "3학년")
+    private var isThirdeGradeButtonSelected = false
+    private let thirdGradeButton = UIButton(filterButton: "3학년").then {
+        $0.addTarget(self, action: #selector(thirdGradeButtonDidTap(_:)), for: .touchUpInside)
+    }
     
     private let genderView = UIView().then {
         $0.frame = CGRect(x: 0, y: 0, width: 375, height: 112)
@@ -54,9 +74,15 @@ class BottomSheetContentViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
-    private let maleButton = UIButton(filterButton: "남성")
+    private var isMaleButtonSelected = false
+    private let maleButton = UIButton(filterButton: "남성").then {
+        $0.addTarget(self, action: #selector(maleButtonDidTap(_:)), for: .touchUpInside)
+    }
     
-    private let femaleButton = UIButton(filterButton: "여성")
+    private var isFemaleButtonSelected = false
+    private let femaleButton = UIButton(filterButton: "여성").then {
+        $0.addTarget(self, action: #selector(femaleButtonDidTap(_:)), for: .touchUpInside)
+    }
     
     private let departmentView = UIView().then {
         $0.frame = CGRect(x: 0, y: 0, width: 375, height: 112)
@@ -68,16 +94,26 @@ class BottomSheetContentViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
-    private let swButton = UIButton(filterButton: "SW")
+    private var isSwButtonSelected = false
+    private let swButton = UIButton(filterButton: "SW").then {
+        $0.addTarget(self, action: #selector(swButtonDidTap(_:)), for: .touchUpInside)
+    }
     
-    private let iotButton = UIButton(filterButton: "IoT")
+    private var isIotButtonSelected = false
+    private let iotButton = UIButton(filterButton: "IoT").then {
+        $0.addTarget(self, action: #selector(iotButtonDidTap(_:)), for: .touchUpInside)
+    }
     
-    private let aiButton = UIButton(filterButton: "AI")
+    private var isAiButtonSelected = false
+    private let aiButton = UIButton(filterButton: "AI").then {
+        $0.addTarget(self, action: #selector(aiButtonDidTap(_:)), for: .touchUpInside)
+    }
     
     private let filterResetButton = UIButton(filterButton: "필터 초기화").then {
         $0.setTitleColor(.color.gomsNegative.color, for: .normal)
         $0.backgroundColor = .color.gomsNegative.color.withAlphaComponent(0.25)
         $0.layer.borderColor = UIColor.clear.cgColor
+        $0.addTarget(self, action: #selector(filterResetButtonDidTap(_:)), for: .touchUpInside)
     }
     
     override func viewDidLoad() {
@@ -120,7 +156,7 @@ class BottomSheetContentViewController: BaseViewController {
         roleView.snp.makeConstraints {
             $0.width.equalTo(375)
             $0.height.equalTo(112)
-            $0.top.equalTo(titleText.snp.bottom).offset(16)
+            $0.top.equalToSuperview().offset(64)
             $0.leading.trailing.equalToSuperview()
         }
         
@@ -264,14 +300,192 @@ class BottomSheetContentViewController: BaseViewController {
     }
     
     // MARK: Action
-    @objc func closeButtonDidTap(_ sender: Any) {
+    @objc private func closeButtonDidTap(_ sender: Any) {
         print("닫힘")
+        buttonAction?()
     }
     
-    @objc func roleStudentButtonDidTap(_ sender: Any) {
-        print("버튼이 눌렸습니다!")
+    @objc private func roleStudentButtonDidTap(_ sender: Any) {
+        isRoleStudentButtonSelected.toggle()
         
-        roleStudentButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
-        roleStudentButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        if isRoleStudentButtonSelected {
+            print("학생 버튼이 눌렸습니다!")
+            roleStudentButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            roleStudentButton.layer.borderColor = UIColor.clear.cgColor
+            roleStudentButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("학생 버튼이 해제되었습니다!")
+            roleStudentButton.backgroundColor = .clear
+            roleStudentButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            roleStudentButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func roleStudentCouncilButtonDidTap(_ sender: Any) {
+        isRoleStudentCouncilButtonSelected.toggle()
+        
+        if isRoleStudentCouncilButtonSelected {
+            print("학생회 버튼이 눌렸습니다!")
+            roleStudentCouncilButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            roleStudentCouncilButton.layer.borderColor = UIColor.clear.cgColor
+            roleStudentCouncilButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("학생회 버튼이 해제되었습니다!")
+            roleStudentCouncilButton.backgroundColor = .clear
+            roleStudentCouncilButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            roleStudentCouncilButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func roleOutingProhibitionButtonDidTap(_ sender: Any) {
+        isRoleOutingProhibitionButtonSelected.toggle()
+        
+        if isRoleOutingProhibitionButtonSelected {
+            print("외출금지 버튼이 눌렸습니다!")
+            roleOutingProhibitionButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            roleOutingProhibitionButton.layer.borderColor = UIColor.clear.cgColor
+            roleOutingProhibitionButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("외출금지 버튼이 해제되었습니다!")
+            roleOutingProhibitionButton.backgroundColor = .clear
+            roleOutingProhibitionButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            roleOutingProhibitionButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func firstGradeButtonDidTap(_ sender: Any) {
+        isFristGradeButtonSelected.toggle()
+        
+        if isFristGradeButtonSelected {
+            print("1학년 버튼이 눌렸습니다!")
+            firstGradeButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            firstGradeButton.layer.borderColor = UIColor.clear.cgColor
+            firstGradeButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("1학년 버튼이 해제되었습니다!")
+            firstGradeButton.backgroundColor = .clear
+            firstGradeButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            firstGradeButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func secondGradeButtonDidTap(_ sender: Any) {
+        isSecondGradeButtonSelected.toggle()
+        
+        if isSecondGradeButtonSelected {
+            print("2학년 버튼이 눌렸습니다!")
+            secondGradeButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            secondGradeButton.layer.borderColor = UIColor.clear.cgColor
+            secondGradeButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("2학년 버튼이 해제되었습니다!")
+            secondGradeButton.backgroundColor = .clear
+            secondGradeButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            secondGradeButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func thirdGradeButtonDidTap(_ sender: Any) {
+        isThirdeGradeButtonSelected.toggle()
+        
+        if isThirdeGradeButtonSelected {
+            print("3학년 버튼이 눌렸습니다!")
+            thirdGradeButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            thirdGradeButton.layer.borderColor = UIColor.clear.cgColor
+            thirdGradeButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("3학년 버튼이 해제되었습니다!")
+            thirdGradeButton.backgroundColor = .clear
+            thirdGradeButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            thirdGradeButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func maleButtonDidTap(_ sender: Any) {
+        isMaleButtonSelected.toggle()
+        
+        if isMaleButtonSelected {
+            print("남성 버튼이 눌렸습니다!")
+            maleButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            maleButton.layer.borderColor = UIColor.clear.cgColor
+            maleButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("남성 버튼이 해제되었습니다!")
+            maleButton.backgroundColor = .clear
+            maleButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            maleButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func femaleButtonDidTap(_ sender: Any) {
+        isFemaleButtonSelected.toggle()
+        
+        if isFemaleButtonSelected {
+            print("여성 버튼이 눌렸습니다!")
+            femaleButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            femaleButton.layer.borderColor = UIColor.clear.cgColor
+            femaleButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("여성 버튼이 해제되었습니다!")
+            femaleButton.backgroundColor = .clear
+            femaleButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            femaleButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func swButtonDidTap(_ sender: Any) {
+        isSwButtonSelected.toggle()
+        
+        if isSwButtonSelected {
+            print("SW 버튼이 눌렸습니다!")
+            swButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            swButton.layer.borderColor = UIColor.clear.cgColor
+            swButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("SW 버튼이 해제되었습니다!")
+            swButton.backgroundColor = .clear
+            swButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            swButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func iotButtonDidTap(_ sender: Any) {
+        isIotButtonSelected.toggle()
+        
+        if isIotButtonSelected {
+            print("IoT 버튼이 눌렸습니다!")
+            iotButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            iotButton.layer.borderColor = UIColor.clear.cgColor
+            iotButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("IoT 버튼이 해제되었습니다!")
+            iotButton.backgroundColor = .clear
+            iotButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            iotButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func aiButtonDidTap(_ sender: Any) {
+        isAiButtonSelected.toggle()
+        
+        if isAiButtonSelected {
+            print("AI 버튼이 눌렸습니다!")
+            aiButton.backgroundColor = .color.gomsAdmin.color.withAlphaComponent(0.25)
+            aiButton.layer.borderColor = UIColor.clear.cgColor
+            aiButton.setTitleColor(.color.gomsAdmin.color, for: .normal)
+        } else {
+            print("AI 버튼이 해제되었습니다!")
+            aiButton.backgroundColor = .clear
+            aiButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            aiButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
+    }
+    
+    @objc private func filterResetButtonDidTap(_ sender: Any) {
+        [roleStudentButton, roleStudentCouncilButton, roleOutingProhibitionButton, firstGradeButton, secondGradeButton, thirdGradeButton, maleButton, femaleButton, swButton, iotButton, aiButton].forEach {
+            $0.backgroundColor = .clear
+            $0.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            $0.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        }
     }
 }

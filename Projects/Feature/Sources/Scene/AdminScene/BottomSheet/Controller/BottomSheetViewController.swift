@@ -1,8 +1,5 @@
 import UIKit
 
-import SnapKit
-import Then
-
 class BottomSheetViewController: UIViewController {
     enum BottomSheetViewState {
         case expanded
@@ -24,18 +21,23 @@ class BottomSheetViewController: UIViewController {
     
     private var bottomSheetViewTopConstraint: NSLayoutConstraint!
     
-    var defaultHeight: CGFloat = 650
-    var cornerRedius: CGFloat = 12
+    var defaultHeight: CGFloat = 500
+    var cornerRedius: CGFloat = 16
     var dimmedAlpha: CGFloat = 0.45
     var bottomSheetPanMinTopConstant: CGFloat = 40
     var isPannedable: Bool = false
+    
     private lazy var bottomSheetPanStartingTopConstant: CGFloat = bottomSheetPanMinTopConstant
     
     private let contentViewController: UIViewController
     
-    private lazy var bottomSheetContentVC = BottomSheetContentViewController()
+    private lazy var bottomSheetContentVC = BottomSheetContentViewController().then {
+        $0.buttonAction = { [weak self] in
+            self?.hideBottomSheetAndGoBack()
+        }
+    }
     
-    init(contentViewController: UIViewController, defaultHeight: CGFloat, cornerRadius: CGFloat = 16, dimmedAlpha: CGFloat = 0.45, isPannedable: Bool = false) {
+    init(contentViewController: UIViewController, defaultHeight: CGFloat, cornerRadius: CGFloat = 16, dimmedAlpha: CGFloat = 0.4, isPannedable: Bool = false) {
         self.contentViewController = contentViewController
         self.defaultHeight = defaultHeight
         self.cornerRedius = cornerRadius
@@ -56,17 +58,15 @@ class BottomSheetViewController: UIViewController {
         self.configureUI()
         self.configureLayout()
         
-        if isPannedable {
-            self.configureViewPannedGesture()
-        }
-        
-        configureBottomSheetContent()
+        let contentVC = BottomSheetContentViewController()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.showBottomSheet()
+        
+        configureBottomSheetContent()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -97,16 +97,6 @@ class BottomSheetViewController: UIViewController {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
-    
-    private func configureBottomSheetContent() {
-        addChild(bottomSheetContentVC)
-        bottomSheetView.addSubview(bottomSheetContentVC.view)
-        bottomSheetContentVC.didMove(toParent: self)
-        
-        bottomSheetContentVC.view.snp.makeConstraints {
-            $0.top.leading.trailing.bottom.equalToSuperview()
-        }
-    }
 }
 
 // MARK: Configure
@@ -119,7 +109,6 @@ extension BottomSheetViewController {
         addChild(contentViewController)
         bottomSheetView.addSubview(contentViewController.view)
         contentViewController.didMove(toParent: self)
-        bottomSheetView.clipsToBounds = true
     }
     
     private func configureLayout() {
@@ -127,14 +116,14 @@ extension BottomSheetViewController {
             $0.top.leading.trailing.bottom.equalToSuperview()
         }
         
-//         MARK: Layout 깨짐 경고를 제거하고자 하는 경우 bottomSheetView의 heightAnchor 값을 지정하면 해결된다.
+        // Layout 깨짐 경고를 제거하고자 하는 경우 bottomSheetView의 heightAnchor 값을 지정하면 해결된다.
         bottomSheetView.translatesAutoresizingMaskIntoConstraints = false
         let topConstant = view.safeAreaInsets.bottom + view.safeAreaLayoutGuide.layoutFrame.height
         bottomSheetViewTopConstraint = bottomSheetView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: topConstant)
         NSLayoutConstraint.activate([
             bottomSheetView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomSheetView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            bottomSheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor), // MARK: 이부분으로 인해 Layout 깨짐 경고가 뜬다
+            bottomSheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor), // 이부분으로 인해 Layout 깨짐 경고가 뜬다
             bottomSheetViewTopConstraint,
         ])
         
@@ -143,59 +132,20 @@ extension BottomSheetViewController {
         }
     }
     
-    private func configureViewPannedGesture() {
-        let viewPan = UIPanGestureRecognizer(target: self, action: #selector(viewPanned(_:)))
+    // MARK: Add BottomSheetContent
+    private func configureBottomSheetContent() {
+        addChild(bottomSheetContentVC)
+        bottomSheetView.addSubview(bottomSheetContentVC.view)
+        bottomSheetContentVC.didMove(toParent: self)
         
-        viewPan.delaysTouchesBegan = false
-        viewPan.delaysTouchesEnded = false
-        view.addGestureRecognizer(viewPan)
-    }
-}
-
-// MARK: Gesture
-extension BottomSheetViewController {
-    // 드래그 시 실행
-    @objc private func viewPanned(_ panGestureRecognizer: UIPanGestureRecognizer) {
-        let translation = panGestureRecognizer.translation(in: view)
-        
-        let velocity = panGestureRecognizer.velocity(in: view)
-        
-        switch panGestureRecognizer.state {
-        case .began:
-            bottomSheetPanStartingTopConstant = bottomSheetViewTopConstraint.constant
-        case .changed:
-            if bottomSheetPanStartingTopConstant + translation.y > bottomSheetPanMinTopConstant {
-                bottomSheetViewTopConstraint.constant = bottomSheetPanStartingTopConstant + translation.y
-            }
-            
-            dimmedView.alpha = dimAlphaWithBottomSheetTopConstraint(value: bottomSheetViewTopConstraint.constant)
-        case .ended:
-            if velocity.y > 1500 {
-                hideBottomSheetAndGoBack()
-                return
-            }
-            
-            let safeAreaHeight = view.safeAreaLayoutGuide.layoutFrame.height
-            let bottomPadding = view.safeAreaInsets.bottom
-            let defaultPadding = safeAreaHeight+bottomPadding - defaultHeight
-            
-            let nearestValue = nearest(to: bottomSheetViewTopConstraint.constant, inValues: [bottomSheetPanMinTopConstant, defaultPadding, safeAreaHeight + bottomPadding])
-            
-            if nearestValue == bottomSheetPanMinTopConstant {
-                showBottomSheet(atState: .expanded)
-            } else if nearestValue == defaultPadding {
-                showBottomSheet(atState: .normal)
-            } else {
-                hideBottomSheetAndGoBack()
-            }
-        default:
-            break
+        bottomSheetContentVC.view.snp.makeConstraints {
+            $0.top.leading.trailing.bottom.equalToSuperview()
         }
     }
 }
 
 extension BottomSheetViewController {
-    private func hideBottomSheetAndGoBack() {
+    public func hideBottomSheetAndGoBack() {
         let safeAreaHeight = view.safeAreaLayoutGuide.layoutFrame.height
         let bottomPadding = view.safeAreaInsets.bottom
         bottomSheetViewTopConstraint.constant = safeAreaHeight + bottomPadding
@@ -209,6 +159,7 @@ extension BottomSheetViewController {
         }
     }
     
+    //주어진 CGFloat 배열의 값 중 number로 주어진 값과 가까운 값을 찾아내는 메소드
     private func nearest(to number: CGFloat, inValues values: [CGFloat]) -> CGFloat {
         guard let nearestVal = values.min(by: { abs(number - $0) < abs(number - $1) })
         else { return number }
@@ -222,9 +173,9 @@ extension BottomSheetViewController {
         let bottomPadding = view.safeAreaInsets.bottom
         
         let fullDimPosition = (safeAreaHeight + bottomPadding - defaultHeight) / 2
-    
+
         let noDimPosition = safeAreaHeight + bottomPadding
-    
+
         if value < fullDimPosition {
             return fullDimAlpha
         }
@@ -232,8 +183,7 @@ extension BottomSheetViewController {
         if value > noDimPosition {
             return 0.0
         }
-
+        
         return fullDimAlpha * (1 - ((value - fullDimPosition) / (noDimPosition - fullDimPosition)))
     }
 }
-
