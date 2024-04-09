@@ -8,27 +8,31 @@
 
 import UIKit
 
-public class AdminProfileViewController: BaseViewController {
+public class AdminProfileViewController: BaseViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    let imagePickerController = UIImagePickerController()
+    
     let userProfile = UIImageView().then {
-        $0.image = .image.gomsProfile.image
+        $0.image = .image.gomsBasicProfile.image
         $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 32
         $0.clipsToBounds = true
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    let userProfilepencil = UIImageView().then {
-        $0.image = .image.gomsProfilePencil.image
+    let userProfilepencil = UIButton().then {
+        $0.setImage(.image.gomsProfilePencil.image, for: .normal)
+        $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
     }
     
-    
-    let repasswordRight = UIImageView().then {
-        $0.image = .image.gomsRightButton.image
+    let repasswordRight = UIButton().then {
+        $0.setImage(.image.gomsRightButton.image, for: .normal)
+        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
     }
     
     let userName = UILabel().then {
         $0.text = "홍길동"
-        $0.textColor = .white
+        $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
@@ -53,54 +57,61 @@ public class AdminProfileViewController: BaseViewController {
     
     let perceptionText = UILabel().then {
         $0.text = "번"
-        $0.textColor = .white
+        $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
     let line1View = UIView().then {
-        $0.backgroundColor = .color.gomsTertiary.color
+        $0.backgroundColor = .color.gomsDivider.color
     }
+    
     let line2View = UIView().then {
-        $0.backgroundColor = .color.gomsTertiary.color
+        $0.backgroundColor = .color.gomsDivider.color
     }
     
     let repassword : UIButton = UIButton().then {
         $0.setTitle("비밀번호 재설정", for: .normal)
-        $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
+        $0.setTitleColor(.color.gomsTextDefault.color, for: .normal)
+        $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
+        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
     }
     
-    let generateQRcodeText = UILabel().then {
-        $0.text = "QR 생성 바로 켜기"
-        $0.textColor = .white
+    let themeChangText = UILabel().then {
+        $0.text = "앱 테마 설정"
+        $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 16, weight: .semibold)
     }
     
-    let generateQRcodeDescription = UILabel().then {
+    let themeChangRec = UIButton().then {
+        $0.backgroundColor = .color.gomsTheme.color
+        $0.addTarget(self, action: #selector(ShowActionSheetClick), for: .touchUpInside)
+        $0.layer.cornerRadius = 12
+        $0.layer.borderColor = UIColor.color.gomsCoverDivider.color.cgColor
+        $0.layer.borderWidth = 1.0
+    }
+    let themesettingText = UILabel().then {
+        $0.text = "시스템 테마 설정"
+        $0.textColor = .color.gomsSecondary.color
+        $0.font = .pretendard(size: 16, weight: .regular)
+    }
+    
+    let themesettingImg = UIImageView().then {
+        $0.image = .image.gomsBottomButton.image
+    }
+    
+    let qrmakeonText = UILabel().then {
+        $0.text = "QR 생성 바로 켜기"
+        $0.textColor = .color.gomsTextDefault.color
+        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
+    }
+    
+    let qrmakeonDescription = UILabel().then {
         $0.text = "앱을 실행하면 즉시 QR코드를 생성해요"
         $0.textColor = .color.gomsTertiary.color
-        $0.font = .pretendard(size: 12, weight: .regular)
+        $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
     
-    let generateQRcodetoggleButton: UISwitch = UISwitch().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.onTintColor = .color.gomsAdmin.color
-        $0.tintColor = .color.gomsTertiary.color
-    }
-    
-    let lightmodeText = UILabel().then {
-        $0.text = "라이트 모드 켜기"
-        $0.textColor = .white
-        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
-
-    }
-    
-    let lightmodeDescription = UILabel().then {
-        $0.text = "앱 테마를 라이트 모드로 만들어요"
-        $0.textColor = .color.gomsTertiary.color
-        $0.font = .pretendard(size: 12, weight: .regular)
-    }
-    
-    let lightmodetoggleButton: UISwitch = UISwitch().then {
+    let qrmakeontoggleButton: UISwitch = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
@@ -114,53 +125,154 @@ public class AdminProfileViewController: BaseViewController {
         $0.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
     }
     
+    let borderView = UIView().then() {
+        $0.backgroundColor = .color.gomsDivider.color
+    }
+    
+    @IBAction func ShowActionSheetClick(_ sender: UIButton) {
+        updateImage(isActionSheetShowing: true)
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
+            print("다크(default) 모드로 변경")
+            if let window = UIApplication.shared.windows.first {
+                window.overrideUserInterfaceStyle = .dark
+                self?.themesettingText.text = "다크(기본)"
+                
+            }
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
+            print("라이트(Light) 모드로 변경")
+            if let window = UIApplication.shared.windows.first {
+                window.overrideUserInterfaceStyle = .light
+                self?.themesettingText.text = "라이트"
+                
+            }
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
+            print("시스템 기본(basics) 테마로 변경")
+            if let window = UIApplication.shared.windows.first {
+                window.overrideUserInterfaceStyle = .unspecified
+                self?.themesettingText.text = "시스템 테마 설정"
+                
+            }
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
+            self?.updateImage(isActionSheetShowing: false)
+        }))
+        
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
     @objc func logoutButtonTapped() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
-
+        
         let titleAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white,
-            .font: UIFont.boldSystemFont(ofSize: 17)
+            .foregroundColor: UIColor.color.gomsTextDefault.color,
+            .font: UIFont.pretendard(size: 17, weight: .semibold)
         ]
-        let attributedTitle = NSAttributedString(string: "로그아웃", attributes: titleAttributes)
+        let attributedTitle = NSAttributedString(string: "로그아웃\n", attributes: titleAttributes)
         alertController.setValue(attributedTitle, forKey: "attributedTitle")
-
+        
         let messageAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white,
-            .font: UIFont.systemFont(ofSize: 15)
+            .foregroundColor: UIColor.color.gomsTextDefault.color,
+            .font: UIFont.pretendard(size: 13, weight: .regular)
         ]
         let attributedMessage = NSAttributedString(string: "로그아웃 하시겠습니까?", attributes: messageAttributes)
         alertController.setValue(attributedMessage, forKey: "attributedMessage")
-
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
             print("로그아웃 버튼이 확인되었습니다.")
             self?.performLogout()
         }
-
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-
-        cancelAction.setValue(UIColor.color.gomsInformation.color, forKey: "titleTextColor")
-        confirmAction.setValue(UIColor.color.gomsInformation.color, forKey: "titleTextColor")
         alertController.addAction(confirmAction)
-        alertController.addAction(cancelAction)
-
-        alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        
+        alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .color.gomsTheme.color
         
         self.present(alertController, animated: true, completion: nil)
     }
-
-
-    // #로그아웃 버튼 클릭시 작동되는 함수
+    
+    
     func performLogout() {
+    }
+    
+    @objc func updateImage(isActionSheetShowing: Bool) {
+        if isActionSheetShowing {
+            themesettingImg.image = UIImage.image.gomsTopButton.image
+        } else {
+            themesettingImg.image = UIImage.image.gomsBottomButton.image
+        }
+    }
+    
+    @objc func themaChang() {
+        let isDarkMode = traitCollection.userInterfaceStyle == .dark
+        let nextMode: UIUserInterfaceStyle = isDarkMode ? .light : .dark
+        overrideUserInterfaceStyle = nextMode
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .black
+        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
+        
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
         self.navigationItem.backBarButtonItem = backBarButtonItem
+        imagePickerController.delegate = self
     }
     
+    @objc func passwordResetPage() {
+//        let testViewController = PasswordResetViewController()
+//
+//        navigationController?.pushViewController(testViewController, animated: true)
+    }
+    
+    @IBAction func ShowActionSheetProfilImageChange(_ sender: UIButton) {
+        updateImage(isActionSheetShowing: true)
+        let actionSheet = UIAlertController(title: "프로필 사진 선택", message: nil, preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "갤러리에서 선택", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
+            self?.presentGallery()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "기본 프로필 사용", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
+            self?.userProfile.image = .image.gomsBasicProfile.image        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
+            self?.updateImage(isActionSheetShowing: false)
+        }))
+        
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func presentGallery() {
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                imagePickerController.sourceType = .photoLibrary
+                present(imagePickerController, animated: true, completion: nil)
+            } else {
+                let alertController = UIAlertController(title: "알림", message: "사용할 수 있는 앨범이 없습니다.", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                present(alertController, animated: true, completion: nil)
+            }
+        }
+
+        public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+                userProfile.image = pickedImage
+            }
+            dismiss(animated: true, completion: nil)
+        }
+
+        public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            dismiss(animated: true, completion: nil)
+        }
+
     override func addView() {
         [
             userProfile,
@@ -170,21 +282,24 @@ public class AdminProfileViewController: BaseViewController {
             perceptionNum,
             perceptionText,
             userProfilepencil,
-            generateQRcodeText,
-            generateQRcodeDescription,
-            generateQRcodetoggleButton,
+            qrmakeonText,
+            qrmakeonDescription,
+            qrmakeontoggleButton,
             repassword,
             line1View,
             line2View,
             repasswordRight,
-            lightmodeText,
-            lightmodeDescription,
-            lightmodetoggleButton,
-            logoutButton
+            logoutButton,
+            themeChangText,
+            themeChangRec,
+            themesettingText,
+            themesettingImg,
+            borderView
+            
         ].forEach {
-                view.addSubview($0)
-            }
+            view.addSubview($0)
         }
+    }
     
     override func setLayout() {
         userProfile.snp.makeConstraints {
@@ -195,8 +310,8 @@ public class AdminProfileViewController: BaseViewController {
         }
         
         userProfilepencil.snp.makeConstraints {
-            $0.top.equalTo(userName.snp.bottom)
-            $0.leading.equalTo(60)
+            $0.top.equalTo(userGradeDepartment.snp.top)
+            $0.trailing.equalTo(userProfile.snp.trailing)
         }
         
         userName.snp.makeConstraints {
@@ -206,13 +321,12 @@ public class AdminProfileViewController: BaseViewController {
             $0.top.equalTo(userProfile.snp.top)
             
         }
+        
         userGradeDepartment.snp.makeConstraints {
             $0.width.equalTo(58)
             $0.height.equalTo(28)
             $0.top.equalTo(userName.snp.bottom).offset(4)
             $0.leading.equalTo(userName.snp.leading)
-            
-            
         }
         
         perceptionCount.snp.makeConstraints {
@@ -238,7 +352,7 @@ public class AdminProfileViewController: BaseViewController {
         
         line1View.snp.makeConstraints {
             $0.height.equalTo(1)
-            $0.bottom.equalTo(userProfile.snp.bottom).offset(32)
+            $0.bottom.equalTo(userProfile.snp.bottom).offset(33)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().inset(20)
         }
@@ -257,52 +371,63 @@ public class AdminProfileViewController: BaseViewController {
             $0.bottom.equalTo(repassword.snp.bottom).offset(22)
         }
         
+        themeChangText.snp.makeConstraints {
+            $0.width.equalTo(93)
+            $0.height.equalTo(28)
+            $0.top.equalTo(line2View.snp.top).offset(24)
+            $0.leading.equalTo(repassword.snp.leading).offset(8)
+        }
+        
+        themeChangRec.snp.makeConstraints {
+            $0.width.equalTo(335)
+            $0.height.equalTo(64)
+            $0.top.equalTo(themeChangText.snp.bottom).offset(8)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20)
+        }
+        
+        themesettingText.snp.makeConstraints {
+            $0.width.equalTo(106)
+            $0.height.equalTo(28)
+            $0.top.equalTo(themeChangRec.snp.top).offset(18)
+            $0.leading.equalTo(themeChangRec.snp.leading).offset(12)
+        }
+        
+        themesettingImg.snp.makeConstraints {
+            $0.width.equalTo(24)
+            $0.height.equalTo(24)
+            $0.top.equalTo(themeChangRec.snp.top).offset(20)
+            $0.trailing.equalToSuperview().inset(32)
+        }
+        
         repasswordRight.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(repassword.snp.top)
         }
         
-        generateQRcodeText.snp.makeConstraints {
+        qrmakeonText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(repassword.snp.leading).offset(8)
-            $0.top.equalTo(line2View.snp.top).offset(25)
+            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
-        generateQRcodeDescription.snp.makeConstraints {
-            $0.width.equalTo(200)
-            $0.height.equalTo(20)
-            $0.leading.equalTo(generateQRcodeText.snp.leading)
-            $0.top.equalTo(generateQRcodeText.snp.bottom)
-        }
-        generateQRcodetoggleButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(line2View.snp.top).offset(32)
-        }
-        
-        lightmodeText.snp.makeConstraints {
+        qrmakeonDescription.snp.makeConstraints {
             $0.width.equalTo(184)
-            $0.height.equalTo(28)
-            $0.leading.equalTo(generateQRcodeText.snp.leading)
-            $0.top.equalTo(generateQRcodeDescription.snp.bottom).offset(32)
-        }
-        lightmodeDescription.snp.makeConstraints {
-            $0.width.equalTo(200)
             $0.height.equalTo(20)
-            $0.top.equalTo(lightmodeText.snp.bottom)
-            $0.leading.equalTo(generateQRcodeText.snp.leading)
+            $0.leading.equalTo(qrmakeonText.snp.leading)
+            $0.top.equalTo(qrmakeonText.snp.bottom)
+        }
+        qrmakeontoggleButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(28)
+            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
         
-        lightmodetoggleButton.snp.makeConstraints {
-            $0.trailing.equalTo(generateQRcodetoggleButton.snp.trailing)
-            $0.top.equalTo(generateQRcodetoggleButton.snp.bottom).offset(48)
-        }
         logoutButton.snp.makeConstraints {
             $0.width.equalTo(335)
             $0.height.equalTo(48)
             $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(40)
-            
+            $0.top.equalTo(qrmakeonDescription.snp.top).offset(188)
         }
     }
-    
 }
+

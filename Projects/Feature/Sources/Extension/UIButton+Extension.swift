@@ -1,6 +1,27 @@
 import UIKit
 
 extension UIButton {
+    
+    func setTitleColorForMode(darkModeColor: UIColor, lightModeColor: UIColor) {
+        let traitCollection = UITraitCollection(userInterfaceStyle: .dark)
+        let titleColor = darkModeColor.resolvedColor(with: traitCollection)
+        setTitleColor(titleColor, for: .normal)
+    }
+    
+    func setButtonBackgroundColor(lightModeColor: UIColor, darkModeColor: UIColor) {
+        let backgroundColor = UIColor { (traitCollection: UITraitCollection) -> UIColor in
+            return traitCollection.userInterfaceStyle == .dark ? darkModeColor : lightModeColor
+        }
+        self.backgroundColor = backgroundColor
+    }
+    
+    func setButtonBorderColor(lightModeColor: UIColor, darkModeColor: UIColor) {
+        let borderColor = UIColor { (traitCollection: UITraitCollection) -> UIColor in
+            return traitCollection.userInterfaceStyle == .dark ? darkModeColor : lightModeColor
+        }
+        self.layer.borderColor = borderColor.cgColor
+    }
+    
     convenience init(filterButton title: String) {
         self.init()
         setTitle(title, for: .normal)
