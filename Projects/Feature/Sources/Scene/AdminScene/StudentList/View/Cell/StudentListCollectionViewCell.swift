@@ -33,6 +33,8 @@ final class StudentListCollectionViewCell: UICollectionViewCell {
         $0.tintColor = .systemBlue
     }
     
+    var editButtonAction: (() -> Void)?
+    
     private let bottomView = UIView().then {
         $0.setDynamicBackgroundColor(darkModeColor: .white.withAlphaComponent(0.15), lightModeColor: .black.withAlphaComponent(0.15))
     }
@@ -52,6 +54,8 @@ final class StudentListCollectionViewCell: UICollectionViewCell {
     // MARK: - Configure UI
     private func configureUI() {
         self.backgroundColor = .clear
+        
+        editButton.addTarget(self, action: #selector(editButtonDidTap(_:)), for: .touchUpInside)
     }
     
     // MARK: - Add View
@@ -97,5 +101,10 @@ final class StudentListCollectionViewCell: UICollectionViewCell {
             $0.height.equalTo(1)
             $0.leading.trailing.equalToSuperview()
         }
+    }
+    
+    // MARK: Action
+    @objc func editButtonDidTap(_ sender: Any) {
+        editButtonAction?()
     }
 }

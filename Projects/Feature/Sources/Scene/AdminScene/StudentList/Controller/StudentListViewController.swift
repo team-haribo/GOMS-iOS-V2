@@ -112,7 +112,15 @@ extension StudentListViewController: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = studentListCollectionView.dequeueReusableCell(withReuseIdentifier: StudentListCollectionViewCell.identifier, for: indexPath) as! StudentListCollectionViewCell
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StudentListCell", for: indexPath) as! StudentListCollectionViewCell
+        
+        // 셀 설정
+        cell.editButtonAction = {
+            let bottomSheetVC = AuthorityBottomSheetViewController(contentViewController: UIViewController(), defaultHeight: 282, dimmedAlpha: 0.45)
+            bottomSheetVC.modalPresentationStyle = .overFullScreen
+            self.present(bottomSheetVC, animated: true, completion: nil)
+        }
         
         return cell
     }
