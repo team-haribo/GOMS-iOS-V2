@@ -47,6 +47,8 @@ public class StudentListViewController: BaseViewController {
         self.studentListCollectionView.dataSource = self
         
         studentListCollectionView.register(StudentListCollectionViewCell.self, forCellWithReuseIdentifier: StudentListCollectionViewCell.identifier)
+        
+        studentListCollectionView.isScrollEnabled = true
     }
     
     // MARK: - Configure UI
