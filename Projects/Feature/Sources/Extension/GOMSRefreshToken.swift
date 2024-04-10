@@ -9,36 +9,57 @@
 import Moya
 import Service
 
-class GOMSRefreshToken {
+public class GOMSRefreshToken {
+    static let shared = GOMSRefreshToken()
     private let authProvider = MoyaProvider<AuthServices>()
-//    private var reissuanceData = SignInResponse()
-//    private let keychain = Keychain()
-//    private lazy var refreshToken = "Bearer " + (keychain.read(key: Const.KeychainKey.refreshToken) ?? "")
+    private let keychain = KeyChain()
+    var statusCode: Int = 0
+    var reissuanceData: SignInResponse?
+    private lazy var refreshToken = "Bearer ey " + (keychain.read(key: Const.KeyChainKey.refreshToken) ?? "")
+
     // 토큰 재발급
-//    func tokenReissuance() {
-//        authProvider.request(.refreshToken(refreshToken: <#T##String#>)) { response in
-//            switch response {
-//            case .success(let result):
-//                    let statusCode = result.statusCode
-//                음
-//                    switch statusCode {
-//                    case 200:
-//                        print("OK")
-//                    case 400:
-//                        print("토큰을 요청하지 않은 경우")
-//                    case 401:
-//                        print("만료된 refreshToken일 경우 / 유효하지 않은 refreshToken일 경우")
-//                    case 404:
-//                        print("존재하지 않은 사용자 일 경우")
-//                    case 500:
-//                        print("SERVER ERROR")
-//                    default:
-//                        print(result)
-//                    }
-//                
-//            case .failure(let err):
-//                print(err.localizedDescription)
-//            }
-//        }
-//    }
+    func tokenReissuance() {
+        authProvider.request(.refreshToken(refreshToken: refreshToken)) { response in
+            switch response {
+            case .success(let result):
+                self.statusCode = result.statusCode
+                do {
+                    self.reissuanceData = try result.map(SignInResponse.self)
+                }catch(let err) {
+                    print(String(describing: err))
+                }
+                switch self.statusCode {
+                case 200..<300:
+                    self.updateToken()
+                case 400, 401, 404:
+                    print("error")
+                default:
+                    print("error")
+                }
+            case .failure(let err):
+                print(String(describing: err))
+            }
+        }
+    }
+    
+    func updateToken() {
+        guard let accessToken = reissuanceData?.accessToken,
+              let refreshToken = reissuanceData?.refreshToken,
+              let authority = reissuanceData?.authority else {
+            print("Failed to update token: Missing token data")
+            return
+        }
+    
+        if !keychain.update(token: accessToken, key: Const.KeyChainKey.accessToken) {
+            print("실패")
+        }
+        
+        if !keychain.update(token: refreshToken, key: Const.KeyChainKey.refreshToken) {
+            print("실패")
+        }
+        
+        if !keychain.update(token: authority, key: Const.KeyChainKey.authority) {
+            print("실패")
+        }
+    }
 }

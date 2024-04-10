@@ -11,7 +11,7 @@ import Service
 import Security
 import Foundation
 
-class KeyChain {
+public class KeyChain {
     func create(key: String, token: String) {
         let query: NSDictionary = [
             kSecClass: kSecClassGenericPassword,
@@ -45,7 +45,31 @@ class KeyChain {
         }
     }
     
+    func update(token: Any, key: Any) -> Bool {
+        let prevQuery: [CFString: Any] = [kSecClass: kSecClassGenericPassword,
+                                    kSecAttrAccount: key]
+        let updateQuery: [CFString: Any] = [kSecValueData: (token as AnyObject).data(using: String.Encoding.utf8.rawValue) as Any]
+        
+        let result: Bool = {
+            let status = SecItemUpdate(prevQuery as CFDictionary, updateQuery as CFDictionary)
+            if status == errSecSuccess { return true }
+            
+            print(status.description)
+            return false
+        }()
+        
+        return result
+    }
+    
     func delete() {
         
+    }
+}
+
+public struct Const {
+    struct KeyChainKey {
+        static let accessToken = "accessToken"
+        static let refreshToken = "refreshToken"
+        static let authority = "authority"
     }
 }

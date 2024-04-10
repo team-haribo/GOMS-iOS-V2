@@ -29,13 +29,15 @@ public final class SignInViewModel {
         authProvider.request(.signIn(param: param)) { response in
             switch response {
             case .success(let result):
+                let statusCode = result.statusCode
                 do {
-                    let statusCode = result.statusCode
+
+                }
                     switch statusCode {
                     case 200:
                         print("OK")
+                        
                         completion(true)
-                        // RefreshToken
                     case 500:
                         print("SERVER ERROR")
                         completion(false)
@@ -43,7 +45,7 @@ public final class SignInViewModel {
                         print(result)
                         completion(false)
                     }
-                }
+
             case .failure(let err):
                 print(err.localizedDescription)
                 completion(false)
