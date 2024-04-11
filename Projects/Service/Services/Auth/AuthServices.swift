@@ -66,8 +66,6 @@ extension AuthServices: TargetType {
             return .requestJSONEncodable(param)
         case .verifyAuthNumber(let email, let authCode):
             return .requestParameters(parameters: ["email": email, "authCode": authCode], encoding: URLEncoding.queryString)
-//        case .verifyAuthNumber(let param):
-//            return .requestJSONEncodable(param)
         }
     }
     
