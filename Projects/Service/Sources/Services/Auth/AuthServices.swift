@@ -2,7 +2,7 @@
 //  AuthServices.swift
 //  Service
 //
-//  Created by 새미 on 3/31/24.
+//  Created by 새미 on 4/11/24.
 //  Copyright © 2024 HARIBO. All rights reserved.
 //
 
@@ -66,8 +66,6 @@ extension AuthServices: TargetType {
             return .requestJSONEncodable(param)
         case .verifyAuthNumber(let email, let authCode):
             return .requestParameters(parameters: ["email": email, "authCode": authCode], encoding: URLEncoding.queryString)
-//        case .verifyAuthNumber(let param):
-//            return .requestJSONEncodable(param)
         }
     }
     
@@ -83,4 +81,5 @@ extension AuthServices: TargetType {
         }
     }
 }
+
 
