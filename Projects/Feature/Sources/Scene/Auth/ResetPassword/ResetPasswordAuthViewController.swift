@@ -8,9 +8,11 @@
 
 import UIKit
 
-public final class ResetPasswordAuthViewController: BaseViewController, UITextFieldDelegate {
+public final class ResetPasswordAuthViewController: BaseViewController {
     
     // MARK: - Properties
+    private let viewModel = SignUpViewModel()
+    
     private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이메일")
     
     private let defaultDomain = UILabel().then {
@@ -24,14 +26,17 @@ public final class ResetPasswordAuthViewController: BaseViewController, UITextFi
     // MARK:  - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         emailTextField.delegate = self
     }
     
     // MARK: - Selectors
     @objc func authButtonTapped() {
-//        let authNumberVC = AuthNumberViewController()
-//        navigationController?.pushViewController(authNumberVC, animated: true)
+        viewModel.sendAuthNumber { success in
+            if success {
+                let authNumberVC = AuthNumberViewController(viewModel: self.viewModel)
+                self.navigationController?.pushViewController(authNumberVC, animated: true)
+            }
+        }
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
@@ -99,6 +104,14 @@ public final class ResetPasswordAuthViewController: BaseViewController, UITextFi
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.height.equalTo(48)
             $0.bottom.equalTo(-bounds.height * 0.16)
+        }
+    }
+}
+
+extension ResetPasswordAuthViewController: UITextFieldDelegate {
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == emailTextField {
+            viewModel.setupEmail(email: textField.text ?? "")
         }
     }
 }

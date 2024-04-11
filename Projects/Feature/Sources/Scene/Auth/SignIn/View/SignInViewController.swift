@@ -46,8 +46,8 @@ public final class SignInViewController: BaseViewController {
         $0.addTarget(self, action: #selector(findPasswordButtonTapped), for: .touchUpInside)
     }
     
-    private lazy var authenticationNumberButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기").then {
-        $0.addTarget(self, action: #selector(authenticationNumberButtonTapped), for: .touchUpInside)
+    private lazy var signInButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "로그인").then {
+        $0.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Life Cycel
@@ -64,9 +64,13 @@ public final class SignInViewController: BaseViewController {
         navigationController?.pushViewController(findPasswordVC, animated: true)
     }
     
-    @objc func authenticationNumberButtonTapped() {
-//        let authNumberVC = AuthNumberViewController()
-//        navigationController?.pushViewController(authNumberVC, animated: true)
+    @objc func signInButtonTapped() {
+        viewModel.signIn { success in
+            if success {
+                let mainVC = MainViewController()
+                self.navigationController?.pushViewController(mainVC, animated: true)
+            }
+        }
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
@@ -76,7 +80,7 @@ public final class SignInViewController: BaseViewController {
             $0.top.equalTo(bounds.height * 0.23)
         }
         
-        authenticationNumberButton.snp.remakeConstraints {
+        signInButton.snp.remakeConstraints {
             $0.height.equalTo(48)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
@@ -91,7 +95,7 @@ public final class SignInViewController: BaseViewController {
             $0.top.equalTo(bounds.height * 0.35)
         }
         
-        authenticationNumberButton.snp.remakeConstraints {
+        signInButton.snp.remakeConstraints {
             $0.height.equalTo(48)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
@@ -110,7 +114,7 @@ public final class SignInViewController: BaseViewController {
     override func addView() {
         emailTextField.addSubview(defaultDomain)
         [emailTextField, passwordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
-        [textFieldStackView, findPasswordLabel, findPasswordButton, authenticationNumberButton].forEach { view.addSubview($0) }
+        [textFieldStackView, findPasswordLabel, findPasswordButton, signInButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -147,7 +151,7 @@ public final class SignInViewController: BaseViewController {
             $0.top.equalTo(passwordTextField.snp.bottom)
         }
         
-        authenticationNumberButton.snp.makeConstraints {
+        signInButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
@@ -157,6 +161,14 @@ public final class SignInViewController: BaseViewController {
 }
 
 extension SignInViewController: UITextFieldDelegate {
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == emailTextField {
+            viewModel.setupEmail(email: textField.text ?? "")
+        } else if textField == passwordTextField {
+            viewModel.setupPassword(password: textField.text ?? "")
+        }
+    }
+    
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if emailTextField.text != "", passwordTextField.text != "" {
             passwordTextField.resignFirstResponder()
@@ -168,4 +180,3 @@ extension SignInViewController: UITextFieldDelegate {
         return false
     }
 }
-
