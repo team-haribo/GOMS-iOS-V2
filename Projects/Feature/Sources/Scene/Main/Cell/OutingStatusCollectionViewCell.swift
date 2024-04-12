@@ -19,6 +19,8 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 28, height: 28)).then {
         $0.image = UIImage(systemName: "person.crop.circle.fill")
         $0.tintColor = .color.gomsSecondary.color
+//        $0.layer.borderColor = UIColor.color.gomsMainViewBorder.color.cgColor
+//        $0.backgroundColor = .color.gomsMainViewBackground.color
     }
     
     let nameLabel = UILabel().then {

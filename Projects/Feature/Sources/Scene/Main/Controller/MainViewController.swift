@@ -1,15 +1,6 @@
-//
-//  MainViewController.swift
-//  Feature
-//
-//  Created by 새미 on 1/10/24.
-//  Copyright © 2024 HARIBO. All rights reserved.
-//
-
 import UIKit
 
 public final class MainViewController: BaseViewController, UICollectionViewDelegate {
-    
     // MARK: - Properties
     let scrollView = UIScrollView()
     
@@ -22,11 +13,11 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private let profileView = ProfileCardView()
     
     private let latecomerView = UIView().then {
-        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
+        $0.backgroundColor = .color.gomsMainViewBackground.color
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 12
         $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
+        $0.layer.borderColor = UIColor.color.gomsMainViewBorder.color.cgColor
     }
     
     private let latecomerLabel = UILabel().then {
@@ -38,11 +29,11 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private let latecomerStackView = LatecomerStackView()
     
     private let outingStatusView = UIView().then {
-        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
+        $0.backgroundColor = .color.gomsMainViewBackground.color
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 12
         $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
+        $0.layer.borderColor = UIColor.color.gomsMainViewBorder.color.cgColor
     }
     
     private let outingStatusLabel = UILabel().then {
@@ -54,7 +45,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private lazy var moreOutingStatusButton = UIButton().then {
         $0.backgroundColor = .clear
         $0.setTitle("더보기", for: .normal)
-        $0.setTitleColor(.color.gomsTertiary.color, for: .normal)
+        $0.setTitleColor(.color.gomsSecondary.color, for: .normal)
         $0.titleLabel?.font = .pretendard(size: 16, weight: .regular)
         $0.addTarget(self, action: #selector(moreOutingStatusButtonTapped), for: .touchUpInside)
     }
@@ -77,7 +68,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
     
     private lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingStatusFlowLayout).then {
-        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
+        $0.backgroundColor = .color.gomsMainViewBackground.color
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
@@ -145,14 +136,16 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide)
+//            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalToSuperview().offset(48)
             $0.leading.equalToSuperview()
             $0.height.equalTo(56)
             $0.width.equalTo(127)
         }
         
         settingButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+//            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            $0.top.equalToSuperview().offset(64)
             $0.trailing.equalToSuperview().inset(20)
             $0.width.equalTo(22.21877)
             $0.height.equalTo(21.88972)
