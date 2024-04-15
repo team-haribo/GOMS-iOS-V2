@@ -1,15 +1,9 @@
-//
-//  LatecomerView.swift
-//  Feature
-//
-//  Created by 새미 on 1/29/24.
-//  Copyright © 2024 HARIBO. All rights reserved.
-//
-
 import UIKit
 
 import SnapKit
 import Then
+import Moya
+import Service
 
 final class LatecomerView: UIView {
     
@@ -37,6 +31,7 @@ final class LatecomerView: UIView {
         configureUI(name, studentInformation)
         addView()
         setLayout()
+        setProfile()
     }
     
     required init?(coder: NSCoder) {
@@ -77,6 +72,51 @@ final class LatecomerView: UIView {
             $0.top.equalTo(nameLabel.snp.bottom)
             $0.bottom.equalToSuperview().inset(8)
             $0.centerX.equalToSuperview()
+        }
+    }
+    
+    private func setProfile() {
+        let provider = MoyaProvider<LateServices>()
+        provider.request(.lateRank(param: LateRankRequest(lateCount: 3))) { result in
+            switch result {
+            case .success(let response):
+                do {
+                    let lateRankResponse = try? response.map(LateRankResponse.self)
+                    
+                    if let lateRankResponse = lateRankResponse {
+                        DispatchQueue.main.async {
+                            if let profileUrlString = lateRankResponse.profileUrl, let profileUrl = URL(string: profileUrlString) {
+                                let profileProvider = MoyaProvider<AccountServices>()
+                                profileProvider.request(.accountProfile) { result in
+                                    switch result {
+                                    case .success(let response):
+                                        if let image = UIImage(data: response.data) {
+                                            DispatchQueue.main.async {
+                                                self.profileImageView.image = image
+                                            }
+                                        }
+                                    case .failure(let error):
+                                        print("Failed to fetch image: \(error)")
+                                        DispatchQueue.main.async {
+                                            self.profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+                                        }
+                                    }
+                                }
+                            } else {
+                                DispatchQueue.main.async {
+                                    self.profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+                                }
+                            }
+                            self.nameLabel.text = lateRankResponse.name
+                            self.studentInformationLabel.text = "\(lateRankResponse.major)기 | \(lateRankResponse.grade)"
+                        }
+                    }
+                } catch {
+                    print("응답 디코딩 오류: \(error)")
+                }
+            case .failure(let error):
+                print("네트워크 요청 실패: \(error)")
+            }
         }
     }
 }

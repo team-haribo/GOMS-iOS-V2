@@ -136,7 +136,6 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-//            $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.top.equalToSuperview().offset(48)
             $0.leading.equalToSuperview()
             $0.height.equalTo(56)
@@ -144,7 +143,6 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         }
         
         settingButton.snp.makeConstraints {
-//            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
             $0.top.equalToSuperview().offset(64)
             $0.trailing.equalToSuperview().inset(20)
             $0.width.equalTo(22.21877)

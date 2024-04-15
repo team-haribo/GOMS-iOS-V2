@@ -13,7 +13,7 @@ import Then
 
 final class OutingStatusCollectionViewCell: UICollectionViewCell {
     
-    // MARK: - Properties
+    // MARK: - Properties    
     static let identifier = "OutingStatusCell"
     
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 28, height: 28)).then {
