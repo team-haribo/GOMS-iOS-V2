@@ -1,8 +1,11 @@
 import UIKit
-
 import AVFoundation
 
 public class QRCodeViewController: BaseViewController {
+    // MARK: Propertices
+    private let captureSession = AVCaptureSession()
+    private var previewLayer: AVCaptureVideoPreviewLayer!
+    
     private let qrScanBackground = UIImageView().then {
         $0.image = .image.gomsqrBackground.image
     }
@@ -12,36 +15,34 @@ public class QRCodeViewController: BaseViewController {
     }
     
     private let closeButton = UIButton().then {
-        $0.setImage(.image.gomsClostButton.image, for: .normal)
+        $0.setImage(.image.gomsCloseButton.image, for: .normal)
         $0.addTarget(self, action: #selector(closeButtonDidTap(_:)), for: .touchUpInside)
     }
     
-    private let qrScanner = UIImageView().then {
-        $0.image = .image.gomsqrScanner.image
-    }
-    
-    private let qrScannerPhone = UIImageView().then {
-        $0.image = .image.gomsqrScannerPhone.image
-    }
-    
-    private let qrScannerBlur = UIImageView().then {
-        $0.image = .image.gomsqrScannerBlur.image
-    }
+//    private let qrScanner = UIImageView().then {
+//        $0.image = .image.gomsqrScanner.image
+//    }
+//    
+//    private let qrScannerPhone = UIImageView().then {
+//        $0.image = .image.gomsqrScannerPhone.image
+//    }
+//    
+//    private let qrScannerBlur = UIImageView().then {
+//        $0.image = .image.gomsqrScannerBlur.image
+//    }
     
     private let qrIcon = UIImageView().then {
         $0.image = .image.gomsqrIcon.image
     }
-    
-    let captureSession = AVCaptureSession()
-    var previewLayer: AVCaptureVideoPreviewLayer!
 
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupCamera()
+        basicSetting()
     }
     
     public override func addView() {
-        [qrScanBackground, gomsLogo, closeButton, qrScanner, qrScannerPhone, qrScannerBlur, qrIcon].forEach {
+        [qrScanBackground, gomsLogo, closeButton, qrIcon].forEach {
             view.addSubview($0)
         }
     }
@@ -62,20 +63,8 @@ public class QRCodeViewController: BaseViewController {
             $0.trailing.equalToSuperview().inset(20)
         }
         
-        qrScanner.snp.makeConstraints {
-            $0.centerY.centerX.equalToSuperview()
-        }
-        
-        qrScannerPhone.snp.makeConstraints {
-            $0.centerY.centerX.equalToSuperview()
-        }
-        
-        qrScannerBlur.snp.makeConstraints {
-            $0.centerY.centerX.equalToSuperview()
-        }
-        
         qrIcon.snp.makeConstraints {
-            $0.width.height.equalTo(136)
+            $0.width.height.equalTo(232)
             $0.centerY.centerX.equalToSuperview()
         }
     }
@@ -113,11 +102,112 @@ public class QRCodeViewController: BaseViewController {
         
         let screenWidth = view.bounds.width
         let screenHeight = view.bounds.height
-        let previewSize: CGFloat = 120
+        let previewSize: CGFloat = 200
         
         let previewX = (screenWidth - previewSize) / 2
         let previewY = (screenHeight - previewSize) / 2
         
         previewLayer.frame = CGRect(x: previewX, y: previewY, width: previewSize, height: previewSize)
     }
+    
+    private func setupQRScanner() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            setupCamera()
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                if granted {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.setupCamera()
+                    }
+                }
+            }
+        default:
+            showAlert()
+        }
+    }
+
+    private func showAlert() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            let alert = UIAlertController(
+                title: "Error",
+                message: "카메라 접근을 허용해주세요",
+                preferredStyle: .alert
+            )
+            alert.addAction(.init(title: "OK", style: .default))
+            self?.present(alert, animated: true)
+        }
+    }
 }
+
+extension QRCodeViewController {
+    private func basicSetting() {
+        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
+            fatalError("No video device found")
+        }
+        do {
+            let input = try AVCaptureDeviceInput(device: captureDevice)
+            
+            captureSession.addInput(input)
+            
+            let output = AVCaptureMetadataOutput()
+            
+            captureSession.addOutput(output)
+            
+//            output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+            
+            output.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
+            
+            setVideoLayer()
+//            setGuideCrossLineView()
+            
+            captureSession.startRunning()
+        }
+        catch {
+            print("error")
+        }
+    }
+    
+    private func setVideoLayer() {
+        let videoLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        
+        videoLayer.frame = view.layer.bounds
+        
+        videoLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        view.layer.addSublayer(videoLayer)
+    }
+    
+//    private func setGuideCrossLineView() {
+//        let guideCrossLine = UIImageView().then {
+//            $0.image = UIImage(systemName: "plus")
+//            $0.tintColor = .green
+//            $0.translatesAutoresizingMaskIntoConstraints = false
+//        }
+//        
+//        guideCrossLine.snp.makeConstraints {
+//            $0.centerY.centerX.equalToSuperview()
+//            $0.width.height.equalTo(30)
+//        }
+//    }
+}
+
+//extension QRCodeViewController: AVCaptureMetadataOutputObjectsDelegate {
+//    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+//        if metadataObjects.count == 0 {
+//            return
+//        }
+//        
+//        guard let metaDataObj = metadataObjects[0] as? AVMetadataMachineReadableCodeObject else { return }
+//        
+//        if metaDataObj.type == AVMetadataObject.ObjectType.qr {
+//            if let outPutValue = metaDataObj.stringValue {
+//                if outPutValue.hasPrefix("http://") || outPutValue.hasPrefix("https://")  {
+//                    UrlLabel.setTitle(outPutValue, for: .normal)
+//                    zoomIn()
+//                    //print(url)
+//                    captureSession.stopRunning()
+//                }
+//            }
+//        }
+//    }
+//}
