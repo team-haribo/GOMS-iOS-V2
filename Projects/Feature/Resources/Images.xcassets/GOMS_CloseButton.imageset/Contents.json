@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "QRIcon.png",
+      "filename" : "closeButton.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

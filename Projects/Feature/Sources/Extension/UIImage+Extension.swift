@@ -1,13 +1,12 @@
-//
-//  UIImage+Extension.swift
-//  Feature
-//
-//  Created by 새미 on 1/11/24.
-//  Copyright © 2024 HARIBO. All rights reserved.
-//
-
 import UIKit
+import QRCode
 
 extension UIImage {
     static let image = FeatureAsset.Images.self
+}
+
+extension UIImageView {
+    convenience init(qrCode: QRCode) {
+        self.init(image: qrCode.unsafeImage)
+    }
 }

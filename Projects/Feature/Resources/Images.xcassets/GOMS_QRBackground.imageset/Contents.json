@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "QRIcon.png",
+      "filename" : "qrBackground.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
