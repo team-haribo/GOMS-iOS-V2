@@ -99,7 +99,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
     
     @objc func qrButtonTapped() {
-        // QR Button Tapped
+        let qrCodeVC = QRCodeViewController()
+        self.navigationController?.pushViewController(qrCodeVC, animated: true)
     }
 
     // MARK: - Life Cycle
@@ -111,6 +112,9 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationItem.hidesBackButton = true
+        
         setCollectionView()
         setDatas()
     }
