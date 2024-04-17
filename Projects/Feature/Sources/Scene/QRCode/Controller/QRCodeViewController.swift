@@ -144,7 +144,6 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
     
     // MARK: Action
     @objc func closeButtonDidTap() {
-        // closeButton 액션
         print("터치")
         let mainVC = MainViewController()
         self.navigationController?.pushViewController(mainVC, animated: true)

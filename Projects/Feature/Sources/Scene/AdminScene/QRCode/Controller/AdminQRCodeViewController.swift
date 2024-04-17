@@ -86,11 +86,8 @@ public class AdminQRCodeViewController: BaseViewController {
     }
     
     func createQrCode() {
-//        viewModel.QRCode { [weak self] success in
-//            guard success else { return }
             let urlUUID = self.viewModel.outingUUID
             let qrCodeURLString = "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2/outing/\(urlUUID)"
-//            guard let qrCodeURL = URL(string: qrCodeURLString) else { return }
             
             var qrCode = QRCode(string: qrCodeURLString) // qr 생성 데이터
             qrCode?.color = .black  // qr 코드 선 색상
@@ -109,9 +106,7 @@ public class AdminQRCodeViewController: BaseViewController {
             
             qrImageView.snp.makeConstraints {
                 $0.height.width.equalTo(200)
-//                $0.top.equalTo(titleText.snp.bottom).offset(124)
                 $0.edges.equalToSuperview()
             }
-//        }
     }
 }
