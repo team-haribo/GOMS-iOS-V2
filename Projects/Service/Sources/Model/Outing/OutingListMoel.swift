@@ -9,7 +9,7 @@
 import Foundation
 
 public struct OutingListModel: Codable {
-    let data: SignInResponse
+    let data: OutingResponse
 }
 
 public struct OutingResponse: Codable {
