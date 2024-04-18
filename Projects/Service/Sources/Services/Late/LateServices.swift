@@ -37,7 +37,7 @@ extension LateServices: TargetType {
     
     public var headers: [String : String]? {
         switch self {
-        case .lateRank(let authorization):
+        default:
             return["Content-Type" :"application/json"]
         }
     }

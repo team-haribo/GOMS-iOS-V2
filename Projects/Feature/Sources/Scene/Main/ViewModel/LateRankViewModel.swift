@@ -28,10 +28,10 @@ public final class LateRankViewModel {
                         print("OK")
                         completion(true)
                     case 401:
-                        print("오류")
+                        print("만료된 accessToken일 경우 / 유효하지 않은 accessToken일 경우")
                         completion(false)
                     case 404:
-                        print("Later X")
+                        print("지각자가 없을 경우")
                         completion(false)
                     case 500:
                         print("SERVER ERROR")

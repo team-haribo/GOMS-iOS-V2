@@ -53,7 +53,7 @@ extension AccountServices: TargetType {
     
     public var headers: [String : String]? {
         switch self {
-        case .accountProfile, .accountNewPassword, .accountImageUpload, .accountImageChange, .accountImageDelete:
+        default:
             return["Content-Type" :"application/json"]
         }
     }
