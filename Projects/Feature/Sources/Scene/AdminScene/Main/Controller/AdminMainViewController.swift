@@ -5,15 +5,11 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Properties
     let scrollView = UIScrollView()
     
-    private let logo = UIImageView(image: .image.gomsAdminLogo.image)
+    private let logo = UIImageView()
     
-    private let studentManagementButton = UIButton().then {
-        $0.setBackgroundImage(.image.gomsAdminIcon.image, for: .normal)
-    }
+    private let studentManagementButton = UIButton()
     
-    private let settingButton = UIButton().then {
-        $0.setBackgroundImage(.image.gomsSettingIcon.image, for: .normal)
-    }
+    private let settingButton = UIButton()
     
     private let profileView = AdminProfileCardView()
     
@@ -95,6 +91,7 @@ public class AdminMainViewController: BaseViewController {
         super.viewDidLoad()
         setCollectionView()
         setDatas()
+        setIconColor()
     }
     
     // MARK: - CollectionView Setting
@@ -113,6 +110,19 @@ public class AdminMainViewController: BaseViewController {
     override func configureUI() {
         qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
         qrButton.clipsToBounds = true
+    }
+    
+    // MARK: setLogo
+    private func setIconColor() {
+        if traitCollection.userInterfaceStyle == .dark {
+            logo.image = .image.gomsDarkGrayLogo.image
+            studentManagementButton.setBackgroundImage(.image.gomsDarkGrayIcon.image, for: .normal)
+            settingButton.setBackgroundImage(.image.gomsDarkGraySettingIcon.image, for: .normal)
+        } else {
+            logo.image = .image.gomsLightGrayLogo.image
+            studentManagementButton.setBackgroundImage(.image.gomsLightGrayIcon.image, for: .normal)
+            settingButton.setBackgroundImage(.image.gomsLightGraySettingIcon.image, for: .normal)
+        }
     }
     
     // MARK: - Add View
@@ -134,9 +144,9 @@ public class AdminMainViewController: BaseViewController {
         
         studentManagementButton.snp.makeConstraints {
             $0.trailing.equalTo(settingButton.snp.leading)
-            $0.top.equalToSuperview().offset(50)
-            $0.width.equalTo(64)
-            $0.height.equalTo(56)
+            $0.top.equalToSuperview().offset(63.43)
+            $0.width.equalTo(36.96)
+            $0.height.equalTo(28.36)
         }
         
         settingButton.snp.makeConstraints {
