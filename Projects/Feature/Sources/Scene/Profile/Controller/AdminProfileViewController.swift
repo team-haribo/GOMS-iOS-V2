@@ -7,10 +7,15 @@
 //
 
 import UIKit
+import Combine
+import Moya
+
 
 public class AdminProfileViewController: BaseViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let imagePickerController = UIImagePickerController()
+    let viewModel = ProfileViewModel()
+    var cancellables = Set<AnyCancellable>()
     
     let userProfile = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
@@ -31,13 +36,13 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     let userName = UILabel().then {
-        $0.text = "홍길동"
+        $0.text = ""
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
     let userGradeDepartment = UILabel().then {
-        $0.text = "7기ㅣIoT"
+        $0.text = ""
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
@@ -50,7 +55,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     
     let perceptionNum = UILabel().then {
-        $0.text = "11"
+        $0.text = ""
         $0.textColor = .color.gomsNegative.color
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
@@ -109,12 +114,14 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.text = "앱을 실행하면 즉시 QR코드를 생성해요"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
+        
     }
     
     let qrmakeontoggleButton: UISwitch = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
+        $0.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
     }
     
     let logoutButton = UIButton().then {
@@ -128,6 +135,12 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     let borderView = UIView().then() {
         $0.backgroundColor = .color.gomsDivider.color
     }
+    
+    @objc func switchValueChanged(_ sender: UISwitch) {
+           // Save switch state to UserDefaults when value changes
+           UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
+            print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
+       }
     
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {
         updateImage(isActionSheetShowing: true)
@@ -188,7 +201,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         alertController.addAction(cancelAction)
         
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
-            print("로그아웃 버튼이 확인되었습니다.")
+            let viewModel = ProfileViewModel()
+            viewModel.ProfileLogout()
             self?.performLogout()
         }
         alertController.addAction(confirmAction)
@@ -197,6 +211,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         
         self.present(alertController, animated: true, completion: nil)
     }
+
     
     
     func performLogout() {
@@ -219,18 +234,65 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.loadProfileInfo()
+        
+        viewModel.$profileInfo.sink { [weak self] profileInfo in
+            guard let profileInfo = profileInfo else { return }
+            DispatchQueue.main.async {
+                self?.userName.text = profileInfo.name
+                self?.perceptionNum.text = String(describing: profileInfo.lateCount)
+                
+                let majorText: String
+                switch profileInfo.major {
+                case "SW_DEVELOP":
+                    majorText = "SW"
+                case "SMART_IOT":
+                    majorText = "IoT"
+                default:
+                    majorText = "AI"
+                }
+                let finalText = "\(profileInfo.grade)기ㅣ\(majorText)"
+
+                // UILabel의 text 속성에 문자열 할당
+                let profileUrlString = profileInfo.profileUrl ?? ""
+
+                // profileUrlString이 유효한 URL이라면 이미지를 가져옵니다.
+                if let profileUrl = URL(string: profileUrlString) {
+                    // URLSession을 사용하여 이미지 데이터를 가져오는 작업을 시작합니다.
+                    URLSession.shared.dataTask(with: profileUrl) { data, response, error in
+                        // 에러를 확인하고 데이터를 UIImage로 변환합니다.
+                        if let error = error {
+                            print("이미지 데이터를 가져오는 중 에러 발생: \(error)")
+                            return
+                        }
+                        
+                        // 데이터가 유효하다면 UIImage로 변환하여 userProfile 이미지 뷰에 설정합니다.
+                        if let imageData = data, let profileImage = UIImage(data: imageData) {
+                            DispatchQueue.main.async {
+                                // userProfile 이미지 뷰에 가져온 이미지를 설정합니다.
+                                self?.userProfile.image = profileImage
+                            }
+                        }
+                    }.resume() // 데이터 작업을 시작합니다.
+                }
+
+                let uploadimage = profileInfo.profileUrl
+                self?.userGradeDepartment.text = finalText
+            }
+        }
+        .store(in: &cancellables)
+
         
         view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
         
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
         self.navigationItem.backBarButtonItem = backBarButtonItem
+        
         imagePickerController.delegate = self
     }
     
     @objc func passwordResetPage() {
-//        let testViewController = PasswordResetViewController()
-//
-//        navigationController?.pushViewController(testViewController, animated: true)
+        // 비밀번호 재설정 뷰 연결
     }
     
     @IBAction func ShowActionSheetProfilImageChange(_ sender: UIButton) {
@@ -242,7 +304,12 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }))
         
         actionSheet.addAction(UIAlertAction(title: "기본 프로필 사용", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            self?.userProfile.image = .image.gomsBasicProfile.image        }))
+            self?.userProfile.image = .image.gomsBasicProfile.image
+            let viewModel = ProfileViewModel()
+                viewModel.deleteProfileImage()
+            
+        }))
+
         
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
             self?.updateImage(isActionSheetShowing: false)
@@ -262,17 +329,27 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             }
         }
 
-        public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-                userProfile.image = pickedImage
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let pickedImage = info[.originalImage] as? UIImage,
+               let imageData = pickedImage.jpegData(compressionQuality: 0.8) {
+                let providerserve = MoyaProvider<ProfileImageServices>()
+                providerserve.request(.submit(authorization: "", imageData: imageData)) { result in
+                    switch result {
+                    case let .success(response):
+                        print(response)
+                        DispatchQueue.main.async { [weak self] in
+                            self?.userProfile.image = pickedImage
+                        }
+                    case let .failure(error):
+                        print(error)
+                    }
+                }
             }
             dismiss(animated: true, completion: nil)
         }
-
         public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             dismiss(animated: true, completion: nil)
         }
-
     override func addView() {
         [
             userProfile,
