@@ -181,7 +181,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         profileView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalToSuperview().inset(16)
-            $0.height.equalTo(96)
+            $0.height.equalTo(84)
             $0.centerX.equalToSuperview()
         }
 
