@@ -142,7 +142,7 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         previewLayer.frame = CGRect(x: previewX, y: previewY, width: previewSize, height: previewSize)
     }
     
-    // MARK: Actionㅌㅌ
+    // MARK: Action
     @objc func closeButtonDidTap() {
         print("터치")
         let mainVC = MainViewController()
