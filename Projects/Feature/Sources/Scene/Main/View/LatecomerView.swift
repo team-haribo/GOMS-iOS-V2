@@ -45,7 +45,7 @@ final class LatecomerView: UIView {
     
     // MARK: - Configure UI
     private func configureUI(_ name: String, _ studentInformation: String) {
-        self.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
+        self.backgroundColor = .color.gomsTextDefault.color.withAlphaComponent(0.1)
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
         nameLabel.text = name
