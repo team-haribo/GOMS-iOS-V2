@@ -19,12 +19,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let defaults = UserDefaults.standard
             
             let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+            defaults.register(defaults: ["isSwitchOn": false])
             print(isSwitchOn)
             
             if isSwitchOn == true {
-                window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
+                DispatchQueue.main.async {
+                    let newViewController = QRCodeViewController()
+                    
+                    // Set the new view controller as the root view controller
+                    UIApplication.shared.windows.first?.rootViewController = newViewController
+                    UIApplication.shared.windows.first?.makeKeyAndVisible()
+                }
             } else {
-                window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+                DispatchQueue.main.async {
+                    let newViewController = UserProfileViewController()
+                    
+                    // Set the new view controller as the root view controller
+                    UIApplication.shared.windows.first?.rootViewController = newViewController
+                    UIApplication.shared.windows.first?.makeKeyAndVisible()
+                }
             }
         
         window?.makeKeyAndVisible()

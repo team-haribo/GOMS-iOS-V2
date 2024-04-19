@@ -202,7 +202,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
             let viewModel = ProfileViewModel()
-            viewModel.ProfileLogout()
+            viewModel.ProfileLogout(presentingViewController: SignInViewController())
             self?.performLogout()
         }
         alertController.addAction(confirmAction)

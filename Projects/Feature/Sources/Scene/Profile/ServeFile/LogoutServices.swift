@@ -42,7 +42,7 @@ extension LogoutServices: TargetType {
 
     public var headers: [String: String]? {
         //["Content-Type": "application/json"]
-        ["refreshToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNGZhYjE3NC05ODY1LTQ4ZTctOTNjZi1lMDQyNGJmMDlkOGUiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJhdXRob3JpdHkiOiJST0xFX1NUVURFTlRfQ09VTkNJTCIsImlhdCI6MTcxMzQyNzA0NywiZXhwIjoxNzEzNDM3ODQ3fQ.qBZ4yLt12mtrHlUgYt7WmYg8rCyoVtMRWem7zM-BQ4Y"]
+        ["refreshToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNGZhYjE3NC05ODY1LTQ4ZTctOTNjZi1lMDQyNGJmMDlkOGUiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzEzNDg5MTAzLCJleHAiOjE3MTE3ODYxMzZ9.uxYQVbVPQ353xPRh0CTOq3DwMxtaXqrXz74mShrOMVU"]
         
     
         

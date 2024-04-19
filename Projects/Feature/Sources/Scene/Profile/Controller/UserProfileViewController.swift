@@ -143,6 +143,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.onTintColor = .color.gomsPrimary.color
         $0.tintColor = .color.gomsTertiary.color
         $0.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
+        $0.isOn = false
     }
     
     let lightmodeText = UILabel().then {
@@ -177,10 +178,11 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     
     @objc func switchValueChanged(_ sender: UISwitch) {
         // Save switch state to UserDefaults when value changes
-        UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
-        let QRState = sender.isOn
+        
+        let QRState = sender.state
         print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
         print(QRState)
+        UserDefaults.standard.set(sender.state, forKey: "isSwitchOn")
     }
     
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {
@@ -242,7 +244,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
             let viewModel = ProfileViewModel()
-            viewModel.ProfileLogout()
+            viewModel.ProfileLogout(presentingViewController: SignInViewController())
             self?.performLogout()
         }
         alertController.addAction(confirmAction)
