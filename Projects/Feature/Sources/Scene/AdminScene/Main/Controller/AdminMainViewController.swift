@@ -112,7 +112,7 @@ public class AdminMainViewController: BaseViewController {
         qrButton.clipsToBounds = true
     }
     
-    // MARK: setLogo
+    // MARK: setIconColor
     private func setIconColor() {
         if traitCollection.userInterfaceStyle == .dark {
             logo.image = .image.gomsDarkGrayLogo.image

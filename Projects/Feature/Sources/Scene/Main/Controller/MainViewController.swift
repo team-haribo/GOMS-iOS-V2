@@ -115,6 +115,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         
         setCollectionView()
         setDatas()
+        setIconColor()
     }
     
     // MARK: - CollectionView Setting
@@ -136,6 +137,17 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         qrButton.clipsToBounds = true
     }
     
+    // MARK: setIconColor
+    private func setIconColor() {
+        if traitCollection.userInterfaceStyle == .dark {
+            logo.image = .image.gomsDarkGrayLogo.image
+            settingButton.setBackgroundImage(.image.gomsDarkGraySettingIcon.image, for: .normal)
+        } else {
+            logo.image = .image.gomsLightGrayLogo.image
+            settingButton.setBackgroundImage(.image.gomsLightGraySettingIcon.image, for: .normal)
+        }
+    }
+    
     // MARK: - Add View
     override func addView() {
         [latecomerLabel, latecomerStackView].forEach { latecomerView.addSubview($0) }
@@ -147,17 +159,17 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalToSuperview()
+            $0.top.equalToSuperview().offset(48)
             $0.leading.equalToSuperview()
             $0.height.equalTo(56)
             $0.width.equalTo(127)
         }
         
         settingButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.width.equalTo(22.21877)
-            $0.height.equalTo(21.88972)
+            $0.top.equalToSuperview().offset(50)
+            $0.trailing.equalToSuperview()
+            $0.width.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         scrollView.snp.makeConstraints {
