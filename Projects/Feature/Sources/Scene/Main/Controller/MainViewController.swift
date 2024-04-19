@@ -32,35 +32,42 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private let latecomerStackView = LatecomerStackView()
     
     private let outingStatusView = UIView().then {
-        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
-        $0.clipsToBounds = true
-        $0.layer.cornerRadius = 12
-        $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
+        $0.backgroundColor = .clear
     }
     
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출 현황"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
-        $0.font = UIFont.pretendard(size: 24, weight: .bold)
+        $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
     private lazy var moreOutingStatusButton = UIButton().then {
-        $0.backgroundColor = .clear
+        $0.backgroundColor = .color.gomsTextDefault.color.withAlphaComponent(0.1)
         $0.setTitle("더보기", for: .normal)
-        $0.setTitleColor(.color.gomsTertiary.color, for: .normal)
-        $0.titleLabel?.font = .pretendard(size: 16, weight: .regular)
-        $0.addTarget(self, action: #selector(moreOutingStatusButtonTapped), for: .touchUpInside)
+        $0.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        $0.titleLabel?.font = .pretendard(size: 12, weight: .regular)
+        $0.layer.cornerRadius = 8
+        $0.layer.masksToBounds = true
     }
     
-    private let dividingLineView = UIView().then {
-        $0.backgroundColor = .color.gomsTertiary.color
-    }
-    
-    let numberOfPeopleOutingLabel = UILabel().then {
-        $0.text = "66명이 외출 중"
-        $0.font = UIFont.pretendard(size: 16, weight: .regular)
+    private let numberOfPeopleOutingLabel = UILabel().then {
+        $0.text = "0명이 외출 중"
         $0.textColor = .color.gomsTertiary.color
+        $0.font = UIFont.pretendard(size: 13, weight: .regular)
+        let fullText = $0.text ?? ""
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let range = (fullText as NSString).range(of: "0")
+        attributedString.addAttribute(
+            .foregroundColor,
+            value: UIColor.color.gomsPrimary.color.cgColor,
+            range: range
+        )
+        attributedString.addAttribute(
+            .font,
+            value: UIFont.pretendard(size: 12, weight: .bold),
+            range: range
+        )
+        $0.attributedText = attributedString
     }
     
     private let outingStatusFlowLayout = UICollectionViewFlowLayout().then {
@@ -71,11 +78,9 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
     
     private lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingStatusFlowLayout).then {
-        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
-        $0.clipsToBounds = true
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
     
@@ -147,7 +152,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     // MARK: - Add View
     override func addView() {
         [latecomerLabel, latecomerStackView].forEach { latecomerView.addSubview($0) }
-        [outingStatusLabel, moreOutingStatusButton, dividingLineView, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
+        [outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
         [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
         [logo, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
     }
@@ -208,32 +213,27 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         }
         
         outingStatusLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(16)
-            $0.height.equalTo(40)
-            $0.top.equalToSuperview().inset(16)
-        }
-        
-        moreOutingStatusButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
-            $0.top.equalToSuperview().inset(16)
-            $0.height.equalTo(40)
-        }
-        
-        dividingLineView.snp.makeConstraints {
-            $0.height.equalTo(1)
-            $0.leading.trailing.equalToSuperview().inset(16)
-            $0.top.equalTo(outingStatusLabel.snp.bottom).offset(4)
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(32)
+            $0.top.equalToSuperview()
         }
         
         numberOfPeopleOutingLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(16)
-            $0.top.equalTo(dividingLineView.snp.bottom).offset(6)
-            $0.height.equalTo(28)
+            $0.top.equalToSuperview().offset(6)
+            $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
+            $0.height.equalTo(20)
+        }
+        
+        moreOutingStatusButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview()
+            $0.top.equalToSuperview().inset(4)
+            $0.width.equalTo(48)
+            $0.height.equalTo(24)
         }
         
         outingStatusCollectionView.snp.makeConstraints {
             $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset(14)
-            $0.height.equalTo(300)
+            $0.height.equalTo(350)
             $0.leading.trailing.equalToSuperview().inset(16)
         }
         

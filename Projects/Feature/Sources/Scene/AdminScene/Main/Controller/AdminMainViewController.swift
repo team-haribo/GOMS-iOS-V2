@@ -35,7 +35,7 @@ public class AdminMainViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
-    private lazy var seeMoreButton = UIButton().then {
+    private lazy var moreOutingStatusButton = UIButton().then {
         $0.backgroundColor = .color.gomsTextDefault.color.withAlphaComponent(0.1)
         $0.setTitle("더보기", for: .normal)
         $0.setTitleColor(.color.gomsSecondary.color, for: .normal)
@@ -128,7 +128,7 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         [latecomerLabel, latecomerStackView].forEach { latecomerView.addSubview($0) }
-        [outingStatusLabel, seeMoreButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
+        [outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
         [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
         [logo, studentManagementButton, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
     }
@@ -207,10 +207,9 @@ public class AdminMainViewController: BaseViewController {
             $0.height.equalTo(20)
         }
         
-        seeMoreButton.snp.makeConstraints {
+        moreOutingStatusButton.snp.makeConstraints {
             $0.trailing.equalToSuperview()
             $0.top.equalToSuperview().inset(4)
-//            $0.centerY.equalToSuperview()
             $0.width.equalTo(48)
             $0.height.equalTo(24)
         }
