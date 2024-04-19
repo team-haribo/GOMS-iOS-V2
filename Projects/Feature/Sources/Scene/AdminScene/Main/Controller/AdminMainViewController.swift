@@ -7,6 +7,10 @@ public class AdminMainViewController: BaseViewController {
     
     private let logo = UIImageView(image: .image.gomsAdminLogo.image)
     
+    private let studentManagementButton = UIButton().then {
+        $0.setBackgroundImage(.image.gomsAdminIcon.image, for: .normal)
+    }
+    
     private let settingButton = UIButton().then {
         $0.setBackgroundImage(.image.gomsSettingIcon.image, for: .normal)
     }
@@ -120,7 +124,7 @@ public class AdminMainViewController: BaseViewController {
         [latecomerLabel, latecomerStackView].forEach { latecomerView.addSubview($0) }
         [outingStatusLabel, seeMoreButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
         [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
-        [logo, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
+        [logo, studentManagementButton, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -132,18 +136,18 @@ public class AdminMainViewController: BaseViewController {
             $0.width.equalTo(127)
         }
         
-//        studentManagementButton.snp.makeConstraints {
-//            $0.leading.equalTo(logo.snp.trailing).offset(66.86)
-//            $0.height.equalTo(32)
-//            $0.top.equalTo(view.safeAreaLayoutGuide).offset(12)
-//            $0.width.equalTo(132)
-//        }
+        studentManagementButton.snp.makeConstraints {
+            $0.trailing.equalTo(settingButton.snp.leading)
+            $0.top.equalToSuperview().offset(50)
+            $0.width.equalTo(64)
+            $0.height.equalTo(56)
+        }
         
         settingButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(64)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.width.equalTo(22.21877)
-            $0.height.equalTo(21.88972)
+            $0.top.equalToSuperview().offset(50)
+            $0.trailing.equalToSuperview()
+            $0.width.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         scrollView.snp.makeConstraints {
