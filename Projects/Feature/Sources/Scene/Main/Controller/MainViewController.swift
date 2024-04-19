@@ -26,6 +26,18 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         $0.font = UIFont.pretendard(size: 24, weight: .bold)
     }
     
+    private let noLateComerImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80)).then {
+        $0.image = .image.gomsNoLateComer.image
+        $0.isHidden = true
+    }
+    
+    private let noLateComerText = UILabel().then {
+        $0.text = "지각자가 없어요! 놀랍게도..."
+        $0.textColor = .color.gomsTertiary.color
+        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
+        $0.isHidden = true
+    }
+    
     private let latecomerStackView = LatecomerStackView()
     
     private let outingStatusView = UIView().then {
@@ -127,7 +139,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     // MARK: - Add View
     override func addView() {
-        [latecomerLabel, latecomerStackView].forEach { latecomerView.addSubview($0) }
+        [latecomerLabel, noLateComerImage, noLateComerText, latecomerStackView].forEach { latecomerView.addSubview($0) }
         [outingStatusLabel, moreOutingStatusButton, dividingLineView, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
         [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
         [logo, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
@@ -173,6 +185,17 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
             $0.top.equalToSuperview().inset(16)
             $0.leading.equalToSuperview().inset(16)
             $0.height.equalTo(40)
+        }
+        
+        noLateComerImage.snp.makeConstraints {
+            $0.width.height.equalTo(80)
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset(12)
+            $0.centerX.equalToSuperview()
+        }
+        
+        noLateComerText.snp.makeConstraints {
+            $0.top.equalTo(noLateComerImage.snp.bottom).offset(12)
+            $0.centerX.equalToSuperview()
         }
         
         latecomerStackView.snp.makeConstraints {
