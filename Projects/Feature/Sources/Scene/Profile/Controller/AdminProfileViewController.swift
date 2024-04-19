@@ -137,10 +137,16 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     @objc func switchValueChanged(_ sender: UISwitch) {
-           // Save switch state to UserDefaults when value changes
-           UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
-            print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
-       }
+        let QRState = sender.isOn
+        print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
+        print(QRState)
+        UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
+        
+        let defaults = UserDefaults.standard
+            
+            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+        print("테스트: \(isSwitchOn)")
+    }
     
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {
         updateImage(isActionSheetShowing: true)

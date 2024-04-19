@@ -176,13 +176,16 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.backgroundColor = .color.gomsDivider.color
     }
     
-    @objc func switchValueChanged(_ sender: UISwitch) {
-        // Save switch state to UserDefaults when value changes
-        
-        let QRState = sender.state
+    @objc func switchValueChanged(_ sender: UISwitch) {        
+        let QRState = sender.isOn
         print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
         print(QRState)
-        UserDefaults.standard.set(sender.state, forKey: "isSwitchOn")
+        UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
+        
+        let defaults = UserDefaults.standard
+            
+            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+        print("테스트: \(isSwitchOn)")
     }
     
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {
