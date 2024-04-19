@@ -41,6 +41,7 @@ extension LogoutServices: TargetType {
        }
 
     public var headers: [String: String]? {
+        // 밑에 코드는 나중에 리프레토큰 연결을 위해 남겨둠
         //["Content-Type": "application/json"]
         ["refreshToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNGZhYjE3NC05ODY1LTQ4ZTctOTNjZi1lMDQyNGJmMDlkOGUiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzEzNDg5MTAzLCJleHAiOjE3MTE3ODYxMzZ9.uxYQVbVPQ353xPRh0CTOq3DwMxtaXqrXz74mShrOMVU"]
         

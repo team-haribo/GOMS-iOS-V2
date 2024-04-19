@@ -258,7 +258,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     @objc func passwordResetPage() {
-        // 비밀번호 재설정 뷰 연결
+        #warning("비밀번호 재설정 뷰 연결")
     }
     
     func performLogout() {
@@ -332,6 +332,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             }
             dismiss(animated: true, completion: nil)
         }
+    
         public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             dismiss(animated: true, completion: nil)
         }
@@ -356,28 +357,21 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                     majorText = "AI"
                 }
                 let finalText = "\(profileInfo.grade)기ㅣ\(majorText)"
-
-                // UILabel의 text 속성에 문자열 할당
                 let profileUrlString = profileInfo.profileUrl ?? ""
 
-                // profileUrlString이 유효한 URL이라면 이미지를 가져옵니다.
                 if let profileUrl = URL(string: profileUrlString) {
-                    // URLSession을 사용하여 이미지 데이터를 가져오는 작업을 시작합니다.
                     URLSession.shared.dataTask(with: profileUrl) { data, response, error in
-                        // 에러를 확인하고 데이터를 UIImage로 변환합니다.
                         if let error = error {
                             print("이미지 데이터를 가져오는 중 에러 발생: \(error)")
                             return
                         }
                         
-                        // 데이터가 유효하다면 UIImage로 변환하여 userProfile 이미지 뷰에 설정합니다.
                         if let imageData = data, let profileImage = UIImage(data: imageData) {
                             DispatchQueue.main.async {
-                                // userProfile 이미지 뷰에 가져온 이미지를 설정합니다.
                                 self?.userProfile.image = profileImage
                             }
                         }
-                    }.resume() // 데이터 작업을 시작합니다.
+                    }.resume()
                 }
 
                 let uploadimage = profileInfo.profileUrl
@@ -393,10 +387,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         self.navigationItem.backBarButtonItem = backBarButtonItem
         
         imagePickerController.delegate = self
-        
-        //let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
-                
-                // Set switch state based on UserDefaults value
     }
     
     
