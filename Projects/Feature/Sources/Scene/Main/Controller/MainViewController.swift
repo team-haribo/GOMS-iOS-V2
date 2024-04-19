@@ -20,17 +20,13 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private let profileView = ProfileCardView()
     
     private let latecomerView = UIView().then {
-        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
-        $0.clipsToBounds = true
-        $0.layer.cornerRadius = 12
-        $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
+        $0.backgroundColor = .clear
     }
     
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
-        $0.font = UIFont.pretendard(size: 24, weight: .bold)
+        $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
     private let latecomerStackView = LatecomerStackView()
@@ -188,18 +184,18 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         latecomerView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(profileView.snp.bottom).offset(32)
-            $0.height.equalTo(216)
+            $0.height.equalTo(176)
             $0.centerX.equalToSuperview()
         }
         
         latecomerLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16)
-            $0.leading.equalToSuperview().inset(16)
-            $0.height.equalTo(40)
+            $0.top.equalToSuperview()
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(32)
         }
         
         latecomerStackView.snp.makeConstraints {
-            $0.top.equalTo(latecomerLabel.snp.bottom).offset(16)
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview().inset(16)
         }
