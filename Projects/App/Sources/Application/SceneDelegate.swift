@@ -15,7 +15,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = UINavigationController(rootViewController: SignInViewController())
+ 
+        let defaults = UserDefaults.standard
+            
+            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+            print(isSwitchOn)
+            
+            if isSwitchOn == true {
+                window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+            } else {
+                window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
+            }
         window?.makeKeyAndVisible()
     }
     
@@ -29,3 +39,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidEnterBackground(_ scene: UIScene) {}
 }
+
+
