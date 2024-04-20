@@ -15,7 +15,7 @@ public class GOMSRefreshToken {
     private let keychain = KeyChain()
     var statusCode: Int = 0
     var reissuanceData: SignInResponse?
-    private lazy var refreshToken = "Bearer ey " + (keychain.read(key: Const.KeyChainKey.refreshToken) ?? "")
+    private lazy var refreshToken = "Bearer " + (keychain.read(key: Const.KeyChainKey.refreshToken) ?? "")
 
     // 토큰 재발급
     func tokenReissuance() {
@@ -31,6 +31,7 @@ public class GOMSRefreshToken {
                 switch self.statusCode {
                 case 200..<300:
                     self.updateToken()
+                    print("update token")
                 case 400, 401, 404:
                     print("error")
                 default:

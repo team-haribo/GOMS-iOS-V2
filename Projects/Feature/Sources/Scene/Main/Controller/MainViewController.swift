@@ -95,7 +95,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
     
     @objc func moreOutingStatusButtonTapped() {
-        // More Outing Status Button Tapped
+        let outingVC = OutingStatusViewController()
+        navigationController?.pushViewController(outingVC, animated: true)
     }
     
     @objc func qrButtonTapped() {

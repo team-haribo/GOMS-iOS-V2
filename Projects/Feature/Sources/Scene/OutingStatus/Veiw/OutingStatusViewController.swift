@@ -11,6 +11,8 @@ import UIKit
 public final class OutingStatusViewController: BaseViewController {
     
     // MARK: - Properties
+    private let viewModel = OutingViewModel()
+    
     private let searchController = UISearchController(searchResultsController: nil).then {
         $0.searchBar.placeholder = "학생 검색"
     }
@@ -44,6 +46,7 @@ public final class OutingStatusViewController: BaseViewController {
     // MARK: - Selectors
     @objc func qrButtonTapped() {
         // QR 화면 이동
+        viewModel.getOutingList()
     }
 
     // MARK: - Life Cycel
