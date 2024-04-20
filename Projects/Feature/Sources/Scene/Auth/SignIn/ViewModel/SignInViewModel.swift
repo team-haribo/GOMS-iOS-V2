@@ -11,6 +11,8 @@ import Service
 
 public final class SignInViewModel {
     private let authProvider = MoyaProvider<AuthServices>()
+    
+    let gomsToken = KeyChain()
     var userData: SignInModel?
     
     private var email: String = ""
@@ -31,12 +33,13 @@ public final class SignInViewModel {
             case .success(let result):
                 let statusCode = result.statusCode
                 do {
-
-                }
                     switch statusCode {
                     case 200:
                         print("OK")
-                        
+                        let signInResponse = try result.map(SignInResponse.self)
+                        self.gomsToken.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
+                        self.gomsToken.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
+                        self.gomsToken.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
                         completion(true)
                     case 500:
                         print("SERVER ERROR")
@@ -45,7 +48,10 @@ public final class SignInViewModel {
                         print(result)
                         completion(false)
                     }
-
+                } catch {
+                    print("error")
+                    completion(false)
+                }
             case .failure(let err):
                 print(err.localizedDescription)
                 completion(false)
