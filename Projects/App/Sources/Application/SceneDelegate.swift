@@ -26,6 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } else {
                 window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
             }
+      
         window?.makeKeyAndVisible()
     }
     
