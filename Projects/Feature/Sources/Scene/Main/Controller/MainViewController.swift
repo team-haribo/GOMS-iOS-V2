@@ -82,6 +82,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        $0.backgroundColor = .clear
     }
     
     private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64)).then {
