@@ -51,4 +51,27 @@ public final class OutingViewModel {
             }
         }
     }
+    
+    func outingCount() {
+        outingProvider.request(.outingCount(authorization: accessToken)) { response in
+            switch response {
+            case .success(let result):
+                let statusCode = result.statusCode
+                switch statusCode {
+                case 200:
+                    print("OK")
+                case 401:
+                    print("만료된 accessToken일 경우")
+                    print("유효하지 않은 accessToken일 경우")
+                    self.gomsRefreshToken.tokenReissuance()
+                case 500:
+                    print("SERVER ERROR")
+                default:
+                    print(result)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
 }
