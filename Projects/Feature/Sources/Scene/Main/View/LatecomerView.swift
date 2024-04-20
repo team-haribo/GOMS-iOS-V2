@@ -45,11 +45,13 @@ final class LatecomerView: UIView {
     
     // MARK: - Configure UI
     private func configureUI(_ name: String, _ studentInformation: String) {
-        self.backgroundColor = .color.gomsCardBackground.color
+        self.backgroundColor = .color.gomsCardBackgroundColor.color
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
         nameLabel.text = name
         studentInformationLabel.text = studentInformation
+        layer.cornerRadius = 8
+        layer.masksToBounds = true
     }
     
     // MARK: - Add View
