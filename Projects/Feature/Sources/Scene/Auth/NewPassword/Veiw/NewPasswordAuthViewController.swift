@@ -1,5 +1,5 @@
 //
-//  FindPasswordViewController.swift
+//  NewPasswordViewController.swift
 //  Feature
 //
 //  Created by 새미 on 3/28/24.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class ResetPasswordAuthViewController: BaseViewController {
+public final class NewPasswordAuthViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel = SignUpViewModel()
@@ -108,7 +108,7 @@ public final class ResetPasswordAuthViewController: BaseViewController {
     }
 }
 
-extension ResetPasswordAuthViewController: UITextFieldDelegate {
+extension NewPasswordAuthViewController: UITextFieldDelegate {
     public func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == emailTextField {
             viewModel.setupEmail(email: textField.text ?? "")

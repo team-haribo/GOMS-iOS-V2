@@ -1,5 +1,5 @@
 //
-//  ResetPasswordViewController.swift
+//  NewPasswordViewController.swift
 //  Feature
 //
 //  Created by 새미 on 3/30/24.
@@ -8,9 +8,11 @@
 
 import UIKit
 
-public final class ResetPasswordViewController: BaseViewController {
+public final class NewPasswordViewController: BaseViewController {
 
     // MARK: - Properties
+    private let viewModel = NewPasswordViewModel()
+    
     private let textFieldStackView = UIStackView().then {
         $0.spacing = 32
         $0.axis = .vertical
@@ -129,7 +131,13 @@ public final class ResetPasswordViewController: BaseViewController {
 }
 
 
-extension ResetPasswordViewController: UITextFieldDelegate {
+extension NewPasswordViewController: UITextFieldDelegate {
+    public func textFieldDidChange(_ textField: UITextField) {
+        if textField == passwordTextField {
+            viewModel.setupPassword(password: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
+        }
+    }
+    
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if passwordTextField.text != "", checkPasswordTextField.text != "" {
             checkPasswordTextField.resignFirstResponder()
