@@ -51,7 +51,7 @@ final class AdminProfileCardView: UIView {
         self.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         self.clipsToBounds = true
         self.layer.cornerRadius = 12
-        self.backgroundColor = .color.gomsCardBackground.color
+        self.backgroundColor = .color.gomsCardBackgroundColor.color
     }
     
     // MARK: - Add View

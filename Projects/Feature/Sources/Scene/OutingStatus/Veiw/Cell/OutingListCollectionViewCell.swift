@@ -10,8 +10,10 @@ import UIKit
 
 import SnapKit
 import Then
+import Kingfisher
 
 final class OutingListCollectionViewCell: UICollectionViewCell {
+    
     // MARK: - Properties
     static let identifier = "OutingListCell"
     
@@ -21,13 +23,11 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     }
     
     let nameLabel = UILabel().then {
-        $0.text = "홍길동"
         $0.textColor = .color.gomsSecondary.color
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
     let studentInformationLabel = UILabel().then {
-        $0.text = "7기 | IOT"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
@@ -37,7 +37,6 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     }
     
     let outingTime = UILabel().then {
-        $0.text = "12:34에 외출"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
@@ -56,6 +55,23 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
+        profileImageView.clipsToBounds = true
+    }
+    
+    func configureData(with outingData: OutingListData) {
+        if let imageURL = outingData.profileImageURL, let url = URL(string: imageURL) {
+            profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+        } else {
+            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+        }
+        nameLabel.text = outingData.name
+        studentInformationLabel.text = "\(outingData.grade)기 | \(outingData.major)"
+        outingTime.text = "\(outingData.outingTime)에 외출"
     }
     
     // MARK: - Configure UI
@@ -109,3 +125,4 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
         }
     }
 }
+

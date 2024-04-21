@@ -111,19 +111,17 @@ public final class SignUpViewModel {
         authProvider.request(.signUp(param: param)) { response in
             switch response {
             case .success(let result):
-                do {
-                    let statusCode = result.statusCode
-                    switch statusCode {
-                    case 201:
-                        print("Created")
-                        completion(true)
-                    case 500:
-                        print("SERVER ERROR")
-                        completion(false)
-                    default:
-                        print(result)
-                        completion(false)
-                    }
+                let statusCode = result.statusCode
+                switch statusCode {
+                case 201:
+                    print("Created")
+                    completion(true)
+                case 500:
+                    print("SERVER ERROR")
+                    completion(false)
+                default:
+                    print(result)
+                    completion(false)
                 }
             case .failure(let err):
                 print(err.localizedDescription)

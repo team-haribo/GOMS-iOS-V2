@@ -9,10 +9,10 @@
 import Foundation
 
 public struct OutingListModel: Codable {
-    let data: OutingResponse
+    let data: OutingListResponse
 }
 
-public struct OutingResponse: Codable {
+public struct OutingListResponse: Codable {
     public let accountIdx: UUID
     public let name: String
     public let major: String

@@ -9,7 +9,7 @@
 import Foundation
 import Moya
 
-public enum OutingServicess {
+public enum OutingServices {
     case outing(authorization: String)
     case outingList(authorization: String)
     case outingCount(authorization: String)
@@ -17,9 +17,9 @@ public enum OutingServicess {
     case outingValidation(authorization: String)
 }
 
-extension OutingServicess: TargetType {
+extension OutingServices: TargetType {
     public var baseURL: URL {
-        return URL(string: BaseURL.baseURL) ?? URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
+        return URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
     }
     
     public var path: String {
@@ -70,6 +70,8 @@ extension OutingServicess: TargetType {
     
     public var headers: [String : String]? {
         switch self {
+        case .outingList(let authorization):
+            return ["Content-Type": "application/json", "Authorization": authorization]
         default:
             return ["Content-Type": "application/json"]
         }

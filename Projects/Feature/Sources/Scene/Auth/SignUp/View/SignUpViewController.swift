@@ -157,7 +157,7 @@ public final class SignUpViewController: BaseViewController {
 }
 
 extension SignUpViewController: UITextFieldDelegate {
-    public func textFieldDidEndEditing(_ textField: UITextField) {
+    public func textFieldDidChange(_ textField: UITextField) {
         if textField == nameTextField {
             viewModel.setupName(name: textField.text ?? "")
         } else if textField == emailTextField {
