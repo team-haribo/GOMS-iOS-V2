@@ -64,7 +64,7 @@ final class LatecomerView: UIView {
     // MARK: - Layout
     private func setLayout() {
         profileImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(8)
+            $0.top.equalToSuperview().offset(12)
             $0.centerX.equalToSuperview()
             $0.height.width.equalTo(56)
         }
@@ -77,7 +77,7 @@ final class LatecomerView: UIView {
         
         studentInformationLabel.snp.makeConstraints {
             $0.top.equalTo(nameLabel.snp.bottom)
-            $0.bottom.equalToSuperview().inset(8)
+            $0.bottom.equalToSuperview().inset(12)
             $0.centerX.equalToSuperview()
         }
     }

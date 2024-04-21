@@ -40,9 +40,5 @@ final class LatecomerStackView: UIStackView {
         self.distribution = .fillEqually
         self.alignment = .fill
         [latecomer1, latecomer2, latecomer3].forEach { self.addArrangedSubview($0) }
-        
-        NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalToConstant: 112)
-        ])
     }
 }
