@@ -3,15 +3,13 @@ import UIKit
 import SnapKit
 import Then
 import Moya
+import Kingfisher
 import Service
 
 final class LatecomerView: UIView {
     
     // MARK: - Properties
-    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 56, height: 56)).then {
-        $0.image = UIImage(systemName: "person.crop.circle.fill")
-        $0.tintColor = .color.gomsSecondary.color
-    }
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 56, height: 56))
     
     let nameLabel = UILabel().then {
         $0.font = .pretendard(size: 16, weight: .semibold)
@@ -28,10 +26,9 @@ final class LatecomerView: UIView {
     // MARK: - Initializer
     init(frame: CGRect, name: String, studentInformation: String) {
         super.init(frame: frame)
-        configureUI(name, studentInformation)
+        configureUI()
         addView()
         setLayout()
-        setProfile()
     }
     
     required init?(coder: NSCoder) {
@@ -39,12 +36,18 @@ final class LatecomerView: UIView {
     }
     
     // MARK: - Configure UI
-    private func configureUI(_ name: String, _ studentInformation: String) {
+    private func configureUI() {
         self.backgroundColor = .clear
-        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
-        profileImageView.clipsToBounds = true
-        nameLabel.text = name
-        studentInformationLabel.text = studentInformation
+    }
+    
+    func configureData(with lateRankData: LateRankData) {
+        if let imageURL = lateRankData.profileImageURL, let url = URL(string: imageURL) {
+            profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+        } else {
+            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+        }
+        nameLabel.text = lateRankData.name
+        studentInformationLabel.text = "\(lateRankData.grade)기 | \(lateRankData.major)"
     }
     
     // MARK: - Add View
@@ -72,51 +75,6 @@ final class LatecomerView: UIView {
             $0.top.equalTo(nameLabel.snp.bottom)
             $0.bottom.equalToSuperview().inset(8)
             $0.centerX.equalToSuperview()
-        }
-    }
-    
-    private func setProfile() {
-        let provider = MoyaProvider<LateServices>()
-        provider.request(.lateRank(param: LateRankRequest(lateCount: 3))) { result in
-            switch result {
-            case .success(let response):
-                do {
-                    let lateRankResponse = try? response.map(LateRankResponse.self)
-                    
-                    if let lateRankResponse = lateRankResponse {
-                        DispatchQueue.main.async {
-                            if let profileUrlString = lateRankResponse.profileUrl, let profileUrl = URL(string: profileUrlString) {
-                                let profileProvider = MoyaProvider<AccountServices>()
-                                profileProvider.request(.accountProfile) { result in
-                                    switch result {
-                                    case .success(let response):
-                                        if let image = UIImage(data: response.data) {
-                                            DispatchQueue.main.async {
-                                                self.profileImageView.image = image
-                                            }
-                                        }
-                                    case .failure(let error):
-                                        print("Failed to fetch image: \(error)")
-                                        DispatchQueue.main.async {
-                                            self.profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
-                                        }
-                                    }
-                                }
-                            } else {
-                                DispatchQueue.main.async {
-                                    self.profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
-                                }
-                            }
-                            self.nameLabel.text = lateRankResponse.name
-                            self.studentInformationLabel.text = "\(lateRankResponse.major)기 | \(lateRankResponse.grade)"
-                        }
-                    }
-                } catch {
-                    print("응답 디코딩 오류: \(error)")
-                }
-            case .failure(let error):
-                print("네트워크 요청 실패: \(error)")
-            }
         }
     }
 }

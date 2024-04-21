@@ -4,6 +4,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     // MARK: - Properties
     let scrollView = UIScrollView()
     
+    let viewModel = LateRankViewModel()
+    
     private let logo = UIImageView(image: .image.gomsLogo.image)
     
     private let settingButton = UIButton().then {
@@ -116,6 +118,17 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         super.viewDidLoad()
         setCollectionView()
         setDatas()
+        
+        viewModel.lateRank {_ in 
+            if self.viewModel.lateRankDatas.count == 0 {
+                self.noLateComerImage.isHidden = false
+                self.noLateComerText.isHidden = false
+            } else {
+                self.noLateComerImage.isHidden = true
+                self.noLateComerText.isHidden = true
+            }
+            self.setCollectionView()
+        }
     }
     
     // MARK: - CollectionView Setting

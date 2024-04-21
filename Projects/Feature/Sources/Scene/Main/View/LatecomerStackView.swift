@@ -8,8 +8,6 @@ import Service
 final class LatecomerStackView: UIStackView {
     
     // MARK: - Properties
-    private let provider = MoyaProvider<LateServices>()
-    
     private let latecomer1 = LatecomerView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), name: "김경수", studentInformation: "7기 | IoT")
     
     private let latecomer2 = LatecomerView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), name: "정민석", studentInformation: "7기 | IoT")
