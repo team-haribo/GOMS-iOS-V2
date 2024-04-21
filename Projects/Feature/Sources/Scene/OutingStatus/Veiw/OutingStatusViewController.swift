@@ -30,7 +30,7 @@ public final class OutingStatusViewController: BaseViewController {
         $0.itemSize = CGSize(width: 335, height: 72)
     }
     
-    private lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingListFlowLayout).then {
+    lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingListFlowLayout).then {
         $0.backgroundColor = .clear
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
@@ -46,19 +46,25 @@ public final class OutingStatusViewController: BaseViewController {
     // MARK: - Selectors
     @objc func qrButtonTapped() {
         // QR 화면 이동
-        viewModel.getOutingList()
     }
 
     // MARK: - Life Cycel
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        outingListCollectionView.reloadData()
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setCollectionView()
+        viewModel.getOutingList {
+            self.setCollectionView()
+        }
     }
     
     // MARK: - CollectionView Setting
     private func setCollectionView() {
         self.outingListCollectionView.dataSource = self
-        
+
         outingListCollectionView.register(OutingListCollectionViewCell.self, forCellWithReuseIdentifier: OutingListCollectionViewCell.identifier)
     }
 
@@ -114,11 +120,14 @@ public final class OutingStatusViewController: BaseViewController {
 
 extension OutingStatusViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return viewModel.outingListDatas.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = outingListCollectionView.dequeueReusableCell(withReuseIdentifier: OutingListCollectionViewCell.identifier, for: indexPath) as! OutingListCollectionViewCell
+        
+        let outingData = viewModel.outingListDatas[indexPath.row]
+        cell.configureData(with: outingData)
         
         return cell
     }
