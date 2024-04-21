@@ -11,7 +11,7 @@ import UIKit
 public final class SignUpViewController: BaseViewController {
 
     // MARK: - Properties
-    private let viewModel = SignUpViewModel()
+    private let viewModel = AuthViewModel()
     
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 32

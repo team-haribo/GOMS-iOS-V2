@@ -11,7 +11,7 @@ import UIKit
 public final class NewPasswordViewController: BaseViewController {
 
     // MARK: - Properties
-    private let viewModel = NewPasswordViewModel()
+    private let viewModel = AuthViewModel()
     
     private let textFieldStackView = UIStackView().then {
         $0.spacing = 32

@@ -11,7 +11,7 @@ import UIKit
 public final class NewPasswordAuthViewController: BaseViewController {
     
     // MARK: - Properties
-    private let viewModel = SignUpViewModel()
+    private let viewModel = AuthViewModel()
     
     private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이메일")
     
@@ -31,12 +31,12 @@ public final class NewPasswordAuthViewController: BaseViewController {
     
     // MARK: - Selectors
     @objc func authButtonTapped() {
-        viewModel.sendAuthNumber { success in
-            if success {
-                let authNumberVC = AuthNumberViewController(viewModel: self.viewModel)
-                self.navigationController?.pushViewController(authNumberVC, animated: true)
-            }
-        }
+//        viewModel.sendAuthNumber { success in
+//            if success {
+//                let authNumberVC = AuthNumberViewController(viewModel: self.viewModel)
+//                self.navigationController?.pushViewController(authNumberVC, animated: true)
+//            }
+//        }
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
@@ -109,6 +109,12 @@ public final class NewPasswordAuthViewController: BaseViewController {
 }
 
 extension NewPasswordAuthViewController: UITextFieldDelegate {
+    public func textFieldDidChange(_ textField: UITextField) {
+        if textField == emailTextField {
+            viewModel.setupEmail(email: emailTextField.text ?? "")
+        }
+    }
+    
     public func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == emailTextField {
             viewModel.setupEmail(email: textField.text ?? "")

@@ -10,6 +10,7 @@ import Moya
 import Service
 
 public final class NewPasswordViewModel {
+    private let authProvider = MoyaProvider<AuthServices>()
     private let accountProvider = MoyaProvider<AccountServices>()
     
     let keyChain = KeyChain()
@@ -27,9 +28,39 @@ public final class NewPasswordViewModel {
         guard password == checkPassword else { return }
     }
     
+    func sendAuthNumber(completion: @escaping (Bool) -> Void) {
+        let param = SendAuthNumberRequest.init(email: email)
+        authProvider.request(.sendAuthNumber(param: param)) { response in
+            switch response {
+            case .success(let result):
+                do {
+                    let statusCode = result.statusCode
+                    switch statusCode {
+                    case 204:
+                        print("No Content")
+                        completion(true)
+                    case 404:
+                        print("GOMS 회원이 아닌 사용자가 이메일 인증 요청을 한 경우")
+                        completion(false)
+                    case 429:
+                        print("이메일 요청이 5번을 초과할 경우")
+                        completion(false)
+                    case 500:
+                        print("SERVER ERROR")
+                    default:
+                        print(result)
+                        completion(false)
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(false)
+            }
+        }
+    }
+    
     func newPassword(completion: @escaping (Bool) -> Void) {
         let param = NewPasswordRequest.init(email: email, newPassword: password)
-        
         accountProvider.request(.newPassword(param: param, authorization: accessToken)) { response in
             switch response {
             case .success(let result):
