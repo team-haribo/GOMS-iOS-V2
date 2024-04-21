@@ -60,11 +60,14 @@ public final class SignInViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func findPasswordButtonTapped() {
-        let findPasswordVC = ResetPasswordAuthViewController()
+        let findPasswordVC = NewPasswordAuthViewController()
         navigationController?.pushViewController(findPasswordVC, animated: true)
     }
     
     @objc func signInButtonTapped() {
+        viewModel.setupEmail(email: emailTextField.text ?? "")
+        viewModel.setupPassword(password: passwordTextField.text ?? "")
+        
         viewModel.signIn { success in
             if success {
                 let mainVC = MainViewController()
@@ -161,7 +164,7 @@ public final class SignInViewController: BaseViewController {
 }
 
 extension SignInViewController: UITextFieldDelegate {
-    public func textFieldDidEndEditing(_ textField: UITextField) {
+    public func textFieldDidChange(_ textField: UITextField) {
         if textField == emailTextField {
             viewModel.setupEmail(email: textField.text ?? "")
         } else if textField == passwordTextField {

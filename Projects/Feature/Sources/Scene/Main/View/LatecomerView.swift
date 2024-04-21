@@ -36,10 +36,6 @@ final class LatecomerView: UIView {
     }
     
     // MARK: - Configure UI
-    private func configureUI() {
-        self.backgroundColor = .clear
-    }
-    
     func configureData(with lateRankData: LateRankData) {
         if let imageURL = lateRankData.profileImageURL, let url = URL(string: imageURL) {
             profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
@@ -48,6 +44,15 @@ final class LatecomerView: UIView {
         }
         nameLabel.text = lateRankData.name
         studentInformationLabel.text = "\(lateRankData.grade)기 | \(lateRankData.major)"
+
+    private func configureUI(_ name: String, _ studentInformation: String) {
+        self.backgroundColor = .color.gomsCardBackgroundColor.color
+        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
+        profileImageView.clipsToBounds = true
+        nameLabel.text = name
+        studentInformationLabel.text = studentInformation
+        layer.cornerRadius = 8
+        layer.masksToBounds = true
     }
     
     // MARK: - Add View

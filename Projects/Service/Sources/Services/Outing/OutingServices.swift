@@ -2,39 +2,42 @@ import Foundation
 import Moya
 
 public enum OutingServices {
-    case outing(authorization: String, qrCode: String)
+    case outing(authorization: String)
     case outingList(authorization: String)
     case outingCount(authorization: String)
-    case outingSearch(authorization: String, name: String)
+    case outingSearch(authorization: String)
     case outingValidation(authorization: String)
 }
 
 extension OutingServices: TargetType {
     public var baseURL: URL {
-        return URL(string: BaseURL.baseURL) ?? URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
+        return URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
     }
     
     public var path: String {
         switch self {
         case .outing:
-            return "/{outingUUID}"
+            return "/outing/{outingUUID}"
         case .outingList:
-            return "/"
+            return "/outing/"
         case .outingCount:
-            return "/count"
+            return "/outing/count"
         case .outingSearch:
-            return "/search"
+            return "/outing/search"
         case .outingValidation:
-            return "/validation"
+            return "/outing/validation"
         }
     }
     
     public var method: Moya.Method {
         switch self {
+        case .outingList,
+             .outingCount,
+             .outingSearch,
+             .outingValidation:
+            return .get
         case .outing:
             return .post
-        case .outingList, .outingCount, .outingSearch, .outingValidation:
-            return .get
         }
     }
     
@@ -44,19 +47,25 @@ extension OutingServices: TargetType {
     
     public var task: Task {
         switch self {
-        case .outing, .outingList, .outingCount, .outingValidation:
+        case .outing:
             return .requestPlain
-        case let .outingSearch(_, name):
-            return .requestParameters(parameters: ["name" : name ?? ""], encoding: URLEncoding.queryString)
+        case .outingList:
+            return .requestPlain
+        case .outingCount:
+            return .requestPlain
+        case .outingSearch(let s):
+            return .requestParameters(parameters: ["s": s], encoding: URLEncoding.queryString)
+        case .outingValidation:
+            return .requestPlain
         }
     }
     
     public var headers: [String : String]? {
         switch self {
-        case .outing(let authorization, _), .outingList(let authorization), .outingCount(let authorization), .outingSearch(let authorization, _), .outingValidation(let authorization):
-            return["Content-Type" :"application/json","Authorization" : authorization]
+        case .outingList(let authorization):
+            return ["Content-Type": "application/json", "Authorization": authorization]
         default:
-            return["Content-Type" :"application/json"]
+            return ["Content-Type": "application/json"]
         }
     }
 }

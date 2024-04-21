@@ -7,11 +7,12 @@ public enum AccountServices {
     case accountImageUpload
     case accountImageChange
     case accountImageDelete
+    case newPassword(param: NewPasswordRequest, authorization: String)
 }
 
 extension AccountServices: TargetType {
     public var baseURL: URL {
-        return URL(string: BaseURL.baseURL) ?? URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
+        return URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
     }
     
     public var path: String {
@@ -24,6 +25,8 @@ extension AccountServices: TargetType {
             return "/image"
         case .accountImageDelete:
             return ""
+        case .newPassword:
+            return "/account/new-password"
         }
     }
     
@@ -37,6 +40,8 @@ extension AccountServices: TargetType {
             return .post
         case .accountImageDelete:
             return .delete
+        case .newPassword:
+            return .patch
         }
     }
     
@@ -48,13 +53,17 @@ extension AccountServices: TargetType {
         switch self {
         case .accountProfile, .accountNewPassword, .accountImageUpload, .accountImageChange, .accountImageDelete:
             return .requestPlain
+        case .newPassword(let param, _):
+            return .requestJSONEncodable(param)
         }
     }
     
     public var headers: [String : String]? {
         switch self {
+        case .newPassword(_, let authorization):
+            return ["Content-Type": "application/json", "Authorization": authorization]
         default:
-            return["Content-Type" :"application/json"]
+            return ["Content-Type": "application/json"]
         }
     }
 }

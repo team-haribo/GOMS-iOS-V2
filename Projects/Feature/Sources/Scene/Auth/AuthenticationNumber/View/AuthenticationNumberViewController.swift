@@ -11,9 +11,9 @@ import UIKit
 public final class AuthNumberViewController: BaseViewController {
     
     // MARK: - Properties
-    private var viewModel = SignUpViewModel()
+    private var viewModel = AuthViewModel()
     
-    init(viewModel: SignUpViewModel) {
+    init(viewModel: AuthViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }

@@ -62,7 +62,7 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
     private func setLayout() {
         profileImageView.snp.makeConstraints {
             $0.height.width.equalTo(28)
-            $0.leading.equalToSuperview().inset(16)
+            $0.leading.equalToSuperview()
             $0.centerY.equalToSuperview()
         }
         
@@ -75,7 +75,8 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
         studentInformationLabel.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.centerY.equalToSuperview()
-            $0.leading.equalTo(nameLabel.snp.trailing).offset(16)
+//            $0.leading.equalTo(nameLabel.snp.trailing).offset(16)
+            $0.trailing.equalToSuperview()
         }
     }
 }

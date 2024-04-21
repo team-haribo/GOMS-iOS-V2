@@ -27,10 +27,16 @@ final class LatecomerStackView: UIStackView {
     // MARK: - Setting
     private func set() {
         self.backgroundColor = .clear
-        self.spacing = 0
+        self.layer.cornerRadius = 8
+        self.layer.masksToBounds = true
+        self.spacing = 11.5
         self.axis = .horizontal
         self.distribution = .fillEqually
         self.alignment = .fill
         [latecomer1, latecomer2, latecomer3].forEach { self.addArrangedSubview($0) }
+        
+        NSLayoutConstraint.activate([
+            self.heightAnchor.constraint(equalToConstant: 112)
+        ])
     }
 }

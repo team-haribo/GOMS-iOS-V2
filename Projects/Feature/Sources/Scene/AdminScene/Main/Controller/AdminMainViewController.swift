@@ -1,11 +1,3 @@
-//
-//  AdminMainViewController.swift
-//  Feature
-//
-//  Created by 새미 on 2/22/24.
-//  Copyright © 2024 HARIBO. All rights reserved.
-//
-
 import UIKit
 
 public class AdminMainViewController: BaseViewController {
@@ -16,36 +8,26 @@ public class AdminMainViewController: BaseViewController {
     
     private let logo = UIImageView(image: .image.gomsAdminLogo.image)
     
-    private let studentManagementButton = StudentManagementButton()
+    private let studentManagementButton = UIButton()
     
-    private let settingButton = UIButton().then {
-        $0.setBackgroundImage(.image.gomsSettingIcon.image, for: .normal)
-    }
+    private let settingButton = UIButton()
     
     private let profileView = AdminProfileCardView()
     
     private let latecomerView = UIView().then {
-        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
-        $0.clipsToBounds = true
-        $0.layer.cornerRadius = 12
-        $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
+        $0.backgroundColor = .clear
     }
     
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
-        $0.font = UIFont.pretendard(size: 24, weight: .bold)
+        $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
     private let latecomerStackView = LatecomerStackView()
     
     private let outingStatusView = UIView().then {
-        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
-        $0.clipsToBounds = true
-        $0.layer.cornerRadius = 12
-        $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
+        $0.backgroundColor = .clear
     }
     
     private let noLateComerImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80)).then {
@@ -63,26 +45,38 @@ public class AdminMainViewController: BaseViewController {
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출 현황"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
-        $0.font = UIFont.pretendard(size: 24, weight: .bold)
+        $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
-    private lazy var managementButton = UIButton().then {
-        $0.backgroundColor = .clear
-        $0.setTitle("인원 관리하기", for: .normal)
-        $0.setTitleColor(.color.gomsTertiary.color, for: .normal)
-        $0.titleLabel?.font = .pretendard(size: 16, weight: .regular)
+    private lazy var moreOutingStatusButton = UIButton().then {
+        $0.backgroundColor = .color.gomsTextDefault.color.withAlphaComponent(0.1)
+        $0.setTitle("더보기", for: .normal)
+        $0.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        $0.titleLabel?.font = .pretendard(size: 12, weight: .regular)
+        $0.layer.cornerRadius = 8
+        $0.layer.masksToBounds = true
     }
     
-    private let dividingLineView = UIView().then {
-        $0.backgroundColor = .color.gomsTertiary.color
-    }
-    
-    let numberOfPeopleOutingLabel = UILabel().then {
-        $0.text = "66명이 외출 중"
-        $0.font = UIFont.pretendard(size: 16, weight: .regular)
+    private let numberOfPeopleOutingLabel = UILabel().then {
+        $0.text = "0명이 외출 중"
         $0.textColor = .color.gomsTertiary.color
+        $0.font = UIFont.pretendard(size: 13, weight: .regular)
+        let fullText = $0.text ?? ""
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let range = (fullText as NSString).range(of: "0")
+        attributedString.addAttribute(
+            .foregroundColor,
+            value: UIColor.color.gomsAdmin.color.cgColor,
+            range: range
+        )
+        attributedString.addAttribute(
+            .font,
+            value: UIFont.pretendard(size: 12, weight: .bold),
+            range: range
+        )
+        $0.attributedText = attributedString
     }
-    
+
     private let outingStatusFlowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
         $0.minimumLineSpacing = 0
@@ -91,12 +85,11 @@ public class AdminMainViewController: BaseViewController {
     }
     
     private lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingStatusFlowLayout).then {
-        $0.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
-        $0.clipsToBounds = true
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        $0.backgroundColor = .clear
     }
     
     private lazy var qrButton = AdminQRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64))
@@ -112,7 +105,6 @@ public class AdminMainViewController: BaseViewController {
         super.viewDidLoad()
         setCollectionView()
         setDatas()
-        
         viewModel.lateRank {_ in
             if self.viewModel.lateRankDatas.count == 0 {
                 self.noLateComerImage.isHidden = false
@@ -123,6 +115,7 @@ public class AdminMainViewController: BaseViewController {
             }
             self.setCollectionView()
         }
+        setIconColor()
     }
     
     // MARK: - CollectionView Setting
@@ -143,10 +136,23 @@ public class AdminMainViewController: BaseViewController {
         qrButton.clipsToBounds = true
     }
     
+    // MARK: setIconColor
+    private func setIconColor() {
+        if traitCollection.userInterfaceStyle == .dark {
+            logo.image = .image.gomsDarkGrayLogo.image
+            studentManagementButton.setBackgroundImage(.image.gomsDarkGrayIcon.image, for: .normal)
+            settingButton.setBackgroundImage(.image.gomsDarkGraySettingIcon.image, for: .normal)
+        } else {
+            logo.image = .image.gomsLightGrayLogo.image
+            studentManagementButton.setBackgroundImage(.image.gomsLightGrayIcon.image, for: .normal)
+            settingButton.setBackgroundImage(.image.gomsLightGraySettingIcon.image, for: .normal)
+        }
+    }
+    
     // MARK: - Add View
     override func addView() {
         [latecomerLabel, noLateComerImage, noLateComerText, latecomerStackView].forEach { latecomerView.addSubview($0) }
-        [outingStatusLabel, managementButton, dividingLineView, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
+        [outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
         [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
         [logo, studentManagementButton, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
     }
@@ -154,24 +160,24 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalToSuperview().offset(48)
             $0.leading.equalToSuperview()
             $0.height.equalTo(56)
             $0.width.equalTo(127)
         }
         
         studentManagementButton.snp.makeConstraints {
-            $0.leading.equalTo(logo.snp.trailing).offset(66.86)
-            $0.height.equalTo(32)
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(12)
-            $0.width.equalTo(132)
+            $0.trailing.equalTo(settingButton.snp.leading)
+            $0.top.equalToSuperview().offset(63.43)
+            $0.width.equalTo(36.96)
+            $0.height.equalTo(28.36)
         }
         
         settingButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.width.equalTo(22.21877)
-            $0.height.equalTo(21.88972)
+            $0.top.equalToSuperview().offset(50)
+            $0.trailing.equalToSuperview()
+            $0.width.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         scrollView.snp.makeConstraints {
@@ -183,25 +189,25 @@ public class AdminMainViewController: BaseViewController {
         profileView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalToSuperview().inset(16)
-            $0.height.equalTo(96)
+            $0.height.equalTo(84)
             $0.centerX.equalToSuperview()
         }
 
         latecomerView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(profileView.snp.bottom).offset(32)
-            $0.height.equalTo(216)
+            $0.height.equalTo(176)
             $0.centerX.equalToSuperview()
         }
         
         latecomerLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16)
-            $0.leading.equalToSuperview().inset(16)
-            $0.height.equalTo(40)
+            $0.top.equalToSuperview()
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(32)
         }
         
         latecomerStackView.snp.makeConstraints {
-            $0.top.equalTo(latecomerLabel.snp.bottom).offset(16)
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview().inset(16)
         }
@@ -220,38 +226,33 @@ public class AdminMainViewController: BaseViewController {
         outingStatusView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(latecomerView.snp.bottom).offset(32)
-            $0.height.equalTo(700)
+            $0.height.equalTo(1100)
             $0.centerX.equalToSuperview()
         }
         
         outingStatusLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(16)
-            $0.height.equalTo(40)
-            $0.top.equalToSuperview().inset(16)
-        }
-        
-        managementButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
-            $0.top.equalToSuperview().inset(16)
-            $0.height.equalTo(40)
-        }
-        
-        dividingLineView.snp.makeConstraints {
-            $0.height.equalTo(1)
-            $0.leading.trailing.equalToSuperview().inset(16)
-            $0.top.equalTo(outingStatusLabel.snp.bottom).offset(4)
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(32)
+            $0.top.equalToSuperview()
         }
         
         numberOfPeopleOutingLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(16)
-            $0.top.equalTo(dividingLineView.snp.bottom).offset(6)
-            $0.height.equalTo(28)
+            $0.top.equalToSuperview().offset(6)
+            $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
+            $0.height.equalTo(20)
+        }
+        
+        moreOutingStatusButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview()
+            $0.top.equalToSuperview().inset(4)
+            $0.width.equalTo(48)
+            $0.height.equalTo(24)
         }
         
         outingStatusCollectionView.snp.makeConstraints {
-            $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset(14)
-            $0.height.equalTo(300)
-            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(outingStatusLabel.snp.bottom).offset(8)
+            $0.height.equalTo(350)
+            $0.leading.trailing.equalToSuperview()
         }
         
         qrButton.snp.makeConstraints {
@@ -259,6 +260,23 @@ public class AdminMainViewController: BaseViewController {
             $0.trailing.equalToSuperview().inset(20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
         }
+    }
+    
+    // MARK: Action
+    @objc func managementButtonDidTap() {
+        
+    }
+    
+    @objc func settingButtonDidTap() {
+        
+    }
+    
+    @objc func qrButtonDidTap() {
+        
+    }
+    
+    @objc func seeMoreButtonDidTap() {
+        
     }
 }
 

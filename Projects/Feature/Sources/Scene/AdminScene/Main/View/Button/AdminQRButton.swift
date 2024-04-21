@@ -13,7 +13,6 @@ import SnapKit
 final class AdminQRButton: UIButton {
     
     private let QRFrame = UIImageView()
-    private let QRIcon = UIImageView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,15 +25,10 @@ final class AdminQRButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        [QRFrame, QRIcon].forEach { self.addSubview($0) }
+        [QRFrame].forEach { self.addSubview($0) }
         
         QRFrame.snp.makeConstraints {
-            $0.height.width.equalTo(24)
-            $0.centerX.centerY.equalToSuperview()
-        }
-        
-        QRIcon.snp.makeConstraints {
-            $0.height.width.equalTo(16)
+            $0.height.width.equalTo(36)
             $0.centerX.centerY.equalToSuperview()
         }
     }
@@ -42,6 +36,5 @@ final class AdminQRButton: UIButton {
     private func setupButton() {
         self.backgroundColor = .color.gomsAdmin.color
         QRFrame.image = .image.gomsqrIcon.image
-        QRIcon.image = .image.gomsAdminQRIcon.image
     }
 }

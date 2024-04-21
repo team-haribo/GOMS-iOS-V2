@@ -5,5 +5,5 @@ public struct OutingCountModel: Codable {
 }
 
 public struct OutingCountResponse: Codable {
-    let outingCount: Int
+    public let outingCount: Int
 }

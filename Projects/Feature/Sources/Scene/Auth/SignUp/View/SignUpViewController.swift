@@ -11,7 +11,7 @@ import UIKit
 public final class SignUpViewController: BaseViewController {
 
     // MARK: - Properties
-    private let viewModel = SignUpViewModel()
+    private let viewModel = AuthViewModel()
     
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 32
@@ -157,7 +157,7 @@ public final class SignUpViewController: BaseViewController {
 }
 
 extension SignUpViewController: UITextFieldDelegate {
-    public func textFieldDidEndEditing(_ textField: UITextField) {
+    public func textFieldDidChange(_ textField: UITextField) {
         if textField == nameTextField {
             viewModel.setupName(name: textField.text ?? "")
         } else if textField == emailTextField {
