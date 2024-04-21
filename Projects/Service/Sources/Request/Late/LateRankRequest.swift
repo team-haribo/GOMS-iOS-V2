@@ -1,9 +1,9 @@
 import Foundation
 
 public struct LateRankRequest: Codable {
-    var lateCount: Int
+    let Authorization: String
     
-    public init(lateCount: Int) {
-        self.lateCount = lateCount
+    public init(Authorization: String) {
+        self.Authorization = Authorization
     }
 }
