@@ -28,7 +28,6 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     }
     
     let studentInformationLabel = UILabel().then {
-        $0.text = "7기 | IOT"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
@@ -38,7 +37,6 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     }
     
     let outingTime = UILabel().then {
-        $0.text = "()에 외출"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }

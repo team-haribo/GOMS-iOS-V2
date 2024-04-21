@@ -32,11 +32,27 @@ public final class OutingStatusViewController: BaseViewController {
     
     lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingListFlowLayout).then {
         $0.backgroundColor = .clear
-        $0.isScrollEnabled = false
+        $0.isScrollEnabled = true
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
         $0.clipsToBounds = true
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    
+    private let outingIsNilIcon = UILabel().then {
+        $0.text = "☕️"
+        $0.font = .systemFont(ofSize: 80)
+        $0.isHidden = true
+    }
+    
+    private let outingIsNilLabel = UILabel().then {
+        $0.text = "텅 비었습니다...\n아직 외출할 시간이 아닌가요?"
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.textAlignment = .center
+        $0.textColor = .color.gomsTertiary.color
+        $0.setLineSpacing(spacing: 6)
+        $0.numberOfLines = 2
+        $0.isHidden = true
     }
     
     private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64)).then {
@@ -57,6 +73,13 @@ public final class OutingStatusViewController: BaseViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.getOutingList {
+            if self.viewModel.outingListDatas.count == 0 {
+                self.outingIsNilIcon.isHidden = false
+                self.outingIsNilLabel.isHidden = false
+            } else {
+                self.outingIsNilIcon.isHidden = true
+                self.outingIsNilLabel.isHidden = true
+            }
             self.setCollectionView()
         }
     }
@@ -93,7 +116,7 @@ public final class OutingStatusViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [mainLabel, outingListCollectionView, qrButton].forEach { view.addSubview($0) }
+        [mainLabel, outingListCollectionView, qrButton, outingIsNilIcon, outingIsNilLabel].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -108,6 +131,18 @@ public final class OutingStatusViewController: BaseViewController {
             $0.top.equalTo(mainLabel.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview()
+        }
+        
+        outingIsNilIcon.snp.makeConstraints {
+            $0.height.width.equalTo(80)
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(bounds.height * 0.44)
+        }
+        
+        outingIsNilLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(56)
+            $0.top.equalTo(outingIsNilIcon.snp.bottom).offset(-16)
         }
         
         qrButton.snp.makeConstraints {
