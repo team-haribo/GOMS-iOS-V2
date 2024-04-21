@@ -19,9 +19,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     private let profileView = ProfileCardView()
     
-    private let latecomerView = UIView().then {
-        $0.backgroundColor = .red
-    }
+    private let latecomerView = UIView()
     
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
@@ -29,13 +27,9 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
-    private let latecomerStackView = LatecomerStackView().then {
-        $0.backgroundColor = .orange
-    }
+    private let latecomerStackView = LatecomerStackView()
     
-    private let outingStatusView = UIView().then {
-        $0.backgroundColor = .yellow
-    }
+    private let outingStatusView = UIView()
     
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출현황"

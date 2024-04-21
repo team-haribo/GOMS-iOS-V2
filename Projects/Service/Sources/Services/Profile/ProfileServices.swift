@@ -33,10 +33,10 @@ extension ProfileServices: TargetType {
 
     public var headers: [String : String]? {
         #warning("밑에 코드는 나중에 로그인토큰 연결을 위해 남겨둠")
-            switch self {
-            default:
-                return ["Content-Type": "application/json"]
-            }
-//        ["authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNGZhYjE3NC05ODY1LTQ4ZTctOTNjZi1lMDQyNGJmMDlkOGUiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJhdXRob3JpdHkiOiJST0xFX1NUVURFTlRfQ09VTkNJTCIsImlhdCI6MTcxMzUyNDc5NywiZXhwIjoxNzEzNTM1NTk3fQ.rqoP4RA97w2_cbvi7Ur9kuMuAlcKg7FJUeNQOEsHRko"]
+//            switch self {
+//            default:
+//                return ["Content-Type": "application/json"]
+//            }
+        ["authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNGZhYjE3NC05ODY1LTQ4ZTctOTNjZi1lMDQyNGJmMDlkOGUiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJhdXRob3JpdHkiOiJST0xFX1NUVURFTlRfQ09VTkNJTCIsImlhdCI6MTcxMzUyNDc5NywiZXhwIjoxNzEzNTM1NTk3fQ.rqoP4RA97w2_cbvi7Ur9kuMuAlcKg7FJUeNQOEsHRko"]
         }
 }
