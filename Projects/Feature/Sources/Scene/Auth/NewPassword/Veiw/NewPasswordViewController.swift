@@ -1,5 +1,5 @@
 //
-//  ResetPasswordViewController.swift
+//  NewPasswordViewController.swift
 //  Feature
 //
 //  Created by 새미 on 3/30/24.
@@ -8,9 +8,11 @@
 
 import UIKit
 
-public final class ResetPasswordViewController: BaseViewController {
+public final class NewPasswordViewController: BaseViewController {
 
     // MARK: - Properties
+    private let viewModel = AuthViewModel()
+    
     private let textFieldStackView = UIStackView().then {
         $0.spacing = 32
         $0.axis = .vertical
@@ -42,16 +44,18 @@ public final class ResetPasswordViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func doneButtonTapped() {
-        let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
-        
-        let check = UIAlertAction(title: "확인", style: .default) { action in
-            let loginVC = SignInViewController()
-            self.navigationController?.pushViewController(loginVC, animated: true)
+        viewModel.newPassword {  success in
+            if success {
+                let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
+                
+                let check = UIAlertAction(title: "확인", style: .default) { action in
+                    let loginVC = SignInViewController()
+                    self.navigationController?.pushViewController(loginVC, animated: true)
+                }
+                alert.addAction(check)
+                self.present(alert, animated: true)
+            }
         }
-        
-        alert.addAction(check)
-        
-        present(alert, animated: true)
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
@@ -129,7 +133,13 @@ public final class ResetPasswordViewController: BaseViewController {
 }
 
 
-extension ResetPasswordViewController: UITextFieldDelegate {
+extension NewPasswordViewController: UITextFieldDelegate {
+    public func textFieldDidChange(_ textField: UITextField) {
+        if textField == passwordTextField {
+            viewModel.setupPassword(password: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
+        }
+    }
+    
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if passwordTextField.text != "", checkPasswordTextField.text != "" {
             checkPasswordTextField.resignFirstResponder()

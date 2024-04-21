@@ -1,5 +1,5 @@
 //
-//  FindPasswordViewController.swift
+//  NewPasswordViewController.swift
 //  Feature
 //
 //  Created by 새미 on 3/28/24.
@@ -8,10 +8,10 @@
 
 import UIKit
 
-public final class ResetPasswordAuthViewController: BaseViewController {
+public final class NewPasswordAuthViewController: BaseViewController {
     
     // MARK: - Properties
-    private let viewModel = SignUpViewModel()
+    private let viewModel = AuthViewModel()
     
     private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이메일")
     
@@ -33,8 +33,8 @@ public final class ResetPasswordAuthViewController: BaseViewController {
     @objc func authButtonTapped() {
         viewModel.sendAuthNumber { success in
             if success {
-                let authNumberVC = AuthNumberViewController(viewModel: self.viewModel)
-                self.navigationController?.pushViewController(authNumberVC, animated: true)
+                let authCodeVC = AuthNumberViewController(viewModel: self.viewModel)
+                self.navigationController?.pushViewController(authCodeVC, animated: true)
             }
         }
     }
@@ -108,10 +108,10 @@ public final class ResetPasswordAuthViewController: BaseViewController {
     }
 }
 
-extension ResetPasswordAuthViewController: UITextFieldDelegate {
-    public func textFieldDidEndEditing(_ textField: UITextField) {
+extension NewPasswordAuthViewController: UITextFieldDelegate {
+    public func textFieldDidChange(_ textField: UITextField) {
         if textField == emailTextField {
-            viewModel.setupEmail(email: textField.text ?? "")
+            viewModel.setupEmail(email: emailTextField.text ?? "")
         }
     }
 }
