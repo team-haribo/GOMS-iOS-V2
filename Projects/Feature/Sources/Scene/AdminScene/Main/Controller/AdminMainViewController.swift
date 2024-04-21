@@ -9,9 +9,10 @@
 import UIKit
 
 public class AdminMainViewController: BaseViewController {
-    
     // MARK: - Properties
     let scrollView = UIScrollView()
+    
+    let viewModel = LateRankViewModel()
     
     private let logo = UIImageView(image: .image.gomsAdminLogo.image)
     
@@ -45,6 +46,18 @@ public class AdminMainViewController: BaseViewController {
         $0.layer.cornerRadius = 12
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
+    }
+    
+    private let noLateComerImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80)).then {
+        $0.image = .image.gomsNoLateComer.image
+        $0.isHidden = true
+    }
+    
+    private let noLateComerText = UILabel().then {
+        $0.text = "지각자가 없어요! 놀랍게도..."
+        $0.textColor = .color.gomsTertiary.color
+        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
+        $0.isHidden = true
     }
     
     private let outingStatusLabel = UILabel().then {
@@ -99,6 +112,17 @@ public class AdminMainViewController: BaseViewController {
         super.viewDidLoad()
         setCollectionView()
         setDatas()
+        
+        viewModel.lateRank {_ in
+            if self.viewModel.lateRankDatas.count == 0 {
+                self.noLateComerImage.isHidden = false
+                self.noLateComerText.isHidden = false
+            } else {
+                self.noLateComerImage.isHidden = true
+                self.noLateComerText.isHidden = true
+            }
+            self.setCollectionView()
+        }
     }
     
     // MARK: - CollectionView Setting
@@ -121,7 +145,7 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [latecomerLabel, latecomerStackView].forEach { latecomerView.addSubview($0) }
+        [latecomerLabel, noLateComerImage, noLateComerText, latecomerStackView].forEach { latecomerView.addSubview($0) }
         [outingStatusLabel, managementButton, dividingLineView, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
         [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
         [logo, studentManagementButton, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
@@ -180,6 +204,17 @@ public class AdminMainViewController: BaseViewController {
             $0.top.equalTo(latecomerLabel.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview().inset(16)
+        }
+        
+        noLateComerImage.snp.makeConstraints {
+            $0.width.height.equalTo(80)
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset(12)
+            $0.centerX.equalToSuperview()
+        }
+        
+        noLateComerText.snp.makeConstraints {
+            $0.top.equalTo(noLateComerImage.snp.bottom).offset(12)
+            $0.centerX.equalToSuperview()
         }
         
         outingStatusView.snp.makeConstraints {
