@@ -31,12 +31,12 @@ public final class NewPasswordAuthViewController: BaseViewController {
     
     // MARK: - Selectors
     @objc func authButtonTapped() {
-//        viewModel.sendAuthNumber { success in
-//            if success {
-//                let authNumberVC = AuthNumberViewController(viewModel: self.viewModel)
-//                self.navigationController?.pushViewController(authNumberVC, animated: true)
-//            }
-//        }
+        viewModel.sendAuthNumber { success in
+            if success {
+                let authCodeVC = AuthNumberViewController(viewModel: self.viewModel)
+                self.navigationController?.pushViewController(authCodeVC, animated: true)
+            }
+        }
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
@@ -112,12 +112,6 @@ extension NewPasswordAuthViewController: UITextFieldDelegate {
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == emailTextField {
             viewModel.setupEmail(email: emailTextField.text ?? "")
-        }
-    }
-    
-    public func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField == emailTextField {
-            viewModel.setupEmail(email: textField.text ?? "")
         }
     }
 }

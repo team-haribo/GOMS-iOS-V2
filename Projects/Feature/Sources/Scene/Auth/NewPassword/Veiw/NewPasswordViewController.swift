@@ -44,16 +44,18 @@ public final class NewPasswordViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func doneButtonTapped() {
-        let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
-        
-        let check = UIAlertAction(title: "확인", style: .default) { action in
-            let loginVC = SignInViewController()
-            self.navigationController?.pushViewController(loginVC, animated: true)
+        viewModel.newPassword {  success in
+            if success {
+                let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
+                
+                let check = UIAlertAction(title: "확인", style: .default) { action in
+                    let loginVC = SignInViewController()
+                    self.navigationController?.pushViewController(loginVC, animated: true)
+                }
+                alert.addAction(check)
+                self.present(alert, animated: true)
+            }
         }
-        
-        alert.addAction(check)
-        
-        present(alert, animated: true)
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
