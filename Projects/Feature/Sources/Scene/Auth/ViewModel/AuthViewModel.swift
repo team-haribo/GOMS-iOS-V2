@@ -151,11 +151,12 @@ public final class AuthViewModel {
                 case 400:
                     print("변경하려는 비밀번호가 이전 비밀번호와 같을 때")
                     completion(false)
+                case 500:
+                    print("SERVER ERROR")
                 default:
                     print(result)
                     completion(false)
                 }
-                print("")
             case .failure(let err):
                 print(err.localizedDescription)
             }
