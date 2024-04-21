@@ -29,14 +29,14 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
-    private let latecomerStackView = LatecomerStackView()
+    private let latecomerStackView = LatecomerStackView(frame: CGRect(x: 0, y: 0, width: 320, height: 136))
     
     private let outingStatusView = UIView().then {
         $0.backgroundColor = .clear
     }
     
     private let outingStatusLabel = UILabel().then {
-        $0.text = "외출 현황"
+        $0.text = "외출현황"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
@@ -182,7 +182,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         
         profileView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().inset(16)
+            $0.top.equalToSuperview().offset(16)
             $0.height.equalTo(84)
             $0.centerX.equalToSuperview()
         }
@@ -202,14 +202,14 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         
         latecomerStackView.snp.makeConstraints {
             $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
-            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview().inset(16)
         }
         
         outingStatusView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(latecomerView.snp.bottom).offset(32)
-            $0.height.equalTo(700)
+            $0.height.equalTo(382)
             $0.centerX.equalToSuperview()
         }
         
@@ -234,14 +234,14 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         
         outingStatusCollectionView.snp.makeConstraints {
             $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset(14)
+            $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(350)
-            $0.leading.trailing.equalToSuperview().inset(16)
         }
         
         qrButton.snp.makeConstraints {
-            $0.height.width.equalTo(64)
             $0.trailing.equalToSuperview().inset(20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
+            $0.height.width.equalTo(64)
         }
     }
 }
