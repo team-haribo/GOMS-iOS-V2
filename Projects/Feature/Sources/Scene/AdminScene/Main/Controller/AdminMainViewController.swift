@@ -25,9 +25,7 @@ public class AdminMainViewController: BaseViewController {
     
     private let latecomerStackView = LatecomerStackView(frame: CGRect(x: 0, y: 0, width: 320, height: 136))
     
-    private let outingStatusView = UIView().then {
-        $0.backgroundColor = .clear
-    }
+    private let outingStatusView = UIView()
     
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출 현황"
@@ -186,7 +184,7 @@ public class AdminMainViewController: BaseViewController {
         latecomerStackView.snp.makeConstraints {
             $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(16)
+            $0.bottom.equalToSuperview()
         }
         
         outingStatusView.snp.makeConstraints {

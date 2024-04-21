@@ -20,7 +20,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private let profileView = ProfileCardView()
     
     private let latecomerView = UIView().then {
-        $0.backgroundColor = .clear
+        $0.backgroundColor = .red
     }
     
     private let latecomerLabel = UILabel().then {
@@ -29,10 +29,12 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
-    private let latecomerStackView = LatecomerStackView(frame: CGRect(x: 0, y: 0, width: 320, height: 136))
+    private let latecomerStackView = LatecomerStackView().then {
+        $0.backgroundColor = .orange
+    }
     
     private let outingStatusView = UIView().then {
-        $0.backgroundColor = .clear
+        $0.backgroundColor = .yellow
     }
     
     private let outingStatusLabel = UILabel().then {
@@ -191,7 +193,6 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(profileView.snp.bottom).offset(32)
             $0.height.equalTo(176)
-            $0.centerX.equalToSuperview()
         }
         
         latecomerLabel.snp.makeConstraints {
@@ -201,9 +202,10 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         }
         
         latecomerStackView.snp.makeConstraints {
+            $0.height.equalTo(136)
             $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(16)
+            $0.bottom.equalToSuperview()
         }
         
         outingStatusView.snp.makeConstraints {

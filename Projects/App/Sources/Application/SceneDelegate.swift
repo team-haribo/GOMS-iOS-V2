@@ -18,14 +18,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
  
         let defaults = UserDefaults.standard
             
-            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-            print(isSwitchOn)
-            
-            if isSwitchOn == true {
-                window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-            } else {
-                window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
-            }
+//            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+//            print(isSwitchOn)
+//            
+//            if isSwitchOn == true {
+//                window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+//            } else {
+//                window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
+//            }
+        window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
       
         window?.makeKeyAndVisible()
     }
