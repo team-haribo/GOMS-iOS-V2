@@ -60,8 +60,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         $0.addTarget(self, action: #selector(moreOutingStatusButtonTapped), for: .touchUpInside)
     }
     
-    private let numberOfPeopleOutingLabel = UILabel().then {
-        $0.text = "0명이 외출 중"
+    let numberOfPeopleOutingLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 13, weight: .regular)
         let fullText = $0.text ?? ""
@@ -128,6 +127,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         viewModel.getLateList {
             self.viewModel.getOutingList {
                 self.setCollectionView()
+                self.numberOfPeopleOutingLabel.text = "\(self.viewModel.outingListDatas.count)명이 외출 중"
             }
         }
         setIconColor()
