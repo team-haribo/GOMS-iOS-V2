@@ -50,7 +50,6 @@ extension ProfileImageServices: TargetType {
     }
 
     var headers: [String : String]? {
-        
         switch self {
         default:
             return ["Content-Type": "application/json"]

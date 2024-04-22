@@ -15,6 +15,7 @@ public enum AuthServices {
     case refreshToken(refreshToken: String)
     case sendAuthNumber(param: SendAuthNumberRequest)
     case verifyAuthNumber(emaiil: String, authCode: String)
+    case logoutToken(refreshToken: String)
 }
 
 extension AuthServices: TargetType {
@@ -34,6 +35,8 @@ extension AuthServices: TargetType {
             return "/auth/email/send"
         case .verifyAuthNumber:
             return "/auth/email/verify"
+        case .logoutToken:
+            return "/"
         }
     }
     
@@ -47,6 +50,8 @@ extension AuthServices: TargetType {
             return .patch
         case .verifyAuthNumber:
             return .get
+        case .logoutToken:
+            return .delete
         }
     }
     
@@ -66,6 +71,9 @@ extension AuthServices: TargetType {
             return .requestJSONEncodable(param)
         case .verifyAuthNumber(let email, let authCode):
             return .requestParameters(parameters: ["email": email, "authCode": authCode], encoding: URLEncoding.queryString)
+        case let .logoutToken(refreshToken):
+            let parameters: [String: Any] = ["refreshToken": refreshToken]
+            return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
         }
     }
     
