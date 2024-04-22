@@ -155,49 +155,49 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     override func setLayout() {
         titleText.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         closeButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         roleView.snp.makeConstraints {
             $0.width.equalTo(375)
             $0.height.equalTo(112)
-            $0.top.equalToSuperview().offset(64)
+            $0.top.equalToSuperview().offset((bounds.height) / 12.6875)
             $0.leading.trailing.equalToSuperview()
         }
         
         roleTitle.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         roleStudentButton.snp.makeConstraints {
             $0.width.equalTo(101)
             $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalTo(roleStudentCouncilButton.snp.leading).offset(-16)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalTo(roleStudentCouncilButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         roleStudentCouncilButton.snp.makeConstraints {
             $0.width.equalTo(101)
             $0.height.equalTo(56)
             $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(roleStudentButton.snp.trailing).offset(16)
-            $0.trailing.equalTo(roleOutingProhibitionButton.snp.leading).offset(-16)
+            $0.leading.equalTo(roleStudentButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalTo(roleOutingProhibitionButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         roleOutingProhibitionButton.snp.makeConstraints {
             $0.width.equalTo(101)
             $0.height.equalTo(56)
             $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(roleStudentCouncilButton.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.leading.equalTo(roleStudentCouncilButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         gradeView.snp.makeConstraints {
@@ -208,32 +208,32 @@ class FilterBottomSheetContentViewController: BaseViewController {
         }
         
         gradeTitle.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         firstGradeButton.snp.makeConstraints {
             $0.width.equalTo(101)
             $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalTo(secondGradeButton.snp.leading).offset(-16)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalTo(secondGradeButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         secondGradeButton.snp.makeConstraints {
             $0.width.equalTo(101)
             $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(firstGradeButton.snp.trailing).offset(16)
-            $0.trailing.equalTo(thirdGradeButton.snp.leading).offset(-16)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(firstGradeButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalTo(thirdGradeButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         thirdGradeButton.snp.makeConstraints {
             $0.width.equalTo(101)
             $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(secondGradeButton.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(secondGradeButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         genderView.snp.makeConstraints {
@@ -244,24 +244,24 @@ class FilterBottomSheetContentViewController: BaseViewController {
         }
         
         genderTitle.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         maleButton.snp.makeConstraints {
             $0.width.equalTo(159)
             $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalTo(femaleButton.snp.leading).offset(-16)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalTo(femaleButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         femaleButton.snp.makeConstraints {
             $0.width.equalTo(159)
             $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(maleButton.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(maleButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         departmentView.snp.makeConstraints {
@@ -272,41 +272,41 @@ class FilterBottomSheetContentViewController: BaseViewController {
         }
         
         departmentTitle.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
+            $0.top.equalToSuperview().offset((bounds.height) / 101.5)
             $0.leading.equalToSuperview().offset(20)
         }
         
         swButton.snp.makeConstraints {
             $0.width.equalTo(101)
             $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalTo(iotButton.snp.leading).offset(-16)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalTo(iotButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         iotButton.snp.makeConstraints {
             $0.width.equalTo(101)
             $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(swButton.snp.trailing).offset(16)
-            $0.trailing.equalTo(aiButton.snp.leading).offset(-16)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(swButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalTo(aiButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         aiButton.snp.makeConstraints {
             $0.width.equalTo(101)
             $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(iotButton.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(iotButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         filterResetButton.snp.makeConstraints {
             $0.width.equalTo(319)
             $0.height.equalTo(56)
-            $0.top.equalTo(departmentView.snp.bottom).offset(24)
-            $0.bottom.equalToSuperview().inset(58)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(departmentView.snp.bottom).offset((bounds.height) / 33.8333333333)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 14)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
     }
     
