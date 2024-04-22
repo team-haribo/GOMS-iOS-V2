@@ -170,17 +170,17 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(48)
+            $0.top.equalToSuperview().offset((bounds.height) / 16.9166666667)
             $0.leading.equalToSuperview()
-            $0.height.equalTo(56)
-            $0.width.equalTo(127)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.width.equalTo((bounds.height) / 6.3937007874)
         }
         
         settingButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(50)
+            $0.top.equalToSuperview().offset((bounds.height) / 16.24)
             $0.trailing.equalToSuperview()
-            $0.width.equalTo(64)
-            $0.height.equalTo(56)
+            $0.width.equalTo((bounds.height) / 12.6875)
+            $0.height.equalTo((bounds.height) / 14.5)
         }
         
         scrollView.snp.makeConstraints {
@@ -190,60 +190,60 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         }
         
         profileView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().offset(16)
-            $0.height.equalTo(84)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.height.equalTo((bounds.height) / 9.6666666667)
             $0.centerX.equalToSuperview()
         }
 
         latecomerView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(profileView.snp.bottom).offset(32)
-            $0.height.equalTo(176)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.top.equalTo(profileView.snp.bottom).offset((bounds.height) / 25.375)
+            $0.height.equalTo((bounds.height) / 4.6136363636)
         }
         
         latecomerLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.leading.equalToSuperview()
-            $0.height.equalTo(32)
+            $0.height.equalTo((bounds.height) / 25.375)
         }
         
         outingStatusView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(latecomerView.snp.bottom).offset(32)
-            $0.height.equalTo(382)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.top.equalTo(latecomerView.snp.bottom).offset((bounds.height) / 25.375)
+            $0.height.equalTo((bounds.height) / 2.1256544503)
             $0.centerX.equalToSuperview()
         }
         
         outingStatusLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
-            $0.height.equalTo(32)
+            $0.height.equalTo((bounds.height) / 25.375)
             $0.top.equalToSuperview()
         }
         
         numberOfPeopleOutingLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(6)
-            $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
-            $0.height.equalTo(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 135.3333333333)
+            $0.leading.equalTo(outingStatusLabel.snp.trailing).offset((bounds.width) / 46.875)
+            $0.height.equalTo((bounds.height) / 40.6)
         }
         
         moreOutingStatusButton.snp.makeConstraints {
             $0.trailing.equalToSuperview()
-            $0.top.equalToSuperview().inset(4)
-            $0.width.equalTo(48)
-            $0.height.equalTo(24)
+            $0.top.equalToSuperview().inset((bounds.height) / 203)
+            $0.width.equalTo((bounds.height) / 16.9166666667)
+            $0.height.equalTo((bounds.height) / 33.8333333333)
         }
         
         outingStatusCollectionView.snp.makeConstraints {
-            $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset(14)
+            $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset((bounds.height) / 58)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(350)
+            $0.height.equalTo((bounds.height) / 2.32)
         }
         
         qrButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
-            $0.height.width.equalTo(64)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-((bounds.height) / 50.75))
+            $0.height.width.equalTo((bounds.height) / 12.6875)
         }
     }
 }
