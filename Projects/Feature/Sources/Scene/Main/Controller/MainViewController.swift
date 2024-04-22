@@ -34,7 +34,6 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
     
     private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.latecomerFlowLayout).then {
-        $0.backgroundColor = .color.gomsCardBackgroundColor.color
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
@@ -167,9 +166,9 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     // MARK: - Add View
     override func addView() {
-        [latecomerLabel].forEach { latecomerView.addSubview($0) }
+        [latecomerLabel, latecomerCollectionView].forEach { latecomerView.addSubview($0) }
         [outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
-        [profileView, latecomerView, outingStatusView, latecomerCollectionView].forEach { self.scrollView.addSubview($0) }
+        [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
         [logo, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
     }
     
@@ -216,7 +215,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         
         latecomerCollectionView.snp.makeConstraints {
             $0.top.equalTo(latecomerLabel.snp.bottom).offset((bounds.height) / 101.5)
-            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.leading.trailing.equalToSuperview()
             $0.height.equalTo((bounds.height) / 5.9705882353)
         }
         
