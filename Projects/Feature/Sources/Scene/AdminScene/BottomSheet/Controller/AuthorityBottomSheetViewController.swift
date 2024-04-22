@@ -8,9 +8,8 @@ final class AuthorityBottomSheetViewController: UIViewController {
         case normal
     }
     
-    private lazy var filterDimmedView = UIView().then {
-        $0.backgroundColor = UIColor.black.withAlphaComponent(self.dimmedAlpha)
-        $0.alpha = 0
+    private lazy var dimmedView = UIView().then {
+        $0.backgroundColor = UIColor.black.withAlphaComponent(0.45)
     }
     
     let filterBottomSheetView = UIView().then {
@@ -23,7 +22,7 @@ final class AuthorityBottomSheetViewController: UIViewController {
     
     private var bottomSheetViewTopConstraint: NSLayoutConstraint!
     
-    var defaultHeight: CGFloat = 500
+    var defaultHeight: CGFloat = 224
     var dimmedAlpha: CGFloat = 0.45
     
     private lazy var bottomSheetPanStartingTopConstant: CGFloat = 40
@@ -36,7 +35,7 @@ final class AuthorityBottomSheetViewController: UIViewController {
         }
     }
     
-    init(contentViewController: UIViewController, defaultHeight: CGFloat, dimmedAlpha: CGFloat = 0.4) {
+    init(contentViewController: UIViewController, defaultHeight: CGFloat, dimmedAlpha: CGFloat = 0.45) {
         self.contentViewController = contentViewController
         self.defaultHeight = defaultHeight
         self.dimmedAlpha = dimmedAlpha
@@ -51,6 +50,8 @@ final class AuthorityBottomSheetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .black.withAlphaComponent(0.45)
         
         self.configureUI()
         self.configureLayout()
@@ -88,7 +89,7 @@ final class AuthorityBottomSheetViewController: UIViewController {
         }
         
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-            self.filterDimmedView.alpha = self.dimAlphaWithBottomSheetTopConstraint(value: self.bottomSheetViewTopConstraint.constant)
+            self.dimmedView.alpha = self.dimAlphaWithBottomSheetTopConstraint(value: 0.45)
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -97,18 +98,18 @@ final class AuthorityBottomSheetViewController: UIViewController {
 // MARK: - Configure
 extension AuthorityBottomSheetViewController {
     private func configureUI() {
-        [filterDimmedView, filterBottomSheetView].forEach {
+        [dimmedView, filterBottomSheetView].forEach {
             view.addSubview($0)
         }
         
         addChild(contentViewController)
-        filterDimmedView.addSubview(contentViewController.view)
+        filterBottomSheetView.addSubview(contentViewController.view)
         contentViewController.didMove(toParent: self)
     }
     
     private func configureLayout() {
-        filterDimmedView.snp.makeConstraints {
-            $0.top.leading.trailing.bottom.equalToSuperview()
+        dimmedView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
         filterBottomSheetView.translatesAutoresizingMaskIntoConstraints = false
@@ -144,7 +145,7 @@ extension AuthorityBottomSheetViewController {
         let bottomPadding = view.safeAreaInsets.bottom
         bottomSheetViewTopConstraint.constant = safeAreaHeight + bottomPadding
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseIn, animations: {
-            self.filterDimmedView.alpha = 0.0
+            self.dimmedView.alpha = 0.0
             self.view.layoutIfNeeded()
         }) { _ in
             if self.presentingViewController != nil {

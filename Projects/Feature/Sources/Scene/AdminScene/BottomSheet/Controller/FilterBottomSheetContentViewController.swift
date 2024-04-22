@@ -129,8 +129,6 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = .color.gomsBottomSheetBackground.color
     }
     
     override func addView() {
@@ -314,7 +312,6 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     // MARK: Action
     @objc private func closeButtonDidTap(_ sender: Any) {
-        print("닫힘")
         buttonAction?()
     }
     

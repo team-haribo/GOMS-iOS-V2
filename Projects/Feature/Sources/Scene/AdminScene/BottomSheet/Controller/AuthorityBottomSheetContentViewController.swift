@@ -8,7 +8,7 @@ class AuthorityBottomSheetContentViewController: BaseViewController {
     
     private let closeButton = UIButton().then {
         $0.setImage(UIImage(systemName: "xmark"), for: .normal)
-        $0.tintColor = .black
+        $0.tintColor = .color.gomsTextDefault.color
         $0.addTarget(self, action: #selector(closeButtonDidTap(_:)), for: .touchUpInside)
     }
     

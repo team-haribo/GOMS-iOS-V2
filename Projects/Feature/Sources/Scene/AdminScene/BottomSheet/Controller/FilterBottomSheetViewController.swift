@@ -7,13 +7,12 @@ class FilterBottomSheetViewController: UIViewController {
     }
     
     private lazy var dimmedView = UIView().then {
-        $0.backgroundColor = UIColor.black.withAlphaComponent(self.dimmedAlpha)
-        $0.alpha = 0
+        $0.backgroundColor = UIColor.black.withAlphaComponent(0.45)
     }
     
     private lazy var bottomSheetView = UIView().then {
         $0.backgroundColor = .white
-        $0.layer.cornerRadius = self.cornerRedius
+        $0.layer.cornerRadius = 16
         $0.layer.cornerCurve = .continuous
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.clipsToBounds = true
@@ -22,12 +21,9 @@ class FilterBottomSheetViewController: UIViewController {
     private var bottomSheetViewTopConstraint: NSLayoutConstraint!
     
     var defaultHeight: CGFloat = 500
-    var cornerRedius: CGFloat = 16
     var dimmedAlpha: CGFloat = 0.45
-    var bottomSheetPanMinTopConstant: CGFloat = 40
-    var isPannedable: Bool = false
     
-    private lazy var bottomSheetPanStartingTopConstant: CGFloat = bottomSheetPanMinTopConstant
+    private lazy var bottomSheetPanStartingTopConstant: CGFloat = 40
     
     private let contentViewController: UIViewController
     
@@ -37,12 +33,10 @@ class FilterBottomSheetViewController: UIViewController {
         }
     }
     
-    init(contentViewController: UIViewController, defaultHeight: CGFloat, cornerRadius: CGFloat = 16, dimmedAlpha: CGFloat = 0.4, isPannedable: Bool = false) {
+    init(contentViewController: UIViewController, defaultHeight: CGFloat, dimmedAlpha: CGFloat = 0.4) {
         self.contentViewController = contentViewController
         self.defaultHeight = defaultHeight
-        self.cornerRedius = cornerRadius
         self.dimmedAlpha = dimmedAlpha
-        self.isPannedable = isPannedable
         
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .overFullScreen
@@ -59,8 +53,6 @@ class FilterBottomSheetViewController: UIViewController {
         
         self.configureUI()
         self.configureLayout()
-        
-        let contentVC = FilterBottomSheetContentViewController()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -87,15 +79,15 @@ class FilterBottomSheetViewController: UIViewController {
             if constraintValue > 0 {
                 self.bottomSheetViewTopConstraint.constant = constraintValue
             } else {
-                self.bottomSheetViewTopConstraint.constant = self.bottomSheetPanMinTopConstant
+                self.bottomSheetViewTopConstraint.constant = self.bottomSheetPanStartingTopConstant
             }
             
         } else {
-            self.bottomSheetViewTopConstraint.constant = self.bottomSheetPanMinTopConstant
+            self.bottomSheetViewTopConstraint.constant = self.bottomSheetPanStartingTopConstant
         }
         
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-            self.dimmedView.alpha = self.dimAlphaWithBottomSheetTopConstraint(value: self.bottomSheetViewTopConstraint.constant)
+            self.dimmedView.alpha = self.dimAlphaWithBottomSheetTopConstraint(value: 0.45)
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -115,17 +107,16 @@ extension FilterBottomSheetViewController {
     
     private func configureLayout() {
         dimmedView.snp.makeConstraints {
-            $0.top.leading.trailing.bottom.equalToSuperview()
+            $0.edges.equalToSuperview()
         }
         
-        // Layout 깨짐 경고를 제거하고자 하는 경우 bottomSheetView의 heightAnchor 값을 지정하면 해결된다.
         bottomSheetView.translatesAutoresizingMaskIntoConstraints = false
         let topConstant = view.safeAreaInsets.bottom + view.safeAreaLayoutGuide.layoutFrame.height
         bottomSheetViewTopConstraint = bottomSheetView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: topConstant)
         NSLayoutConstraint.activate([
             bottomSheetView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomSheetView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            bottomSheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor), // 이부분으로 인해 Layout 깨짐 경고가 뜬다
+            bottomSheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomSheetViewTopConstraint,
         ])
         
@@ -141,7 +132,7 @@ extension FilterBottomSheetViewController {
         bottomSheetContentVC.didMove(toParent: self)
         
         bottomSheetContentVC.view.snp.makeConstraints {
-            $0.top.leading.trailing.bottom.equalToSuperview()
+            $0.edges.equalToSuperview()
         }
     }
 }
@@ -159,13 +150,6 @@ extension FilterBottomSheetViewController {
                 self.dismiss(animated: false, completion: nil)
             }
         }
-    }
-    
-    //주어진 CGFloat 배열의 값 중 number로 주어진 값과 가까운 값을 찾아내는 메소드
-    private func nearest(to number: CGFloat, inValues values: [CGFloat]) -> CGFloat {
-        guard let nearestVal = values.min(by: { abs(number - $0) < abs(number - $1) })
-        else { return number }
-        return nearestVal
     }
     
     private func dimAlphaWithBottomSheetTopConstraint(value: CGFloat) -> CGFloat {
