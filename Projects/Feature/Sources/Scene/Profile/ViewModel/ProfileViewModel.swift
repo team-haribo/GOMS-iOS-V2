@@ -10,12 +10,13 @@ final class ProfileViewModel: ObservableObject {
     
     let provider = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
     let providerserve = MoyaProvider<ProfileImageServices>(plugins: [NetworkLoggerPlugin()])
-    let providerthree = MoyaProvider<LogoutServices>(plugins: [NetworkLoggerPlugin()])
-    let token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNGZhYjE3NC05ODY1LTQ4ZTctOTNjZi1lMDQyNGJmMDlkOGUiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJhdXRob3JpdHkiOiJST0xFX1NUVURFTlRfQ09VTkNJTCIsImlhdCI6MTcxMzUyNDc5NywiZXhwIjoxNzEzNTM1NTk3fQ.rqoP4RA97w2_cbvi7Ur9kuMuAlcKg7FJUeNQOEsHRko"
-    let refreshToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlNGZhYjE3NC05ODY1LTQ4ZTctOTNjZi1lMDQyNGJmMDlkOGUiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzEzNTI0Nzk3LCJleHAiOjE3MTE4MjE4Mjl9.IBZdoIZAU1pLiCO5brvznZ8OvDlLgqL4gmBOYTTiW0k"
+    let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
+    let keyChain = KeyChain()
+    let gomsRefreshToken = GOMSRefreshToken.shared
+    lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
     
     func loadProfileInfo() {
-        provider.request(.getProfile(authorization: token)) { result in
+        provider.request(.getProfile(authorization: accessToken)) { result in
             switch result {
             case let .success(response):
                 do {
@@ -35,7 +36,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func submitProfileImage(imageData: Data) {
-        providerserve.request(.submit(authorization: token, imageData: imageData)) { result in
+        providerserve.request(.submit(authorization: accessToken, imageData: imageData)) { result in
             switch result {
             case .success:
                 // Handle success
@@ -48,7 +49,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func updateProfileImage(imageData: Data) {
-        providerserve.request(.update(authorization: token, imageData: imageData)) { result in
+        providerserve.request(.update(authorization: accessToken, imageData: imageData)) { result in
             switch result {
             case .success:
                 // Handle success
@@ -61,7 +62,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func deleteProfileImage() {
-        providerserve.request(.delete(authorization: token)) { result in
+        providerserve.request(.delete(authorization: accessToken)) { result in
             switch result {
             case .success:
                 // Handle success
@@ -74,7 +75,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func ProfileLogout(presentingViewController: UIViewController) {
-        providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
+        providerthree.request(.logoutToken(refreshToken: gomsRefreshToken)) { [weak self] result in
             switch result {
             case .success:
                 print("Logout successfully")
