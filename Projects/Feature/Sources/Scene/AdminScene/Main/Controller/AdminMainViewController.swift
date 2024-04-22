@@ -23,7 +23,18 @@ public class AdminMainViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
-    private let latecomerStackView = LatecomerStackView(frame: CGRect(x: 0, y: 0, width: 320, height: 136))
+    private let latecomerFlowLayout = UICollectionViewFlowLayout().then {
+        $0.minimumLineSpacing = 0
+        $0.minimumInteritemSpacing = 0
+        $0.itemSize = CGSize(width: 303, height: 56)
+    }
+    
+    private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.latecomerFlowLayout).then {
+        $0.isScrollEnabled = false
+        $0.showsHorizontalScrollIndicator = false
+        $0.showsVerticalScrollIndicator = true
+        $0.backgroundColor = .clear
+    }
     
     private let outingStatusView = UIView()
     
@@ -126,7 +137,7 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [latecomerLabel, latecomerStackView].forEach { latecomerView.addSubview($0) }
+        [latecomerLabel, latecomerCollectionView].forEach { latecomerView.addSubview($0) }
         [outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
         [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
         [logo, studentManagementButton, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
@@ -179,12 +190,6 @@ public class AdminMainViewController: BaseViewController {
             $0.top.equalToSuperview()
             $0.leading.equalToSuperview()
             $0.height.equalTo(32)
-        }
-        
-        latecomerStackView.snp.makeConstraints {
-            $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview()
         }
         
         outingStatusView.snp.makeConstraints {
