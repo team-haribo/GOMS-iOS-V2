@@ -8,7 +8,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     private let closeButton = UIButton().then {
         $0.setImage(UIImage(systemName: "xmark"), for: .normal)
-        $0.tintColor = .black
+        $0.tintColor = .color.gomsTextDefault.color
         $0.addTarget(self, action: #selector(closeButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -26,16 +26,19 @@ class FilterBottomSheetContentViewController: BaseViewController {
 
     private var isRoleStudentButtonSelected = false
     private let roleStudentButton = UIButton(filterButton: "학생").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(roleStudentButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isRoleStudentCouncilButtonSelected = false
     private let roleStudentCouncilButton = UIButton(filterButton: "학생회").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(roleStudentCouncilButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isRoleOutingProhibitionButtonSelected = false
     private let roleOutingProhibitionButton = UIButton(filterButton: "외출 금지").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(roleOutingProhibitionButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -51,16 +54,19 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     private var isFristGradeButtonSelected = false
     private let firstGradeButton = UIButton(filterButton: "1학년").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(firstGradeButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isSecondGradeButtonSelected = false
     private let secondGradeButton = UIButton(filterButton: "2학년").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(secondGradeButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isThirdeGradeButtonSelected = false
     private let thirdGradeButton = UIButton(filterButton: "3학년").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(thirdGradeButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -76,11 +82,13 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     private var isMaleButtonSelected = false
     private let maleButton = UIButton(filterButton: "남성").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(maleButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isFemaleButtonSelected = false
     private let femaleButton = UIButton(filterButton: "여성").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(femaleButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -96,16 +104,19 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     private var isSwButtonSelected = false
     private let swButton = UIButton(filterButton: "SW").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(swButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isIotButtonSelected = false
     private let iotButton = UIButton(filterButton: "IoT").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(iotButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isAiButtonSelected = false
     private let aiButton = UIButton(filterButton: "AI").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(aiButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -118,6 +129,8 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .color.gomsBottomSheetBackground.color
     }
     
     override func addView() {
@@ -316,7 +329,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("학생 버튼이 해제되었습니다!")
             roleStudentButton.backgroundColor = .clear
-            roleStudentButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            roleStudentButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             roleStudentButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -332,7 +345,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("학생회 버튼이 해제되었습니다!")
             roleStudentCouncilButton.backgroundColor = .clear
-            roleStudentCouncilButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            roleStudentCouncilButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             roleStudentCouncilButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -348,7 +361,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("외출금지 버튼이 해제되었습니다!")
             roleOutingProhibitionButton.backgroundColor = .clear
-            roleOutingProhibitionButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            roleOutingProhibitionButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             roleOutingProhibitionButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -364,7 +377,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("1학년 버튼이 해제되었습니다!")
             firstGradeButton.backgroundColor = .clear
-            firstGradeButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            firstGradeButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             firstGradeButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -380,7 +393,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("2학년 버튼이 해제되었습니다!")
             secondGradeButton.backgroundColor = .clear
-            secondGradeButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            secondGradeButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             secondGradeButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -396,7 +409,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("3학년 버튼이 해제되었습니다!")
             thirdGradeButton.backgroundColor = .clear
-            thirdGradeButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            thirdGradeButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             thirdGradeButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -412,7 +425,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("남성 버튼이 해제되었습니다!")
             maleButton.backgroundColor = .clear
-            maleButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            maleButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             maleButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -428,7 +441,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("여성 버튼이 해제되었습니다!")
             femaleButton.backgroundColor = .clear
-            femaleButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            femaleButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             femaleButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -444,7 +457,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("SW 버튼이 해제되었습니다!")
             swButton.backgroundColor = .clear
-            swButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            swButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             swButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -460,7 +473,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("IoT 버튼이 해제되었습니다!")
             iotButton.backgroundColor = .clear
-            iotButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            iotButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             iotButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -476,7 +489,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("AI 버튼이 해제되었습니다!")
             aiButton.backgroundColor = .clear
-            aiButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            aiButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             aiButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -484,7 +497,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
     @objc private func filterResetButtonDidTap(_ sender: Any) {
         [roleStudentButton, roleStudentCouncilButton, roleOutingProhibitionButton, firstGradeButton, secondGradeButton, thirdGradeButton, maleButton, femaleButton, swButton, iotButton, aiButton].forEach {
             $0.backgroundColor = .clear
-            $0.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             $0.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }

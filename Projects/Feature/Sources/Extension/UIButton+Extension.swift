@@ -28,7 +28,7 @@ extension UIButton {
         setTitleColor(.color.gomsSecondary.color, for: .normal)
         titleLabel?.font = UIFont.pretendard(size: 16, weight: .semibold)
         frame = CGRect(x: 0, y: 0, width: 101, height: 56)
-        backgroundColor = .color.gomsLightBackground.color
+        backgroundColor = .clear
         layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
         layer.borderWidth = 1
         layer.masksToBounds = true

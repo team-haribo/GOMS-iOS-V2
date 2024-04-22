@@ -55,6 +55,8 @@ class FilterBottomSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .black.withAlphaComponent(0.45)
+        
         self.configureUI()
         self.configureLayout()
         
