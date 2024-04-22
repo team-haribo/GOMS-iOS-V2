@@ -1,8 +1,8 @@
 //
-//  LatecomerView.swift
+//  LateCell.swift
 //  Feature
 //
-//  Created by 새미 on 1/29/24.
+//  Created by 새미 on 4/22/24.
 //  Copyright © 2024 HARIBO. All rights reserved.
 //
 
@@ -10,13 +10,16 @@ import UIKit
 
 import SnapKit
 import Then
+import Kingfisher
 
-final class LatecomerView: UIView {
+final class LateCell: UICollectionViewCell {
     
     // MARK: - Properties
+    static let identifier = "LateCell"
+
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 56, height: 56)).then {
         $0.image = UIImage(systemName: "person.crop.circle.fill")
-        $0.tintColor = .color.gomsSecondary.color
+        $0.tintColor = .color.gomsTertiary.color
     }
     
     let nameLabel = UILabel().then {
@@ -29,29 +32,21 @@ final class LatecomerView: UIView {
         $0.font = .pretendard(size: 12, weight: .regular)
         $0.textAlignment = .center
         $0.textColor = .color.gomsTertiary.color
+        $0.text = "6기 | 스마트 IOT"
     }
-
+    
     // MARK: - Initializer
-    init(frame: CGRect, name: String, studentInformation: String) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
-        configureUI(name, studentInformation)
+        self.backgroundColor = .color.gomsCardBackgroundColor.color
+        
         addView()
+        configureUI()
         setLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Configure UI
-    private func configureUI(_ name: String, _ studentInformation: String) {
-        self.backgroundColor = .color.gomsCardBackgroundColor.color
-        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
-        profileImageView.clipsToBounds = true
-        nameLabel.text = name
-        studentInformationLabel.text = studentInformation
-        layer.cornerRadius = 8
-        layer.masksToBounds = true
     }
     
     // MARK: - Add View
@@ -61,23 +56,41 @@ final class LatecomerView: UIView {
         }
     }
     
-    // MARK: - Layout
+    func configureData(with lateData: LatecomerData) {
+        if let imageURL = lateData.profileImageURL, let url = URL(string: imageURL) {
+            profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+        } else {
+            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+        }
+        nameLabel.text = lateData.name
+        studentInformationLabel.text = "\(lateData.grade)기 | \(lateData.major)"
+    }
+    
+    // MARK: - Configure UI
+    private func configureUI() {
+        self.backgroundColor = .color.gomsCardBackgroundColor.color
+        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
+        profileImageView.clipsToBounds = true
+        layer.cornerRadius = 8
+        layer.masksToBounds = true
+    }
+    
     private func setLayout() {
         profileImageView.snp.makeConstraints {
+            $0.width.height.equalTo(56)
             $0.top.equalToSuperview().offset(12)
             $0.centerX.equalToSuperview()
-            $0.height.width.equalTo(56)
         }
         
         nameLabel.snp.makeConstraints {
-            $0.top.equalTo(profileImageView.snp.bottom).offset(8)
             $0.height.equalTo(28)
+            $0.top.equalTo(profileImageView.snp.bottom).offset(8)
             $0.centerX.equalToSuperview()
         }
         
         studentInformationLabel.snp.makeConstraints {
+            $0.height.equalTo(20)
             $0.top.equalTo(nameLabel.snp.bottom)
-            $0.bottom.equalToSuperview().inset(12)
             $0.centerX.equalToSuperview()
         }
     }
