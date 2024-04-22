@@ -11,6 +11,8 @@ import UIKit
 public final class MainViewController: BaseViewController, UICollectionViewDelegate {
     
     // MARK: - Properties
+    private let viewModel = HomeViewModel()
+    
     let scrollView = UIScrollView()
     
     private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
@@ -121,11 +123,12 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.navigationItem.hidesBackButton = true
         
-        setCollectionView()
-        setDatas()
+        viewModel.getLateList {
+            self.setCollectionView()
+            self.setDatas()
+        }
         setIconColor()
     }
     
@@ -265,7 +268,7 @@ extension MainViewController: UICollectionViewDataSource {
         if collectionView == outingStatusCollectionView {
             return 10
         } else if collectionView == latecomerCollectionView {
-            return 3
+            return viewModel.lateListDatas.count
         }
         return 0
     }
@@ -277,6 +280,9 @@ extension MainViewController: UICollectionViewDataSource {
             return cell
         } else if collectionView == latecomerCollectionView {
             let cell = latecomerCollectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as! LateCell
+
+            let lateData = viewModel.lateListDatas[indexPath.row]
+            cell.configureData(with: lateData)
             
             return cell
         }
