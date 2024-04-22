@@ -30,10 +30,11 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private let latecomerFlowLayout = UICollectionViewFlowLayout().then {
         $0.minimumLineSpacing = 0
         $0.minimumInteritemSpacing = 0
-        $0.itemSize = CGSize(width: 303, height: 56)
+        $0.itemSize = CGSize(width: 104, height: 136)
     }
     
     private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.latecomerFlowLayout).then {
+        $0.backgroundColor = .color.gomsCardBackgroundColor.color
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
@@ -135,6 +136,11 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         self.outingStatusCollectionView.delegate = self
         
         outingStatusCollectionView.register(OutingStatusCollectionViewCell.self, forCellWithReuseIdentifier: OutingStatusCollectionViewCell.identifier)
+        
+        self.latecomerCollectionView.dataSource = self
+        self.latecomerCollectionView.delegate = self
+        
+        latecomerCollectionView.register(LateCell.self, forCellWithReuseIdentifier: LateCell.identifier)
     }
     
     // MARK: - Data Setting
@@ -161,9 +167,9 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     // MARK: - Add View
     override func addView() {
-        [latecomerLabel, latecomerCollectionView].forEach { latecomerView.addSubview($0) }
+        [latecomerLabel].forEach { latecomerView.addSubview($0) }
         [outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
-        [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
+        [profileView, latecomerView, outingStatusView, latecomerCollectionView].forEach { self.scrollView.addSubview($0) }
         [logo, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
     }
     
@@ -206,6 +212,12 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
             $0.top.equalToSuperview()
             $0.leading.equalToSuperview()
             $0.height.equalTo((bounds.height) / 25.375)
+        }
+        
+        latecomerCollectionView.snp.makeConstraints {
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset((bounds.height) / 101.5)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.height.equalTo((bounds.height) / 5.9705882353)
         }
         
         outingStatusView.snp.makeConstraints {
@@ -251,12 +263,24 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
 // MARK: - MainViewController Extension
 extension MainViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        if collectionView == outingStatusCollectionView {
+            return 10
+        } else if collectionView == latecomerCollectionView {
+            return 3
+        }
+        return 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
-        
-        return cell
+        if collectionView == outingStatusCollectionView {
+            let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
+            
+            return cell
+        } else if collectionView == latecomerCollectionView {
+            let cell = latecomerCollectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as! LateCell
+            
+            return cell
+        }
+        return UICollectionViewCell()
     }
 }

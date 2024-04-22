@@ -18,7 +18,7 @@ final class LateCell: UICollectionViewCell {
 
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 56, height: 56)).then {
         $0.image = UIImage(systemName: "person.crop.circle.fill")
-        $0.tintColor = .color.gomsSecondary.color
+        $0.tintColor = .blue
     }
     
     let nameLabel = UILabel().then {
@@ -34,13 +34,15 @@ final class LateCell: UICollectionViewCell {
         $0.textColor = .color.gomsTertiary.color
         $0.text = "6기 | 스마트 IOT"
     }
-
     
     // MARK: - Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.backgroundColor = .color.gomsCardBackgroundColor.color
+        
         addView()
         configureUI()
+        setLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -61,5 +63,25 @@ final class LateCell: UICollectionViewCell {
         profileImageView.clipsToBounds = true
         layer.cornerRadius = 8
         layer.masksToBounds = true
+    }
+    
+    private func setLayout() {
+        profileImageView.snp.makeConstraints {
+            $0.width.height.equalTo(56)
+            $0.top.equalToSuperview().offset(12)
+            $0.centerX.equalToSuperview()
+        }
+        
+        nameLabel.snp.makeConstraints {
+            $0.height.equalTo(28)
+            $0.top.equalTo(profileImageView.snp.bottom).offset(8)
+            $0.centerX.equalToSuperview()
+        }
+        
+        studentInformationLabel.snp.makeConstraints {
+            $0.height.equalTo(20)
+            $0.top.equalTo(nameLabel.snp.bottom)
+            $0.centerX.equalToSuperview()
+        }
     }
 }
