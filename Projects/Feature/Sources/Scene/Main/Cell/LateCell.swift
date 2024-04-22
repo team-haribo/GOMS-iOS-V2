@@ -18,7 +18,7 @@ final class LateCell: UICollectionViewCell {
 
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 56, height: 56)).then {
         $0.image = UIImage(systemName: "person.crop.circle.fill")
-        $0.tintColor = .blue
+        $0.tintColor = .color.gomsTertiary.color
     }
     
     let nameLabel = UILabel().then {
