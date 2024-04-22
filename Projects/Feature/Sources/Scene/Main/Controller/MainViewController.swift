@@ -126,8 +126,9 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         self.navigationItem.hidesBackButton = true
         
         viewModel.getLateList {
-            self.setCollectionView()
-            self.setDatas()
+            self.viewModel.getOutingList {
+                self.setCollectionView()
+            }
         }
         setIconColor()
     }
@@ -143,11 +144,6 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         self.latecomerCollectionView.delegate = self
         
         latecomerCollectionView.register(LateCell.self, forCellWithReuseIdentifier: LateCell.identifier)
-    }
-    
-    // MARK: - Data Setting
-    private func setDatas() {
-        // Data Setting
     }
     
     // MARK: - Configure UI
@@ -266,7 +262,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
 extension MainViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == outingStatusCollectionView {
-            return 10
+            return viewModel.outingListDatas.count
         } else if collectionView == latecomerCollectionView {
             return viewModel.lateListDatas.count
         }
@@ -276,6 +272,9 @@ extension MainViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == outingStatusCollectionView {
             let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
+            
+            let outingData = viewModel.outingListDatas[indexPath.row]
+            cell.configureData(with: outingData)
             
             return cell
         } else if collectionView == latecomerCollectionView {
