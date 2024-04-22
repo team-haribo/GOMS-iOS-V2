@@ -40,11 +40,7 @@ extension LogoutServices: TargetType {
            }
        }
 
-    var headers: [String : String]? {
-        switch self {
-        default:
-            return ["Content-Type": "application/json"]
-        }
-    }
-}
+    public var headers: [String: String]? {
+        return ["Content-Type": "application/json"]
+    }}
 
