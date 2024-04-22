@@ -10,6 +10,7 @@ import UIKit
 
 import SnapKit
 import Then
+import Kingfisher
 
 final class LateCell: UICollectionViewCell {
     
@@ -25,7 +26,6 @@ final class LateCell: UICollectionViewCell {
         $0.font = .pretendard(size: 16, weight: .semibold)
         $0.textAlignment = .center
         $0.textColor = .color.gomsSecondary.color
-        $0.text = "김새미"
     }
     
     let studentInformationLabel = UILabel().then {
@@ -54,6 +54,16 @@ final class LateCell: UICollectionViewCell {
         [profileImageView, nameLabel, studentInformationLabel].forEach {
             self.addSubview($0)
         }
+    }
+    
+    func configureData(with lateData: LatecomerData) {
+        if let imageURL = lateData.profileImageURL, let url = URL(string: imageURL) {
+            profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+        } else {
+            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+        }
+        nameLabel.text = lateData.name
+        studentInformationLabel.text = "\(lateData.grade)기 | \(lateData.major)"
     }
     
     // MARK: - Configure UI
