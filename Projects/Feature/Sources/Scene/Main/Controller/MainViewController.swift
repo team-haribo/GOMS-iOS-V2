@@ -29,6 +29,20 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     private let latecomerStackView = LatecomerStackView()
     
+    private let latecomerFlowLayout = UICollectionViewFlowLayout().then {
+        $0.scrollDirection = .vertical
+        $0.minimumLineSpacing = 0
+        $0.minimumInteritemSpacing = 0
+        $0.itemSize = CGSize(width: 303, height: 56)
+    }
+    
+    private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.latecomerFlowLayout).then {
+        $0.isScrollEnabled = false
+        $0.showsHorizontalScrollIndicator = false
+        $0.showsVerticalScrollIndicator = true
+        $0.backgroundColor = .clear
+    }
+    
     private let outingStatusView = UIView()
     
     private let outingStatusLabel = UILabel().then {

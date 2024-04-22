@@ -14,11 +14,11 @@ import Then
 final class LatecomerStackView: UIStackView {
     
     // MARK: - Properties
-    private let latecomer1 = LatecomerView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), name: "김경수", studentInformation: "7기 | IoT")
+    private let latecomer1 = LatecomerView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), name: "", studentInformation: "")
     
-    private let latecomer2 = LatecomerView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), name: "정민석", studentInformation: "7기 | IoT")
+    private let latecomer2 = LatecomerView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), name: "", studentInformation: "")
     
-    private let latecomer3 = LatecomerView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), name: "김경수", studentInformation: "7기 | IoT")
+    private let latecomer3 = LatecomerView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), name: "", studentInformation: "")
     
     // MARK: - Initializer
     override init(frame: CGRect) {
