@@ -14,8 +14,7 @@ class AuthorityBottomSheetContentViewController: BaseViewController {
     
     var buttonAction: (() -> Void)?
     
-    private let outingProhibitionView = UIView().then {
-        $0.frame = CGRect(x: 0, y: 0, width: 375, height: 112)
+    private let outingProhibitionView = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 112)).then {
         $0.backgroundColor = .clear
     }
     
@@ -78,19 +77,19 @@ class AuthorityBottomSheetContentViewController: BaseViewController {
     
     override func setLayout() {
         titleText.snp.makeConstraints {
-            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.bottom.equalTo(outingProhibitionView.snp.top).offset(-((bounds.height) / 50.75))
             $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         closeButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.bottom.equalTo(outingProhibitionView.snp.top).offset(-((bounds.height) / 50.75))
             $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         outingProhibitionView.snp.makeConstraints {
             $0.width.equalTo(375)
             $0.height.equalTo(80)
-            $0.top.equalTo(titleText.snp.bottom).offset((bounds.height) / 50.75)
+            $0.bottom.equalTo(authorizationView.snp.top)
             $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
@@ -112,7 +111,7 @@ class AuthorityBottomSheetContentViewController: BaseViewController {
         authorizationView.snp.makeConstraints {
             $0.width.equalTo(375)
             $0.height.equalTo(80)
-            $0.top.equalTo(outingProhibitionView.snp.bottom)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 14)
             $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
