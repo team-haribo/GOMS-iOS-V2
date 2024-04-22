@@ -6,9 +6,7 @@ class FilterBottomSheetViewController: UIViewController {
         case normal
     }
     
-    private lazy var dimmedView = UIView().then {
-        $0.backgroundColor = UIColor.black.withAlphaComponent(0.45)
-    }
+    private lazy var dimmedView = UIView()
     
     private lazy var bottomSheetView = UIView().then {
         $0.backgroundColor = .white

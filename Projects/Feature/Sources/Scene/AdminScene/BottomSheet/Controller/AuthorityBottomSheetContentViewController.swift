@@ -14,9 +14,7 @@ class AuthorityBottomSheetContentViewController: BaseViewController {
     
     var buttonAction: (() -> Void)?
     
-    private let outingProhibitionView = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 112)).then {
-        $0.backgroundColor = .clear
-    }
+    private let outingProhibitionView = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 112))
     
     private let outingProhibitionTitleText = UILabel().then {
         $0.text = "외출금지"
@@ -35,10 +33,7 @@ class AuthorityBottomSheetContentViewController: BaseViewController {
         $0.addTarget(self, action: #selector(outingProhibitionOnClickSwitch(_:)), for: UIControl.Event.valueChanged)
     }
     
-    private let authorizationView = UIView().then {
-        $0.frame = CGRect(x: 0, y: 0, width: 375, height: 112)
-        $0.backgroundColor = .clear
-    }
+    private let authorizationView = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 112))
     
     private let authorizationTitleText = UILabel().then {
         $0.text = "학생회 권한 부여"

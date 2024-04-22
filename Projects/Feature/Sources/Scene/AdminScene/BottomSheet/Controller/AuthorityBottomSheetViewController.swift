@@ -8,12 +8,9 @@ final class AuthorityBottomSheetViewController: UIViewController {
         case normal
     }
     
-    private lazy var dimmedView = UIView().then {
-        $0.backgroundColor = UIColor.black.withAlphaComponent(0.45)
-    }
+    private lazy var dimmedView = UIView()
     
     let filterBottomSheetView = UIView().then {
-        $0.backgroundColor = .white
         $0.layer.cornerRadius = 16
         $0.layer.cornerCurve = .continuous
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
