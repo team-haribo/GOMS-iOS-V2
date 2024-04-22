@@ -30,7 +30,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private let latecomerFlowLayout = UICollectionViewFlowLayout().then {
         $0.minimumLineSpacing = 0
         $0.minimumInteritemSpacing = 0
-        $0.itemSize = CGSize(width: 303, height: 56)
+        $0.itemSize = CGSize(width: 104, height: 136)
     }
     
     private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.latecomerFlowLayout).then {
@@ -135,6 +135,11 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         self.outingStatusCollectionView.delegate = self
         
         outingStatusCollectionView.register(OutingStatusCollectionViewCell.self, forCellWithReuseIdentifier: OutingStatusCollectionViewCell.identifier)
+        
+        self.latecomerCollectionView.dataSource = self
+        self.latecomerCollectionView.delegate = self
+        
+        latecomerCollectionView.register(LateCell.self, forCellWithReuseIdentifier: LateCell.identifier)
     }
     
     // MARK: - Data Setting
@@ -170,17 +175,17 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(48)
+            $0.top.equalToSuperview().offset((bounds.height) / 16.9166666667)
             $0.leading.equalToSuperview()
-            $0.height.equalTo(56)
-            $0.width.equalTo(127)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.width.equalTo((bounds.height) / 6.3937007874)
         }
         
         settingButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(50)
+            $0.top.equalToSuperview().offset((bounds.height) / 16.24)
             $0.trailing.equalToSuperview()
-            $0.width.equalTo(64)
-            $0.height.equalTo(56)
+            $0.width.equalTo((bounds.height) / 12.6875)
+            $0.height.equalTo((bounds.height) / 14.5)
         }
         
         scrollView.snp.makeConstraints {
@@ -190,60 +195,66 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         }
         
         profileView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().offset(16)
-            $0.height.equalTo(84)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.height.equalTo((bounds.height) / 9.6666666667)
             $0.centerX.equalToSuperview()
         }
 
         latecomerView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(profileView.snp.bottom).offset(32)
-            $0.height.equalTo(176)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.top.equalTo(profileView.snp.bottom).offset((bounds.height) / 25.375)
+            $0.height.equalTo((bounds.height) / 4.6136363636)
         }
         
         latecomerLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.leading.equalToSuperview()
-            $0.height.equalTo(32)
+            $0.height.equalTo((bounds.height) / 25.375)
+        }
+        
+        latecomerCollectionView.snp.makeConstraints {
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset((bounds.height) / 101.5)
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo((bounds.height) / 5.9705882353)
         }
         
         outingStatusView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(latecomerView.snp.bottom).offset(32)
-            $0.height.equalTo(382)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.top.equalTo(latecomerView.snp.bottom).offset((bounds.height) / 25.375)
+            $0.height.equalTo((bounds.height) / 2.1256544503)
             $0.centerX.equalToSuperview()
         }
         
         outingStatusLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
-            $0.height.equalTo(32)
+            $0.height.equalTo((bounds.height) / 25.375)
             $0.top.equalToSuperview()
         }
         
         numberOfPeopleOutingLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(6)
-            $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
-            $0.height.equalTo(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 135.3333333333)
+            $0.leading.equalTo(outingStatusLabel.snp.trailing).offset((bounds.width) / 46.875)
+            $0.height.equalTo((bounds.height) / 40.6)
         }
         
         moreOutingStatusButton.snp.makeConstraints {
             $0.trailing.equalToSuperview()
-            $0.top.equalToSuperview().inset(4)
-            $0.width.equalTo(48)
-            $0.height.equalTo(24)
+            $0.top.equalToSuperview().inset((bounds.height) / 203)
+            $0.width.equalTo((bounds.height) / 16.9166666667)
+            $0.height.equalTo((bounds.height) / 33.8333333333)
         }
         
         outingStatusCollectionView.snp.makeConstraints {
-            $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset(14)
+            $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset((bounds.height) / 58)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(350)
+            $0.height.equalTo((bounds.height) / 2.32)
         }
         
         qrButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
-            $0.height.width.equalTo(64)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-((bounds.height) / 50.75))
+            $0.height.width.equalTo((bounds.height) / 12.6875)
         }
     }
 }
@@ -251,12 +262,24 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
 // MARK: - MainViewController Extension
 extension MainViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        if collectionView == outingStatusCollectionView {
+            return 10
+        } else if collectionView == latecomerCollectionView {
+            return 3
+        }
+        return 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
-        
-        return cell
+        if collectionView == outingStatusCollectionView {
+            let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
+            
+            return cell
+        } else if collectionView == latecomerCollectionView {
+            let cell = latecomerCollectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as! LateCell
+            
+            return cell
+        }
+        return UICollectionViewCell()
     }
 }
