@@ -9,11 +9,10 @@ final class ProfileViewModel: ObservableObject {
     @Published var profileInfo: ProfileResponse?
     
     let provider = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
-    let providerserve = MoyaProvider<ProfileImageServices>(plugins: [NetworkLoggerPlugin()])
     let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
-    let gomsRefreshToken = GOMSRefreshToken.shared
     lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
+    private lazy var refreshToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.refreshToken) ?? "")
     
     func loadProfileInfo() {
         provider.request(.getProfile(authorization: accessToken)) { result in
@@ -36,10 +35,9 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func submitProfileImage(imageData: Data) {
-        providerserve.request(.submit(authorization: accessToken, imageData: imageData)) { result in
+        provider.request(.submit(authorization: accessToken, imageData: imageData)) { result in
             switch result {
             case .success:
-                // Handle success
                 print("Profile image submitted successfully")
             case let .failure(err):
                 self.errorMessage = "Network request failed: \(err.localizedDescription)"
@@ -49,10 +47,9 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func updateProfileImage(imageData: Data) {
-        providerserve.request(.update(authorization: accessToken, imageData: imageData)) { result in
+        provider.request(.update(authorization: accessToken, imageData: imageData)) { result in
             switch result {
             case .success:
-                // Handle success
                 print("Profile image updated successfully")
             case let .failure(err):
                 self.errorMessage = "Network request failed: \(err.localizedDescription)"
@@ -62,10 +59,9 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func deleteProfileImage() {
-        providerserve.request(.delete(authorization: accessToken)) { result in
+        provider.request(.delete(authorization: accessToken)) { result in
             switch result {
             case .success:
-                // Handle success
                 print("Profile image deleted successfully")
             case let .failure(err):
                 self.errorMessage = "Network request failed: \(err.localizedDescription)"
@@ -75,7 +71,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func ProfileLogout(presentingViewController: UIViewController) {
-        providerthree.request(.logoutToken(refreshToken: gomsRefreshToken)) { [weak self] result in
+        providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
             switch result {
             case .success:
                 print("Logout successfully")
@@ -92,9 +88,4 @@ final class ProfileViewModel: ObservableObject {
             }
         }
     }
-
-
-
-
-
 }

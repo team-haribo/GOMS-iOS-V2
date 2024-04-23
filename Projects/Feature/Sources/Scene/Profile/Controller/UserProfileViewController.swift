@@ -52,7 +52,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.font = .pretendard(size: 16, weight: .regular)
     }
     
-    
     let perceptionNum = UILabel().then {
         $0.text = "\(0)"
         $0.textColor = .color.gomsNegative.color
@@ -68,6 +67,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let line1View = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
+    
     let line2View = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
@@ -142,7 +142,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsPrimary.color
         $0.tintColor = .color.gomsTertiary.color
-        $0.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
+        $0.addTarget(self, action: #selector(switchQROn(_:)), for: .valueChanged)
         $0.isOn = false
     }
     
@@ -176,7 +176,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.backgroundColor = .color.gomsDivider.color
     }
     
-    @objc func switchValueChanged(_ sender: UISwitch) {        
+    @objc func switchQROn(_ sender: UISwitch) {
         let QRState = sender.isOn
         print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
         print(QRState)
@@ -295,7 +295,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             
         }))
 
-        
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
             self?.updateImage(isActionSheetShowing: false)
         }))
@@ -317,7 +316,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let pickedImage = info[.originalImage] as? UIImage,
                let imageData = pickedImage.jpegData(compressionQuality: 0.8) {
-                let providerserve = MoyaProvider<ProfileImageServices>()
+                let providerserve = MoyaProvider<ProfileServices>()
                 providerserve.request(.submit(authorization: "", imageData: imageData)) { result in
                     switch result {
                     case let .success(response):
@@ -371,7 +370,8 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                                 self?.userProfile.image = profileImage
                             }
                         }
-                    }.resume()
+                    }
+                    .resume()
                 }
 
                 let uploadimage = profileInfo.profileUrl
@@ -388,8 +388,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         
         imagePickerController.delegate = self
     }
-    
-    
     
     override func addView() {
         [
@@ -439,7 +437,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.height.equalTo(32)
             $0.leading.equalTo(userProfile.snp.trailing).inset(-16)
             $0.top.equalTo(userProfile.snp.top)
-            
         }
         
         userGradeDepartment.snp.makeConstraints {
@@ -457,7 +454,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         
         perceptionNum.snp.makeConstraints {
             $0.height.equalTo(32)
-            $0.trailing.equalTo(perceptionText.snp.leading)
+            $0.trailing.equalTo(perceptionText.snp.leading).inset(-1)
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
         
@@ -566,7 +563,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.height.equalTo(48)
             $0.centerX.equalToSuperview()
             $0.top.equalTo(cameranowonDescription.snp.top).offset(108)
-            
         }
     }
 }

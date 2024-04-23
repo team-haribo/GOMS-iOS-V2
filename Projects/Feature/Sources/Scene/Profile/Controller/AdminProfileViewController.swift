@@ -121,7 +121,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
-        $0.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
+        $0.addTarget(self, action: #selector(switchQRMake(_:)), for: .valueChanged)
+        $0.isOn = false
     }
     
     let logoutButton = UIButton().then {
@@ -136,16 +137,16 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.backgroundColor = .color.gomsDivider.color
     }
     
-    @objc func switchValueChanged(_ sender: UISwitch) {
+    @objc func switchQRMake(_ sender: UISwitch) {
         let QRState = sender.isOn
         print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
         print(QRState)
-        UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
+        UserDefaults.standard.set(sender.isOn, forKey: "isSwitchMakeOn")
         
         let defaults = UserDefaults.standard
             
-            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-        print("테스트: \(isSwitchOn)")
+            let isSwitchMakeOn = defaults.bool(forKey: "isSwitchMakeOn")
+        print("테스트: \(isSwitchMakeOn)")
     }
     
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {
@@ -157,7 +158,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .dark
                 self?.themesettingText.text = "다크(기본)"
-                
             }
         }))
         
@@ -166,7 +166,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .light
                 self?.themesettingText.text = "라이트"
-                
             }
         }))
         
@@ -175,7 +174,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .unspecified
                 self?.themesettingText.text = "시스템 테마 설정"
-                
             }
         }))
         
@@ -193,6 +191,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             .foregroundColor: UIColor.color.gomsTextDefault.color,
             .font: UIFont.pretendard(size: 17, weight: .semibold)
         ]
+        
         let attributedTitle = NSAttributedString(string: "로그아웃\n", attributes: titleAttributes)
         alertController.setValue(attributedTitle, forKey: "attributedTitle")
         
@@ -200,6 +199,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             .foregroundColor: UIColor.color.gomsTextDefault.color,
             .font: UIFont.pretendard(size: 13, weight: .regular)
         ]
+        
         let attributedMessage = NSAttributedString(string: "로그아웃 하시겠습니까?", attributes: messageAttributes)
         alertController.setValue(attributedMessage, forKey: "attributedMessage")
         
@@ -211,6 +211,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             viewModel.ProfileLogout(presentingViewController: SignInViewController())
             self?.performLogout()
         }
+        
         alertController.addAction(confirmAction)
         
         alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .color.gomsTheme.color
@@ -271,7 +272,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
                                 self?.userProfile.image = profileImage
                             }
                         }
-                    }.resume()
+                    }
+                    .resume()
                 }
 
                 let uploadimage = profileInfo.profileUrl
@@ -305,10 +307,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             self?.userProfile.image = .image.gomsBasicProfile.image
             let viewModel = ProfileViewModel()
                 viewModel.deleteProfileImage()
-            
         }))
 
-        
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
             self?.updateImage(isActionSheetShowing: false)
         }))
@@ -330,7 +330,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let pickedImage = info[.originalImage] as? UIImage,
                let imageData = pickedImage.jpegData(compressionQuality: 0.8) {
-                let providerserve = MoyaProvider<ProfileImageServices>()
+                let providerserve = MoyaProvider<ProfileServices>()
                 providerserve.request(.submit(authorization: "", imageData: imageData)) { result in
                     switch result {
                     case let .success(response):
@@ -345,9 +345,11 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             }
             dismiss(animated: true, completion: nil)
         }
+    
         public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             dismiss(animated: true, completion: nil)
         }
+    
     override func addView() {
         [
             userProfile,
@@ -398,17 +400,15 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
         
         userGradeDepartment.snp.makeConstraints {
-            $0.width.equalTo(58)
             $0.height.equalTo(28)
             $0.top.equalTo(userName.snp.bottom).offset(4)
             $0.leading.equalTo(userName.snp.leading)
         }
         
-        perceptionCount.snp.makeConstraints {
-            $0.width.equalTo(60)
-            $0.height.equalTo(28)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(userName.snp.top).inset(0)
+        perceptionNum.snp.makeConstraints {
+            $0.height.equalTo(32)
+            $0.trailing.equalTo(perceptionText.snp.leading).inset(-1)
+            $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
         
         perceptionNum.snp.makeConstraints {
@@ -486,12 +486,14 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.leading.equalTo(repassword.snp.leading).offset(8)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
+        
         qrmakeonDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
             $0.leading.equalTo(qrmakeonText.snp.leading)
             $0.top.equalTo(qrmakeonText.snp.bottom)
         }
+        
         qrmakeontoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
