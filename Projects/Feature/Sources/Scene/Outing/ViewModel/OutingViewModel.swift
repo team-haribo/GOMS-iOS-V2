@@ -19,12 +19,8 @@ struct OutingListData {
     let outingTime: String
 }
 
-public final class OutingViewModel {
+public final class OutingViewModel: BaseViewModel {
     private let outingProvider = MoyaProvider<OutingServices>()
-    
-    let keyChain = KeyChain()
-    let gomsRefreshToken = GOMSRefreshToken.shared
-    lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
 
     var outingList: [OutingListResponse] = []
     var outingListDatas: [OutingListData] = []
@@ -32,10 +28,6 @@ public final class OutingViewModel {
     var outingSearchList: [OutingSearchResponse] = []
     var outingSearchListDatas: [OutingListData] = []
     
-    func inputStirng() {
-        
-    }
-
     func getOutingList(completion: @escaping () -> Void) {
         outingProvider.request(.outingList(authorization: accessToken)) { response in
             switch response {
@@ -95,5 +87,4 @@ public final class OutingViewModel {
             }
         }
     }
-    
 }
