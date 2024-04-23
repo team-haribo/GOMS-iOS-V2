@@ -12,7 +12,7 @@ import Moya
 public enum OutingServices {
     case outing(authorization: String)
     case outingList(authorization: String)
-    case outingSearch(authorization: String)
+    case outingSearch(name: String?, authorization: String)
     case outingValidation(authorization: String)
 }
 
@@ -55,8 +55,8 @@ extension OutingServices: TargetType {
             return .requestPlain
         case .outingList:
             return .requestPlain
-        case .outingSearch(let s):
-            return .requestParameters(parameters: ["s": s], encoding: URLEncoding.queryString)
+        case .outingSearch(let name, _):
+            return .requestParameters(parameters: ["name": name ?? ""], encoding: URLEncoding.queryString)
         case .outingValidation:
             return .requestPlain
         }

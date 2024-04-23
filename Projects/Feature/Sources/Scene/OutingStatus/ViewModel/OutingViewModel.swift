@@ -28,6 +28,13 @@ public final class OutingViewModel {
 
     var outingList: [OutingListResponse] = []
     var outingListDatas: [OutingListData] = []
+    
+    var outingSearchList: [OutingSearchResponse] = []
+    var outingSearchListDatas: [OutingListData] = []
+    
+    func inputStirng() {
+        
+    }
 
     func getOutingList(completion: @escaping () -> Void) {
         outingProvider.request(.outingList(authorization: accessToken)) { response in
@@ -60,10 +67,18 @@ public final class OutingViewModel {
         }
     }
     
-    func searchStudent() {
-        outingProvider.request(.outingSearch(authorization: accessToken)) { response in
+    func searchStudent(searchString: String, completion: @escaping () -> Void) {
+        outingProvider.request(.outingSearch(name: searchString, authorization: accessToken)) { response in
             switch response {
             case .success(let result):
+                let responseData = result.data
+                do {
+                    self.outingSearchList = try JSONDecoder().decode([OutingSearchResponse].self, from: responseData)
+                    self.outingSearchListDatas = self.outingSearchList.map { OutingListData(id: $0.accountIdx, profileImageURL: $0.profileUrl, name: $0.name, grade: $0.grade, major: $0.major, outingTime: $0.createdTime) }
+                    completion()
+                } catch(let err) {
+                    print(String(describing: err))
+                }
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 200:
@@ -80,4 +95,5 @@ public final class OutingViewModel {
             }
         }
     }
+    
 }
