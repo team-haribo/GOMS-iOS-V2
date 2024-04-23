@@ -139,14 +139,14 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     @objc func switchValueChanged(_ sender: UISwitch) {
         let QRState = sender.isOn
-        print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
+        print("QR 바로생성: \(sender.isOn ? "On" : "Off")")
         print(QRState)
-        UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
+        UserDefaults.standard.set(sender.isOn, forKey: "AdminisSwitchOn")
         
         let defaults = UserDefaults.standard
             
-            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-        print("테스트: \(isSwitchOn)")
+            let AdminisSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
+        print("테스트: \(AdminisSwitchOn)")
     }
     
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {
@@ -399,7 +399,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
         
         userGradeDepartment.snp.makeConstraints {
-            $0.width.equalTo(58)
             $0.height.equalTo(28)
             $0.top.equalTo(userName.snp.bottom).offset(4)
             $0.leading.equalTo(userName.snp.leading)
@@ -413,9 +412,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
         
         perceptionNum.snp.makeConstraints {
-            $0.width.equalTo(18)
             $0.height.equalTo(32)
-            $0.trailing.equalTo(perceptionText.snp.leading)
+            $0.trailing.equalTo(perceptionText.snp.leading).inset(-1)
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
         

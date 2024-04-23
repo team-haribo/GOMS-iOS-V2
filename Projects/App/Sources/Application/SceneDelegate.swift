@@ -19,19 +19,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let defaults = UserDefaults.standard
         //let viewModel = ProfileViewModel()
             
-            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-            print(isSwitchOn)
-            
-            if isSwitchOn == true {
-//                if viewModel.profileInfo?.authority == "ROLE_STUDENT" {
-//                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-//                } else {
-                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-                //}
-            } else {
-               
-                window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
-            }
+//            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+//            print(isSwitchOn)
+//            let AdminisSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
+//            
+//            if isSwitchOn == true {
+//
+//            } else if AdminisSwitchOn == true {
+//                window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
+//            } else {
+//                window?.rootViewController =  UINavigationController(rootViewController: AdminProfileViewController())
+//            }
+        window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
       
         window?.makeKeyAndVisible()
     }
