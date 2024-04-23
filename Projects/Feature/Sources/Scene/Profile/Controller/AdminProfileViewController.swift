@@ -121,7 +121,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
-        $0.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
+        $0.addTarget(self, action: #selector(switchQRMake(_:)), for: .valueChanged)
         $0.isOn = false
     }
     
@@ -137,16 +137,16 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.backgroundColor = .color.gomsDivider.color
     }
     
-    @objc func switchValueChanged(_ sender: UISwitch) {
+    @objc func switchQRMake(_ sender: UISwitch) {
         let QRState = sender.isOn
-        print("QR 바로생성: \(sender.isOn ? "On" : "Off")")
+        print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
         print(QRState)
-        UserDefaults.standard.set(sender.isOn, forKey: "AdminisSwitchOn")
+        UserDefaults.standard.set(sender.isOn, forKey: "isSwitchMakeOn")
         
         let defaults = UserDefaults.standard
             
-            let AdminisSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
-        print("테스트: \(AdminisSwitchOn)")
+            let isSwitchMakeOn = defaults.bool(forKey: "isSwitchMakeOn")
+        print("테스트: \(isSwitchMakeOn)")
     }
     
     @IBAction func ShowActionSheetClick(_ sender: UIButton) {

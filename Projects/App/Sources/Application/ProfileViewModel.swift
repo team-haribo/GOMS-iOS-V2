@@ -9,7 +9,6 @@ final class ProfileViewModel: ObservableObject {
     @Published var profileInfo: ProfileResponse?
     
     let provider = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
-    //let providerserve = MoyaProvider<ProfileImageServices>(plugins: [NetworkLoggerPlugin()])
     let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
     lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
@@ -39,7 +38,6 @@ final class ProfileViewModel: ObservableObject {
         provider.request(.submit(authorization: accessToken, imageData: imageData)) { result in
             switch result {
             case .success:
-                // Handle success
                 print("Profile image submitted successfully")
             case let .failure(err):
                 self.errorMessage = "Network request failed: \(err.localizedDescription)"
@@ -52,7 +50,6 @@ final class ProfileViewModel: ObservableObject {
         provider.request(.update(authorization: accessToken, imageData: imageData)) { result in
             switch result {
             case .success:
-                // Handle success
                 print("Profile image updated successfully")
             case let .failure(err):
                 self.errorMessage = "Network request failed: \(err.localizedDescription)"
@@ -65,7 +62,6 @@ final class ProfileViewModel: ObservableObject {
         provider.request(.delete(authorization: accessToken)) { result in
             switch result {
             case .success:
-                // Handle success
                 print("Profile image deleted successfully")
             case let .failure(err):
                 self.errorMessage = "Network request failed: \(err.localizedDescription)"
@@ -92,9 +88,4 @@ final class ProfileViewModel: ObservableObject {
             }
         }
     }
-
-
-
-
-
 }
