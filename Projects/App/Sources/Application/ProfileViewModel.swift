@@ -12,8 +12,8 @@ final class ProfileViewModel: ObservableObject {
     let providerserve = MoyaProvider<ProfileImageServices>(plugins: [NetworkLoggerPlugin()])
     let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
-    let gomsRefreshToken = GOMSRefreshToken.shared
     lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
+    private lazy var refreshToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.refreshToken) ?? "")
     
     func loadProfileInfo() {
         provider.request(.getProfile(authorization: accessToken)) { result in
@@ -75,7 +75,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func ProfileLogout(presentingViewController: UIViewController) {
-        providerthree.request(.logoutToken(refreshToken: gomsRefreshToken)) { [weak self] result in
+        providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
             switch result {
             case .success:
                 print("Logout successfully")

@@ -79,7 +79,7 @@ extension AuthServices: TargetType {
     
     public var headers: [String : String]? {
         switch self {
-        case .refreshToken(let refreshToken):
+        case .refreshToken(let refreshToken),.logoutToken(let refreshToken):
             return [
                 "Content-Type": "application/json",
                 "refreshToken": refreshToken

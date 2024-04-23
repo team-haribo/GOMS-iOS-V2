@@ -122,6 +122,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
         $0.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
+        $0.isOn = false
     }
     
     let logoutButton = UIButton().then {

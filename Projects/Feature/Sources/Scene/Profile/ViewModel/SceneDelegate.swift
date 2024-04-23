@@ -17,14 +17,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         
         let defaults = UserDefaults.standard
+        //let viewModel = ProfileViewModel()
             
             let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
             print(isSwitchOn)
             
             if isSwitchOn == true {
-                window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+//                if viewModel.profileInfo?.authority == "ROLE_STUDENT" {
+//                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+//                } else {
+                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+                //}
             } else {
-                window?.rootViewController =  UINavigationController(rootViewController: SignInViewController())
+               
+                window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
             }
       
         window?.makeKeyAndVisible()
@@ -40,5 +46,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidEnterBackground(_ scene: UIScene) {}
 }
-
-

@@ -33,8 +33,8 @@ extension ProfileServices: TargetType {
     
     public var headers: [String : String]? {
         switch self {
-        default:
-            return ["Content-Type": "application/json"]
+        case .getProfile(let authorization):
+            return ["Content-Type": "application/json", "Authorization": authorization]
         }
     }
 }
