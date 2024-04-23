@@ -102,7 +102,7 @@ public class StudentListViewController: BaseViewController {
     
     // MARK: Action
     @objc func filterButtonDidTap(_ sender: Any) {
-        let bottomSheetVC = FilterBottomSheetViewController(contentViewController: UIViewController(), defaultHeight: 650, cornerRadius: 12, dimmedAlpha: 0.45, isPannedable: true)
+        let bottomSheetVC = FilterBottomSheetViewController(contentViewController: UIViewController(), defaultHeight: 650, dimmedAlpha: 0.45)
         bottomSheetVC.modalPresentationStyle = .overFullScreen
         self.present(bottomSheetVC, animated: false, completion: nil)
     }
@@ -121,7 +121,7 @@ extension StudentListViewController: UICollectionViewDataSource {
         cell.editButtonAction = {
             let bottomSheetVC = AuthorityBottomSheetViewController(contentViewController: UIViewController(), defaultHeight: 282, dimmedAlpha: 0.45)
             bottomSheetVC.modalPresentationStyle = .overFullScreen
-            self.present(bottomSheetVC, animated: true, completion: nil)
+            self.present(bottomSheetVC, animated: false, completion: nil)
         }
         
         return cell

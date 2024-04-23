@@ -8,7 +8,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     private let closeButton = UIButton().then {
         $0.setImage(UIImage(systemName: "xmark"), for: .normal)
-        $0.tintColor = .black
+        $0.tintColor = .color.gomsTextDefault.color
         $0.addTarget(self, action: #selector(closeButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -26,16 +26,19 @@ class FilterBottomSheetContentViewController: BaseViewController {
 
     private var isRoleStudentButtonSelected = false
     private let roleStudentButton = UIButton(filterButton: "학생").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(roleStudentButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isRoleStudentCouncilButtonSelected = false
     private let roleStudentCouncilButton = UIButton(filterButton: "학생회").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(roleStudentCouncilButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isRoleOutingProhibitionButtonSelected = false
     private let roleOutingProhibitionButton = UIButton(filterButton: "외출 금지").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(roleOutingProhibitionButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -51,16 +54,19 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     private var isFristGradeButtonSelected = false
     private let firstGradeButton = UIButton(filterButton: "1학년").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(firstGradeButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isSecondGradeButtonSelected = false
     private let secondGradeButton = UIButton(filterButton: "2학년").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(secondGradeButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isThirdeGradeButtonSelected = false
     private let thirdGradeButton = UIButton(filterButton: "3학년").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(thirdGradeButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -76,11 +82,13 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     private var isMaleButtonSelected = false
     private let maleButton = UIButton(filterButton: "남성").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(maleButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isFemaleButtonSelected = false
     private let femaleButton = UIButton(filterButton: "여성").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(femaleButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -96,16 +104,19 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     private var isSwButtonSelected = false
     private let swButton = UIButton(filterButton: "SW").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(swButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isIotButtonSelected = false
     private let iotButton = UIButton(filterButton: "IoT").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(iotButtonDidTap(_:)), for: .touchUpInside)
     }
     
     private var isAiButtonSelected = false
     private let aiButton = UIButton(filterButton: "AI").then {
+        $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
         $0.addTarget(self, action: #selector(aiButtonDidTap(_:)), for: .touchUpInside)
     }
     
@@ -144,49 +155,49 @@ class FilterBottomSheetContentViewController: BaseViewController {
     
     override func setLayout() {
         titleText.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         closeButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         roleView.snp.makeConstraints {
             $0.width.equalTo(375)
             $0.height.equalTo(112)
-            $0.top.equalToSuperview().offset(64)
+            $0.top.equalToSuperview().offset((bounds.height) / 12.6875)
             $0.leading.trailing.equalToSuperview()
         }
         
         roleTitle.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         roleStudentButton.snp.makeConstraints {
-            $0.width.equalTo(101)
-            $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalTo(roleStudentCouncilButton.snp.leading).offset(-16)
+            $0.width.equalTo((bounds.width) / 3.7128712871)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalTo(roleStudentCouncilButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         roleStudentCouncilButton.snp.makeConstraints {
-            $0.width.equalTo(101)
-            $0.height.equalTo(56)
+            $0.width.equalTo((bounds.width) / 3.7128712871)
+            $0.height.equalTo((bounds.height) / 14.5)
             $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(roleStudentButton.snp.trailing).offset(16)
-            $0.trailing.equalTo(roleOutingProhibitionButton.snp.leading).offset(-16)
+            $0.leading.equalTo(roleStudentButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalTo(roleOutingProhibitionButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         roleOutingProhibitionButton.snp.makeConstraints {
-            $0.width.equalTo(101)
-            $0.height.equalTo(56)
+            $0.width.equalTo((bounds.width) / 3.7128712871)
+            $0.height.equalTo((bounds.height) / 14.5)
             $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(roleStudentCouncilButton.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.leading.equalTo(roleStudentCouncilButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         gradeView.snp.makeConstraints {
@@ -197,32 +208,32 @@ class FilterBottomSheetContentViewController: BaseViewController {
         }
         
         gradeTitle.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         firstGradeButton.snp.makeConstraints {
-            $0.width.equalTo(101)
-            $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalTo(secondGradeButton.snp.leading).offset(-16)
+            $0.width.equalTo((bounds.width) / 3.7128712871)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalTo(secondGradeButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         secondGradeButton.snp.makeConstraints {
-            $0.width.equalTo(101)
-            $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(firstGradeButton.snp.trailing).offset(16)
-            $0.trailing.equalTo(thirdGradeButton.snp.leading).offset(-16)
+            $0.width.equalTo((bounds.width) / 3.7128712871)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(firstGradeButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalTo(thirdGradeButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         thirdGradeButton.snp.makeConstraints {
-            $0.width.equalTo(101)
-            $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(secondGradeButton.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.width.equalTo((bounds.width) / 3.7128712871)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(secondGradeButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         genderView.snp.makeConstraints {
@@ -233,24 +244,24 @@ class FilterBottomSheetContentViewController: BaseViewController {
         }
         
         genderTitle.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         maleButton.snp.makeConstraints {
-            $0.width.equalTo(159)
-            $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalTo(femaleButton.snp.leading).offset(-16)
+            $0.width.equalTo((bounds.width) / 2.358490566)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalTo(femaleButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         femaleButton.snp.makeConstraints {
-            $0.width.equalTo(159)
-            $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(maleButton.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.width.equalTo((bounds.width) / 2.358490566)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(maleButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         departmentView.snp.makeConstraints {
@@ -261,47 +272,46 @@ class FilterBottomSheetContentViewController: BaseViewController {
         }
         
         departmentTitle.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
+            $0.top.equalToSuperview().offset((bounds.height) / 101.5)
             $0.leading.equalToSuperview().offset(20)
         }
         
         swButton.snp.makeConstraints {
-            $0.width.equalTo(101)
-            $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalTo(iotButton.snp.leading).offset(-16)
+            $0.width.equalTo((bounds.width) / 3.7128712871)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalTo(iotButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         iotButton.snp.makeConstraints {
-            $0.width.equalTo(101)
-            $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(swButton.snp.trailing).offset(16)
-            $0.trailing.equalTo(aiButton.snp.leading).offset(-16)
+            $0.width.equalTo((bounds.width) / 3.7128712871)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(swButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalTo(aiButton.snp.leading).offset(-((bounds.width) / 23.4375))
         }
         
         aiButton.snp.makeConstraints {
-            $0.width.equalTo(101)
-            $0.height.equalTo(56)
-            $0.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(iotButton.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.width.equalTo((bounds.width) / 3.7128712871)
+            $0.height.equalTo((bounds.height) / 14.5)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 101.5)
+            $0.leading.equalTo(iotButton.snp.trailing).offset((bounds.width) / 23.4375)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         filterResetButton.snp.makeConstraints {
             $0.width.equalTo(319)
             $0.height.equalTo(56)
-            $0.top.equalTo(departmentView.snp.bottom).offset(24)
-            $0.bottom.equalToSuperview().inset(58)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(departmentView.snp.bottom).offset((bounds.height) / 33.8333333333)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 14)
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
     }
     
     // MARK: Action
     @objc private func closeButtonDidTap(_ sender: Any) {
-        print("닫힘")
         buttonAction?()
     }
     
@@ -316,7 +326,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("학생 버튼이 해제되었습니다!")
             roleStudentButton.backgroundColor = .clear
-            roleStudentButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            roleStudentButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             roleStudentButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -332,7 +342,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("학생회 버튼이 해제되었습니다!")
             roleStudentCouncilButton.backgroundColor = .clear
-            roleStudentCouncilButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            roleStudentCouncilButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             roleStudentCouncilButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -348,7 +358,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("외출금지 버튼이 해제되었습니다!")
             roleOutingProhibitionButton.backgroundColor = .clear
-            roleOutingProhibitionButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            roleOutingProhibitionButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             roleOutingProhibitionButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -364,7 +374,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("1학년 버튼이 해제되었습니다!")
             firstGradeButton.backgroundColor = .clear
-            firstGradeButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            firstGradeButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             firstGradeButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -380,7 +390,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("2학년 버튼이 해제되었습니다!")
             secondGradeButton.backgroundColor = .clear
-            secondGradeButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            secondGradeButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             secondGradeButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -396,7 +406,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("3학년 버튼이 해제되었습니다!")
             thirdGradeButton.backgroundColor = .clear
-            thirdGradeButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            thirdGradeButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             thirdGradeButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -412,7 +422,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("남성 버튼이 해제되었습니다!")
             maleButton.backgroundColor = .clear
-            maleButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            maleButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             maleButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -428,7 +438,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("여성 버튼이 해제되었습니다!")
             femaleButton.backgroundColor = .clear
-            femaleButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            femaleButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             femaleButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -444,7 +454,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("SW 버튼이 해제되었습니다!")
             swButton.backgroundColor = .clear
-            swButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            swButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             swButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -460,7 +470,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("IoT 버튼이 해제되었습니다!")
             iotButton.backgroundColor = .clear
-            iotButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            iotButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             iotButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -476,7 +486,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
         } else {
             print("AI 버튼이 해제되었습니다!")
             aiButton.backgroundColor = .clear
-            aiButton.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            aiButton.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             aiButton.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }
@@ -484,7 +494,7 @@ class FilterBottomSheetContentViewController: BaseViewController {
     @objc private func filterResetButtonDidTap(_ sender: Any) {
         [roleStudentButton, roleStudentCouncilButton, roleOutingProhibitionButton, firstGradeButton, secondGradeButton, thirdGradeButton, maleButton, femaleButton, swButton, iotButton, aiButton].forEach {
             $0.backgroundColor = .clear
-            $0.layer.borderColor = UIColor.black.withAlphaComponent(0.05).cgColor
+            $0.layer.borderColor = UIColor.color.gomsBottomSheetBorder.color.cgColor
             $0.setTitleColor(.color.gomsSecondary.color, for: .normal)
         }
     }

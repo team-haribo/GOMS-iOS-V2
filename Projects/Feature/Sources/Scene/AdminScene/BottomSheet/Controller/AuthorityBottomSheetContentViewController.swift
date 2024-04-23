@@ -8,16 +8,13 @@ class AuthorityBottomSheetContentViewController: BaseViewController {
     
     private let closeButton = UIButton().then {
         $0.setImage(UIImage(systemName: "xmark"), for: .normal)
-        $0.tintColor = .black
+        $0.tintColor = .color.gomsTextDefault.color
         $0.addTarget(self, action: #selector(closeButtonDidTap(_:)), for: .touchUpInside)
     }
     
     var buttonAction: (() -> Void)?
     
-    private let outingProhibitionView = UIView().then {
-        $0.frame = CGRect(x: 0, y: 0, width: 375, height: 112)
-        $0.backgroundColor = .clear
-    }
+    private let outingProhibitionView = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 112))
     
     private let outingProhibitionTitleText = UILabel().then {
         $0.text = "외출금지"
@@ -36,10 +33,7 @@ class AuthorityBottomSheetContentViewController: BaseViewController {
         $0.addTarget(self, action: #selector(outingProhibitionOnClickSwitch(_:)), for: UIControl.Event.valueChanged)
     }
     
-    private let authorizationView = UIView().then {
-        $0.frame = CGRect(x: 0, y: 0, width: 375, height: 112)
-        $0.backgroundColor = .clear
-    }
+    private let authorizationView = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 112))
     
     private let authorizationTitleText = UILabel().then {
         $0.text = "학생회 권한 부여"
@@ -78,57 +72,57 @@ class AuthorityBottomSheetContentViewController: BaseViewController {
     
     override func setLayout() {
         titleText.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalToSuperview().offset(20)
+            $0.bottom.equalTo(outingProhibitionView.snp.top).offset(-((bounds.height) / 50.75))
+            $0.leading.equalToSuperview().offset((bounds.width) / 18.75)
         }
         
         closeButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(outingProhibitionView.snp.top).offset(-((bounds.height) / 50.75))
+            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         outingProhibitionView.snp.makeConstraints {
             $0.width.equalTo(375)
             $0.height.equalTo(80)
-            $0.top.equalTo(titleText.snp.bottom).offset(16)
-            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(authorizationView.snp.top)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         outingProhibitionTitleText.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.leading.equalToSuperview()
         }
         
         outingProhibitionInfoText.snp.makeConstraints {
-            $0.bottom.equalToSuperview().inset(16)
-            $0.leading.equalToSuperview().offset(20)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 50.75)
+            $0.leading.equalToSuperview()
         }
         
         outingProhibitionSwitch.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(20)
+            $0.trailing.equalToSuperview()
         }
         
         authorizationView.snp.makeConstraints {
             $0.width.equalTo(375)
             $0.height.equalTo(80)
-            $0.top.equalTo(outingProhibitionView.snp.bottom)
-            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview().inset((bounds.height) / 14)
+            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
         }
         
         authorizationTitleText.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
+            $0.leading.equalToSuperview()
         }
         
         authorizationInfoText.snp.makeConstraints {
-            $0.bottom.equalToSuperview().inset(16)
-            $0.leading.equalToSuperview().offset(20)
+            $0.bottom.equalToSuperview().inset((bounds.height) / 50.75)
+            $0.leading.equalToSuperview()
         }
         
         authorizationSwitch.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(20)
+            $0.trailing.equalToSuperview()
         }
     }
     

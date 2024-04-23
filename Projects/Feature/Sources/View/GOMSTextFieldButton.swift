@@ -23,7 +23,6 @@ public class GOMSTextFieldButton: UIButton {
         setButtonBackgroundColor(lightModeColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.05), darkModeColor: UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1))
         setTitle(title, for: .normal)
         setTitleColor(.color.gomsTertiary.color, for: .normal)
-//        setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
         titleLabel?.font = .pretendard(size: 16, weight: .regular)
         layer.masksToBounds = true
         layer.cornerRadius = 12
