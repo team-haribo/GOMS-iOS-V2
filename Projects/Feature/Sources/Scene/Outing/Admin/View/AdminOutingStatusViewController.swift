@@ -1,5 +1,5 @@
 //
-//  AdminOutingStatusViewController.swift
+//  AdminOutingViewController.swift
 //  Feature
 //
 //  Created by 새미 on 2/22/24.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class AdminOutingStatusViewController: BaseViewController {
+public final class AdminOutingViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel = OutingViewModel()
@@ -51,7 +51,7 @@ public final class AdminOutingStatusViewController: BaseViewController {
     private func setCollectionView() {
         self.outingListCollectionView.dataSource = self
         
-        outingListCollectionView.register(AdminOutingStatusCollectionViewCell.self, forCellWithReuseIdentifier: AdminOutingStatusCollectionViewCell.identifier)
+        outingListCollectionView.register(AdminOutingCollectionViewCell.self, forCellWithReuseIdentifier: AdminOutingCollectionViewCell.identifier)
     }
     
     // MARK: - Configure UI
@@ -96,13 +96,13 @@ public final class AdminOutingStatusViewController: BaseViewController {
     }
 }
 
-extension AdminOutingStatusViewController: UICollectionViewDataSource {
+extension AdminOutingViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.outingListDatas.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = outingListCollectionView.dequeueReusableCell(withReuseIdentifier: AdminOutingStatusCollectionViewCell.identifier, for: indexPath) as! AdminOutingStatusCollectionViewCell
+        let cell = outingListCollectionView.dequeueReusableCell(withReuseIdentifier: AdminOutingCollectionViewCell.identifier, for: indexPath) as! AdminOutingCollectionViewCell
         
         let outingData = viewModel.outingListDatas[indexPath.row]
         cell.configureData(with: outingData)

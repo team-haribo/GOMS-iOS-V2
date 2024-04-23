@@ -1,5 +1,5 @@
 //
-//  AdminOutingStatusCollectionViewCell.swift
+//  AdminOutingCollectionViewCell.swift
 //  Feature
 //
 //  Created by 새미 on 2/22/24.
@@ -11,7 +11,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class AdminOutingStatusCollectionViewCell: UICollectionViewCell {
+final class AdminOutingCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
     static let identifier = "AdminOutingStatusCell"
     
