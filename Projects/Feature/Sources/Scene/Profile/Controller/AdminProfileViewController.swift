@@ -158,7 +158,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .dark
                 self?.themesettingText.text = "다크(기본)"
-                
             }
         }))
         
@@ -167,7 +166,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .light
                 self?.themesettingText.text = "라이트"
-                
             }
         }))
         
@@ -176,7 +174,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             if let window = UIApplication.shared.windows.first {
                 window.overrideUserInterfaceStyle = .unspecified
                 self?.themesettingText.text = "시스템 테마 설정"
-                
             }
         }))
         
@@ -194,6 +191,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             .foregroundColor: UIColor.color.gomsTextDefault.color,
             .font: UIFont.pretendard(size: 17, weight: .semibold)
         ]
+        
         let attributedTitle = NSAttributedString(string: "로그아웃\n", attributes: titleAttributes)
         alertController.setValue(attributedTitle, forKey: "attributedTitle")
         
@@ -201,6 +199,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             .foregroundColor: UIColor.color.gomsTextDefault.color,
             .font: UIFont.pretendard(size: 13, weight: .regular)
         ]
+        
         let attributedMessage = NSAttributedString(string: "로그아웃 하시겠습니까?", attributes: messageAttributes)
         alertController.setValue(attributedMessage, forKey: "attributedMessage")
         
@@ -212,6 +211,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             viewModel.ProfileLogout(presentingViewController: SignInViewController())
             self?.performLogout()
         }
+        
         alertController.addAction(confirmAction)
         
         alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .color.gomsTheme.color
@@ -272,7 +272,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
                                 self?.userProfile.image = profileImage
                             }
                         }
-                    }.resume()
+                    }
+                    .resume()
                 }
 
                 let uploadimage = profileInfo.profileUrl
@@ -306,10 +307,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             self?.userProfile.image = .image.gomsBasicProfile.image
             let viewModel = ProfileViewModel()
                 viewModel.deleteProfileImage()
-            
         }))
 
-        
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
             self?.updateImage(isActionSheetShowing: false)
         }))
@@ -346,9 +345,11 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             }
             dismiss(animated: true, completion: nil)
         }
+    
         public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             dismiss(animated: true, completion: nil)
         }
+    
     override func addView() {
         [
             userProfile,
@@ -485,12 +486,14 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.leading.equalTo(repassword.snp.leading).offset(8)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
+        
         qrmakeonDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
             $0.leading.equalTo(qrmakeonText.snp.leading)
             $0.top.equalTo(qrmakeonText.snp.bottom)
         }
+        
         qrmakeontoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)

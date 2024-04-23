@@ -52,7 +52,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.font = .pretendard(size: 16, weight: .regular)
     }
     
-    
     let perceptionNum = UILabel().then {
         $0.text = "\(0)"
         $0.textColor = .color.gomsNegative.color
@@ -68,6 +67,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let line1View = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
+    
     let line2View = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
@@ -295,7 +295,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             
         }))
 
-        
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
             self?.updateImage(isActionSheetShowing: false)
         }))
@@ -371,7 +370,8 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                                 self?.userProfile.image = profileImage
                             }
                         }
-                    }.resume()
+                    }
+                    .resume()
                 }
 
                 let uploadimage = profileInfo.profileUrl
@@ -388,8 +388,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         
         imagePickerController.delegate = self
     }
-    
-    
     
     override func addView() {
         [
@@ -439,7 +437,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.height.equalTo(32)
             $0.leading.equalTo(userProfile.snp.trailing).inset(-16)
             $0.top.equalTo(userProfile.snp.top)
-            
         }
         
         userGradeDepartment.snp.makeConstraints {
@@ -566,7 +563,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.height.equalTo(48)
             $0.centerX.equalToSuperview()
             $0.top.equalTo(cameranowonDescription.snp.top).offset(108)
-            
         }
     }
 }
