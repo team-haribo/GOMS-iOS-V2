@@ -404,11 +404,10 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.leading.equalTo(userName.snp.leading)
         }
         
-        perceptionCount.snp.makeConstraints {
-            $0.width.equalTo(60)
-            $0.height.equalTo(28)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(userName.snp.top).inset(0)
+        perceptionNum.snp.makeConstraints {
+            $0.height.equalTo(32)
+            $0.trailing.equalTo(perceptionText.snp.leading).inset(-1)
+            $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
         
         perceptionNum.snp.makeConstraints {
