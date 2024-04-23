@@ -12,7 +12,6 @@ import Moya
 public enum OutingServices {
     case outing(authorization: String)
     case outingList(authorization: String)
-    case outingCount(authorization: String)
     case outingSearch(authorization: String)
     case outingValidation(authorization: String)
 }
@@ -28,8 +27,6 @@ extension OutingServices: TargetType {
             return "/outing/{outingUUID}"
         case .outingList:
             return "/outing/"
-        case .outingCount:
-            return "/outing/count"
         case .outingSearch:
             return "/outing/search"
         case .outingValidation:
@@ -40,7 +37,6 @@ extension OutingServices: TargetType {
     public var method: Moya.Method {
         switch self {
         case .outingList,
-             .outingCount,
              .outingSearch,
              .outingValidation:
             return .get
@@ -58,8 +54,6 @@ extension OutingServices: TargetType {
         case .outing:
             return .requestPlain
         case .outingList:
-            return .requestPlain
-        case .outingCount:
             return .requestPlain
         case .outingSearch(let s):
             return .requestParameters(parameters: ["s": s], encoding: URLEncoding.queryString)
