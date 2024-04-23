@@ -28,6 +28,13 @@ public final class OutingViewModel {
 
     var outingList: [OutingListResponse] = []
     var outingListDatas: [OutingListData] = []
+    
+    var outingSearchList: [OutingSearchResponse] = []
+    var outingSearchListDatas: [OutingListData] = []
+    
+    func inputStirng() {
+        
+    }
 
     func getOutingList(completion: @escaping () -> Void) {
         outingProvider.request(.outingList(authorization: accessToken)) { response in
@@ -60,33 +67,18 @@ public final class OutingViewModel {
         }
     }
     
-    func countOuting() {
-        outingProvider.request(.outingCount(authorization: accessToken)) { response in
+    func searchStudent(searchString: String, completion: @escaping () -> Void) {
+        outingProvider.request(.outingSearch(name: searchString, authorization: accessToken)) { response in
             switch response {
             case .success(let result):
-                let statusCode = result.statusCode
-                switch statusCode {
-                case 200:
-                    print("OK")
-                case 401:
-                    print("만료된 accessToken일 경우")
-                    print("유효하지 않은 accessToken일 경우")
-                    self.gomsRefreshToken.tokenReissuance()
-                case 500:
-                    print("SERVER ERROR")
-                default:
-                    print(result)
+                let responseData = result.data
+                do {
+                    self.outingSearchList = try JSONDecoder().decode([OutingSearchResponse].self, from: responseData)
+                    self.outingSearchListDatas = self.outingSearchList.map { OutingListData(id: $0.accountIdx, profileImageURL: $0.profileUrl, name: $0.name, grade: $0.grade, major: $0.major, outingTime: $0.createdTime) }
+                    completion()
+                } catch(let err) {
+                    print(String(describing: err))
                 }
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
-        }
-    }
-    
-    func searchStudent() {
-        outingProvider.request(.outingSearch(authorization: accessToken)) { response in
-            switch response {
-            case .success(let result):
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 200:
@@ -103,4 +95,5 @@ public final class OutingViewModel {
             }
         }
     }
+    
 }

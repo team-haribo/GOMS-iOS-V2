@@ -13,13 +13,18 @@ public final class OutingStatusViewController: BaseViewController {
     // MARK: - Properties
     private let viewModel = OutingViewModel()
     
-    private let searchController = UISearchController(searchResultsController: nil).then {
-        $0.searchBar.placeholder = "학생 검색"
-    }
+    var outingList: [OutingListData] = [] {
+         didSet {
+             outingListCollectionView.reloadData()
+             isOutingListNilUI()
+         }
+     }
+    
+    private let searchController = UISearchController(searchResultsController: nil)
     
     private let mainLabel = UILabel().then {
         $0.text = "검색 결과"
-        $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
+        $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 18, weight: .semibold)
     }
     
@@ -69,36 +74,17 @@ public final class OutingStatusViewController: BaseViewController {
         super.viewWillAppear(animated)
         outingListCollectionView.reloadData()
     }
-    
+        
     public override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.getOutingList {
-            if self.viewModel.outingListDatas.count == 0 {
-                self.outingIsNilIcon.isHidden = false
-                self.outingIsNilLabel.isHidden = false
-            } else {
-                self.outingIsNilIcon.isHidden = true
-                self.outingIsNilLabel.isHidden = true
-            }
-            self.setCollectionView()
+            self.outingList = self.viewModel.outingListDatas
+            self.setup()
+            self.isOutingListNilUI()
         }
     }
     
-    // MARK: - CollectionView Setting
-    private func setCollectionView() {
-        self.outingListCollectionView.dataSource = self
-
-        outingListCollectionView.register(OutingListCollectionViewCell.self, forCellWithReuseIdentifier: OutingListCollectionViewCell.identifier)
-    }
-
-    // MARK: - Configure UI
-    override func configureUI() {
-        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
-        qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
-        qrButton.clipsToBounds = true
-    }
-    
-    // MARK: - Configure Navigation
+    // MARK: - Setting
     override func configNavigation() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -112,6 +98,39 @@ public final class OutingStatusViewController: BaseViewController {
         
         navigationItem.title = "외출 현황"
         navigationItem.searchController = searchController
+    }
+    
+    func setup() {
+        setupSearchBar()
+        setupCollectionView()
+    }
+    
+    func setupSearchBar() {
+        searchController.searchBar.placeholder = "학생 검색"
+        searchController.searchResultsUpdater = self
+    }
+    
+    private func setupCollectionView() {
+        self.outingListCollectionView.dataSource = self
+        
+        outingListCollectionView.register(OutingListCollectionViewCell.self, forCellWithReuseIdentifier: OutingListCollectionViewCell.identifier)
+    }
+    
+    // MARK: - Configure UI
+    override func configureUI() {
+        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
+        qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
+        qrButton.clipsToBounds = true
+    }
+    
+    func isOutingListNilUI() {
+        if self.viewModel.outingListDatas.count == 0 {
+            self.outingIsNilIcon.isHidden = false
+            self.outingIsNilLabel.isHidden = false
+        } else {
+            self.outingIsNilIcon.isHidden = true
+            self.outingIsNilLabel.isHidden = true
+        }
     }
     
     // MARK: - Add View
@@ -155,15 +174,29 @@ public final class OutingStatusViewController: BaseViewController {
 
 extension OutingStatusViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.outingListDatas.count
+        return outingList.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = outingListCollectionView.dequeueReusableCell(withReuseIdentifier: OutingListCollectionViewCell.identifier, for: indexPath) as! OutingListCollectionViewCell
-        
-        let outingData = viewModel.outingListDatas[indexPath.row]
+    
+        let outingData = outingList[indexPath.row]
         cell.configureData(with: outingData)
         
         return cell
+    }
+}
+
+extension OutingStatusViewController: UISearchResultsUpdating {
+    public func updateSearchResults(for searchController: UISearchController) {
+        guard let searchString = searchController.searchBar.text else { return }
+        if searchString.isEmpty {
+            outingList = viewModel.outingListDatas
+        } else {
+            viewModel.searchStudent(searchString: searchString) {
+                self.outingList = self.viewModel.outingSearchListDatas
+                self.outingListCollectionView.reloadData()
+            }
+        }
     }
 }

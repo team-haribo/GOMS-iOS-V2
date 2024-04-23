@@ -19,6 +19,7 @@ struct LatecomerData {
 
 public final class HomeViewModel {
     private let lateProvider = MoyaProvider<LateService>()
+    private let outingProvider = MoyaProvider<OutingServices>()
     
     let keyChain = KeyChain()
     let gomsRefreshToken = GOMSRefreshToken.shared
@@ -26,6 +27,9 @@ public final class HomeViewModel {
     
     var lateList: [LatecomerResponse] = []
     var lateListDatas: [LatecomerData] = []
+    
+    var outingList: [OutingListResponse] = []
+    var outingListDatas: [OutingListData] = []
     
     func getLateList(completion: @escaping () -> Void) {
         lateProvider.request(.lateRank(authorization: accessToken)) { response in
@@ -47,6 +51,37 @@ public final class HomeViewModel {
                     self.gomsRefreshToken.tokenReissuance()
                 case 404:
                     print("지각자 없음")
+                case 500:
+                    print("SERVER ERROR")
+                default:
+                    print(result)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
+    
+    func getOutingList(completion: @escaping () -> Void) {
+        outingProvider.request(.outingList(authorization: accessToken)) { response in
+            switch response {
+            case .success(let result):
+                let responseData = result.data
+                do {
+                    self.outingList = try JSONDecoder().decode([OutingListResponse].self, from: responseData)
+                    self.outingListDatas = self.outingList.map { OutingListData(id: $0.accountIdx, profileImageURL: $0.profileUrl, name: $0.name, grade: $0.grade, major: $0.major, outingTime: $0.createdTime) }
+                    completion()
+                } catch(let err) {
+                    print(String(describing: err))
+                }
+                let statusCode = result.statusCode
+                switch statusCode {
+                case 200:
+                    print("OK")
+                case 401:
+                    self.gomsRefreshToken.tokenReissuance()
+                case 404:
+                    print("외출한 사람이 없을 경우")
                 case 500:
                     print("SERVER ERROR")
                 default:
