@@ -71,7 +71,6 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func ProfileLogout(presentingViewController: UIViewController) {
-<<<<<<< HEAD:Projects/App/Sources/Application/ProfileViewModel.swift
         providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
             switch result {
             case .success:
@@ -88,23 +87,5 @@ final class ProfileViewModel: ObservableObject {
                 print("Network request failed: \(err)")
             }
         }
-=======
-//        providerthree.request(.logoutToken(refreshToken: gomsRefreshToken)) { [weak self] result in
-//            switch result {
-//            case .success:
-//                print("Logout successfully")
-//
-//                DispatchQueue.main.async {
-//                    let newViewController = SignInViewController()
-//                    UIApplication.shared.windows.first?.rootViewController = newViewController
-//                    UIApplication.shared.windows.first?.makeKeyAndVisible()
-//                }
-//
-//            case let .failure(err):
-//                self?.errorMessage = "Network request failed: \(err.localizedDescription)"
-//                print("Network request failed: \(err)")
-//            }
-//        }
->>>>>>> d768939 (✨ :: Delete Outing Student Service):Projects/Feature/Sources/Scene/Profile/ViewModel/ProfileViewModel.swift
     }
 }
