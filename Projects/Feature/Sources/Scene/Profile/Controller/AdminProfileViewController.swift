@@ -331,7 +331,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let pickedImage = info[.originalImage] as? UIImage,
                let imageData = pickedImage.jpegData(compressionQuality: 0.8) {
-                let providerserve = MoyaProvider<ProfileImageServices>()
+                let providerserve = MoyaProvider<ProfileServices>()
                 providerserve.request(.submit(authorization: "", imageData: imageData)) { result in
                     switch result {
                     case let .success(response):

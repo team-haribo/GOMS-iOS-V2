@@ -9,7 +9,7 @@ final class ProfileViewModel: ObservableObject {
     @Published var profileInfo: ProfileResponse?
     
     let provider = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
-    let providerserve = MoyaProvider<ProfileImageServices>(plugins: [NetworkLoggerPlugin()])
+    //let providerserve = MoyaProvider<ProfileImageServices>(plugins: [NetworkLoggerPlugin()])
     let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
     lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
@@ -36,7 +36,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func submitProfileImage(imageData: Data) {
-        providerserve.request(.submit(authorization: accessToken, imageData: imageData)) { result in
+        provider.request(.submit(authorization: accessToken, imageData: imageData)) { result in
             switch result {
             case .success:
                 // Handle success
@@ -49,7 +49,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func updateProfileImage(imageData: Data) {
-        providerserve.request(.update(authorization: accessToken, imageData: imageData)) { result in
+        provider.request(.update(authorization: accessToken, imageData: imageData)) { result in
             switch result {
             case .success:
                 // Handle success
@@ -62,7 +62,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func deleteProfileImage() {
-        providerserve.request(.delete(authorization: accessToken)) { result in
+        provider.request(.delete(authorization: accessToken)) { result in
             switch result {
             case .success:
                 // Handle success
