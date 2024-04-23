@@ -3,6 +3,7 @@ import Moya
 
 public enum StudentCouncilServices {
     case makeQRCode(authorization: String)
+    case deleteOuting(authorization: String, accountIdx: UUID)
 }
 
 extension StudentCouncilServices: TargetType {
@@ -14,6 +15,8 @@ extension StudentCouncilServices: TargetType {
         switch self {
         case .makeQRCode:
             return "/student-council/outing"
+        case .deleteOuting:
+            return "/student-council/outing/{accountIdx}"
         }
     }
     
@@ -21,6 +24,8 @@ extension StudentCouncilServices: TargetType {
         switch self {
         case .makeQRCode:
             return .post
+        case .deleteOuting:
+            return .delete
         }
     }
     
@@ -32,6 +37,8 @@ extension StudentCouncilServices: TargetType {
         switch self {
         case .makeQRCode:
             return .requestPlain
+        case .deleteOuting(_ , accountIdx: let accountIdx):
+            return .requestParameters(parameters: ["accountIdx": accountIdx], encoding: URLEncoding.queryString)
         }
     }
     
@@ -39,6 +46,10 @@ extension StudentCouncilServices: TargetType {
         switch self {
         case let .makeQRCode(authorization):
             return ["Content-Type" :"application/json", "Authorization" : authorization]
+        case .deleteOuting(let authorization, _):
+            return ["Content-Type" :"application/json", "Authorization" : authorization]
+        default:
+            return ["Content-Type": "application/json"]
         }
     }
 }
