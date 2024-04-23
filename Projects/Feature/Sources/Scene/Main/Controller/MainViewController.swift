@@ -104,7 +104,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
     
     @objc func moreOutingStatusButtonTapped() {
-        let outingVC = OutingStatusViewController()
+//        let outingVC = OutingStatusViewController()
+        let outingVC = AdminOutingStatusViewController()
         navigationController?.pushViewController(outingVC, animated: true)
     }
     

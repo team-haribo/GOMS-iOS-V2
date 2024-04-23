@@ -70,7 +70,7 @@ public final class SignInViewController: BaseViewController {
         
         viewModel.signIn { success in
             if success {
-                let mainVC = UserProfileViewController()
+                let mainVC = MainViewController()
                 self.navigationController?.pushViewController(mainVC, animated: true)
             }
         }

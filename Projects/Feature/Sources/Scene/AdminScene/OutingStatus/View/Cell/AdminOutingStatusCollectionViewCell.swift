@@ -72,7 +72,8 @@ final class AdminOutingStatusCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Configure UI
     private func configureUI() {
-        self.backgroundColor = .clear
+        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
+        profileImageView.clipsToBounds = true
     }
     
     // MARK: - Add View
