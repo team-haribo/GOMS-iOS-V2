@@ -15,8 +15,8 @@ extension StudentCouncilServices: TargetType {
         switch self {
         case .makeQRCode:
             return "/student-council/outing"
-        case .deleteOuting:
-            return "/student-council/outing/{accountIdx}"
+        case .deleteOuting(_ , let accountIdx):
+            return "/student-council/outing/\(accountIdx)"
         }
     }
     
@@ -37,8 +37,8 @@ extension StudentCouncilServices: TargetType {
         switch self {
         case .makeQRCode:
             return .requestPlain
-        case .deleteOuting(_ , accountIdx: let accountIdx):
-            return .requestParameters(parameters: ["accountIdx": accountIdx], encoding: URLEncoding.queryString)
+        case .deleteOuting:
+            return .requestPlain
         }
     }
     
