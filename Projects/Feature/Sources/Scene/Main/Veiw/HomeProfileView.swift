@@ -32,7 +32,7 @@ final class HomeProfileView: UIView {
         $0.font = UIFont.pretendard(size: 16, weight: .bold)
     }
     
-    private let currentTime = AdminCurrentTimeView(frame: CGRect(x: 0, y: 0, width: 140, height: 40))
+    private let currentTime = CurrentTimeView(frame: CGRect(x: 0, y: 0, width: 140, height: 40))
     
     // MARK: - Initializer
     override init(frame: CGRect) {
