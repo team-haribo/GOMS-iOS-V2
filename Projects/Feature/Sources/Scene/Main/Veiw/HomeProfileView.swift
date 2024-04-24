@@ -1,5 +1,5 @@
 //
-//  AdminProfileCardView.swift
+//  HomeProfileView.swift
 //  Feature
 //
 //  Created by 새미 on 2/22/24.
@@ -11,7 +11,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class AdminProfileCardView: UIView {
+final class HomeProfileView: UIView {
     
     // MARK: - Properties
     let nameLabel = UILabel().then {

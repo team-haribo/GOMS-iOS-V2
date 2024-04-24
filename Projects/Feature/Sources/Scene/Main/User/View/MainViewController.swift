@@ -19,7 +19,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     private let settingButton = UIButton()
     
-    private let profileView = ProfileCardView()
+    private let profileView = HomeProfileView()
     
     private let latecomerView = UIView()
     

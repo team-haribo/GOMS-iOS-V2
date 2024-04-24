@@ -17,19 +17,27 @@ struct LatecomerData {
     let major: String
 }
 
-public final class HomeViewModel {
+public final class HomeViewModel: BaseViewModel {
     private let lateProvider = MoyaProvider<LateService>()
     private let outingProvider = MoyaProvider<OutingServices>()
-    
-    let keyChain = KeyChain()
-    let gomsRefreshToken = GOMSRefreshToken.shared
-    lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
-    
+
     var lateList: [LatecomerResponse] = []
     var lateListDatas: [LatecomerData] = []
     
     var outingList: [OutingListResponse] = []
     var outingListDatas: [OutingListData] = []
+    
+    func validationOutingTime() {
+        outingProvider.request(.outingValidation(authorization: accessToken)) { response in
+            switch response {
+            case .success(let result):
+                let responseData = result.data
+                print(responseData)
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
     
     func getLateList(completion: @escaping () -> Void) {
         lateProvider.request(.lateRank(authorization: accessToken)) { response in
