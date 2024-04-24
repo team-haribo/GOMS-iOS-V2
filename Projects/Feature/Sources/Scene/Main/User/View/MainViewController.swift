@@ -94,7 +94,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         $0.backgroundColor = .clear
     }
     
-    private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64)).then {
+    private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsPrimary.color).then {
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
     

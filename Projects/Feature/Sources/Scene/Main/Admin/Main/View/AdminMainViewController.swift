@@ -87,7 +87,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDelega
         $0.backgroundColor = .clear
     }
     
-    private lazy var qrButton = AdminQRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64))
+    private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsAdmin.color)
 
     // MARK: - Life Cycle
     public override func viewDidAppear(_ animated: Bool) {
