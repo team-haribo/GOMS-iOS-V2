@@ -16,7 +16,6 @@ public final class OutingViewController: BaseViewController {
     var outingList: [OutingListData] = [] {
          didSet {
              outingListCollectionView.reloadData()
-             isOutingListNilUI()
          }
      }
     
