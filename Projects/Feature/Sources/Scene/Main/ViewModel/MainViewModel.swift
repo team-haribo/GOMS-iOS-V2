@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  MainViewModel.swift
 //  Feature
 //
 //  Created by 새미 on 4/22/24.
@@ -17,7 +17,7 @@ struct LatecomerData {
     let major: String
 }
 
-public final class HomeViewModel: BaseViewModel {
+public final class MainViewModel: BaseViewModel {
     private let lateProvider = MoyaProvider<LateService>()
     private let outingProvider = MoyaProvider<OutingServices>()
 
@@ -26,18 +26,6 @@ public final class HomeViewModel: BaseViewModel {
     
     var outingList: [OutingListResponse] = []
     var outingListDatas: [OutingListData] = []
-    
-    func validationOutingTime() {
-        outingProvider.request(.outingValidation(authorization: accessToken)) { response in
-            switch response {
-            case .success(let result):
-                let responseData = result.data
-                print(responseData)
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
-        }
-    }
     
     func getLateList(completion: @escaping () -> Void) {
         lateProvider.request(.lateRank(authorization: accessToken)) { response in

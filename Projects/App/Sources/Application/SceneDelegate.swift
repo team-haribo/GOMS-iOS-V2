@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if isSwitchOn == true {
                 window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
             } else {
-                window?.rootViewController =  UINavigationController(rootViewController: AdminMainViewController())
+                window?.rootViewController =  UINavigationController(rootViewController: MainViewController())
             }
       
         window?.makeKeyAndVisible()

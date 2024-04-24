@@ -1,5 +1,5 @@
 //
-//  HomeProfileView.swift
+//  MainProfileView.swift
 //  Feature
 //
 //  Created by 새미 on 2/22/24.
@@ -11,7 +11,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class HomeProfileView: UIView {
+final class MainProfileView: UIView {
     
     // MARK: - Properties
     let nameLabel = UILabel().then {
@@ -26,7 +26,7 @@ final class HomeProfileView: UIView {
         $0.font = UIFont.pretendard(size: 14, weight: .regular)
     }
 
-    private let studentCouncilLabel = UILabel().then {
+    let profileStatus = UILabel().then {
         $0.text = "학생회"
         $0.textColor = .color.gomsAdmin.color
         $0.font = UIFont.pretendard(size: 16, weight: .bold)
@@ -56,7 +56,7 @@ final class HomeProfileView: UIView {
     
     // MARK: - Add View
     private func addView() {
-        [nameLabel, studentInformationLabel, studentCouncilLabel, currentTime].forEach { self.addSubview($0) }
+        [nameLabel, studentInformationLabel, profileStatus, currentTime].forEach { self.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -73,7 +73,7 @@ final class HomeProfileView: UIView {
             $0.height.equalTo(24)
         }
         
-        studentCouncilLabel.snp.makeConstraints {
+        profileStatus.snp.makeConstraints {
             $0.top.equalToSuperview().offset(12)
             $0.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(28)

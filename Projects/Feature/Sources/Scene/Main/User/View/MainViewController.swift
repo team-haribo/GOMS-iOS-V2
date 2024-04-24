@@ -11,7 +11,7 @@ import UIKit
 public final class MainViewController: BaseViewController, UICollectionViewDelegate {
     
     // MARK: - Properties
-    private let viewModel = HomeViewModel()
+    private let viewModel = MainViewModel()
     
     let scrollView = UIScrollView()
     
@@ -19,7 +19,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     private let settingButton = UIButton()
     
-    private let profileView = HomeProfileView()
+    private let profileView = MainProfileView()
     
     private let latecomerView = UIView()
     
@@ -104,7 +104,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
     
     @objc func moreOutingStatusButtonTapped() {
-        let outingVC = AdminOutingViewController()
+        let outingVC = OutingViewController()
         navigationController?.pushViewController(outingVC, animated: true)
     }
     
@@ -123,6 +123,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
+        setIconColor()
         
         viewModel.getLateList {
             self.viewModel.getOutingList {
@@ -130,7 +131,6 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
                 self.numberOfPeopleOutingLabel.text = "\(self.viewModel.outingListDatas.count)명이 외출 중"
             }
         }
-        setIconColor()
     }
     
     // MARK: - CollectionView Setting

@@ -11,7 +11,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDelega
     
     private let settingButton = UIButton()
     
-    private let profileView = HomeProfileView()
+    private let profileView = MainProfileView()
     
     private let latecomerView = UIView()
     
