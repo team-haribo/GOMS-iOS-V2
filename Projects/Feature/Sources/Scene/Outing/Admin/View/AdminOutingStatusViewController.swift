@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class AdminOutingViewController: BaseViewController {
+public final class AdminOutingViewController: BaseViewController, AdminOutingCellDelegate {
     
     // MARK: - Properties
     private let viewModel = OutingViewModel()
@@ -34,7 +34,7 @@ public final class AdminOutingViewController: BaseViewController {
         $0.itemSize = CGSize(width: 335, height: 72)
     }
     
-    private lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingListFlowLayout).then {
+    lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingListFlowLayout).then {
         $0.backgroundColor = .clear
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
@@ -75,6 +75,7 @@ public final class AdminOutingViewController: BaseViewController {
 
     private func setupCollectionView() {
         self.outingListCollectionView.dataSource = self
+        self.outingListCollectionView.delegate  = self
         
         outingListCollectionView.register(AdminOutingCollectionViewCell.self, forCellWithReuseIdentifier: AdminOutingCollectionViewCell.identifier)
     }
@@ -118,10 +119,29 @@ extension AdminOutingViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = outingListCollectionView.dequeueReusableCell(withReuseIdentifier: AdminOutingCollectionViewCell.identifier, for: indexPath) as! AdminOutingCollectionViewCell
         
+        cell.delegate = self
+        cell.tag = indexPath.row
+        
         let outingData = outingList[indexPath.row]
         cell.configureData(with: outingData)
         
         return cell
+    }
+}
+
+extension AdminOutingViewController: UICollectionViewDelegate {
+    func deleteButtonTapped(index: Int) {
+        let alertController = UIAlertController(title: "외출 강제 복귀", message: "외출자를 강제로 복귀시키시겠습니까?", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "복귀", style: .destructive, handler: { _ in
+            self.viewModel.deleteOutingStudent(index: index) {
+                self.outingList = self.viewModel.outingListDatas
+                DispatchQueue.main.async {
+                    self.outingListCollectionView.reloadData()
+                }
+            }
+        }))
+        present(alertController, animated: true, completion: nil)
     }
 }
 

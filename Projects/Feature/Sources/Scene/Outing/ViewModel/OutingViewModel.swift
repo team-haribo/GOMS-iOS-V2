@@ -21,6 +21,7 @@ struct OutingListData {
 
 public final class OutingViewModel: BaseViewModel {
     private let outingProvider = MoyaProvider<OutingServices>()
+    private let studentCouncilProvider = MoyaProvider<StudentCouncilServices>()
 
     var outingList: [OutingListResponse] = []
     var outingListDatas: [OutingListData] = []
@@ -84,6 +85,29 @@ public final class OutingViewModel: BaseViewModel {
                 }
             case .failure(let err):
                 print(err.localizedDescription)
+            }
+        }
+    }
+    
+    func deleteOutingStudent(index: Int, completion: @escaping () -> Void) {
+        let deleteStudent = outingList[index]
+        let accountIdx = deleteStudent.accountIdx
+
+        studentCouncilProvider.request(.deleteOuting(authorization: accessToken, accountIdx: accountIdx)) { response in
+            switch response {
+            case .success(let result):
+                if result.statusCode == 205 {
+                    self.outingListDatas.remove(at: index)
+                    completion()
+                } else if result.statusCode == 401 {
+                    self.gomsRefreshToken.tokenReissuance()
+                } else if result.statusCode == 403 {
+                    print("학생회 계정이 아닌데 요청할 경우")
+                } else {
+                    print("SERVER ERROR")
+                }
+            case .failure(let err):
+                print("외출자 삭제 중 오류 발생: \(err.localizedDescription)")
             }
         }
     }

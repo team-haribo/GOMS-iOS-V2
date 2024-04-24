@@ -11,9 +11,14 @@ import UIKit
 import SnapKit
 import Then
 
+protocol AdminOutingCellDelegate: AnyObject {
+    func deleteButtonTapped(index: Int)
+}
+
 final class AdminOutingCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
     static let identifier = "AdminOutingStatusCell"
+    weak var delegate: AdminOutingCellDelegate?
     
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 48, height: 48)).then {
         $0.image = UIImage(systemName: "person.crop.circle.fill")
@@ -45,6 +50,7 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
     
     private let deleteButton = UIButton().then {
         $0.setImage(.image.gomsDeleteIcon.image, for: .normal)
+        $0.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Initializer
@@ -57,6 +63,10 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc private func deleteButtonTapped() {
+        delegate?.deleteButtonTapped(index: self.tag)
     }
     
     func configureData(with outingData: OutingListData) {

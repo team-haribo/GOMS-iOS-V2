@@ -8,7 +8,7 @@ public enum StudentCouncilServices {
 
 extension StudentCouncilServices: TargetType {
     public var baseURL: URL {
-        return URL(string: BaseURL.baseURL) ?? URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
+        return URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
     }
     
     public var path: String {
