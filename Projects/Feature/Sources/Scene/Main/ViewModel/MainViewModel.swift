@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  MainViewModel.swift
 //  Feature
 //
 //  Created by 새미 on 4/22/24.
@@ -17,14 +17,10 @@ struct LatecomerData {
     let major: String
 }
 
-public final class HomeViewModel {
+public final class MainViewModel: BaseViewModel {
     private let lateProvider = MoyaProvider<LateService>()
     private let outingProvider = MoyaProvider<OutingServices>()
-    
-    let keyChain = KeyChain()
-    let gomsRefreshToken = GOMSRefreshToken.shared
-    lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
-    
+
     var lateList: [LatecomerResponse] = []
     var lateListDatas: [LatecomerData] = []
     

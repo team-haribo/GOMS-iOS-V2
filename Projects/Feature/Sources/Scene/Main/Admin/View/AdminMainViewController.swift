@@ -1,25 +1,17 @@
-//
-//  MainViewController.swift
-//  Feature
-//
-//  Created by 새미 on 1/10/24.
-//  Copyright © 2024 HARIBO. All rights reserved.
-//
-
 import UIKit
 
-public final class MainViewController: BaseViewController, UICollectionViewDelegate {
+public class AdminMainViewController: BaseViewController, UICollectionViewDelegate {
     
     // MARK: - Properties
-    private let viewModel = HomeViewModel()
-    
     let scrollView = UIScrollView()
     
-    private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
+    private let logo = UIImageView()
+    
+    private let studentManagementButton = UIButton()
     
     private let settingButton = UIButton()
     
-    private let profileView = ProfileCardView()
+    private let profileView = MainProfileView()
     
     private let latecomerView = UIView()
     
@@ -45,7 +37,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private let outingStatusView = UIView()
     
     private let outingStatusLabel = UILabel().then {
-        $0.text = "외출현황"
+        $0.text = "외출 현황"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
@@ -60,7 +52,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         $0.addTarget(self, action: #selector(moreOutingStatusButtonTapped), for: .touchUpInside)
     }
     
-    let numberOfPeopleOutingLabel = UILabel().then {
+    private let numberOfPeopleOutingLabel = UILabel().then {
+        $0.text = "0명이 외출 중"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 13, weight: .regular)
         let fullText = $0.text ?? ""
@@ -68,7 +61,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         let range = (fullText as NSString).range(of: "0")
         attributedString.addAttribute(
             .foregroundColor,
-            value: UIColor.color.gomsPrimary.color.cgColor,
+            value: UIColor.color.gomsAdmin.color.cgColor,
             range: range
         )
         attributedString.addAttribute(
@@ -78,7 +71,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         )
         $0.attributedText = attributedString
     }
-    
+
     private let outingStatusFlowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
         $0.minimumLineSpacing = 0
@@ -94,24 +87,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         $0.backgroundColor = .clear
     }
     
-    private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64)).then {
-        $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
-    }
-    
-    // MARK: - Selectors
-    @objc func settingButtonTapped() {
-        // Setting ViewController 이동
-    }
-    
-    @objc func moreOutingStatusButtonTapped() {
-        let outingVC = AdminOutingViewController()
-        navigationController?.pushViewController(outingVC, animated: true)
-    }
-    
-    @objc func qrButtonTapped() {
-        let qrCodeVC = QRCodeViewController()
-        self.navigationController?.pushViewController(qrCodeVC, animated: true)
-    }
+    private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsAdmin.color)
 
     // MARK: - Life Cycle
     public override func viewDidAppear(_ animated: Bool) {
@@ -122,14 +98,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.hidesBackButton = true
-        
-        viewModel.getLateList {
-            self.viewModel.getOutingList {
-                self.setCollectionView()
-                self.numberOfPeopleOutingLabel.text = "\(self.viewModel.outingListDatas.count)명이 외출 중"
-            }
-        }
+        setCollectionView()
+        setDatas()
         setIconColor()
     }
     
@@ -146,6 +116,11 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         latecomerCollectionView.register(LateCell.self, forCellWithReuseIdentifier: LateCell.identifier)
     }
     
+    // MARK: - Data Setting
+    private func setDatas() {
+        // Data Setting
+    }
+    
     // MARK: - Configure UI
     override func configureUI() {
         qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
@@ -156,9 +131,11 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     private func setIconColor() {
         if traitCollection.userInterfaceStyle == .dark {
             logo.image = .image.gomsDarkGrayLogo.image
+            studentManagementButton.setBackgroundImage(.image.gomsDarkGrayIcon.image, for: .normal)
             settingButton.setBackgroundImage(.image.gomsDarkGraySettingIcon.image, for: .normal)
         } else {
             logo.image = .image.gomsLightGrayLogo.image
+            studentManagementButton.setBackgroundImage(.image.gomsLightGrayIcon.image, for: .normal)
             settingButton.setBackgroundImage(.image.gomsLightGraySettingIcon.image, for: .normal)
         }
     }
@@ -168,7 +145,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         [latecomerLabel, latecomerCollectionView].forEach { latecomerView.addSubview($0) }
         [outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
         [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
-        [logo, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
+        [logo, studentManagementButton, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -178,6 +155,13 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
             $0.leading.equalToSuperview()
             $0.height.equalTo((bounds.height) / 14.5)
             $0.width.equalTo((bounds.height) / 6.3937007874)
+        }
+        
+        studentManagementButton.snp.makeConstraints {
+            $0.trailing.equalTo(settingButton.snp.leading)
+            $0.top.equalToSuperview().offset((bounds.height) / 12.8015134794)
+            $0.width.equalTo((bounds.height) / 21.9696969697)
+            $0.height.equalTo((bounds.height) / 28.6318758815)
         }
         
         settingButton.snp.makeConstraints {
@@ -256,15 +240,32 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
             $0.height.width.equalTo((bounds.height) / 12.6875)
         }
     }
+    
+    // MARK: Action
+    @objc func managementButtonDidTap() {
+        
+    }
+    
+    @objc func settingButtonDidTap() {
+        
+    }
+    
+    @objc func qrButtonDidTap() {
+        
+    }
+    
+    @objc func moreOutingStatusButtonTapped() {
+        
+    }
 }
 
 // MARK: - MainViewController Extension
-extension MainViewController: UICollectionViewDataSource {
+extension AdminMainViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == outingStatusCollectionView {
-            return viewModel.outingListDatas.count
+            return 10
         } else if collectionView == latecomerCollectionView {
-            return viewModel.lateListDatas.count
+            return 3
         }
         return 0
     }
@@ -273,15 +274,9 @@ extension MainViewController: UICollectionViewDataSource {
         if collectionView == outingStatusCollectionView {
             let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
             
-            let outingData = viewModel.outingListDatas[indexPath.row]
-            cell.configureData(with: outingData)
-            
             return cell
         } else if collectionView == latecomerCollectionView {
             let cell = latecomerCollectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as! LateCell
-
-            let lateData = viewModel.lateListDatas[indexPath.row]
-            cell.configureData(with: lateData)
             
             return cell
         }

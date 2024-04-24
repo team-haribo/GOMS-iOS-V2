@@ -64,7 +64,8 @@ extension OutingServices: TargetType {
     
     public var headers: [String : String]? {
         switch self {
-        case .outingList(let authorization):
+        case .outingList(let authorization),
+                .outingValidation(let authorization):
             return ["Content-Type": "application/json", "Authorization": authorization]
         default:
             return ["Content-Type": "application/json"]

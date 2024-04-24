@@ -1,22 +1,21 @@
 //
-//  AdminQRButton.swift
+//  QRButton.swift
 //  Feature
 //
-//  Created by 새미 on 2/22/24.
+//  Created by 새미 on 4/24/24.
 //  Copyright © 2024 HARIBO. All rights reserved.
 //
 
 import UIKit
-
 import SnapKit
 
-final class AdminQRButton: UIButton {
+class QRButton: UIButton {
     
-    private let QRFrame = UIImageView()
-
-    override init(frame: CGRect) {
+    private let QRIcon = UIImageView()
+    
+    init(frame: CGRect, backgroundColor: UIColor) {
         super.init(frame: frame)
-        setupButton()
+        setupButton(backgroundColor: backgroundColor)
     }
     
     required init?(coder: NSCoder) {
@@ -25,16 +24,16 @@ final class AdminQRButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        [QRFrame].forEach { self.addSubview($0) }
+        self.addSubview(QRIcon)
         
-        QRFrame.snp.makeConstraints {
+        QRIcon.snp.makeConstraints {
             $0.height.width.equalTo(36)
             $0.centerX.centerY.equalToSuperview()
         }
     }
     
-    private func setupButton() {
-        self.backgroundColor = .color.gomsAdmin.color
-        QRFrame.image = .image.gomsqrIcon.image
+    private func setupButton(backgroundColor: UIColor) {
+        self.backgroundColor = backgroundColor
+        QRIcon.image = .image.gomsqrIcon.image
     }
 }
