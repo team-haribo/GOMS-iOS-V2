@@ -1,5 +1,5 @@
 //
-//  OutingStatusViewController.swift
+//  OutingViewController.swift
 //  Feature
 //
 //  Created by 새미 on 1/11/24.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class OutingStatusViewController: BaseViewController {
+public final class OutingViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel = OutingViewModel()
@@ -172,7 +172,7 @@ public final class OutingStatusViewController: BaseViewController {
     }
 }
 
-extension OutingStatusViewController: UICollectionViewDataSource {
+extension OutingViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return outingList.count
     }
@@ -187,7 +187,7 @@ extension OutingStatusViewController: UICollectionViewDataSource {
     }
 }
 
-extension OutingStatusViewController: UISearchResultsUpdating {
+extension OutingViewController: UISearchResultsUpdating {
     public func updateSearchResults(for searchController: UISearchController) {
         guard let searchString = searchController.searchBar.text else { return }
         if searchString.isEmpty {
