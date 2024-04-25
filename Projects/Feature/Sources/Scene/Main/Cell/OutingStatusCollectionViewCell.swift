@@ -41,7 +41,7 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureData(with outingData: OutingListData) {
+    func setupData(with outingData: OutingListData) {
         if let imageURL = outingData.profileImageURL, let url = URL(string: imageURL) {
             profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
         } else {

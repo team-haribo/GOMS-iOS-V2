@@ -253,14 +253,14 @@ extension AdminMainViewController: UICollectionViewDataSource {
             let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
             
             let outingData = viewModel.outingListDatas[indexPath.row]
-            cell.configureData(with: outingData)
+            cell.setupData(with: outingData)
             
             return cell
         } else if collectionView == latecomerCollectionView {
             let cell = latecomerCollectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as! LateCell
 
             let lateData = viewModel.lateListDatas[indexPath.row]
-            cell.configureData(with: lateData)
+            cell.setupData(with: lateData)
             
             return cell
         }
