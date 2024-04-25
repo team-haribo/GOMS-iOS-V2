@@ -107,24 +107,26 @@ public final class OutingViewController: BaseViewController {
     override func setLayout() {
         mainLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
-            $0.leading.equalToSuperview().inset(20)
+            $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(32)
         }
         
         outingListCollectionView.snp.makeConstraints {
             $0.top.equalTo(mainLabel.snp.bottom).offset(8)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.bottom.equalToSuperview()
         }
         
         qrButton.snp.makeConstraints {
             $0.height.width.equalTo(64)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
         }
     }
 }
 
+// MARK: - Extension
 extension OutingViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return outingList.count
@@ -141,7 +143,6 @@ extension OutingViewController: UICollectionViewDataSource {
 }
 
 extension OutingViewController: UICollectionViewDelegateFlowLayout {
-    // 셀의 크기를 지정합니다.
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.bounds.width * 0.9
         let height: CGFloat = 72

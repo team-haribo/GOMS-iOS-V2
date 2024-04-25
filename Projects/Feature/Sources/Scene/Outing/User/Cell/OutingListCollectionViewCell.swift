@@ -24,7 +24,7 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
-    let studentInformationLabel = UILabel().then {
+    let studentInfoLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
@@ -63,7 +63,7 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
             profileImageView.image = .image.gomsProfile.image
         }
         nameLabel.text = outingData.name
-        studentInformationLabel.text = "\(outingData.grade)기 | \(outingData.major)"
+        studentInfoLabel.text = "\(outingData.grade)기 | \(outingData.major)"
         outingTime.text = "\(outingData.outingTime)에 외출"
     }
     
@@ -74,7 +74,7 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Add View
     private func addView() {
-        [profileImageView, nameLabel, studentInformationLabel, divLine, outingTime, bottomView].forEach { contentView.addSubview($0)}
+        [profileImageView, nameLabel, studentInfoLabel, divLine, outingTime, bottomView].forEach { contentView.addSubview($0)}
     }
     
     // MARK: - Layout
@@ -92,7 +92,7 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
             $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
         }
         
-        studentInformationLabel.snp.makeConstraints {
+        studentInfoLabel.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.bottom.equalToSuperview().inset(12)
             $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
@@ -102,7 +102,7 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
             $0.height.equalTo(8)
             $0.width.equalTo(1)
             $0.bottom.equalToSuperview().inset(18)
-            $0.leading.equalTo(studentInformationLabel.snp.trailing).offset(4)
+            $0.leading.equalTo(studentInfoLabel.snp.trailing).offset(4)
         }
         
         outingTime.snp.makeConstraints {
