@@ -48,7 +48,13 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
             profileImageView.image = .image.gomsProfile.image
         }
         nameLabel.text = outingData.name
-        studentInfoLabel.text = "\(outingData.grade)기 | \(outingData.major)"
+        if outingData.major == "SW_DEVELOP" {
+            studentInfoLabel.text = "\(outingData.grade)기 | SW개발"
+        } else if outingData.major == "SMART_IOT" {
+            studentInfoLabel.text = "\(outingData.grade)기 | IoT"
+        } else {
+            studentInfoLabel.text = "\(outingData.grade)기 | AI"
+        }
     }
     
     // MARK: - Configure UI

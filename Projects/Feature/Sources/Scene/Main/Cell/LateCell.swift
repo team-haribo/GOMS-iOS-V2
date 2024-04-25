@@ -25,7 +25,7 @@ final class LateCell: UICollectionViewCell {
         $0.textColor = .color.gomsSecondary.color
     }
     
-    let studentInformationLabel = UILabel().then {
+    let studentInfoLabel = UILabel().then {
         $0.font = .pretendard(size: 12, weight: .regular)
         $0.textAlignment = .center
         $0.textColor = .color.gomsTertiary.color
@@ -53,13 +53,12 @@ final class LateCell: UICollectionViewCell {
             profileImageView.image = .image.gomsProfile.image
         }
         nameLabel.text = lateData.name
-        
         if lateData.major == "SW_DEVELOP" {
-            studentInformationLabel.text = "\(lateData.grade)기 | SW개발"
+            studentInfoLabel.text = "\(lateData.grade)기 | SW개발"
         } else if lateData.major == "SMART_IOT" {
-            studentInformationLabel.text = "\(lateData.grade)기 | IoT"
+            studentInfoLabel.text = "\(lateData.grade)기 | IoT"
         } else {
-            studentInformationLabel.text = "\(lateData.grade)기 | AI"
+            studentInfoLabel.text = "\(lateData.grade)기 | AI"
         }
     }
     
@@ -73,7 +72,7 @@ final class LateCell: UICollectionViewCell {
     
     // MARK: - Add View
     private func addView() {
-        [profileImageView, nameLabel, studentInformationLabel].forEach { self.addSubview($0) }
+        [profileImageView, nameLabel, studentInfoLabel].forEach { self.addSubview($0) }
     }
     
     private func setLayout() {
@@ -89,7 +88,7 @@ final class LateCell: UICollectionViewCell {
             $0.centerX.equalToSuperview()
         }
         
-        studentInformationLabel.snp.makeConstraints {
+        studentInfoLabel.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.top.equalTo(nameLabel.snp.bottom)
             $0.centerX.equalToSuperview()
