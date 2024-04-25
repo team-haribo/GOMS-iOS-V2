@@ -17,17 +17,14 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
     static let identifier = "OutingListCell"
     
-    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 48, height: 48)).then {
-        $0.image = UIImage(systemName: "person.crop.circle.fill")
-        $0.tintColor = .color.gomsSecondary.color
-    }
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 48, height: 48))
     
     let nameLabel = UILabel().then {
         $0.textColor = .color.gomsSecondary.color
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
-    let studentInformationLabel = UILabel().then {
+    let studentInfoLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
@@ -42,46 +39,42 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
     }
     
     private let bottomView = UIView().then {
-        $0.setDynamicBackgroundColor(darkModeColor: .white.withAlphaComponent(0.15), lightModeColor: .black.withAlphaComponent(0.15))
+        $0.setDynamicBackgroundColor(darkModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.15), lightModeColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.05))
     }
     
     // MARK: - Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureUI()
         addView()
         setLayout()
+        configureUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    // MARK: - Configure
+    func configureData(with outingData: OutingListData) {
+        if let imageURL = outingData.profileImageURL, let url = URL(string: imageURL) {
+            profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+            profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+        } else {
+            profileImageView.image = .image.gomsProfile.image
+        }
+        nameLabel.text = outingData.name
+        studentInfoLabel.text = "\(outingData.grade)기 | \(outingData.major)"
+        outingTime.text = "\(outingData.outingTime)에 외출"
+    }
+    
+    func configureUI() {
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
     }
     
-    func configureData(with outingData: OutingListData) {
-        if let imageURL = outingData.profileImageURL, let url = URL(string: imageURL) {
-            profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
-        } else {
-            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
-        }
-        nameLabel.text = outingData.name
-        studentInformationLabel.text = "\(outingData.grade)기 | \(outingData.major)"
-        outingTime.text = "\(outingData.outingTime)에 외출"
-    }
-    
-    // MARK: - Configure UI
-    private func configureUI() {
-        self.backgroundColor = .clear
-    }
-    
     // MARK: - Add View
     private func addView() {
-        [profileImageView, nameLabel, studentInformationLabel, divLine, outingTime, bottomView].forEach { contentView.addSubview($0)}
+        [profileImageView, nameLabel, studentInfoLabel, divLine, outingTime, bottomView].forEach { contentView.addSubview($0)}
     }
     
     // MARK: - Layout
@@ -99,7 +92,7 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
             $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
         }
         
-        studentInformationLabel.snp.makeConstraints {
+        studentInfoLabel.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.bottom.equalToSuperview().inset(12)
             $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
@@ -109,7 +102,7 @@ final class OutingListCollectionViewCell: UICollectionViewCell {
             $0.height.equalTo(8)
             $0.width.equalTo(1)
             $0.bottom.equalToSuperview().inset(18)
-            $0.leading.equalTo(studentInformationLabel.snp.trailing).offset(4)
+            $0.leading.equalTo(studentInfoLabel.snp.trailing).offset(4)
         }
         
         outingTime.snp.makeConstraints {

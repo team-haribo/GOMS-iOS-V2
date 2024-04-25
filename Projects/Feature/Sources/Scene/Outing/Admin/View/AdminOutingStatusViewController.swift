@@ -21,26 +21,23 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     
     private let searchController = UISearchController(searchResultsController: nil)
     
-    private let mainLabel = UILabel().then {
+    private let searchTitle = UILabel().then {
         $0.text = "검색 결과"
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 18, weight: .semibold)
     }
     
-    private let outingListFlowLayout = UICollectionViewFlowLayout().then {
-        $0.scrollDirection = .vertical
-        $0.minimumLineSpacing = 0
-        $0.minimumInteritemSpacing = 0
-        $0.itemSize = CGSize(width: 335, height: 72)
-    }
-    
-    lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingListFlowLayout).then {
+    lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.backgroundColor = .clear
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
         $0.clipsToBounds = true
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    
+    private let outingNillView = OutingNilView().then {
+        $0.isHidden = true
     }
     
     // MARK: - Life Cycel
@@ -69,6 +66,14 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     }
     
     func setup() {
+        if outingList.isEmpty {
+            searchTitle.isHidden = true
+            outingNillView.isHidden = false
+        } else {
+            searchTitle.isHidden = false
+            outingNillView.isHidden = true
+        }
+        
         setupCollectionView()
         setupSearchBar()
     }
@@ -92,25 +97,34 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     
     // MARK: - Add View
     override func addView() {
-        [mainLabel, outingListCollectionView].forEach { view.addSubview($0) }
+        [searchTitle, outingListCollectionView, outingNillView].forEach { view.addSubview($0) }
     }
         
     // MARK: - Layout
     override func setLayout() {
-        mainLabel.snp.makeConstraints {
+        searchTitle.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
-            $0.leading.equalToSuperview().inset(20)
+            $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(32)
         }
         
         outingListCollectionView.snp.makeConstraints {
-            $0.top.equalTo(mainLabel.snp.bottom).offset(8)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(searchTitle.snp.bottom).offset(8)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.bottom.equalToSuperview()
+        }
+        
+        outingNillView.snp.makeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-(bounds.width * 0.05))
+            $0.height.equalTo(40)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
         }
     }
 }
 
+// MARK: - Extension
 extension AdminOutingViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return outingList.count
@@ -142,6 +156,18 @@ extension AdminOutingViewController: UICollectionViewDelegate {
             }
         }))
         present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension AdminOutingViewController: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.bounds.width * 0.9
+        let height: CGFloat = 72
+        return CGSize(width: width, height: height)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
 }
 
