@@ -30,6 +30,12 @@ class OutingNilView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: UIColor(red: 0.967, green: 0.97, blue: 0.973, alpha: 1))
+        self.layer.cornerRadius = 12
+    }
+    
     private func configureUI() {
         coffeeIcon.image = .image.coffee.image
         
@@ -47,5 +53,4 @@ class OutingNilView: UIView {
             $0.centerY.equalToSuperview()
         }
     }
-
 }

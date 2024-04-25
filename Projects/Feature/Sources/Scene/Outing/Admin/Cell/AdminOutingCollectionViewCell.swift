@@ -20,10 +20,7 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
     static let identifier = "AdminOutingStatusCell"
     weak var delegate: AdminOutingCellDelegate?
     
-    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 48, height: 48)).then {
-        $0.image = UIImage(systemName: "person.crop.circle.fill")
-        $0.tintColor = .color.gomsSecondary.color
-    }
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 48, height: 48))
     
     let nameLabel = UILabel().then {
         $0.textColor = .color.gomsSecondary.color
