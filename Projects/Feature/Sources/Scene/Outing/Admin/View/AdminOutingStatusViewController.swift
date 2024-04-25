@@ -21,7 +21,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     
     private let searchController = UISearchController(searchResultsController: nil)
     
-    private let mainLabel = UILabel().then {
+    private let searchTitle = UILabel().then {
         $0.text = "검색 결과"
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 18, weight: .semibold)
@@ -34,6 +34,10 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
         $0.showsVerticalScrollIndicator = true
         $0.clipsToBounds = true
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    
+    private let outingNillView = OutingNilView().then {
+        $0.isHidden = true
     }
     
     // MARK: - Life Cycel
@@ -85,22 +89,29 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     
     // MARK: - Add View
     override func addView() {
-        [mainLabel, outingListCollectionView].forEach { view.addSubview($0) }
+        [searchTitle, outingListCollectionView, outingNillView].forEach { view.addSubview($0) }
     }
         
     // MARK: - Layout
     override func setLayout() {
-        mainLabel.snp.makeConstraints {
+        searchTitle.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(32)
         }
         
         outingListCollectionView.snp.makeConstraints {
-            $0.top.equalTo(mainLabel.snp.bottom).offset(8)
+            $0.top.equalTo(searchTitle.snp.bottom).offset(8)
             $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-(bounds.width * 0.05)g)
+            $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.bottom.equalToSuperview()
+        }
+        
+        outingNillView.snp.makeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-(bounds.width * 0.05))
+            $0.height.equalTo(40)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
         }
     }
 }
