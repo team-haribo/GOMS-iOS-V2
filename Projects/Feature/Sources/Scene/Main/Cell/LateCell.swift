@@ -17,10 +17,7 @@ final class LateCell: UICollectionViewCell {
     // MARK: - Properties
     static let identifier = "LateCell"
 
-    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 56, height: 56)).then {
-        $0.image = UIImage(systemName: "person.crop.circle.fill")
-        $0.tintColor = .color.gomsTertiary.color
-    }
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 56, height: 56))
     
     let nameLabel = UILabel().then {
         $0.font = .pretendard(size: 16, weight: .semibold)
@@ -28,11 +25,10 @@ final class LateCell: UICollectionViewCell {
         $0.textColor = .color.gomsSecondary.color
     }
     
-    let studentInformationLabel = UILabel().then {
+    let studentInfoLabel = UILabel().then {
         $0.font = .pretendard(size: 12, weight: .regular)
         $0.textAlignment = .center
         $0.textColor = .color.gomsTertiary.color
-        $0.text = "6기 | 스마트 IOT"
     }
     
     // MARK: - Initializer
@@ -49,30 +45,34 @@ final class LateCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Add View
-    private func addView() {
-        [profileImageView, nameLabel, studentInformationLabel].forEach {
-            self.addSubview($0)
-        }
-    }
-    
-    func configureData(with lateData: LatecomerData) {
+    // MARK: - Configure
+    func setupData(with lateData: LatecomerData) {
         if let imageURL = lateData.profileImageURL, let url = URL(string: imageURL) {
             profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
         } else {
-            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+            profileImageView.image = .image.gomsProfile.image
         }
         nameLabel.text = lateData.name
-        studentInformationLabel.text = "\(lateData.grade)기 | \(lateData.major)"
+        if lateData.major == "SW_DEVELOP" {
+            studentInfoLabel.text = "\(lateData.grade)기 | SW개발"
+        } else if lateData.major == "SMART_IOT" {
+            studentInfoLabel.text = "\(lateData.grade)기 | IoT"
+        } else {
+            studentInfoLabel.text = "\(lateData.grade)기 | AI"
+        }
     }
     
-    // MARK: - Configure UI
     private func configureUI() {
         self.backgroundColor = .color.gomsCardBackgroundColor.color
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
         layer.cornerRadius = 8
         layer.masksToBounds = true
+    }
+    
+    // MARK: - Add View
+    private func addView() {
+        [profileImageView, nameLabel, studentInfoLabel].forEach { self.addSubview($0) }
     }
     
     private func setLayout() {
@@ -88,7 +88,7 @@ final class LateCell: UICollectionViewCell {
             $0.centerX.equalToSuperview()
         }
         
-        studentInformationLabel.snp.makeConstraints {
+        studentInfoLabel.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.top.equalTo(nameLabel.snp.bottom)
             $0.centerX.equalToSuperview()

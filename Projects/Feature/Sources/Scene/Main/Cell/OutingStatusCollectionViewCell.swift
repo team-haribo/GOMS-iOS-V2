@@ -17,17 +17,14 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
     static let identifier = "OutingStatusCell"
     
-    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 28, height: 28)).then {
-        $0.image = UIImage(systemName: "person.crop.circle.fill")
-        $0.tintColor = .color.gomsSecondary.color
-    }
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 28, height: 28))
     
     let nameLabel = UILabel().then {
         $0.textColor = .color.gomsSecondary.color
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
-    let studentInformationLabel = UILabel().then {
+    let studentInfoLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
@@ -44,14 +41,20 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureData(with outingData: OutingListData) {
+    func setupData(with outingData: OutingListData) {
         if let imageURL = outingData.profileImageURL, let url = URL(string: imageURL) {
             profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
         } else {
-            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+            profileImageView.image = .image.gomsProfile.image
         }
         nameLabel.text = outingData.name
-        studentInformationLabel.text = "\(outingData.grade)기 | \(outingData.major)"
+        if outingData.major == "SW_DEVELOP" {
+            studentInfoLabel.text = "\(outingData.grade)기 | SW개발"
+        } else if outingData.major == "SMART_IOT" {
+            studentInfoLabel.text = "\(outingData.grade)기 | IoT"
+        } else {
+            studentInfoLabel.text = "\(outingData.grade)기 | AI"
+        }
     }
     
     // MARK: - Configure UI
@@ -62,27 +65,28 @@ final class OutingStatusCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Add View
     private func addView() {
-        [profileImageView, nameLabel, studentInformationLabel].forEach { contentView.addSubview($0) }
+        [profileImageView, nameLabel, studentInfoLabel].forEach { contentView.addSubview($0) }
     }
     
     // MARK: - Layout
     private func setLayout() {
         profileImageView.snp.makeConstraints {
             $0.height.width.equalTo(28)
-            $0.leading.equalToSuperview().inset(-((bounds.width) / 23.4375))
-            $0.centerY.equalToSuperview()
+            $0.leading.equalToSuperview().inset(16)
+            $0.top.bottom.equalToSuperview().inset(11)
         }
         
         nameLabel.snp.makeConstraints {
             $0.height.equalTo(28)
-            $0.leading.equalTo(profileImageView.snp.trailing).offset((bounds.width) / 46.875)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(8)
             $0.centerY.equalToSuperview()
         }
         
-        studentInformationLabel.snp.makeConstraints {
+        studentInfoLabel.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().offset((bounds.width) / 23.4375)
+            $0.trailing.equalToSuperview().inset(16)
+            $0.top.bottom.equalToSuperview().inset(15)
         }
     }
 }
