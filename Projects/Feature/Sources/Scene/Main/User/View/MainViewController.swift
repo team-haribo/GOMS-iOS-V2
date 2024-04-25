@@ -115,15 +115,12 @@ public final class MainViewController: BaseViewController {
         viewModel.getLateList {
             self.viewModel.getOutingList {
                 self.setup()
-                print(self.viewModel.lateListDatas)
-                print(self.viewModel.outingListDatas)
             }
         }
     }
     
     // MARK: - Setting
     func setup() {
-//        self.scrollView.updateContentSize()
         self.numberOfPeopleOutingLabel.text = "\(self.viewModel.outingListDatas.count)명이 외출 중"
         self.setCollectionView()
     }
