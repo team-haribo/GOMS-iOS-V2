@@ -73,11 +73,9 @@ public final class OutingViewModel: BaseViewModel {
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 200:
-                    print("OK")
+                    print("success")
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
-                case 500:
-                    print("SERVER-ERROR")
                 default:
                     print(result)
                 }
@@ -94,15 +92,18 @@ public final class OutingViewModel: BaseViewModel {
         studentCouncilProvider.request(.deleteOuting(authorization: accessToken, accountIdx: accountIdx)) { response in
             switch response {
             case .success(let result):
-                if result.statusCode == 205 {
+                let statusCode = result.statusCode
+                let responseData = result.data
+                switch statusCode {
+                case 205:
                     self.outingListDatas.remove(at: index)
                     completion()
-                } else if result.statusCode == 401 {
+                case 401:
                     self.gomsRefreshToken.tokenReissuance()
-                } else if result.statusCode == 403 {
+                case 403:
                     print("학생회 계정이 아닌데 요청할 경우")
-                } else {
-                    print("SERVER ERROR")
+                default:
+                    print(result)
                 }
             case .failure(let err):
                 print("외출자 삭제 중 오류 발생: \(err.localizedDescription)")
