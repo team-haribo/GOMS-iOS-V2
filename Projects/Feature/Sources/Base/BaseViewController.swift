@@ -24,7 +24,6 @@ public class BaseViewController: UIViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-
         setupKeyboardEvent()
         configureUI()
         addView()
@@ -40,6 +39,17 @@ public class BaseViewController: UIViewController {
     }
     
     func configNavigation() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .clear
+        
+        navigationController?.navigationBar.tintColor = .systemBlue
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
         navigationItem.backBarButtonItem = backBarButtonItem
     }

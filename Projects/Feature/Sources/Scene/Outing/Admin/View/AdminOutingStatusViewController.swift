@@ -51,16 +51,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     
     // MARK: - Setting
     override func configNavigation() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .clear
-        
-        navigationController?.navigationBar.tintColor = .systemBlue
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.prefersLargeTitles = true
-        
         navigationItem.title = "외출 현황"
         navigationItem.searchController = searchController
     }

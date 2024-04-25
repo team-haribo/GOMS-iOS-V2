@@ -53,23 +53,9 @@ public final class MainViewController: BaseViewController {
         $0.addTarget(self, action: #selector(moreOutingStatusButtonTapped), for: .touchUpInside)
     }
     
-    let numberOfPeopleOutingLabel = UILabel().then {
+    let outingCountLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
-        $0.font = UIFont.pretendard(size: 13, weight: .regular)
-        let fullText = $0.text ?? ""
-        let attributedString = NSMutableAttributedString(string: fullText)
-        let range = (fullText as NSString).range(of: "0")
-        attributedString.addAttribute(
-            .foregroundColor,
-            value: UIColor.color.gomsPrimary.color.cgColor,
-            range: range
-        )
-        attributedString.addAttribute(
-            .font,
-            value: UIFont.pretendard(size: 12, weight: .bold),
-            range: range
-        )
-        $0.attributedText = attributedString
+        $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
 
     lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
@@ -121,8 +107,8 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Setting
     func setup() {
-        self.numberOfPeopleOutingLabel.text = "\(self.viewModel.outingListDatas.count)명이 외출 중"
         self.setCollectionView()
+        self.setupCountLable()
     }
     
     private func setCollectionView() {
@@ -136,6 +122,16 @@ public final class MainViewController: BaseViewController {
         latecomerCollectionView.register(LateCell.self, forCellWithReuseIdentifier: LateCell.identifier)
     }
     
+    func setupCountLable() {
+        let attributedString = NSMutableAttributedString(string: "\(self.viewModel.outingListDatas.count)명이 외출 중")
+        let range = (attributedString.string as NSString).range(of: "\(self.viewModel.outingListDatas.count)")
+
+        attributedString.addAttribute(.foregroundColor, value: UIColor.color.gomsPrimary.color, range: range)
+        attributedString.addAttribute(.font, value: UIFont.pretendard(size: 12, weight: .semibold), range: range)
+
+        self.outingCountLabel.attributedText = attributedString
+    }
+    
     // MARK: - Configure UI
     override func configureUI() {
         qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
@@ -144,7 +140,7 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, latecomerLabel, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
+        [profileView, latecomerLabel, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
         [logo, settingButton, content, qrButton].forEach { view.addSubview($0) }
     }
     
@@ -195,7 +191,7 @@ public final class MainViewController: BaseViewController {
             $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
         }
         
-        numberOfPeopleOutingLabel.snp.makeConstraints {
+        outingCountLabel.snp.makeConstraints {
             $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
             $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
             $0.height.equalTo(32)
