@@ -13,36 +13,31 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     // MARK: - Properties
     private let viewModel = MainViewModel()
     
-    let scrollView = UIScrollView()
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .systemPink
+    }
     
     private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
     
-    private let settingButton = UIButton()
+    
+    private let settingButton = UIButton().then {
+        $0.setBackgroundImage(.image.gomsSetting.image, for: .normal)
+    }
     
     private let profileView = MainProfileView()
-    
-    private let latecomerView = UIView()
     
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
-    
-    private let latecomerFlowLayout = UICollectionViewFlowLayout().then {
-        $0.minimumLineSpacing = 0
-        $0.minimumInteritemSpacing = 0
-        $0.itemSize = CGSize(width: 104, height: 136)
-    }
-    
-    private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.latecomerFlowLayout).then {
+
+    private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
         $0.backgroundColor = .clear
     }
-    
-    private let outingStatusView = UIView()
     
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출현황"
@@ -78,19 +73,12 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         )
         $0.attributedText = attributedString
     }
-    
-    private let outingStatusFlowLayout = UICollectionViewFlowLayout().then {
-        $0.scrollDirection = .vertical
-        $0.minimumLineSpacing = 0
-        $0.minimumInteritemSpacing = 0
-        $0.itemSize = CGSize(width: 303, height: 56)
-    }
-    
-    private lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingStatusFlowLayout).then {
-        $0.isScrollEnabled = false
+
+    lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
+        $0.isScrollEnabled = true
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
-        $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -0)
         $0.backgroundColor = .clear
     }
     
@@ -100,7 +88,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     // MARK: - Selectors
     @objc func settingButtonTapped() {
-        // Setting ViewController 이동
+        let profileVC = UserProfileViewController()
+        navigationController?.pushViewController(profileVC, animated: true)
     }
     
     @objc func moreOutingStatusButtonTapped() {
@@ -114,35 +103,40 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     }
 
     // MARK: - Life Cycle
-    public override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        scrollView.updateContentSize()
-        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        latecomerCollectionView.reloadData()
+        outingStatusCollectionView.reloadData()
+        
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.hidesBackButton = true
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.hidesBackButton = true
-        setIconColor()
-        
         viewModel.getLateList {
             self.viewModel.getOutingList {
-                self.setCollectionView()
-                self.numberOfPeopleOutingLabel.text = "\(self.viewModel.outingListDatas.count)명이 외출 중"
+                self.setup()
+                print(self.viewModel.lateListDatas)
+                print(self.viewModel.outingListDatas)
             }
         }
     }
     
-    // MARK: - CollectionView Setting
+    // MARK: - Setting
+    func setup() {
+        self.numberOfPeopleOutingLabel.text = "\(self.viewModel.outingListDatas.count)명이 외출 중"
+        self.setCollectionView()
+    }
+    
     private func setCollectionView() {
         self.outingStatusCollectionView.dataSource = self
         self.outingStatusCollectionView.delegate = self
         
-        outingStatusCollectionView.register(OutingStatusCollectionViewCell.self, forCellWithReuseIdentifier: OutingStatusCollectionViewCell.identifier)
-        
         self.latecomerCollectionView.dataSource = self
         self.latecomerCollectionView.delegate = self
         
+        outingStatusCollectionView.register(OutingStatusCollectionViewCell.self, forCellWithReuseIdentifier: OutingStatusCollectionViewCell.identifier)
         latecomerCollectionView.register(LateCell.self, forCellWithReuseIdentifier: LateCell.identifier)
     }
     
@@ -152,113 +146,87 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         qrButton.clipsToBounds = true
     }
     
-    // MARK: setIconColor
-    private func setIconColor() {
-        if traitCollection.userInterfaceStyle == .dark {
-            logo.image = .image.gomsDarkGrayLogo.image
-            settingButton.setBackgroundImage(.image.gomsDarkGraySettingIcon.image, for: .normal)
-        } else {
-            logo.image = .image.gomsLightGrayLogo.image
-            settingButton.setBackgroundImage(.image.gomsLightGraySettingIcon.image, for: .normal)
-        }
-    }
-    
     // MARK: - Add View
     override func addView() {
-        [latecomerLabel, latecomerCollectionView].forEach { latecomerView.addSubview($0) }
-        [outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { outingStatusView.addSubview($0) }
-        [profileView, latecomerView, outingStatusView].forEach { self.scrollView.addSubview($0) }
+        [profileView, latecomerLabel, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { self.scrollView.addSubview($0) }
         [logo, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalToSuperview().offset((bounds.height) / 16.9166666667)
-            $0.leading.equalToSuperview()
-            $0.height.equalTo((bounds.height) / 14.5)
-            $0.width.equalTo((bounds.height) / 6.3937007874)
+            $0.top.equalToSuperview().inset(64)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.height.equalTo(56)
+            $0.width.equalTo(127)
         }
         
         settingButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset((bounds.height) / 16.24)
-            $0.trailing.equalToSuperview()
-            $0.width.equalTo((bounds.height) / 12.6875)
-            $0.height.equalTo((bounds.height) / 14.5)
+            $0.top.equalToSuperview().inset(80)
+            $0.trailing.equalTo(-(bounds.width * 0.05))
+            $0.width.height.equalTo(24)
         }
         
         scrollView.snp.makeConstraints {
             $0.top.equalTo(logo.snp.bottom)
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview()
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-(bounds.width * 0.05))
+            $0.height.equalTo(10000)
+//            $0.bottom.equalToSuperview()
         }
         
         profileView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
-            $0.top.equalToSuperview().offset((bounds.height) / 50.75)
-            $0.height.equalTo((bounds.height) / 9.6666666667)
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(84)
             $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(24)
         }
 
-        latecomerView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
-            $0.top.equalTo(profileView.snp.bottom).offset((bounds.height) / 25.375)
-            $0.height.equalTo((bounds.height) / 4.6136363636)
-        }
-        
         latecomerLabel.snp.makeConstraints {
-            $0.top.equalToSuperview()
+            $0.top.equalTo(profileView.snp.bottom).offset(24)
             $0.leading.equalToSuperview()
-            $0.height.equalTo((bounds.height) / 25.375)
+            $0.height.equalTo(32)
         }
         
         latecomerCollectionView.snp.makeConstraints {
-            $0.top.equalTo(latecomerLabel.snp.bottom).offset((bounds.height) / 101.5)
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo((bounds.height) / 5.9705882353)
-        }
-        
-        outingStatusView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset((bounds.width) / 18.75)
-            $0.top.equalTo(latecomerView.snp.bottom).offset((bounds.height) / 25.375)
-            $0.height.equalTo((bounds.height) / 2.1256544503)
-            $0.centerX.equalToSuperview()
+            $0.height.equalTo(136)
         }
         
         outingStatusLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
-            $0.height.equalTo((bounds.height) / 25.375)
-            $0.top.equalToSuperview()
+            $0.height.equalTo(32)
+            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
         }
         
         numberOfPeopleOutingLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset((bounds.height) / 135.3333333333)
-            $0.leading.equalTo(outingStatusLabel.snp.trailing).offset((bounds.width) / 46.875)
-            $0.height.equalTo((bounds.height) / 40.6)
+            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+            $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
+            $0.height.equalTo(32)
         }
         
         moreOutingStatusButton.snp.makeConstraints {
+            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(28)
             $0.trailing.equalToSuperview()
-            $0.top.equalToSuperview().inset((bounds.height) / 203)
-            $0.width.equalTo((bounds.height) / 16.9166666667)
-            $0.height.equalTo((bounds.height) / 33.8333333333)
+            $0.width.equalTo(48)
+            $0.height.equalTo(24)
         }
         
         outingStatusCollectionView.snp.makeConstraints {
-            $0.top.equalTo(numberOfPeopleOutingLabel.snp.bottom).offset((bounds.height) / 58)
+            $0.top.equalTo(outingStatusLabel.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo((bounds.height) / 2.32)
         }
         
         qrButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset((bounds.width) / 18.75)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-((bounds.height) / 50.75))
-            $0.height.width.equalTo((bounds.height) / 12.6875)
+            $0.trailing.equalTo(-(bounds.width * 0.1))
+            $0.bottom.equalTo(-(bounds.height * 0.06))
+            $0.height.width.equalTo(64)
         }
     }
 }
 
-// MARK: - MainViewController Extension
+// MARK: - Extension
 extension MainViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == outingStatusCollectionView {
@@ -286,5 +254,29 @@ extension MainViewController: UICollectionViewDataSource {
             return cell
         }
         return UICollectionViewCell()
+    }
+}
+
+extension MainViewController: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == latecomerCollectionView {
+            let width = bounds.width * 0.27
+            let height: CGFloat = 136
+            return CGSize(width: width, height: height)
+        } else if collectionView == outingStatusCollectionView {
+            let width = bounds.width * 0.9
+            let height: CGFloat = 50
+            return CGSize(width: width, height: height)
+        }
+        return CGSize(width: 0, height: 0)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        if collectionView == latecomerCollectionView {
+            return bounds.width * 0.03
+        } else if collectionView == outingStatusCollectionView {
+            return 0
+        }
+        return 0
     }
 }

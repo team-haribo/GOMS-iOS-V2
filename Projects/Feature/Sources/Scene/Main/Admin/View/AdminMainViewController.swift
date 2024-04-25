@@ -49,7 +49,6 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDelega
         $0.titleLabel?.font = .pretendard(size: 12, weight: .regular)
         $0.layer.cornerRadius = 8
         $0.layer.masksToBounds = true
-        $0.addTarget(self, action: #selector(moreOutingStatusButtonTapped), for: .touchUpInside)
     }
     
     private let numberOfPeopleOutingLabel = UILabel().then {
@@ -99,7 +98,6 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDelega
     public override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
-        setDatas()
         setIconColor()
     }
     
@@ -115,12 +113,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDelega
         
         latecomerCollectionView.register(LateCell.self, forCellWithReuseIdentifier: LateCell.identifier)
     }
-    
-    // MARK: - Data Setting
-    private func setDatas() {
-        // Data Setting
-    }
-    
+
     // MARK: - Configure UI
     override func configureUI() {
         qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
@@ -136,7 +129,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDelega
         } else {
             logo.image = .image.gomsLightGrayLogo.image
             studentManagementButton.setBackgroundImage(.image.gomsLightGrayIcon.image, for: .normal)
-            settingButton.setBackgroundImage(.image.gomsLightGraySettingIcon.image, for: .normal)
+            settingButton.setBackgroundImage(.image.gomsSetting.image, for: .normal)
         }
     }
     
@@ -239,23 +232,6 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDelega
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-((bounds.height) / 50.75))
             $0.height.width.equalTo((bounds.height) / 12.6875)
         }
-    }
-    
-    // MARK: Action
-    @objc func managementButtonDidTap() {
-        
-    }
-    
-    @objc func settingButtonDidTap() {
-        
-    }
-    
-    @objc func qrButtonDidTap() {
-        
-    }
-    
-    @objc func moreOutingStatusButtonTapped() {
-        
     }
 }
 
