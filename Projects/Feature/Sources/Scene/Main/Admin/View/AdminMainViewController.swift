@@ -3,6 +3,8 @@ import UIKit
 public class AdminMainViewController: BaseViewController, UICollectionViewDelegate {
     
     // MARK: - Properties
+    private let viewModel = MainViewModel()
+    
     let scrollView = UIScrollView()
     
     private let logo = UIImageView()
@@ -239,9 +241,9 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDelega
 extension AdminMainViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == outingStatusCollectionView {
-            return 10
+            return viewModel.outingListDatas.count
         } else if collectionView == latecomerCollectionView {
-            return 3
+            return viewModel.lateListDatas.count
         }
         return 0
     }
@@ -250,9 +252,15 @@ extension AdminMainViewController: UICollectionViewDataSource {
         if collectionView == outingStatusCollectionView {
             let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
             
+            let outingData = viewModel.outingListDatas[indexPath.row]
+            cell.configureData(with: outingData)
+            
             return cell
         } else if collectionView == latecomerCollectionView {
             let cell = latecomerCollectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as! LateCell
+
+            let lateData = viewModel.lateListDatas[indexPath.row]
+            cell.configureData(with: lateData)
             
             return cell
         }

@@ -8,14 +8,12 @@
 
 import UIKit
 
-public final class MainViewController: BaseViewController, UICollectionViewDelegate {
+public final class MainViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel = MainViewModel()
     
-    let scrollView = UIScrollView().then {
-        $0.backgroundColor = .systemPink
-    }
+    let content = UIView()
     
     private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
     
@@ -125,6 +123,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     // MARK: - Setting
     func setup() {
+//        self.scrollView.updateContentSize()
         self.numberOfPeopleOutingLabel.text = "\(self.viewModel.outingListDatas.count)명이 외출 중"
         self.setCollectionView()
     }
@@ -148,8 +147,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
     
     // MARK: - Add View
     override func addView() {
-        [profileView, latecomerLabel, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { self.scrollView.addSubview($0) }
-        [logo, settingButton, scrollView, qrButton].forEach { view.addSubview($0) }
+        [profileView, latecomerLabel, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, numberOfPeopleOutingLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
+        [logo, settingButton, content, qrButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -167,12 +166,11 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
             $0.width.height.equalTo(24)
         }
         
-        scrollView.snp.makeConstraints {
+        content.snp.makeConstraints {
             $0.top.equalTo(logo.snp.bottom)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-(bounds.width * 0.05))
-            $0.height.equalTo(10000)
-//            $0.bottom.equalToSuperview()
+            $0.bottom.equalToSuperview()
         }
         
         profileView.snp.makeConstraints {
@@ -216,6 +214,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDeleg
         outingStatusCollectionView.snp.makeConstraints {
             $0.top.equalTo(outingStatusLabel.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview()
         }
         
         qrButton.snp.makeConstraints {
