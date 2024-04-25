@@ -27,14 +27,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
         $0.font = .pretendard(size: 18, weight: .semibold)
     }
     
-    private let outingListFlowLayout = UICollectionViewFlowLayout().then {
-        $0.scrollDirection = .vertical
-        $0.minimumLineSpacing = 0
-        $0.minimumInteritemSpacing = 0
-        $0.itemSize = CGSize(width: 335, height: 72)
-    }
-    
-    lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.outingListFlowLayout).then {
+    lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.backgroundColor = .clear
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
@@ -99,18 +92,20 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     override func setLayout() {
         mainLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
-            $0.leading.equalToSuperview().inset(20)
+            $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(32)
         }
         
         outingListCollectionView.snp.makeConstraints {
             $0.top.equalTo(mainLabel.snp.bottom).offset(8)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-(bounds.width * 0.05)g)
             $0.bottom.equalToSuperview()
         }
     }
 }
 
+// MARK: - Extension
 extension AdminOutingViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return outingList.count
@@ -142,6 +137,18 @@ extension AdminOutingViewController: UICollectionViewDelegate {
             }
         }))
         present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension AdminOutingViewController: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.bounds.width * 0.9
+        let height: CGFloat = 72
+        return CGSize(width: width, height: height)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
 }
 

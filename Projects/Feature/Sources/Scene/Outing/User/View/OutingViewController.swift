@@ -42,7 +42,8 @@ public final class OutingViewController: BaseViewController {
     
     // MARK: - Selectors
     @objc func qrButtonTapped() {
-        // QR 화면 이동
+        let qrCodeVC = QRCodeViewController()
+        self.navigationController?.pushViewController(qrCodeVC, animated: true)
     }
 
     // MARK: - Life Cycel

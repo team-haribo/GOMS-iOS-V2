@@ -27,7 +27,7 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
-    let studentInformationLabel = UILabel().then {
+    let studentInfoLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
@@ -42,10 +42,10 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
     }
     
     private let bottomView = UIView().then {
-        $0.setDynamicBackgroundColor(darkModeColor: .white.withAlphaComponent(0.15), lightModeColor: .black.withAlphaComponent(0.15))
+        $0.setDynamicBackgroundColor(darkModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.15), lightModeColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.05))
     }
     
-    private let deleteButton = UIButton().then {
+    private lazy var deleteButton = UIButton().then {
         $0.setImage(.image.gomsDeleteIcon.image, for: .normal)
         $0.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
@@ -73,7 +73,7 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
             profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
         }
         nameLabel.text = outingData.name
-        studentInformationLabel.text = "\(outingData.grade)기 | \(outingData.major)"
+        studentInfoLabel.text = "\(outingData.grade)기 | \(outingData.major)"
         outingTime.text = "\(outingData.outingTime)에 외출"
     }
     
@@ -85,7 +85,7 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Add View
     private func addView() {
-        [profileImageView, nameLabel, studentInformationLabel, divLine, outingTime, deleteButton, bottomView].forEach { contentView.addSubview($0)}
+        [profileImageView, nameLabel, studentInfoLabel, divLine, outingTime, deleteButton, bottomView].forEach { contentView.addSubview($0)}
     }
     
     // MARK: - Layout
@@ -103,7 +103,7 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
             $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
         }
         
-        studentInformationLabel.snp.makeConstraints {
+        studentInfoLabel.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.bottom.equalToSuperview().inset(12)
             $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
@@ -113,7 +113,7 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
             $0.height.equalTo(8)
             $0.width.equalTo(1)
             $0.bottom.equalToSuperview().inset(18)
-            $0.leading.equalTo(studentInformationLabel.snp.trailing).offset(4)
+            $0.leading.equalTo(studentInfoLabel.snp.trailing).offset(4)
         }
         
         outingTime.snp.makeConstraints {
