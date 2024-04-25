@@ -81,6 +81,13 @@ public final class OutingViewController: BaseViewController {
     }
     
     func setup() {
+        if outingList.isEmpty {
+            searchTitle.isHidden = true
+            outingNillView.isHidden = false
+        } else {
+            searchTitle.isHidden = false
+            outingNillView.isHidden = true
+        }
         setupSearchBar()
         setupCollectionView()
     }

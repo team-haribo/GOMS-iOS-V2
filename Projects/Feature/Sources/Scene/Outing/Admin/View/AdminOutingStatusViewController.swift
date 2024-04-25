@@ -66,6 +66,14 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     }
     
     func setup() {
+        if outingList.isEmpty {
+            searchTitle.isHidden = true
+            outingNillView.isHidden = false
+        } else {
+            searchTitle.isHidden = false
+            outingNillView.isHidden = true
+        }
+        
         setupCollectionView()
         setupSearchBar()
     }
