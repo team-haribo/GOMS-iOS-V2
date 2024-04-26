@@ -66,27 +66,15 @@ public final class PasswordSettingViewController: BaseViewController {
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
-        textFieldStackView.snp.remakeConstraints {
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.22)
-        }
-        
         signUpButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.bottom.equalTo(-bounds.height * 0.41)
+            $0.bottom.equalTo(-bounds.height * 0.42)
             $0.height.equalTo(48)
         }
     }
 
     @objc override func keyboardWillHide(_ sender: Notification) {
-        textFieldStackView.snp.remakeConstraints {
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.35)
-        }
-        
         signUpButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
@@ -111,17 +99,17 @@ public final class PasswordSettingViewController: BaseViewController {
     // MARK: - Layout
     override func setLayout() {
         passwordTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         checkPasswordTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         textFieldStackView.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.35)
+            $0.top.equalTo(bounds.height * 0.21)
         }
         
         conditionsLabel.snp.makeConstraints {
@@ -151,7 +139,7 @@ extension PasswordSettingViewController: UITextFieldDelegate {
         return false
     }
     
-    public func textFieldDidEndEditing(_ textField: UITextField) {
+    public func textFieldDidChange(_ textField: UITextField) {
         if textField == passwordTextField {
             viewModel.setupPassword(password: textField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         }
