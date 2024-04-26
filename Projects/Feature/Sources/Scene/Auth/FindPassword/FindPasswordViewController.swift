@@ -35,7 +35,7 @@ public final class FindPasswordViewController: BaseViewController {
     @objc func authCodeButtonTapped() {
         viewModel.sendAuthNumber { success in
             if success {
-                let authCodeVC = AuthNumberViewController(viewModel: self.viewModel)
+                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel)
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
             }
         }
