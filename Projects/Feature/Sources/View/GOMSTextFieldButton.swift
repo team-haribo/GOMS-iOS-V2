@@ -26,8 +26,6 @@ public class GOMSTextFieldButton: UIButton {
         titleLabel?.font = .pretendard(size: 16, weight: .regular)
         layer.masksToBounds = true
         layer.cornerRadius = 12
-        layer.borderWidth = 1
-        layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.15).cgColor
         contentHorizontalAlignment = .leading
         contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }

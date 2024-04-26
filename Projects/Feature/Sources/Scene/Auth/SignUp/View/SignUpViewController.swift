@@ -38,8 +38,8 @@ public final class SignUpViewController: BaseViewController {
         $0.addTarget(self, action: #selector(departmentButtonTapped), for: .touchUpInside)
     }
     
-    private lazy var authNumberButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기").then {
-        $0.addTarget(self, action: #selector(authNumberButtonTapped), for: .touchUpInside)
+    private lazy var authCodeButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기").then {
+        $0.addTarget(self, action: #selector(authCodeButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Life Cycel
@@ -90,11 +90,11 @@ public final class SignUpViewController: BaseViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    @objc func authNumberButtonTapped() {
+    @objc func authCodeButtonTapped() {
         viewModel.sendAuthNumber { success in
             if success {
-                let authNumberVC = AuthNumberViewController(viewModel: self.viewModel)
-                self.navigationController?.pushViewController(authNumberVC, animated: true)
+                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel)
+                self.navigationController?.pushViewController(authCodeVC, animated: true)
             }
         }
     }
@@ -109,22 +109,20 @@ public final class SignUpViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         emailTextField.addSubview(defaultDomain)
-        
         [nameTextField, emailTextField, genderTextField, majorTextField].forEach {
             self.textFieldStackView.addArrangedSubview($0)
         }
-        
-        [textFieldStackView, authNumberButton].forEach { view.addSubview($0) }
+        [textFieldStackView, authCodeButton].forEach { view.addSubview($0) }
     }
 
     // MARK: - Layout
     override func setLayout() {
         nameTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         emailTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         defaultDomain.snp.makeConstraints {
@@ -134,20 +132,20 @@ public final class SignUpViewController: BaseViewController {
         }
         
         genderTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         majorTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         textFieldStackView.snp.makeConstraints {
-            $0.top.equalTo(bounds.height * 0.27)
+            $0.top.equalTo(bounds.height * 0.21)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
         }
         
-        authNumberButton.snp.makeConstraints {
+        authCodeButton.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.16)
@@ -165,13 +163,17 @@ extension SignUpViewController: UITextFieldDelegate {
         }
     }
     
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.resignFirstResponder()
+    }
+    
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let text = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         
         if !text.isEmpty {
-            authNumberButton.isEnabled = true
+            authCodeButton.isEnabled = true
         } else {
-            authNumberButton.isEnabled = false
+            authCodeButton.isEnabled = false
         }
         return true
     }

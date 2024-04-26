@@ -1,5 +1,5 @@
 //
-//  NewPasswordViewController.swift
+//  FindPasswordViewController.swift
 //  Feature
 //
 //  Created by 새미 on 3/28/24.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class NewPasswordAuthViewController: BaseViewController {
+public final class FindPasswordViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel = AuthViewModel()
@@ -21,7 +21,9 @@ public final class NewPasswordAuthViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    private let authButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기")
+    private lazy var authCodeButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기").then {
+        $0.addTarget(self, action: #selector(authCodeButtonTapped), for: .touchUpInside)
+    }
     
     // MARK:  - Life Cycel
     public override func viewDidLoad() {
@@ -30,40 +32,26 @@ public final class NewPasswordAuthViewController: BaseViewController {
     }
     
     // MARK: - Selectors
-    @objc func authButtonTapped() {
+    @objc func authCodeButtonTapped() {
         viewModel.sendAuthNumber { success in
             if success {
-                let authCodeVC = AuthNumberViewController(viewModel: self.viewModel)
+                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel)
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
             }
         }
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
-        emailTextField.snp.remakeConstraints {
-            $0.top.equalTo(bounds.height * 0.31)
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.height.equalTo(64)
-        }
-        
-        authButton.snp.remakeConstraints {
+        authCodeButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.height.equalTo(48)
-            $0.bottom.equalTo(-bounds.height * 0.41)
+            $0.bottom.equalTo(-bounds.height * 0.43)
         }
     }
 
     @objc override func keyboardWillHide(_ sender: Notification) {
-        emailTextField.snp.remakeConstraints{
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.height.equalTo(64)
-            $0.top.equalTo(bounds.height * 0.43)
-        }
-        
-        authButton.snp.remakeConstraints {
+        authCodeButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.height.equalTo(48)
@@ -75,13 +63,13 @@ public final class NewPasswordAuthViewController: BaseViewController {
     override func configNavigation() {
         super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "비밀번호 재설정"
+        navigationItem.title = "비밀번호 찾기"
     }
     
     // MARK: - Add View
     override func addView() {
         emailTextField.addSubview(defaultDomain)
-        [emailTextField, authButton].forEach { view.addSubview($0) }
+        [emailTextField, authCodeButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -95,11 +83,11 @@ public final class NewPasswordAuthViewController: BaseViewController {
         emailTextField.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.height.equalTo(64)
-            $0.top.equalTo(bounds.height * 0.43)
+            $0.height.equalTo(56)
+            $0.top.equalTo(bounds.height * 0.21)
         }
         
-        authButton.snp.makeConstraints {
+        authCodeButton.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.height.equalTo(48)
@@ -108,7 +96,7 @@ public final class NewPasswordAuthViewController: BaseViewController {
     }
 }
 
-extension NewPasswordAuthViewController: UITextFieldDelegate {
+extension FindPasswordViewController: UITextFieldDelegate {
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == emailTextField {
             viewModel.setupEmail(email: emailTextField.text ?? "")

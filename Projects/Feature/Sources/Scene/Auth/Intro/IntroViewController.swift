@@ -16,7 +16,7 @@ public final class IntroViewController: BaseViewController {
     private let mainLable = UILabel().then {
         let range = NSRange(location: 0, length: 6)
         $0.text = "수요 외출제 관리 서비스"
-        $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
+        $0.textColor = .color.gomsTextDefault.color
         $0.setTextColor(.color.gomsPrimary.color, range: range)
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
@@ -24,14 +24,14 @@ public final class IntroViewController: BaseViewController {
     private let descriptionLabel = UILabel().then {
         $0.text = "앱으로 간편하게 GSM의\n수요 외출제를 이용해 보세요!"
         $0.numberOfLines = 2
-        $0.setLineSpacing(spacing: 7)
+        $0.setLineSpacing(spacing: 8)
         $0.textAlignment = .center
         $0.textColor = .color.gomsTertiary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
     
-    private lazy var loginButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "로그인").then {
-        $0.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+    private lazy var signInButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "로그인").then {
+        $0.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
     }
     
     private let divLineView1 = UIView().then {
@@ -62,7 +62,7 @@ public final class IntroViewController: BaseViewController {
     }
     
     // MARK: - Seletors
-    @objc func loginButtonTapped() {
+    @objc func signInButtonTapped() {
         let signInVC = SignInViewController()
         navigationController?.pushViewController(signInVC, animated: true)
     }
@@ -74,7 +74,7 @@ public final class IntroViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [gomsLogoImage, mainLable, descriptionLabel, loginButton, divLineView1, firstText, divLineView2, signUpButton].forEach { view.addSubview($0) }
+        [gomsLogoImage, mainLable, descriptionLabel, signInButton, divLineView1, firstText, divLineView2, signUpButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -97,36 +97,36 @@ public final class IntroViewController: BaseViewController {
             $0.top.equalTo(mainLable.snp.bottom).offset(8)
         }
         
-        loginButton.snp.makeConstraints {
+        signInButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(136)
+            $0.bottom.equalTo(firstText.snp.top).offset(-18)
         }
         
         firstText.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(loginButton.snp.bottom).offset(18)
+            $0.bottom.equalTo(signUpButton.snp.top).offset(-2)
         }
         
         divLineView1.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
-            $0.top.equalTo(loginButton.snp.bottom).offset(27.5)
+            $0.bottom.equalTo(signUpButton.snp.top).offset(-11.5)
             $0.trailing.equalTo(firstText.snp.leading).offset(-4)
             $0.height.equalTo(1)
         }
         
         divLineView2.snp.makeConstraints {
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(loginButton.snp.bottom).offset(27.5)
+            $0.bottom.equalTo(signUpButton.snp.top).offset(-11.5)
             $0.height.equalTo(1)
             $0.leading.equalTo(firstText.snp.trailing).offset(4)
         }
         
         signUpButton.snp.makeConstraints {
             $0.height.equalTo(48)
-            $0.top.equalTo(firstText.snp.bottom).offset(2)
+            $0.bottom.equalTo(-bounds.height * 0.06)
             $0.centerX.equalTo(bounds.width * 0.5)
         }
     }

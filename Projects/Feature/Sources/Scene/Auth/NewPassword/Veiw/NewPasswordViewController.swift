@@ -59,27 +59,15 @@ public final class NewPasswordViewController: BaseViewController {
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
-        textFieldStackView.snp.remakeConstraints {
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.22)
-        }
-        
         doneButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.bottom.equalTo(-bounds.height * 0.41)
             $0.height.equalTo(48)
+            $0.bottom.equalTo(-bounds.height * 0.43)
         }
     }
 
     @objc override func keyboardWillHide(_ sender: Notification) {
-        textFieldStackView.snp.remakeConstraints {
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.35)
-        }
-        
         doneButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
@@ -104,17 +92,17 @@ public final class NewPasswordViewController: BaseViewController {
     // MARK: - Layout
     override func setLayout() {
         passwordTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         checkPasswordTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         textFieldStackView.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.35)
+            $0.top.equalTo(bounds.height * 0.21)
         }
         
         conditionsLabel.snp.makeConstraints {

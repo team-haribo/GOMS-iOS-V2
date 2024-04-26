@@ -11,3 +11,4 @@ import Foundation
 public struct BaseURL {
     public static let baseURL = Bundle.main.object(forInfoDictionaryKey: "SERVER_HOST") as! String
 }
+
