@@ -67,7 +67,6 @@ public final class SignInViewController: BaseViewController {
     @objc func signInButtonTapped() {
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupPassword(password: passwordTextField.text ?? "")
-        
         viewModel.signIn { success in
             if success {
                 let mainVC = MainViewController()
@@ -77,32 +76,11 @@ public final class SignInViewController: BaseViewController {
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
-        textFieldStackView.snp.remakeConstraints {
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.23)
-        }
-        
         signInButton.snp.remakeConstraints {
             $0.height.equalTo(48)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.bottom.equalTo(-bounds.height * 0.41)
-        }
-    }
-
-    @objc override func keyboardWillHide(_ sender: Notification) {
-        textFieldStackView.snp.remakeConstraints {
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.35)
-        }
-        
-        signInButton.snp.remakeConstraints {
-            $0.height.equalTo(48)
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.bottom.equalTo(-bounds.height * 0.16)
+            $0.bottom.equalTo(-bounds.height * 0.43)
         }
     }
     
@@ -129,17 +107,17 @@ public final class SignInViewController: BaseViewController {
         }
         
         emailTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         passwordTextField.snp.makeConstraints {
-            $0.height.equalTo(64)
+            $0.height.equalTo(56)
         }
         
         textFieldStackView.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.35)
+            $0.top.equalTo(bounds.height * 0.2)
         }
         
         findPasswordLabel.snp.makeConstraints {
