@@ -60,7 +60,7 @@ public final class SignInViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func findPasswordButtonTapped() {
-        let findPasswordVC = NewPasswordAuthViewController()
+        let findPasswordVC = FindPasswordViewController()
         navigationController?.pushViewController(findPasswordVC, animated: true)
     }
     
@@ -81,6 +81,15 @@ public final class SignInViewController: BaseViewController {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.43)
+        }
+    }
+    
+    @objc override func keyboardWillHide(_ sender: Notification) {
+        signInButton.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.bottom.equalTo(-bounds.height * 0.16)
         }
     }
     
