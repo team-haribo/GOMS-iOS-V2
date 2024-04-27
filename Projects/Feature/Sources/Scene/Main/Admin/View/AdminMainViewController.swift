@@ -9,13 +9,8 @@ public class AdminMainViewController: BaseViewController {
     
     private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
     
-    private lazy var settingButton = UIButton().then {
-        $0.setBackgroundImage(.image.gomsSetting.image, for: .normal)
-        $0.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
-    }
-    
-    private lazy var studentCouncilButton = UIButton().then {
-        $0.setBackgroundImage(.image.studentCouncil.image, for: .normal)
+    private lazy var adminMenuButton = UIButton().then {
+        $0.setBackgroundImage(.image.adminMenu.image, for: .normal)
     }
     
     private let profileView = MainProfileView()
@@ -113,12 +108,7 @@ public class AdminMainViewController: BaseViewController {
         self.outingCountLabel.attributedText = attributedString
     }
     
-    // MARK: - Selectors
-    @objc func settingButtonTapped() {
-        let profileVC = UserProfileViewController()
-        navigationController?.pushViewController(profileVC, animated: true)
-    }
-    
+    // MARK: - Selector
     @objc func moreOutingStatusButtonTapped() {
         let outingVC = OutingViewController()
         navigationController?.pushViewController(outingVC, animated: true)
@@ -127,10 +117,6 @@ public class AdminMainViewController: BaseViewController {
     @objc func qrButtonTapped() {
         let qrCodeVC = QRCodeViewController()
         self.navigationController?.pushViewController(qrCodeVC, animated: true)
-    }
-    
-    @objc func studentCouncilButtonTapped() {
-        // 학생 관리 페이지 이동
     }
 
     // MARK: - Configure UI
@@ -142,7 +128,7 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         [profileView, latecomerLabel, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
-        [logo, studentCouncilButton, settingButton, content, qrButton].forEach { view.addSubview($0) }
+        [logo, adminMenuButton, content, qrButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -150,21 +136,15 @@ public class AdminMainViewController: BaseViewController {
         logo.snp.makeConstraints {
             $0.top.equalToSuperview().inset(64)
             $0.leading.equalTo(bounds.width * 0.05)
-            $0.height.equalTo(56)
-            $0.width.equalTo(127)
+            $0.height.equalTo(24)
+            $0.width.equalTo(87)
         }
         
-        studentCouncilButton.snp.makeConstraints {
-            $0.trailing.equalTo(settingButton.snp.leading).offset(-40)
-            $0.height.equalTo(28)
-            $0.width.equalTo(34)
-            $0.top.equalToSuperview().inset(80)
-        }
-        
-        settingButton.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(80)
-            $0.trailing.equalTo(-(bounds.width * 0.05))
-            $0.width.height.equalTo(24)
+        adminMenuButton.snp.makeConstraints {
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalToSuperview().inset(67)
+            $0.height.equalTo(18)
+            $0.width.equalTo(20)
         }
         
         content.snp.makeConstraints {
