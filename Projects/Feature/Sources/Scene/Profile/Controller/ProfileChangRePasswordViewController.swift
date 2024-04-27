@@ -67,25 +67,25 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         navigationTitle.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.width.equalTo(183)
-            $0.top.equalToSuperview().inset(bounds.height * 0.09) // 9% 상대적 위치
-            $0.leading.equalToSuperview().inset(bounds.width * 0.05) // 5% 상대적 위치
+            $0.top.equalToSuperview().inset(bounds.height * 0.09)
+            $0.leading.equalToSuperview().inset(bounds.width * 0.05)
         }
         
         passwordTextField.snp.makeConstraints {
             $0.height.equalTo(64)
             $0.width.equalTo(335)
             
-            textFieldBottomConstraint = $0.bottom.equalToSuperview().inset(bounds.height * 0.47).constraint // 21% 상대적 위치
-            $0.leading.equalToSuperview().inset(bounds.width * 0.05) // 5% 상대적 위치
-            $0.trailing.equalToSuperview().inset(bounds.width * 0.05) // 5% 상대적 위치
+            textFieldBottomConstraint = $0.bottom.equalToSuperview().inset(bounds.height * 0.47).constraint
+            $0.leading.equalToSuperview().inset(bounds.width * 0.05)
+            $0.trailing.equalToSuperview().inset(bounds.width * 0.05)
         }
         
         doneButton.snp.makeConstraints {
-            doneButtonBottomConstraint = $0.bottom.equalToSuperview().inset(view.bounds.height * 0.17).constraint // 5.7% 상대적 위치
+            doneButtonBottomConstraint = $0.bottom.equalToSuperview().inset(bounds.height * 0.19).constraint
             $0.height.equalTo(48)
             $0.width.equalTo(335)
-            $0.leading.equalToSuperview().inset(bounds.width * 0.05) // 5% 상대적 위치
-            $0.trailing.equalToSuperview().inset(bounds.width * 0.05) // 5% 상대적 위치
+            $0.leading.equalToSuperview().inset(bounds.width * 0.05)
+            $0.trailing.equalToSuperview().inset(bounds.width * 0.05)
         }
     }
     
@@ -109,7 +109,7 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
     override func keyboardWillHide(_ notification: Notification) {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
-            self.doneButtonBottomConstraint?.update(inset: self.bounds.height * 0.057)
+            self.doneButtonBottomConstraint?.update(inset: self.bounds.height * 0.19)
             self.textFieldBottomConstraint?.update(inset: self.bounds.height * 0.45)
             
             self.view.layoutIfNeeded()
