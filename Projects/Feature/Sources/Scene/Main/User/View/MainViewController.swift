@@ -149,8 +149,8 @@ public final class MainViewController: BaseViewController {
         logo.snp.makeConstraints {
             $0.top.equalToSuperview().inset(64)
             $0.leading.equalTo(bounds.width * 0.05)
-            $0.height.equalTo(56)
-            $0.width.equalTo(127)
+            $0.height.equalTo(24)
+            $0.width.equalTo(87)
         }
         
         settingButton.snp.makeConstraints {
