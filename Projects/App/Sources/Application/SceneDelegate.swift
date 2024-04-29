@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else if AdminisSwitchOn == true {
             window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
         } else {
-            window?.rootViewController =  UINavigationController(rootViewController: AdminMainViewController())
+            window?.rootViewController =  UINavigationController(rootViewController: AdminMenuViewController())
         }
         
         window?.makeKeyAndVisible()

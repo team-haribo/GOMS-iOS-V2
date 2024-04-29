@@ -11,6 +11,7 @@ public class AdminMainViewController: BaseViewController {
     
     private lazy var adminMenuButton = UIButton().then {
         $0.setBackgroundImage(.image.adminMenu.image, for: .normal)
+        $0.addTarget(self, action: #selector(adminMenuButtonTapped), for: .touchUpInside)
     }
     
     private let profileView = MainProfileView()
@@ -117,6 +118,12 @@ public class AdminMainViewController: BaseViewController {
     @objc func qrButtonTapped() {
         let qrCodeVC = QRCodeViewController()
         self.navigationController?.pushViewController(qrCodeVC, animated: true)
+    }
+    
+    @objc func adminMenuButtonTapped() {
+        let adminMenuVC = AdminMenuViewController()
+        self.navigationController?.pushViewController(adminMenuVC, animated: true)
+        print("admin")
     }
 
     // MARK: - Configure UI
