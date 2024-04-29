@@ -11,6 +11,7 @@ import Moya
 
 public enum AccountServices {
     case newPassword(param: NewPasswordRequest, authorization: String)
+    case changPassword(param: ChangPasswordRequest, authorization: String)
 }
 
 extension AccountServices: TargetType {
@@ -22,12 +23,14 @@ extension AccountServices: TargetType {
         switch self {
         case .newPassword:
             return "/account/new-password"
+        case .changPassword:
+            return "/account/change-password"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-        case .newPassword:
+        case .newPassword,.changPassword:
             return .patch
         }
     }
@@ -40,12 +43,14 @@ extension AccountServices: TargetType {
         switch self {
         case .newPassword(let param, _):
             return .requestJSONEncodable(param)
+        case .changPassword(let param, _):
+            return .requestJSONEncodable(param)
         }
     }
     
     public var headers: [String : String]? {
         switch self {
-        case .newPassword(_, let authorization):
+        case .newPassword(_, let authorization), .changPassword(_, let authorization):
             return ["Content-Type": "application/json", "Authorization": authorization]
         default:
             return ["Content-Type": "application/json"]
