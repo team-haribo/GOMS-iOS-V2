@@ -12,8 +12,8 @@ public struct ChangPasswordRequest: Codable {
     var password: String
     var newPassword: String
     
-    public init(email: String, newPassword: String) {
-        self.password = email
+    public init(password: String, newPassword: String) {
+        self.password = password
         self.newPassword = newPassword
     }
 }

@@ -23,13 +23,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("\(isSwitchOn)|\(AdminisSwitchOn)")
         
         
-        if isSwitchOn == true {
-            window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-        } else if AdminisSwitchOn == true {
-            window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
-        } else {
-            window?.rootViewController =  UINavigationController(rootViewController: AdminMenuViewController())
-        }
+//        if isSwitchOn == true {
+//            window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+//        } else if AdminisSwitchOn == true {
+//            window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
+//        } else {
+//            window?.rootViewController =  UINavigationController(rootViewController: AdminMenuViewController())
+//        }
+        window?.rootViewController =  UINavigationController(rootViewController: SignInViewController())
         
         window?.makeKeyAndVisible()
     }

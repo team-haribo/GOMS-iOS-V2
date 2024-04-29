@@ -10,10 +10,11 @@ import UIKit
 import Combine
 import Moya
 import SnapKit
+import Service
 
 public class ProfileChangRePasswordViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    private let viewModel = AuthViewModel()
+    private let viewModel = ProfileViewModel()
     
     let navigationTitle = UILabel().then {
         $0.text = "비밀번호 재설정"
@@ -31,17 +32,13 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
     private var textFieldBottomConstraint: Constraint?
     
     @objc func doneButtonTapped() {
-        viewModel.newPassword {  success in
-            if success {
-                let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
-                
-                let check = UIAlertAction(title: "확인", style: .default) { action in
-                    let loginVC = SignInViewController()
-                    self.navigationController?.pushViewController(loginVC, animated: true)
-                }
-                alert.addAction(check)
-                self.present(alert, animated: true)
-            }
+        let defaults = UserDefaults.standard
+        let localPassword = defaults.string(forKey: "localPassword")
+        if localPassword == passwordTextField.text {
+            let newPasswordVC = NewPasswordViewController()
+            navigationController?.pushViewController(newPasswordVC, animated: true)
+        } else {
+            print("비밀번호가 틀렸습니다.")
         }
     }
     

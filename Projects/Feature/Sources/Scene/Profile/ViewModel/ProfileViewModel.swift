@@ -9,10 +9,22 @@ final class ProfileViewModel: ObservableObject {
     @Published var profileInfo: ProfileResponse?
     
     let provider = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
+    let providerserve = MoyaProvider<AccountServices>(plugins: [NetworkLoggerPlugin()])
     let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
     lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
     private lazy var refreshToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.refreshToken) ?? "")
+    
+    private var password: String = ""
+    private var rePassword: String = ""
+    
+    func setupPassword(password: String) {
+        self.password = password
+    }
+    
+    func setupRePassword(rePassword: String) {
+        self.rePassword = rePassword
+    }
     
     func loadProfileInfo() {
         provider.request(.getProfile(authorization: accessToken)) { result in

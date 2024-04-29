@@ -42,7 +42,11 @@ let dependencies = Dependencies(
         .remote(
             url: "https://github.com/yannickl/QRCodeReader.swift.git",
             requirement: .upToNextMajor(from: "10.1.0")
-        )
+        ),
+        .remote(
+                    url: "https://github.com/firebase/firebase-ios-sdk.git",
+                    requirement: .exact("10.4.0")
+                )
     ]),
     platforms: [.iOS]
 )
