@@ -20,6 +20,7 @@ let project = Project.makeModule(
         .external(name: "Kingfisher"),
         .external(name: "GAuthSignin"),
         .external(name: "QRCode"),
-        .external(name: "QRCodeReader")
+        .external(name: "QRCodeReader"),
+        .external(name: "FirebaseMessaging")
     ]
 )

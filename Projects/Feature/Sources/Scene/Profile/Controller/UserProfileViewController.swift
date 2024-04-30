@@ -258,7 +258,8 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     @objc func passwordResetPage() {
-        #warning("비밀번호 재설정 뷰 연결")
+        let changPassword = ProfileChangRePasswordViewController()
+        self.navigationController?.pushViewController(changPassword, animated: true)
     }
     
     func performLogout() {

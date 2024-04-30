@@ -22,7 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let AdminisSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
         print("\(isSwitchOn)|\(AdminisSwitchOn)")
         
-        
         if isSwitchOn == true {
             window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
         } else if AdminisSwitchOn == true {

@@ -69,6 +69,10 @@ public final class SignInViewController: BaseViewController {
         viewModel.setupPassword(password: passwordTextField.text ?? "")
         viewModel.signIn { success in
             if success {
+                UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPassword")
+                let defaults = UserDefaults.standard
+                let localPassword = defaults.string(forKey: "localPassword")
+                print(localPassword)
                 let mainVC = MainViewController()
                 self.navigationController?.pushViewController(mainVC, animated: true)
             }
