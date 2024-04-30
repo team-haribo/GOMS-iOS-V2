@@ -11,7 +11,7 @@ import UIKit
 public final class FindPasswordViewController: BaseViewController {
     
     // MARK: - Properties
-    private let viewModel = AuthViewModel()
+    private let viewModel = SignUpViewModel()
     
     private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이메일")
     
@@ -33,7 +33,7 @@ public final class FindPasswordViewController: BaseViewController {
     
     // MARK: - Selectors
     @objc func authCodeButtonTapped() {
-        viewModel.sendAuthNumber { success in
+        viewModel.sendAuthCode { success in
             if success {
                 let authCodeVC = AuthCodeViewController(viewModel: self.viewModel)
                 self.navigationController?.pushViewController(authCodeVC, animated: true)

@@ -1,5 +1,5 @@
 //
-//  AuthViewModel.swift
+//  SignUpViewModel.swift
 //  Feature
 //
 //  Created by 새미 on 4/21/24.
@@ -9,21 +9,17 @@
 import Moya
 import Service
 
-public final class AuthViewModel {
+public final class SignUpViewModel: BaseViewModel {
     
     private let authProvider = MoyaProvider<AuthServices>()
     private let accountProvider = MoyaProvider<AccountServices>()
-    
-    let keyChain = KeyChain()
-    let gomsRefreshToken = GOMSRefreshToken.shared
-    lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
     
     private var name: String = ""
     private var email: String = ""
     private var gender: String = ""
     private var major: String = ""
     private var password: String = ""
-    private var authnNumber: String = ""
+    private var authCode: String = ""
     
     func setupName(name: String) {
         self.name = name
@@ -41,17 +37,17 @@ public final class AuthViewModel {
         self.major = major
     }
     
-    func setupAuthNumber(authNumber: String) {
-        self.authnNumber += authNumber
+    func setupAuthCode(authCode: String) {
+        self.authCode = authCode
     }
     
     func setupPassword(password: String, checkPassword: String) {
         guard password == checkPassword else { return }
     }
     
-    func sendAuthNumber(completion: @escaping (Bool) -> Void) {
-        let param = SendAuthNumberRequest.init(email: email)
-        authProvider.request(.sendAuthNumber(param: param)) { response in
+    func sendAuthCode(completion: @escaping (Bool) -> Void) {
+        let param  = SendAuthCodeRequest(email: email)
+        authProvider.request(.sendAuthCode(param: param)) { response in
             switch response {
             case .success(let result):
                 do {
@@ -60,15 +56,11 @@ public final class AuthViewModel {
                     case 204:
                         print("No Content")
                         completion(true)
-                    case 404:
-                        print("GOMS 회원이 아닌 사용자가 이메일 인증 요청을 한 경우")
-                        completion(false)
                     case 429:
                         print("이메일 요청이 5번을 초과할 경우")
                         completion(false)
-                    case 500:
-                        print("SERVER ERROR")
                     default:
+                        print(self.email)
                         print(result)
                         completion(false)
                     }
@@ -81,7 +73,7 @@ public final class AuthViewModel {
     }
     
     func verifyAuthNumber(completion: @escaping (Bool) -> Void) {
-        authProvider.request(.verifyAuthNumber(emaiil: email, authCode: authnNumber)) { response in
+        authProvider.request(.verifyAuthNumber(emaiil: email, authCode: authCode)) { response in
             switch response {
             case .success(let result):
                 do {
@@ -163,4 +155,3 @@ public final class AuthViewModel {
         }
     }
 }
-

@@ -11,7 +11,7 @@ import UIKit
 public final class SignUpViewController: BaseViewController {
 
     // MARK: - Properties
-    private let viewModel = AuthViewModel()
+    private let viewModel = SignUpViewModel()
     
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 32
@@ -22,7 +22,7 @@ public final class SignUpViewController: BaseViewController {
     
     let nameTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이름")
     
-    let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 64), placeholder: "이메일")
+    private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이메일")
     
     private let defaultDomain = UILabel().then {
         $0.text = "@gsm.hs.kr"
@@ -91,7 +91,8 @@ public final class SignUpViewController: BaseViewController {
     }
     
     @objc func authCodeButtonTapped() {
-        viewModel.sendAuthNumber { success in
+        viewModel.setupEmail(email: emailTextField.text ?? "")
+        viewModel.sendAuthCode { success in
             if success {
                 let authCodeVC = AuthCodeViewController(viewModel: self.viewModel)
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
@@ -154,27 +155,13 @@ public final class SignUpViewController: BaseViewController {
     }
 }
 
+// MARK: - Extension
 extension SignUpViewController: UITextFieldDelegate {
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == nameTextField {
-            viewModel.setupName(name: textField.text ?? "")
+            viewModel.setupName(name: self.nameTextField.text ?? "")
         } else if textField == emailTextField {
-            viewModel.setupEmail(email: textField.text ?? "")
+            viewModel.setupEmail(email: self.emailTextField.text ?? "")
         }
-    }
-    
-    public func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.resignFirstResponder()
-    }
-    
-    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let text = (textField.text! as NSString).replacingCharacters(in: range, with: string)
-        
-        if !text.isEmpty {
-            authCodeButton.isEnabled = true
-        } else {
-            authCodeButton.isEnabled = false
-        }
-        return true
     }
 }

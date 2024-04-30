@@ -11,9 +11,9 @@ import UIKit
 public final class AuthCodeViewController: BaseViewController {
     
     // MARK: - Properties
-    private var viewModel = AuthViewModel()
+    private var viewModel = SignUpViewModel()
     
-    init(viewModel: AuthViewModel) {
+    init(viewModel: SignUpViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -57,7 +57,7 @@ public final class AuthCodeViewController: BaseViewController {
     
     // MARK: - Selectors
     @objc func resendButtonTapped() {
-        viewModel.sendAuthNumber { success in print("인증번호 재발송") }
+        viewModel.sendAuthCode { success in print("인증번호 재발송") }
     }
     
     @objc func authButtonTapped() {
@@ -151,7 +151,7 @@ public final class AuthCodeViewController: BaseViewController {
 extension AuthCodeViewController: UITextFieldDelegate {
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == authCodeTextField {
-            viewModel.setupAuthNumber(authNumber: textField.text ?? "")
+            viewModel.setupAuthCode(authCode: textField.text ?? "")
         }
     }
 }

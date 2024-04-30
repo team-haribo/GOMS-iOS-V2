@@ -11,9 +11,9 @@ import UIKit
 public final class PasswordSettingViewController: BaseViewController {
 
     // MARK: - Properties
-    private var viewModel = AuthViewModel()
+    private var viewModel = SignUpViewModel()
     
-    init(viewModel: AuthViewModel) {
+    init(viewModel: SignUpViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
