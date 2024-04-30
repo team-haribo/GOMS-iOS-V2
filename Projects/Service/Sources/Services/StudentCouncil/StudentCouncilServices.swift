@@ -4,6 +4,7 @@ import Moya
 public enum StudentCouncilServices {
     case makeQRCode(authorization: String)
     case deleteOuting(authorization: String, accountIdx: UUID)
+    case lateList(authorization: String, date: String)
 }
 
 extension StudentCouncilServices: TargetType {
@@ -17,6 +18,8 @@ extension StudentCouncilServices: TargetType {
             return "/student-council/outing"
         case .deleteOuting(_ , let accountIdx):
             return "/student-council/outing/\(accountIdx)"
+        case .lateList:
+            return "/student-council/late"
         }
     }
     
@@ -26,6 +29,8 @@ extension StudentCouncilServices: TargetType {
             return .post
         case .deleteOuting:
             return .delete
+        case .lateList:
+            return .get
         }
     }
     
@@ -39,6 +44,8 @@ extension StudentCouncilServices: TargetType {
             return .requestPlain
         case .deleteOuting:
             return .requestPlain
+        case .lateList(_, let date):
+            return  .requestJSONEncodable(date)
         }
     }
     
@@ -46,7 +53,8 @@ extension StudentCouncilServices: TargetType {
         switch self {
         case let .makeQRCode(authorization):
             return ["Content-Type" :"application/json", "Authorization" : authorization]
-        case .deleteOuting(let authorization, _):
+        case .deleteOuting(let authorization, _),
+             .lateList(let authorization, _):
             return ["Content-Type" :"application/json", "Authorization" : authorization]
         default:
             return ["Content-Type": "application/json"]
