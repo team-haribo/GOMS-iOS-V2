@@ -17,10 +17,11 @@ public final class LatecomerListViewController: BaseViewController {
         $0.font = .pretendard(size: 18, weight: .semibold)
     }
     
-    private let filterButton = UIButton().then {
+    private lazy var  filterButton = UIButton().then {
         $0.setTitle("필터", for: .normal)
         $0.backgroundColor = .clear
         $0.setTitleColor(.color.gomsInformation.color, for: .normal)
+        $0.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
     }
     
     lazy var lateListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
@@ -37,6 +38,12 @@ public final class LatecomerListViewController: BaseViewController {
         super.viewDidLoad()
         configNavigation()
         setupCollectionView()
+    }
+    
+    @objc func filterButtonTapped() {
+        let bottomSheetVC = CalendarBottomSheetVC()
+        bottomSheetVC.modalPresentationStyle = .overFullScreen
+        self.present(bottomSheetVC, animated: false, completion: nil)
     }
     
     override func configNavigation() {
