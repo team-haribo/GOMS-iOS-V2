@@ -11,6 +11,14 @@ import UIKit
 public final class LatecomerListViewController: BaseViewController {
 
     // MARK: - Properties
+    var latecomerList: [LatecomerListData] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.lateListCollectionView.reloadData()
+            }
+        }
+    }
+    
     private let titleLabel = UILabel().then {
         $0.text = "검색 결과"
         $0.textColor = .color.gomsTextDefault.color
@@ -36,8 +44,8 @@ public final class LatecomerListViewController: BaseViewController {
     // MARK: - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
-        configNavigation()
         setupCollectionView()
+        configNavigation()
     }
     
     @objc func filterButtonTapped() {
@@ -52,7 +60,7 @@ public final class LatecomerListViewController: BaseViewController {
         navigationItem.title = "지각자 명단"
     }
     
-    private func setupCollectionView() {
+    func setupCollectionView() {
         self.lateListCollectionView.dataSource = self
         self.lateListCollectionView.delegate = self
         lateListCollectionView.register(LatecomerCollectionViewCell.self, forCellWithReuseIdentifier: LatecomerCollectionViewCell.identifier)
@@ -87,11 +95,14 @@ public final class LatecomerListViewController: BaseViewController {
 // MARK: - Extension
 extension LatecomerListViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return latecomerList.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = lateListCollectionView.dequeueReusableCell(withReuseIdentifier: LatecomerCollectionViewCell.identifier, for: indexPath) as! LatecomerCollectionViewCell
+        
+        let latecomerData = latecomerList[indexPath.item]
+        cell.configureData(lateData: latecomerData)
         
         return cell
     }

@@ -44,8 +44,8 @@ extension StudentCouncilServices: TargetType {
             return .requestPlain
         case .deleteOuting:
             return .requestPlain
-        case .lateList(_, let date):
-            return  .requestJSONEncodable(date)
+        case .lateList(_ , let date):
+            return .requestParameters(parameters: ["date": date], encoding: URLEncoding.default)
         }
     }
     

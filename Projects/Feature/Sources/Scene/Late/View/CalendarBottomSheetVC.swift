@@ -11,6 +11,10 @@ import UIKit
 class CalendarBottomSheetVC: BaseViewController {
 
     // MARK: - Properties
+    private let viewModel = LetecomerViewModel()
+    
+    let latecomerListVC = LatecomerListViewController()
+    
     var selectedDate: DateComponents? = nil
 
     private let bottomSheetView = UIView().then {
@@ -38,6 +42,11 @@ class CalendarBottomSheetVC: BaseViewController {
     }
     
     // MARK: - Life Cycel
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.view.backgroundColor = .clear
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -97,13 +106,29 @@ class CalendarBottomSheetVC: BaseViewController {
 }
 
 extension CalendarBottomSheetVC: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
-    func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
-        return nil
-    }
-
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
+        guard let dateComponents = dateComponents else { return }
+        
         selection.setSelected(dateComponents, animated: true)
         selectedDate = dateComponents
-        reloadDateView(date: Calendar.current.date(from: dateComponents!))
+        reloadDateView(date: Calendar.current.date(from: dateComponents))
+        
+        if let selectedDate = Calendar.current.date(from: dateComponents) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            viewModel.setupDate(date: formatter.string(from: selectedDate))
+            viewModel.getLatecomerList {
+                self.latecomerListVC.latecomerList = self.viewModel.latecomerListDatas
+                DispatchQueue.main.async {
+                    
+                    self.latecomerListVC.lateListCollectionView.reloadData()
+                    print(self.latecomerListVC.latecomerList)
+                    print(self.latecomerListVC.latecomerList.count)
+                }
+                //                self.latecomerListVC.latecomerList = self.viewModel.latecomerListDatas
+                //                self.latecomerListVC.lateListCollectionView.reloadData()
+                
+            }
+        }
     }
 }

@@ -8,6 +8,10 @@
 
 import UIKit
 
+import SnapKit
+import Then
+import Kingfisher
+
 class LatecomerCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Properties
@@ -20,13 +24,13 @@ class LatecomerCollectionViewCell: UICollectionViewCell {
     let nameLabel = UILabel().then {
         $0.textColor = .color.gomsSecondary.color
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
-        $0.text = "김새미"
+        $0.text = "test"
     }
     
     let studentInfoLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
-        $0.text = "6기 | 김새미"
+        $0.text = "test"
     }
 
     private let bottomView = UIView().then {
@@ -49,6 +53,24 @@ class LatecomerCollectionViewCell: UICollectionViewCell {
     func configureUI() {
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
+    }
+    
+    func configureData(lateData: LatecomerListData) {
+        if let imageURL = lateData.profileImageURL, let url = URL(string: imageURL) {
+            profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+            profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+        } else {
+            profileImageView.image = .image.gomsProfile.image
+        }
+        
+        nameLabel.text = lateData.name
+        if lateData.major == "SW_DEVELOP" {
+            studentInfoLabel.text = "\(lateData.grade)기 | SW개발"
+        } else if lateData.major == "SMART_IOT" {
+            studentInfoLabel.text = "\(lateData.grade)기 | IoT"
+        } else {
+            studentInfoLabel.text = "\(lateData.grade)기 | AI"
+        }
     }
     
     // MARK: - Add View
