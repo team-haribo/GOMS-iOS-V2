@@ -24,10 +24,11 @@ public final class AuthCodeViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    var limitTime = 300
+    
     private let authCodeTextField = GOMSTextField()
     
     private let timeLabel = UILabel().then {
-        $0.text = "5:00"
         $0.font = .pretendard(size: 16, weight: .regular)
         $0.textColor = .color.gomsTertiary.color
     }
@@ -55,9 +56,15 @@ public final class AuthCodeViewController: BaseViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         authCodeTextField.delegate = self
+        getSetTime()
     }
     
     // MARK: - Selectors
+    @objc func getSetTime() {
+        secToTime(sec: limitTime)
+        limitTime -= 1
+    }
+    
     @objc func resendButtonTapped() {
         viewModel.sendAuthCode { success in print("인증번호 재발송") }
     }
@@ -95,6 +102,23 @@ public final class AuthCodeViewController: BaseViewController {
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.16)
             $0.height.equalTo(48)
+        }
+    }
+    
+    func secToTime(sec: Int) {
+        let minute = (sec % 3600) / 60
+        let second = (sec % 3600) % 60
+        
+        if second < 10 {
+            timeLabel.text = String(minute) + ":" + "0"+String(second)
+        } else {
+            timeLabel.text = String(minute) + ":" + String(second)
+        }
+        
+        if limitTime != 0 {
+            perform(#selector(getSetTime), with: nil, afterDelay: 1.0)
+        } else if limitTime == 0 {
+            timeLabel.text = "00:00"
         }
     }
 
