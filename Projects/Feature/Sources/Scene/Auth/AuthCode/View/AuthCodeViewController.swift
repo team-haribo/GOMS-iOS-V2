@@ -11,10 +11,12 @@ import UIKit
 public final class AuthCodeViewController: BaseViewController {
     
     // MARK: - Properties
-    private var viewModel = SignUpViewModel()
-    
-    init(viewModel: SignUpViewModel) {
+    private var viewModel = AuthViewModel()
+    private var previousViewController: UIViewController?
+        
+    init(viewModel: AuthViewModel, previousViewController: UIViewController?) {
         self.viewModel = viewModel
+        self.previousViewController = previousViewController
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -61,11 +63,17 @@ public final class AuthCodeViewController: BaseViewController {
     }
     
     @objc func authButtonTapped() {
-        viewModel.verifyAuthNumber { success in
+        viewModel.setupAuthCode(authCode: authCodeTextField.text ?? "")
+        viewModel.verifyAuthCode { success in
             if success {
                 self.authCodeSuccess()
-                let setPasswordVC = PasswordSettingViewController(viewModel: self.viewModel)
-                self.navigationController?.pushViewController(setPasswordVC, animated: true)
+                if let previousVC = self.previousViewController as? FindPasswordViewController {
+                    let newPasswordVC = NewPasswordViewController()
+                    self.navigationController?.pushViewController(newPasswordVC, animated: true)
+                } else if let previousVC = self.previousViewController as? SignUpViewController {
+                    let passwordSettingVC = PasswordSettingViewController(viewModel: self.viewModel)
+                    self.navigationController?.pushViewController(passwordSettingVC, animated: true)
+                }
             } else {
                 self.authCodeError()
             }

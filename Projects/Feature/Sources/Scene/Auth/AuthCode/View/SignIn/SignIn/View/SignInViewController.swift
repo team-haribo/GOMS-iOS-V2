@@ -11,7 +11,7 @@ import UIKit
 public final class SignInViewController: BaseViewController {
 
     // MARK: - Properties
-    private let viewModel = SignInViewModel()
+    private let viewModel = AuthViewModel()
     
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 24
@@ -72,9 +72,13 @@ public final class SignInViewController: BaseViewController {
                 UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPassword")
                 let defaults = UserDefaults.standard
                 let localPassword = defaults.string(forKey: "localPassword")
-                print(localPassword)
-                let mainVC = MainViewController()
-                self.navigationController?.pushViewController(mainVC, animated: true)
+                if self.viewModel.email == "s22070@gsm.hs.kr" {
+                    let mainVC = AdminMainViewController()
+                    self.navigationController?.pushViewController(mainVC, animated: true)
+                } else {
+                    let mainVC = MainViewController()
+                    self.navigationController?.pushViewController(mainVC, animated: true)
+                }
             }
         }
     }
@@ -154,6 +158,7 @@ public final class SignInViewController: BaseViewController {
     }
 }
 
+// MARK: - Extension
 extension SignInViewController: UITextFieldDelegate {
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == emailTextField {

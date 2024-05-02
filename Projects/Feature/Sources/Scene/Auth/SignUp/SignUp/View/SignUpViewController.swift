@@ -11,7 +11,7 @@ import UIKit
 public final class SignUpViewController: BaseViewController {
 
     // MARK: - Properties
-    private let viewModel = SignUpViewModel()
+    private let viewModel = AuthViewModel()
     
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 32
@@ -92,9 +92,10 @@ public final class SignUpViewController: BaseViewController {
     
     @objc func authCodeButtonTapped() {
         viewModel.setupEmail(email: emailTextField.text ?? "")
+        viewModel.setupName(name: nameTextField.text ?? "")
         viewModel.sendAuthCode { success in
             if success {
-                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel)
+                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel,  previousViewController: self)
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
             }
         }

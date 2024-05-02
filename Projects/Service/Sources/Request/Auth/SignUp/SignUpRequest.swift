@@ -13,13 +13,13 @@ public struct SignUpRequest: Codable {
     var password: String
     var name: String
     var gender: String
-    var major: String
+    var Major: String
     
-    public init(email: String, password: String, name: String, gender: String, major: String) {
+    public init(email: String, password: String, name: String, gender: String, Major: String) {
         self.email = email
         self.password = password
         self.name = name
         self.gender = gender
-        self.major = major
+        self.Major = Major
     }
 }

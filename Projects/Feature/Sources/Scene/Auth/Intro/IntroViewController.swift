@@ -11,6 +11,8 @@ import UIKit
 public final class IntroViewController: BaseViewController {
 
     // MARK: - Properties
+    let viewModel = AuthViewModel()
+    
     private let gomsLogoImage = UIImageView(image: .image.gomsGoms.image)
     
     private let mainLable = UILabel().then {
@@ -63,7 +65,7 @@ public final class IntroViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func signInButtonTapped() {
-        let signInVC = SignInViewController()
+        let signInVC = SignInViewController(viewModel: self.viewModel)
         navigationController?.pushViewController(signInVC, animated: true)
     }
     
