@@ -2,35 +2,47 @@
 //  AuthViewModel.swift
 //  Feature
 //
-//  Created by 새미 on 4/21/24.
+//  Created by 새미 on 5/2/24.
 //  Copyright © 2024 HARIBO. All rights reserved.
 //
 
 import Moya
 import Service
 
-public final class AuthViewModel {
+public final class AuthViewModel: BaseViewModel {
     
     private let authProvider = MoyaProvider<AuthServices>()
     private let accountProvider = MoyaProvider<AccountServices>()
     
-    let keyChain = KeyChain()
-    let gomsRefreshToken = GOMSRefreshToken.shared
-    lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
+    var userData: SignInModel?
+    var email: String = ""
     
+    private var password: String = ""
+    private var authCode: String = ""
+    private var newPassword: String = ""
     private var name: String = ""
-    private var email: String = ""
     private var gender: String = ""
     private var major: String = ""
-    private var password: String = ""
-    private var authnNumber: String = ""
-    
-    func setupName(name: String) {
-        self.name = name
-    }
     
     func setupEmail(email: String) {
         self.email = "\(email)@gsm.hs.kr"
+    }
+    
+    func setupPassword(password: String) {
+        self.password = password
+    }
+    
+    func setupAuthCode(authCode: String) {
+        self.authCode = authCode
+    }
+    
+    func setupNewPassword(newPassword: String, checkPassword: String) {
+        guard newPassword == checkPassword else { return }
+        self.newPassword = newPassword
+    }
+    
+    func setupName(name: String) {
+        self.name = name
     }
     
     func setupGender(gender: String) {
@@ -41,33 +53,55 @@ public final class AuthViewModel {
         self.major = major
     }
     
-    func setupAuthNumber(authNumber: String) {
-        self.authnNumber += authNumber
+    // MARK: - Sign In
+    func signIn(completion: @escaping (Bool) -> Void) {
+        let param = SignInRequest.init(email: email, password: password)
+        authProvider.request(.signIn(param: param)) { response in
+            switch response {
+            case .success(let result):
+                let statusCode = result.statusCode
+                do {
+                    switch statusCode {
+                    case 200:
+                        print("success")
+                        let signInResponse = try result.map(SignInResponse.self)
+                        self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
+                        self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
+                        self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
+                        completion(true)
+                    case 500:
+                        print("SERVER ERROR")
+                        completion(false)
+                    default:
+                        print(result)
+                        completion(false)
+                    }
+                } catch {
+                    print("error")
+                    completion(false)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(false)
+            }
+        }
     }
     
-    func setupPassword(password: String, checkPassword: String) {
-        guard password == checkPassword else { return }
-    }
-    
-    func sendAuthNumber(completion: @escaping (Bool) -> Void) {
-        let param = SendAuthNumberRequest.init(email: email)
-        authProvider.request(.sendAuthNumber(param: param)) { response in
+    // MARK: - Send Auth Code
+    func sendAuthCode(completion: @escaping (Bool) -> Void) {
+        let param  = SendAuthCodeRequest(email: email)
+        authProvider.request(.sendAuthCode(param: param)) { response in
             switch response {
             case .success(let result):
                 do {
                     let statusCode = result.statusCode
                     switch statusCode {
                     case 204:
-                        print("No Content")
+                        print("success")
                         completion(true)
-                    case 404:
-                        print("GOMS 회원이 아닌 사용자가 이메일 인증 요청을 한 경우")
-                        completion(false)
                     case 429:
                         print("이메일 요청이 5번을 초과할 경우")
                         completion(false)
-                    case 500:
-                        print("SERVER ERROR")
                     default:
                         print(result)
                         completion(false)
@@ -80,8 +114,9 @@ public final class AuthViewModel {
         }
     }
     
-    func verifyAuthNumber(completion: @escaping (Bool) -> Void) {
-        authProvider.request(.verifyAuthNumber(emaiil: email, authCode: authnNumber)) { response in
+    // MARK: - Verify Auth Code
+    func verifyAuthCode(completion: @escaping (Bool) -> Void) {
+        authProvider.request(.verifyAuthNumber(emaiil: email, authCode: authCode)) { response in
             switch response {
             case .success(let result):
                 do {
@@ -111,8 +146,39 @@ public final class AuthViewModel {
         }
     }
     
-    func SignUp(completion: @escaping (Bool) -> Void) {
-        let param = SignUpRequest.init(email: email, password: password, name: name, gender: gender, major: major)
+    // MARK: - New Password
+    func newPassword(completion: @escaping (Bool) -> Void) {
+        let param = NewPasswordRequest.init(email: email, newPassword: newPassword)
+        accountProvider.request(.newPassword(param: param, authorization: accessToken)) { response in
+            switch response {
+            case .success(let result):
+                let statusCode = result.statusCode
+                switch statusCode {
+                case 204:
+                    print("NO CONTENT")
+                    completion(true)
+                case 404:
+                    print("존재하지 않는 사용자일때")
+                    completion(false)
+                case 400:
+                    print("변경하려는 비밀번호가 이전 비밀번호와 같을 때")
+                    completion(false)
+                case 500:
+                    print("SERVER ERROR")
+                default:
+                    print(result)
+                    completion(false)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
+    
+    // MARK: - Sign Up
+    func signUp(completion: @escaping (Bool) -> Void) {
+        let param = SignUpRequest.init(email: email, password: newPassword, name: name, gender: gender, major: major)
+        print("Sending SignUpRequest: \(param)")
         authProvider.request(.signUp(param: param)) { response in
             switch response {
             case .success(let result):
@@ -131,34 +197,6 @@ public final class AuthViewModel {
             case .failure(let err):
                 print(err.localizedDescription)
                 completion(false)
-            }
-        }
-    }
-    
-    func newPassword(completion: @escaping (Bool) -> Void) {
-        let param = NewPasswordRequest.init(email: email, newPassword: password)
-        accountProvider.request(.newPassword(param: param, authorization: accessToken)) { response in
-            switch response {
-            case .success(let result):
-                let statusCode = result.statusCode
-                switch statusCode {
-                case 204:
-                    print("NO CONTENT")
-                    completion(true)
-                case 404:
-                    print("존재하지 않는 사용자일때.")
-                    completion(false)
-                case 400:
-                    print("변경하려는 비밀번호가 이전 비밀번호와 같을 때")
-                    completion(false)
-                case 500:
-                    print("SERVER ERROR")
-                default:
-                    print(result)
-                    completion(false)
-                }
-            case .failure(let err):
-                print(err.localizedDescription)
             }
         }
     }

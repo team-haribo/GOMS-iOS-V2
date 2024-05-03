@@ -11,7 +11,16 @@ import UIKit
 public final class SignInViewController: BaseViewController {
 
     // MARK: - Properties
-    private let viewModel = SignInViewModel()
+    private var viewModel = AuthViewModel()
+    
+    init(viewModel: AuthViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 24
@@ -60,7 +69,7 @@ public final class SignInViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func findPasswordButtonTapped() {
-        let findPasswordVC = FindPasswordViewController()
+        let findPasswordVC = FindPasswordViewController(viewModel: self.viewModel)
         navigationController?.pushViewController(findPasswordVC, animated: true)
     }
     
@@ -72,8 +81,13 @@ public final class SignInViewController: BaseViewController {
                 UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPassword")
                 let defaults = UserDefaults.standard
                 let localPassword = defaults.string(forKey: "localPassword")
-                let mainVC = LatecomerListViewController()
-                self.navigationController?.pushViewController(mainVC, animated: true)
+                if self.viewModel.email == "s22070@gsm.hs.kr" {
+                    let mainVC = AdminMainViewController()
+                    self.navigationController?.pushViewController(mainVC, animated: true)
+                } else {
+                    let mainVC = MainViewController()
+                    self.navigationController?.pushViewController(mainVC, animated: true)
+                }
             }
         }
     }
@@ -153,6 +167,7 @@ public final class SignInViewController: BaseViewController {
     }
 }
 
+// MARK: - Extension
 extension SignInViewController: UITextFieldDelegate {
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == emailTextField {
