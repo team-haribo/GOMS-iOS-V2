@@ -42,6 +42,7 @@ public final class FindPasswordViewController: BaseViewController {
     
     // MARK: - Selectors
     @objc func authCodeButtonTapped() {
+        viewModel.setupEmail(email: self.emailTextField.text ?? "")
         viewModel.sendAuthCode { success in
             if success {
                 let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self)

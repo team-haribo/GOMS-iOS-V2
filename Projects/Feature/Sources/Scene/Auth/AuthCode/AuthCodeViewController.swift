@@ -66,6 +66,7 @@ public final class AuthCodeViewController: BaseViewController {
     }
     
     @objc func resendButtonTapped() {
+        viewModel.setupAuthCode(authCode: authCodeTextField.text ?? "")
         viewModel.sendAuthCode { success in print("인증번호 재발송") }
     }
     
