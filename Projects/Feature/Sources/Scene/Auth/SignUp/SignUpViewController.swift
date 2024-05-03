@@ -56,12 +56,12 @@ public final class SignUpViewController: BaseViewController {
         let menAction = UIAlertAction(title: "남성", style: .default) { _ in
             self.genderTextField.setTitle("남성", for: .normal)
             self.genderTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupGender(gender: "남성")
+            self.viewModel.setupGender(gender: "MAN")
         }
         let womanAction = UIAlertAction(title: "여성", style: .default) { _ in
             self.genderTextField.setTitle("여성", for: .normal)
             self.genderTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupGender(gender: "여성")
+            self.viewModel.setupGender(gender: "WOMAN")
         }
         
         [ menAction, womanAction ].forEach { alert.addAction($0) }
@@ -73,17 +73,17 @@ public final class SignUpViewController: BaseViewController {
         let swAction = UIAlertAction(title: "SW개발과", style: .default) { _ in
             self.majorTextField.setTitle("SW개발과", for: .normal)
             self.majorTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupMajor(major: "SW개발과")
+            self.viewModel.setupMajor(major: "SW_DEVELOP")
         }
         let iotAction = UIAlertAction(title: "스마트IoT과", style: .default) { _ in
             self.majorTextField.setTitle("스마트IoT과", for: .normal)
             self.majorTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupMajor(major: "스마트IoT과")
+            self.viewModel.setupMajor(major: "SMART_IOT")
         }
         let aiAction = UIAlertAction(title: "AI개발과", style: .default) { _ in
             self.majorTextField.setTitle("AI개발과", for: .normal)
             self.majorTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupMajor(major: "AI개발과")
+            self.viewModel.setupMajor(major: "AI")
         }
         
         [ swAction, iotAction, aiAction ].forEach { alert.addAction($0) }
