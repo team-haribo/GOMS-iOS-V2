@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import Moya
+import Service
 
 public class UserProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
