@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import Moya
+import Service
 
 public class UserProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -246,9 +247,8 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         alertController.addAction(cancelAction)
         
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
-//            let viewModel = ProfileViewModel()
-//            viewModel.ProfileLogout(presentingViewController: SignInViewController())
-//            self?.performLogout()
+            let signInVC = SignInViewController(viewModel: AuthViewModel())
+            self?.navigationController?.pushViewController(signInVC, animated: true)
         }
         alertController.addAction(confirmAction)
         
