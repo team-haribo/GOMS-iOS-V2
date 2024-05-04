@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ProfileModel: Codable {
+public struct ProfileModel: Decodable {
     let date: ProfileResponse
 }
 
