@@ -1,5 +1,5 @@
 //
-//  BottomSheetViewController.swift
+//  FilterBottomSheetViewController.swift
 //  Feature
 //
 //  Created by 새미 on 5/9/24.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BottomSheetViewController: BaseViewController {
+class FilterBottomSheetViewController: BaseViewController {
     
     // MARK: - Properties
     private let bottomSheetView = UIView().then {
