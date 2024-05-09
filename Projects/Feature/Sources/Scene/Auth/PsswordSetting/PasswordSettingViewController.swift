@@ -57,9 +57,10 @@ public final class PasswordSettingViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func signUpButtonTapped() {
-        viewModel.SignUp { success in
+        viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
+        viewModel.signUp { success in
             if success {
-                let signInVC = SignInViewController()
+                let signInVC = SignInViewController(viewModel: self.viewModel)
                 self.navigationController?.pushViewController(signInVC, animated: true)
             }
         }
@@ -141,7 +142,7 @@ extension PasswordSettingViewController: UITextFieldDelegate {
     
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == passwordTextField {
-            viewModel.setupPassword(password: textField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
+            viewModel.setupNewPassword(newPassword: textField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         }
     }
 }

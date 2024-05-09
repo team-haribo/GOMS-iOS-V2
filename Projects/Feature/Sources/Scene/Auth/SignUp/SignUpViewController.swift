@@ -22,7 +22,7 @@ public final class SignUpViewController: BaseViewController {
     
     let nameTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이름")
     
-    let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 64), placeholder: "이메일")
+    private let emailTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "이메일")
     
     private let defaultDomain = UILabel().then {
         $0.text = "@gsm.hs.kr"
@@ -56,12 +56,12 @@ public final class SignUpViewController: BaseViewController {
         let menAction = UIAlertAction(title: "남성", style: .default) { _ in
             self.genderTextField.setTitle("남성", for: .normal)
             self.genderTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupGender(gender: "남성")
+            self.viewModel.setupGender(gender: "MAN")
         }
         let womanAction = UIAlertAction(title: "여성", style: .default) { _ in
             self.genderTextField.setTitle("여성", for: .normal)
             self.genderTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupGender(gender: "여성")
+            self.viewModel.setupGender(gender: "WOMAN")
         }
         
         [ menAction, womanAction ].forEach { alert.addAction($0) }
@@ -73,17 +73,17 @@ public final class SignUpViewController: BaseViewController {
         let swAction = UIAlertAction(title: "SW개발과", style: .default) { _ in
             self.majorTextField.setTitle("SW개발과", for: .normal)
             self.majorTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupMajor(major: "SW개발과")
+            self.viewModel.setupMajor(major: "SW_DEVELOP")
         }
         let iotAction = UIAlertAction(title: "스마트IoT과", style: .default) { _ in
             self.majorTextField.setTitle("스마트IoT과", for: .normal)
             self.majorTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupMajor(major: "스마트IoT과")
+            self.viewModel.setupMajor(major: "SMART_IOT")
         }
         let aiAction = UIAlertAction(title: "AI개발과", style: .default) { _ in
             self.majorTextField.setTitle("AI개발과", for: .normal)
             self.majorTextField.setTitleColorForMode(darkModeColor: .white, lightModeColor: .black)
-            self.viewModel.setupMajor(major: "AI개발과")
+            self.viewModel.setupMajor(major: "AI")
         }
         
         [ swAction, iotAction, aiAction ].forEach { alert.addAction($0) }
@@ -91,9 +91,11 @@ public final class SignUpViewController: BaseViewController {
     }
     
     @objc func authCodeButtonTapped() {
-        viewModel.sendAuthNumber { success in
+        viewModel.setupEmail(email: emailTextField.text ?? "")
+        viewModel.setupName(name: nameTextField.text ?? "")
+        viewModel.sendAuthCode { success in
             if success {
-                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel)
+                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel,  previousViewController: self)
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
             }
         }
@@ -154,27 +156,13 @@ public final class SignUpViewController: BaseViewController {
     }
 }
 
+// MARK: - Extension
 extension SignUpViewController: UITextFieldDelegate {
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == nameTextField {
-            viewModel.setupName(name: textField.text ?? "")
+            viewModel.setupName(name: self.nameTextField.text ?? "")
         } else if textField == emailTextField {
-            viewModel.setupEmail(email: textField.text ?? "")
+            viewModel.setupEmail(email: self.emailTextField.text ?? "")
         }
-    }
-    
-    public func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.resignFirstResponder()
-    }
-    
-    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let text = (textField.text! as NSString).replacingCharacters(in: range, with: string)
-        
-        if !text.isEmpty {
-            authCodeButton.isEnabled = true
-        } else {
-            authCodeButton.isEnabled = false
-        }
-        return true
     }
 }

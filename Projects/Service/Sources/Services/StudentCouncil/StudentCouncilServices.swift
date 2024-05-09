@@ -6,10 +6,10 @@ public enum StudentCouncilServices {
     case deleteOuting(authorization: String, accountIdx: UUID)
     case studentList(authorization: String)
     case editAuthority(authorization: String, param: AuthorityRequest)
-    
     case changeBlackList(authorization: String, accountIdx: UUID)
     case cancelBlackList(authorization: String, accountIdx: UUID)
     case searchStudent(authorization: String, parm: SearchStudentRequest)
+    case lateList(authorization: String, date: String)
 }
 
 extension StudentCouncilServices: TargetType {
@@ -33,6 +33,8 @@ extension StudentCouncilServices: TargetType {
             return "/student-council/black-list/\(accountIdx)"
         case .searchStudent:
             return "/student-council/search"
+        case .lateList:
+            return "/student-council/late"
         }
     }
     
@@ -49,6 +51,8 @@ extension StudentCouncilServices: TargetType {
             return .get
         case .editAuthority:
             return .patch
+        case .lateList:
+            return .get
         }
     }
     
@@ -68,6 +72,8 @@ extension StudentCouncilServices: TargetType {
             return .requestJSONEncodable(param)
         case .searchStudent(_, let param):
             return .requestParameters(parameters: ["grade": param.grade ?? 0, "gender": param.gender ?? "", "name": param.name ?? "", "isBlackList": param.isBlackList, "authority": param.authority ?? ""], encoding: URLEncoding.queryString)
+        case .lateList(_ , let date):
+            return .requestParameters(parameters: ["date": date], encoding: URLEncoding.default)
         }
     }
     
@@ -80,7 +86,8 @@ extension StudentCouncilServices: TargetType {
              .editAuthority(let authorization, _),
              .changeBlackList(let authorization, _),
              .cancelBlackList(let authorization, _),
-             .searchStudent(let authorization, _):
+             .searchStudent(let authorization, _),
+             .lateList(let authorization, _):
             return ["Content-Type" :"application/json", "Authorization" : authorization]
         }
     }

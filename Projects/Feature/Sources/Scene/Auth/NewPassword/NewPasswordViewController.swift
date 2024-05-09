@@ -44,12 +44,13 @@ public final class NewPasswordViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func doneButtonTapped() {
+        viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         viewModel.newPassword {  success in
             if success {
                 let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
                 
                 let check = UIAlertAction(title: "확인", style: .default) { action in
-                    let loginVC = SignInViewController()
+                    let loginVC = SignInViewController(viewModel: self.viewModel)
                     self.navigationController?.pushViewController(loginVC, animated: true)
                 }
                 alert.addAction(check)
@@ -120,11 +121,11 @@ public final class NewPasswordViewController: BaseViewController {
     }
 }
 
-
+// MARK: - Extension
 extension NewPasswordViewController: UITextFieldDelegate {
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == passwordTextField {
-            viewModel.setupPassword(password: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
+            viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         }
     }
     

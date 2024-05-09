@@ -13,7 +13,7 @@ public enum AuthServices {
     case signUp(param: SignUpRequest)
     case signIn(param: SignInRequest)
     case refreshToken(refreshToken: String)
-    case sendAuthNumber(param: SendAuthNumberRequest)
+    case sendAuthCode(param: SendAuthCodeRequest)
     case verifyAuthNumber(emaiil: String, authCode: String)
     case logoutToken(refreshToken: String)
 }
@@ -31,7 +31,7 @@ extension AuthServices: TargetType {
             return "/auth/signin"
         case .refreshToken:
             return "/auth/"
-        case .sendAuthNumber:
+        case .sendAuthCode:
             return "/auth/email/send"
         case .verifyAuthNumber:
             return "/auth/email/verify"
@@ -44,7 +44,7 @@ extension AuthServices: TargetType {
         switch self {
         case .signUp,
              .signIn,
-             .sendAuthNumber:
+             .sendAuthCode:
             return .post
         case .refreshToken:
             return .patch
@@ -67,7 +67,7 @@ extension AuthServices: TargetType {
             return .requestJSONEncodable(param)
         case .refreshToken:
             return .requestPlain
-        case .sendAuthNumber(let param):
+        case .sendAuthCode(let param):
             return .requestJSONEncodable(param)
         case .verifyAuthNumber(let email, let authCode):
             return .requestParameters(parameters: ["email": email, "authCode": authCode], encoding: URLEncoding.queryString)
@@ -79,7 +79,8 @@ extension AuthServices: TargetType {
     
     public var headers: [String : String]? {
         switch self {
-        case .refreshToken(let refreshToken),.logoutToken(let refreshToken):
+        case .refreshToken(let refreshToken),
+             .logoutToken(let refreshToken):
             return [
                 "Content-Type": "application/json",
                 "refreshToken": refreshToken

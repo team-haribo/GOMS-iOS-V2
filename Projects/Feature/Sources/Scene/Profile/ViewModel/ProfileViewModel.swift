@@ -88,11 +88,11 @@ final class ProfileViewModel: ObservableObject {
             case .success:
                 print("Logout successfully")
 
-                DispatchQueue.main.async {
-                    let newViewController = SignInViewController()
-                    UIApplication.shared.windows.first?.rootViewController = newViewController
-                    UIApplication.shared.windows.first?.makeKeyAndVisible()
-                }
+//                DispatchQueue.main.async {
+//                    let newViewController = SignInViewController()
+//                    UIApplication.shared.windows.first?.rootViewController = newViewController
+//                    UIApplication.shared.windows.first?.makeKeyAndVisible()
+//                }
 
             case let .failure(err):
                 self?.errorMessage = "Network request failed: \(err.localizedDescription)"

@@ -36,7 +36,7 @@ public class GOMSTextField: UITextField {
         self.clipsToBounds = true
         self.layer.cornerRadius = 12
         self.addPadding(paddingFrame: CGRect(x: 0, y: 0, width: 16, height: self.frame.height))
-        self.autocorrectionType = .no
+        self.autocapitalizationType = .none
         self.spellCheckingType = .no
     }
     
