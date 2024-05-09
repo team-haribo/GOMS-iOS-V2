@@ -60,6 +60,7 @@ public final class IntroViewController: BaseViewController {
     
     // MARK: - Life Cycel
     public override func viewDidLoad() {
+        self.navigationController?.navigationBar.isHidden = true
         super.viewDidLoad()
     }
     
