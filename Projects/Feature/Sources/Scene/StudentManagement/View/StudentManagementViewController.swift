@@ -11,6 +11,14 @@ import UIKit
 public final class StudentManagementViewController: BaseViewController {
 
     // MARK: - Properties
+    private let viewModel = StudentManagementViewModel()
+    
+    var userList: [UserData] = [] {
+         didSet {
+             studentCollectionView.reloadData()
+         }
+     }
+    
     private let searchController = UISearchController(searchResultsController: nil)
     
     private let titleLabel = UILabel().then {
@@ -35,11 +43,19 @@ public final class StudentManagementViewController: BaseViewController {
     }
     
     // MARK: - Life Cycel
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        studentCollectionView.reloadData()
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
-        configNavigation()
-        setupCollectionView()
-        setupSearchBar()
+        viewModel.getUserList {
+            self.userList = self.viewModel.userListDatas
+            self.configNavigation()
+            self.setupCollectionView()
+            self.setupSearchBar()
+        }
     }
     
     override func configNavigation() {
@@ -89,11 +105,14 @@ public final class StudentManagementViewController: BaseViewController {
 // MARK: - Extension
 extension StudentManagementViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return userList.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = studentCollectionView.dequeueReusableCell(withReuseIdentifier: StudentCollectionViewCell.identifier, for: indexPath) as! StudentCollectionViewCell
+    
+        let userData = userList[indexPath.row]
+        cell.configureData(with: userData)
         
         return cell
     }

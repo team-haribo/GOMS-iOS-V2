@@ -94,6 +94,7 @@ public final class MainViewController: BaseViewController {
         
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.hidesBackButton = true
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     public override func viewDidLoad() {

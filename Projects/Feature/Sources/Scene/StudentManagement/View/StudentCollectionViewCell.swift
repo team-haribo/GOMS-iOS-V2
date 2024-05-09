@@ -10,6 +10,7 @@ import UIKit
 
 import SnapKit
 import Then
+import Kingfisher
 
 public final class StudentCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
@@ -52,8 +53,25 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - Configure
+    func configureData(with userData: UserData) {
+        if let imageURL = userData.profileImageURL, let url = URL(string: imageURL) {
+            profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+            profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+        } else {
+            profileImageView.image = .image.gomsProfile.image
+        }
+        nameLabel.text = userData.name
+        if userData.major == "SW_DEVELOP" {
+            studentInfoLabel.text = "\(userData.grade)기 | SW개발"
+        } else if userData.major == "SMART_IOT" {
+            studentInfoLabel.text = "\(userData.grade)기 | IoT"
+        } else {
+            studentInfoLabel.text = "\(userData.grade)기 | AI"
+        }
+    }
     
-    // MARK: - Configure UI
     private func configureUI() {
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
