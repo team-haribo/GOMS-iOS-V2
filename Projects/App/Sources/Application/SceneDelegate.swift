@@ -27,7 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else if AdminisSwitchOn == true {
             window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
         } else {
-            window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
+            window?.rootViewController =  UINavigationController(rootViewController: NewPasswordViewController())
         }
         
         window?.makeKeyAndVisible()
