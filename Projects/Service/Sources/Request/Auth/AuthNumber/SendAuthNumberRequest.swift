@@ -1,5 +1,5 @@
 //
-//  SendAuthNumberRequest.swift
+//  SendAuthCodeRequest.swift
 //  Service
 //
 //  Created by 새미 on 3/31/24.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct SendAuthNumberRequest: Codable {
+public struct SendAuthCodeRequest: Codable {
     var email: String
     
     public init(email: String) {
