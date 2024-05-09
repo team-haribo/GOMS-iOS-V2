@@ -33,6 +33,11 @@ public final class PasswordSettingViewController: BaseViewController {
         $0.isSecureTextEntry = true
     }
     
+    lazy var visiblePasswordButton = UIButton().then {
+        $0.setImage(.image.visible.image, for: .normal)
+        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+    }
+    
     private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인").then {
         $0.isSecureTextEntry = true
     }
@@ -66,6 +71,17 @@ public final class PasswordSettingViewController: BaseViewController {
         }
     }
     
+    @objc func visiblePasswordButtonTapped() {
+        passwordTextField.isSecureTextEntry.toggle()
+        passwordTextField.isSelected.toggle()
+        
+        if passwordTextField.isSelected {
+            visiblePasswordButton.setImage(.image.invisible.image, for: .normal)
+        } else {
+            visiblePasswordButton.setImage(.image.visible.image, for: .normal)
+        }
+    }
+    
     @objc override func keyboardWillShow(_ sender: Notification) {
         signUpButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
@@ -93,6 +109,7 @@ public final class PasswordSettingViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
+        passwordTextField.addSubview(visiblePasswordButton)
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
         [textFieldStackView, conditionsLabel, signUpButton].forEach { view.addSubview($0) }
     }
@@ -101,6 +118,12 @@ public final class PasswordSettingViewController: BaseViewController {
     override func setLayout() {
         passwordTextField.snp.makeConstraints {
             $0.height.equalTo(56)
+        }
+        
+        visiblePasswordButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(24)
         }
         
         checkPasswordTextField.snp.makeConstraints {
