@@ -20,9 +20,18 @@ public final class NewPasswordViewController: BaseViewController {
         $0.alignment = .fill
     }
     
-    private let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호")
+    let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
+        $0.isSecureTextEntry = true
+    }
     
-    private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인")
+    lazy var visiblePasswordButton = UIButton().then {
+        $0.setImage(.image.visible.image, for: .normal)
+        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+    }
+    
+    private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인").then {
+        $0.isSecureTextEntry = true
+    }
     
     private let conditionsLabel = UILabel().then {
         $0.text = "대/소문자, 특수문자 포함 6~15자"
@@ -59,6 +68,17 @@ public final class NewPasswordViewController: BaseViewController {
         }
     }
     
+    @objc func visiblePasswordButtonTapped() {
+        passwordTextField.isSecureTextEntry.toggle()
+        passwordTextField.isSelected.toggle()
+        
+        if passwordTextField.isSelected {
+            visiblePasswordButton.setImage(.image.invisible.image, for: .normal)
+        } else {
+            visiblePasswordButton.setImage(.image.visible.image, for: .normal)
+        }
+    }
+    
     @objc override func keyboardWillShow(_ sender: Notification) {
         doneButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
@@ -86,6 +106,7 @@ public final class NewPasswordViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
+        passwordTextField.addSubview(visiblePasswordButton)
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
         [textFieldStackView, conditionsLabel, doneButton].forEach { view.addSubview($0) }
     }
@@ -104,6 +125,12 @@ public final class NewPasswordViewController: BaseViewController {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.top.equalTo(bounds.height * 0.21)
+        }
+        
+        visiblePasswordButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(24)
         }
         
         conditionsLabel.snp.makeConstraints {
