@@ -12,16 +12,16 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel = MainViewModel()
+    private let profileView = MainProfileView()
     
     let content = UIView()
     
     private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
     
-    private let settingButton = UIButton().then {
+    private lazy var settingButton = UIButton().then {
         $0.setBackgroundImage(.image.gomsSetting.image, for: .normal)
+        $0.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
     }
-    
-    private let profileView = MainProfileView()
     
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
@@ -100,6 +100,9 @@ public final class MainViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.getProfile {
+            self.setupProfileView()
+        }
         viewModel.getLateList {
             self.viewModel.getOutingList {
                 self.setup()
@@ -119,6 +122,32 @@ public final class MainViewController: BaseViewController {
     
     func showLatecomers() {
         lateNilView.isHidden = true
+    }
+    
+    func setupProfileView() {
+        guard let grade = viewModel.profileData?.grade else { return }
+        
+        profileView.nameLabel.text = viewModel.profileData?.name
+        if viewModel.profileData?.major == "SW_DEVELOP" {
+            profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
+        } else if viewModel.profileData?.major == "SMART_IOT" {
+            profileView.studentInformationLabel.text = "\(grade)기 | IoT"
+        } else {
+            profileView.studentInformationLabel.text = "\(grade)기 | AI"
+        }
+        
+        if let isBlackList = viewModel.profileData?.isBlackList, let isOuting = viewModel.profileData?.isOuting {
+            if isBlackList {
+                profileView.profileStatus.text = "외출 금지"
+                profileView.profileStatus.textColor = .color.gomsNegative.color
+            } else if isOuting {
+                profileView.profileStatus.text = "외출 중"
+                profileView.profileStatus.textColor = .color.gomsPrimary.color
+            } else {
+                profileView.profileStatus.text = "외출 대기 중"
+                profileView.profileStatus.textColor = .color.gomsSecondary.color
+            }
+        }
     }
     
     private func setCollectionView() {
