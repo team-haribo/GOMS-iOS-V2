@@ -8,11 +8,11 @@
 
 import UIKit
 
-class AuthorityBottomSheetVC: BaseViewController {
+public final class AuthorityBottomSheetVC: BaseViewController {
 
     // MARK: - Properties
     private let bottomSheetView = UIView().then {
-        $0.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+        $0.setDynamicBackgroundColor(darkModeColor: UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1), lightModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1))
         $0.layer.cornerRadius = 12
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.clipsToBounds = true
@@ -63,7 +63,7 @@ class AuthorityBottomSheetVC: BaseViewController {
     }
 
     // MARK: - Life Cycel
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
     }
     
@@ -94,6 +94,7 @@ class AuthorityBottomSheetVC: BaseViewController {
         closeButton.snp.makeConstraints {
             $0.trailing.equalTo(-bounds.width * 0.06)
             $0.top.equalToSuperview().inset(20)
+            $0.width.height.equalTo(24)
         }
         
         prohibitionOutingTitle.snp.makeConstraints {
@@ -125,7 +126,7 @@ class AuthorityBottomSheetVC: BaseViewController {
             $0.top.equalTo(authorityTitle.snp.bottom)
         }
         
-        authorityLabel.snp.makeConstraints {
+        authoritySwitch.snp.makeConstraints {
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.top.equalTo(prohibitionOutingSwitch.snp.bottom).offset(48)
         }

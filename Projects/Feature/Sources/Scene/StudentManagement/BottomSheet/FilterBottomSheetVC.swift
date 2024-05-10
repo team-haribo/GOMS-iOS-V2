@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FilterBottomSheetVC: BaseViewController {
+public final class FilterBottomSheetVC: BaseViewController {
     
     // MARK: - Properties
     private let bottomSheetView = UIView().then {
@@ -73,7 +73,7 @@ class FilterBottomSheetVC: BaseViewController {
     private let resetButton = ResetButton()
     
     // MARK: - Life Cycel
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
     }
     
