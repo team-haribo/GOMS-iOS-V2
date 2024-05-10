@@ -77,6 +77,10 @@ public class AdminMainViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.getProfile {
+            self.setupProfileView()
+        }
+        
         viewModel.getLateList {
             self.viewModel.getOutingList {
                 self.setup()
@@ -118,6 +122,19 @@ public class AdminMainViewController: BaseViewController {
         attributedString.addAttribute(.font, value: UIFont.pretendard(size: 12, weight: .semibold), range: range)
 
         self.outingCountLabel.attributedText = attributedString
+    }
+    
+    func setupProfileView() {
+        guard let grade = viewModel.profileData?.grade else { return }
+        
+        profileView.nameLabel.text = viewModel.profileData?.name
+        if viewModel.profileData?.major == "SW_DEVELOP" {
+            profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
+        } else if viewModel.profileData?.major == "SMART_IOT" {
+            profileView.studentInformationLabel.text = "\(grade)기 | IoT"
+        } else {
+            profileView.studentInformationLabel.text = "\(grade)기 | AI"
+        }
     }
     
     // MARK: - Selector
