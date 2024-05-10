@@ -48,7 +48,6 @@ final class MainProfileView: UIView {
     
     // MARK: - Configure UI
     private func configureUI() {
-        self.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         self.clipsToBounds = true
         self.layer.cornerRadius = 12
         self.backgroundColor = .color.gomsCardBackgroundColor.color

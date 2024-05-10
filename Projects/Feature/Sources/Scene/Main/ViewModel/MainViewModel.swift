@@ -43,10 +43,18 @@ public final class MainViewModel: BaseViewModel {
                 switch statusCode {
                 case 200:
                     print("OK")
+                    let adminVC = AdminMainViewController()
+                    let userVC = MainViewController()
+                    adminVC.showLatecomers()
+                    userVC.showLatecomers()
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
                 case 404:
                     print("지각자 없음")
+                    let adminVC = AdminMainViewController()
+                    let userVC = MainViewController()
+                    adminVC.nilLatecomers()
+                    userVC.nilLatecomers()
                 case 500:
                     print("SERVER ERROR")
                 default:
