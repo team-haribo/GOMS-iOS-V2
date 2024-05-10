@@ -21,13 +21,11 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
     let nameLabel = UILabel().then {
         $0.textColor = .color.gomsSecondary.color
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
-        $0.text = "김새미"
     }
     
     let studentInfoLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
-        $0.text = "6기 | 스마트IOT"
     }
     
     private let divLine = UIView().then {
@@ -40,6 +38,7 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
     
     private lazy var editButton = UIButton().then {
         $0.setImage(.image.studentEdit.image, for: .normal)
+        $0.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Initializer
@@ -52,6 +51,12 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func editButtonTapped() {
+        print("Edit Cell")
+        let studentManagementVC = StudentManagementViewController()
+        studentManagementVC.authorityButtonTapped()
     }
 
     // MARK: - Configure

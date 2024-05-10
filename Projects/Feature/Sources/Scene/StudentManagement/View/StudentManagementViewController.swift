@@ -9,15 +9,15 @@
 import UIKit
 
 public final class StudentManagementViewController: BaseViewController {
-
+    
     // MARK: - Properties
     private let viewModel = StudentManagementViewModel()
     
     var userList: [UserData] = [] {
-         didSet {
-             studentCollectionView.reloadData()
-         }
-     }
+        didSet {
+            studentCollectionView.reloadData()
+        }
+    }
     
     private let searchController = UISearchController(searchResultsController: nil)
     
@@ -76,10 +76,12 @@ public final class StudentManagementViewController: BaseViewController {
         searchController.searchResultsUpdater = self
     }
     
+    // MARK: - Add View
     override func addView() {
         [titleLabel, filterButton, studentCollectionView].forEach { view.addSubview($0) }
     }
     
+    // MARK: Layout
     override func setLayout() {
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
@@ -99,6 +101,17 @@ public final class StudentManagementViewController: BaseViewController {
             $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.bottom.equalToSuperview()
         }
+    }
+    
+    func authorityButtonTapped() {
+        print("dd")
+        let bottomSheetVC = AuthorityBottomSheetVC()
+        bottomSheetVC.modalPresentationStyle = .overFullScreen
+        self.present(bottomSheetVC, animated: false, completion: nil)
+    }
+    
+    func filterButtonTapped() {
+        
     }
 }
 
