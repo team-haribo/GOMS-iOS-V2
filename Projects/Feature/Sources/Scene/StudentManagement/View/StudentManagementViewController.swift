@@ -133,7 +133,7 @@ extension StudentManagementViewController: UICollectionViewDataSource {
 
 extension StudentManagementViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width * 0.9
+        let width = bounds.width * 0.9
         let height: CGFloat = 72
         return CGSize(width: width, height: height)
     }

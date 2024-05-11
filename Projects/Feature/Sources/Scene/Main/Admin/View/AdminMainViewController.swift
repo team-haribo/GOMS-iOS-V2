@@ -139,7 +139,7 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Selector
     @objc func moreOutingStatusButtonTapped() {
-        let outingVC = OutingViewController()
+        let outingVC = AdminOutingViewController()
         navigationController?.pushViewController(outingVC, animated: true)
     }
     
@@ -151,7 +151,6 @@ public class AdminMainViewController: BaseViewController {
     @objc func adminMenuButtonTapped() {
         let adminMenuVC = AdminMenuViewController()
         self.navigationController?.pushViewController(adminMenuVC, animated: true)
-        print("admin")
     }
 
     // MARK: - Configure UI
