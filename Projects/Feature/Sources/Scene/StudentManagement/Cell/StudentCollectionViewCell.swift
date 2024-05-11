@@ -54,9 +54,14 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func editButtonTapped() {
-        print("Edit Cell")
-        let studentManagementVC = StudentManagementViewController()
-        studentManagementVC.authorityButtonTapped()
+        guard let window = UIApplication.shared.keyWindow,
+              let rootViewController = window.rootViewController else {
+            return
+        }
+        
+        let bottomSheetVC = AuthorityBottomSheetVC()
+        bottomSheetVC.modalPresentationStyle = .overFullScreen
+        rootViewController.present(bottomSheetVC, animated: false, completion: nil)
     }
 
     // MARK: - Configure

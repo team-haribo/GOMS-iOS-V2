@@ -102,17 +102,6 @@ public final class StudentManagementViewController: BaseViewController {
             $0.bottom.equalToSuperview()
         }
     }
-    
-    func authorityButtonTapped() {
-        print("dd")
-        let bottomSheetVC = AuthorityBottomSheetVC()
-        bottomSheetVC.modalPresentationStyle = .overFullScreen
-        self.present(bottomSheetVC, animated: false, completion: nil)
-    }
-    
-    func filterButtonTapped() {
-        
-    }
 }
 
 // MARK: - Extension
