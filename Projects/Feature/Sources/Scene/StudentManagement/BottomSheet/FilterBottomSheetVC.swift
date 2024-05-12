@@ -1,5 +1,5 @@
 //
-//  BottomSheetViewController.swift
+//  FilterBottomSheetVC.swift
 //  Feature
 //
 //  Created by 새미 on 5/9/24.
@@ -8,11 +8,15 @@
 
 import UIKit
 
-class BottomSheetViewController: BaseViewController {
+public final class FilterBottomSheetVC: BaseViewController {
     
     // MARK: - Properties
+    private let dimmedView = UIView().then {
+        $0.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
+    }
+    
     private let bottomSheetView = UIView().then {
-        $0.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+        $0.setDynamicBackgroundColor(darkModeColor: UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1), lightModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1))
         $0.layer.cornerRadius = 12
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.clipsToBounds = true
@@ -73,7 +77,7 @@ class BottomSheetViewController: BaseViewController {
     private let resetButton = ResetButton()
     
     // MARK: - Life Cycel
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
     }
     
@@ -84,11 +88,17 @@ class BottomSheetViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         [titleLabel, closeButton, roleLabel, studentButton, studentCouncilButton, prohibitionOutingButton, gradeLabel, grade1Button, grade2Button, grade3Button, genderLabel, manButton, womanButton, majorLabel, swButton, iotButton, aiButton, resetButton].forEach { self.bottomSheetView.addSubview($0) }
-        view.addSubview(bottomSheetView)
+        dimmedView.addSubview(bottomSheetView)
+        view.addSubview(dimmedView)
     }
     
     // MARK:  - Layout
     override func setLayout() {
+        dimmedView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.top.bottom.equalToSuperview()
+        }
+        
         bottomSheetView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(bounds.height * 0.8)

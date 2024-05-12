@@ -10,9 +10,11 @@ import UIKit
 
 import SnapKit
 import Then
+import Kingfisher
 
 public final class StudentCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
+    
     static let identifier = "StudentCell"
     
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 48, height: 48))
@@ -20,13 +22,11 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
     let nameLabel = UILabel().then {
         $0.textColor = .color.gomsSecondary.color
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
-        $0.text = "김새미"
     }
     
     let studentInfoLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
-        $0.text = "6기 | 스마트IOT"
     }
     
     private let divLine = UIView().then {
@@ -39,6 +39,7 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
     
     private lazy var editButton = UIButton().then {
         $0.setImage(.image.studentEdit.image, for: .normal)
+        $0.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Initializer
@@ -53,10 +54,66 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Configure UI
+    @objc func editButtonTapped() {
+        guard let parentViewController = findParentViewController() as? StudentManagementViewController else { return }
+        
+        guard let indexPath = parentViewController.studentCollectionView.indexPath(for: self) else {
+            return }
+        
+        let userData = parentViewController.userList[indexPath.row]
+
+        let bottomSheetVC = AuthorityBottomSheetVC()
+        bottomSheetVC.userData = userData
+        bottomSheetVC.userDataIndex = indexPath.row
+        bottomSheetVC.modalPresentationStyle = .overFullScreen
+        parentViewController.present(bottomSheetVC, animated: false, completion: nil)
+    }
+
+    private func findParentViewController() -> UIViewController? {
+        var parentResponder: UIResponder? = self
+        while let responder = parentResponder {
+            if let viewController = responder as? UIViewController {
+                return viewController
+            }
+            parentResponder = responder.next
+        }
+        return nil
+    }
+    
+    // MARK: - Configure
+    func configureData(with userData: UserData) {
+        if let imageURL = userData.profileImageURL, let url = URL(string: imageURL) {
+            profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+            profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
+        } else {
+            profileImageView.image = .image.gomsProfile.image
+        }
+        nameLabel.text = userData.name
+        if userData.major == "SW_DEVELOP" {
+            studentInfoLabel.text = "\(userData.grade)기 | SW개발"
+        } else if userData.major == "SMART_IOT" {
+            studentInfoLabel.text = "\(userData.grade)기 | IoT"
+        } else {
+            studentInfoLabel.text = "\(userData.grade)기 | AI"
+        }
+        
+        if userData.authority == "ROLE_STUDENT_COUNCIL" {
+            profileImageView.layer.borderColor = UIColor(red: 0.706, green: 0.525, blue: 0.976, alpha: 1).cgColor
+            nameLabel.textColor = .color.gomsAdmin.color
+        }
+        
+        if userData.isBlackList == true {
+            profileImageView.layer.borderColor = UIColor(red: 0.895, green: 0.213, blue: 0.125, alpha: 1).cgColor
+            nameLabel.textColor = .color.gomsNegative.color
+        }
+    }
+    
     private func configureUI() {
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
+        
+        profileImageView.layer.borderWidth = 4
+        profileImageView.layer.borderColor = UIColor.clear.cgColor
     }
     
     // MARK: - Add View

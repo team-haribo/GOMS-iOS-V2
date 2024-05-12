@@ -12,23 +12,24 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel = MainViewModel()
+    private let profileView = MainProfileView()
     
     let content = UIView()
     
     private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
     
-    
-    private let settingButton = UIButton().then {
+    private lazy var settingButton = UIButton().then {
         $0.setBackgroundImage(.image.gomsSetting.image, for: .normal)
+        $0.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
     }
-    
-    private let profileView = MainProfileView()
     
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
+    
+    let lateNilView = LateNilView()
 
     private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = false
@@ -94,10 +95,14 @@ public final class MainViewController: BaseViewController {
         
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.hidesBackButton = true
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.getProfile {
+            self.setupProfileView()
+        }
         viewModel.getLateList {
             self.viewModel.getOutingList {
                 self.setup()
@@ -109,6 +114,40 @@ public final class MainViewController: BaseViewController {
     func setup() {
         self.setCollectionView()
         self.setupCountLable()
+    }
+    
+    func nilLatecomers() {
+        lateNilView.isHidden = false
+    }
+    
+    func showLatecomers() {
+        lateNilView.isHidden = true
+    }
+    
+    func setupProfileView() {
+        guard let grade = viewModel.profileData?.grade else { return }
+        
+        profileView.nameLabel.text = viewModel.profileData?.name
+        if viewModel.profileData?.major == "SW_DEVELOP" {
+            profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
+        } else if viewModel.profileData?.major == "SMART_IOT" {
+            profileView.studentInformationLabel.text = "\(grade)기 | IoT"
+        } else {
+            profileView.studentInformationLabel.text = "\(grade)기 | AI"
+        }
+        
+        if let isBlackList = viewModel.profileData?.isBlackList, let isOuting = viewModel.profileData?.isOuting {
+            if isBlackList {
+                profileView.profileStatus.text = "외출 금지"
+                profileView.profileStatus.textColor = .color.gomsNegative.color
+            } else if isOuting {
+                profileView.profileStatus.text = "외출 중"
+                profileView.profileStatus.textColor = .color.gomsPrimary.color
+            } else {
+                profileView.profileStatus.text = "외출 대기 중"
+                profileView.profileStatus.textColor = .color.gomsSecondary.color
+            }
+        }
     }
     
     private func setCollectionView() {
@@ -140,21 +179,21 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, latecomerLabel, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
+        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
         [logo, settingButton, content, qrButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(64)
+            $0.top.equalTo(bounds.height * 0.07)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(24)
             $0.width.equalTo(87)
         }
         
         settingButton.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(80)
+            $0.top.equalTo(bounds.height * 0.07)
             $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.width.height.equalTo(24)
         }
@@ -177,6 +216,12 @@ public final class MainViewController: BaseViewController {
             $0.top.equalTo(profileView.snp.bottom).offset(24)
             $0.leading.equalToSuperview()
             $0.height.equalTo(32)
+        }
+        
+        lateNilView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(40)
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
         }
         
         latecomerCollectionView.snp.makeConstraints {
@@ -211,7 +256,7 @@ public final class MainViewController: BaseViewController {
         }
         
         qrButton.snp.makeConstraints {
-            $0.trailing.equalTo(-(bounds.width * 0.1))
+            $0.trailing.equalTo(-(bounds.width * 0.09))
             $0.bottom.equalTo(-(bounds.height * 0.06))
             $0.height.width.equalTo(64)
         }

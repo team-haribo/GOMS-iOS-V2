@@ -28,6 +28,7 @@ public class AdminMenuViewController: BaseViewController {
     // MARK:  - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.isHidden = false
         adminDataList.makeAdminMenuData()
         setupCollectionView()
     }
@@ -85,5 +86,30 @@ extension AdminMenuViewController: UICollectionViewDelegateFlowLayout {
         let width = bounds.width * 0.9
         let height: CGFloat = 72
         return CGSize(width: width, height: height)
+    }
+}
+
+extension AdminMenuViewController: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedMenu = adminDataList.getAdminMenuData()[indexPath.row]
+        
+        switch indexPath.row {
+        case 0:
+            print("QR 생성 VC 이동")
+        case 1:
+            let studentManagementVC = StudentManagementViewController()
+            navigationController?.pushViewController(studentManagementVC, animated: true)
+        case 2:
+            let outingVC = AdminOutingViewController()
+            navigationController?.pushViewController(outingVC, animated: true)
+        case 3:
+            let lateVC = LatecomerListViewController()
+            navigationController?.pushViewController(lateVC, animated: true)
+        case 4:
+            let profileVC = AdminProfileViewController()
+            navigationController?.pushViewController(profileVC, animated: true)
+        default:
+            break
+        }
     }
 }

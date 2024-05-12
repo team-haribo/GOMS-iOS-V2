@@ -21,6 +21,8 @@ public class AdminMainViewController: BaseViewController {
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
+    
+    let lateNilView = LateNilView()
 
     lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = false
@@ -70,10 +72,15 @@ public class AdminMainViewController: BaseViewController {
         
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.hidesBackButton = true
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.getProfile {
+            self.setupProfileView()
+        }
+        
         viewModel.getLateList {
             self.viewModel.getOutingList {
                 self.setup()
@@ -86,7 +93,15 @@ public class AdminMainViewController: BaseViewController {
         self.setCollectionView()
         self.setupCountLable()
     }
-
+    
+    func nilLatecomers() {
+        lateNilView.isHidden = false
+    }
+    
+    func showLatecomers() {
+        lateNilView.isHidden = true
+    }
+    
     private func setCollectionView() {
         self.outingStatusCollectionView.dataSource = self
         self.outingStatusCollectionView.delegate = self
@@ -109,9 +124,22 @@ public class AdminMainViewController: BaseViewController {
         self.outingCountLabel.attributedText = attributedString
     }
     
+    func setupProfileView() {
+        guard let grade = viewModel.profileData?.grade else { return }
+        
+        profileView.nameLabel.text = viewModel.profileData?.name
+        if viewModel.profileData?.major == "SW_DEVELOP" {
+            profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
+        } else if viewModel.profileData?.major == "SMART_IOT" {
+            profileView.studentInformationLabel.text = "\(grade)기 | IoT"
+        } else {
+            profileView.studentInformationLabel.text = "\(grade)기 | AI"
+        }
+    }
+    
     // MARK: - Selector
     @objc func moreOutingStatusButtonTapped() {
-        let outingVC = OutingViewController()
+        let outingVC = AdminOutingViewController()
         navigationController?.pushViewController(outingVC, animated: true)
     }
     
@@ -123,7 +151,6 @@ public class AdminMainViewController: BaseViewController {
     @objc func adminMenuButtonTapped() {
         let adminMenuVC = AdminMenuViewController()
         self.navigationController?.pushViewController(adminMenuVC, animated: true)
-        print("admin")
     }
 
     // MARK: - Configure UI
@@ -134,14 +161,14 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, latecomerLabel, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
+        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
         [logo, adminMenuButton, content, qrButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(64)
+            $0.top.equalTo(bounds.height * 0.07)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(24)
             $0.width.equalTo(87)
@@ -149,7 +176,7 @@ public class AdminMainViewController: BaseViewController {
         
         adminMenuButton.snp.makeConstraints {
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalToSuperview().inset(67)
+            $0.top.equalTo(bounds.height * 0.07)
             $0.height.equalTo(18)
             $0.width.equalTo(20)
         }
@@ -172,6 +199,12 @@ public class AdminMainViewController: BaseViewController {
             $0.top.equalTo(profileView.snp.bottom).offset(24)
             $0.leading.equalToSuperview()
             $0.height.equalTo(32)
+        }
+        
+        lateNilView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(40)
+            $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
         }
         
         latecomerCollectionView.snp.makeConstraints {
@@ -206,7 +239,7 @@ public class AdminMainViewController: BaseViewController {
         }
         
         qrButton.snp.makeConstraints {
-            $0.trailing.equalTo(-(bounds.width * 0.1))
+            $0.trailing.equalTo(-(bounds.width * 0.09))
             $0.bottom.equalTo(-(bounds.height * 0.06))
             $0.height.width.equalTo(64)
         }

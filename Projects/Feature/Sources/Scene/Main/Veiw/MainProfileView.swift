@@ -11,17 +11,15 @@ import UIKit
 import SnapKit
 import Then
 
-final class MainProfileView: UIView {
+public final class MainProfileView: UIView {
     
     // MARK: - Properties
     let nameLabel = UILabel().then {
-        $0.text = "홍길동"
         $0.textColor = .color.gomsTextDefault.color
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
     
     let studentInformationLabel = UILabel().then {
-        $0.text = "7기 | IoT"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 14, weight: .regular)
     }
@@ -48,7 +46,6 @@ final class MainProfileView: UIView {
     
     // MARK: - Configure UI
     private func configureUI() {
-        self.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
         self.clipsToBounds = true
         self.layer.cornerRadius = 12
         self.backgroundColor = .color.gomsCardBackgroundColor.color

@@ -17,15 +17,33 @@ struct LatecomerData {
     let major: String
 }
 
+struct ProfileData {
+    let name: String
+    let grade: Int
+    let major: String
+    let authority: String
+    let isOuting: Bool
+    let isBlackList: Bool
+}
+
 public final class MainViewModel: BaseViewModel {
     private let lateProvider = MoyaProvider<LateService>()
     private let outingProvider = MoyaProvider<OutingServices>()
-
+    private let profileProvider = MoyaProvider<ProfileServices>()
+    
     var lateList: [LatecomerResponse] = []
     var lateListDatas: [LatecomerData] = []
     
     var outingList: [OutingListResponse] = []
     var outingListDatas: [OutingListData] = []
+    
+    var profile: ProfileResponse?
+    var profileData: ProfileData?
+        
+    override init() {
+        self.profile = nil
+        self.profileData = nil
+    }
     
     func getLateList(completion: @escaping () -> Void) {
         lateProvider.request(.lateRank(authorization: accessToken)) { response in
@@ -43,10 +61,18 @@ public final class MainViewModel: BaseViewModel {
                 switch statusCode {
                 case 200:
                     print("OK")
+                    let adminVC = AdminMainViewController()
+                    let userVC = MainViewController()
+                    adminVC.showLatecomers()
+                    userVC.showLatecomers()
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
                 case 404:
                     print("지각자 없음")
+                    let adminVC = AdminMainViewController()
+                    let userVC = MainViewController()
+                    adminVC.nilLatecomers()
+                    userVC.nilLatecomers()
                 case 500:
                     print("SERVER ERROR")
                 default:
@@ -80,6 +106,38 @@ public final class MainViewModel: BaseViewModel {
                     print("외출한 사람이 없을 경우")
                 case 500:
                     print("SERVER ERROR")
+                default:
+                    print(result)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
+    
+    func getProfile(completion: @escaping () -> Void) {
+        profileProvider.request(.getProfile(authorization: accessToken)) { response in
+            switch response {
+            case .success(let result):
+                let statusCode = result.statusCode
+                let responseData = result.data
+                switch statusCode {
+                case 200:
+                    print("ok")
+                    do {
+                        self.profile = try JSONDecoder().decode(ProfileResponse.self, from: responseData)
+                        self.profileData = ProfileData(name: self.profile?.name ?? "",
+                                                       grade: self.profile?.grade ?? 0,
+                                                       major: self.profile?.major ?? "",
+                                                       authority: self.profile?.authority ?? "",
+                                                       isOuting: self.profile?.isOuting ?? false,
+                                                       isBlackList: self.profile?.isBlackList ?? false)
+                        completion()
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                case 401:
+                    self.gomsRefreshToken.tokenReissuance()
                 default:
                     print(result)
                 }

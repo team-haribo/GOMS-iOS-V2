@@ -9,8 +9,16 @@
 import UIKit
 
 public final class StudentManagementViewController: BaseViewController {
-
+    
     // MARK: - Properties
+    private let viewModel = StudentManagementViewModel()
+    
+    var userList: [UserData] = [] {
+        didSet {
+            studentCollectionView.reloadData()
+        }
+    }
+    
     private let searchController = UISearchController(searchResultsController: nil)
     
     private let titleLabel = UILabel().then {
@@ -19,10 +27,11 @@ public final class StudentManagementViewController: BaseViewController {
         $0.font = .pretendard(size: 18, weight: .semibold)
     }
     
-    private let filterButton = UIButton().then {
+    private lazy var filterButton = UIButton().then {
         $0.setTitle("필터", for: .normal)
         $0.backgroundColor = .clear
         $0.setTitleColor(.color.gomsInformation.color, for: .normal)
+        $0.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
     }
     
     lazy var studentCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
@@ -34,12 +43,26 @@ public final class StudentManagementViewController: BaseViewController {
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
+    @objc func filterButtonTapped() {
+        let bottomSheetVC = FilterBottomSheetVC()
+        bottomSheetVC.modalPresentationStyle = .overFullScreen
+        self.present(bottomSheetVC, animated: false, completion: nil)
+    }
+    
     // MARK: - Life Cycel
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    
+        viewModel.getUserList {
+            self.userList = self.viewModel.userListDatas
+            self.setupCollectionView()
+            self.setupSearchBar()
+            self.studentCollectionView.reloadData()
+        }
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
-        configNavigation()
-        setupCollectionView()
-        setupSearchBar()
     }
     
     override func configNavigation() {
@@ -60,10 +83,12 @@ public final class StudentManagementViewController: BaseViewController {
         searchController.searchResultsUpdater = self
     }
     
+    // MARK: - Add View
     override func addView() {
         [titleLabel, filterButton, studentCollectionView].forEach { view.addSubview($0) }
     }
     
+    // MARK: Layout
     override func setLayout() {
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
@@ -89,11 +114,14 @@ public final class StudentManagementViewController: BaseViewController {
 // MARK: - Extension
 extension StudentManagementViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return userList.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = studentCollectionView.dequeueReusableCell(withReuseIdentifier: StudentCollectionViewCell.identifier, for: indexPath) as! StudentCollectionViewCell
+    
+        let userData = userList[indexPath.row]
+        cell.configureData(with: userData)
         
         return cell
     }
@@ -101,7 +129,7 @@ extension StudentManagementViewController: UICollectionViewDataSource {
 
 extension StudentManagementViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width * 0.9
+        let width = bounds.width * 0.9
         let height: CGFloat = 72
         return CGSize(width: width, height: height)
     }
