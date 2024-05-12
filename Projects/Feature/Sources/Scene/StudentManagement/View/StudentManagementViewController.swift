@@ -52,14 +52,14 @@ public final class StudentManagementViewController: BaseViewController {
     // MARK: - Life Cycel
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    
         viewModel.getUserList {
             self.userList = self.viewModel.userListDatas
             self.setupCollectionView()
             self.setupSearchBar()
+            self.studentCollectionView.reloadData()
         }
-        studentCollectionView.reloadData()
     }
-    
     
     public override func viewDidLoad() {
         super.viewDidLoad()

@@ -82,9 +82,20 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupSwitch()
+    }
+    
+    func setupSwitch() {
+        if let userData = userData, userData.isBlackList {
+            prohibitionOutingSwitch.isOn = true
+        } else {
+            prohibitionOutingSwitch.isOn = false
+        }
     }
     
     @objc func closeButtonTapped() {
+        self.studentManagementVC.studentCollectionView.reloadData()
         self.dismiss(animated: false, completion: nil)
     }
     
@@ -94,11 +105,22 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         if sender.isOn {
             viewModel.blackList(index: index) {
                 print("blackList")
+                let cell = StudentCollectionViewCell()
+                let userData = userData
+    
+                cell.configureData(with: userData)
+                self.setupSwitch()
                 self.studentManagementVC.studentCollectionView.reloadData()
             }
         } else {
             viewModel.cancelBlackList(index: index) {
-                print("blaclist cancel")
+                print("Delete blackList")
+                let cell = StudentCollectionViewCell()
+                let userData = userData
+    
+                cell.configureData(with: userData)
+                self.setupSwitch()
+                self.studentManagementVC.studentCollectionView.reloadData()
             }
         }
     }

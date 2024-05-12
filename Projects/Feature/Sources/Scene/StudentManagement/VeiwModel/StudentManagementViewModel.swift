@@ -88,9 +88,6 @@ public final class StudentManagementViewModel: BaseViewModel {
     
     func blackList(index: Int, completion: @escaping () -> Void) {
         self.getUserList {
-            print(self.userList)
-            print(index)
-            
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
             
@@ -119,28 +116,30 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     func cancelBlackList(index: Int, completion: @escaping () -> Void) {
-        let selectedUser = userList[index]
-        let accountIdx = selectedUser.accountIdx
-        
-        studentCouncilProvider.request(.cancelBlackList(authorization: accessToken, accountIdx: accountIdx)) { response in
-            switch response {
-            case .success(let result):
-                let statusCode = result.statusCode
-                switch statusCode {
-                case 201:
-                    print("Reset content")
-                    completion()
-                case 401:
-                    self.gomsRefreshToken.tokenReissuance()
-                case 403:
-                    print("학생회 계정이 아닌데 요청할 경우")
-                case 404:
-                    print("계정을 찾을 수 없을 경우")
-                default:
-                    print(result)
+        self.getUserList {
+            let selectedUser = self.userList[index]
+            let accountIdx = selectedUser.accountIdx
+            
+            self.studentCouncilProvider.request(.cancelBlackList(authorization: self.accessToken, accountIdx: accountIdx)) { response in
+                switch response {
+                case .success(let result):
+                    let statusCode = result.statusCode
+                    switch statusCode {
+                    case 200..<300:
+                        print("Reset content")
+                        completion()
+                    case 401:
+                        self.gomsRefreshToken.tokenReissuance()
+                    case 403:
+                        print("학생회 계정이 아닌데 요청할 경우")
+                    case 404:
+                        print("계정을 찾을 수 없을 경우")
+                    default:
+                        print(result)
+                    }
+                case .failure(let err):
+                    print(err.localizedDescription)
                 }
-            case .failure(let err):
-                print(err.localizedDescription)
             }
         }
     }
