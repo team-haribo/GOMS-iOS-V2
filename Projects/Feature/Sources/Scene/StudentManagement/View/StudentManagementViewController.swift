@@ -27,10 +27,11 @@ public final class StudentManagementViewController: BaseViewController {
         $0.font = .pretendard(size: 18, weight: .semibold)
     }
     
-    private let filterButton = UIButton().then {
+    private lazy var filterButton = UIButton().then {
         $0.setTitle("필터", for: .normal)
         $0.backgroundColor = .clear
         $0.setTitleColor(.color.gomsInformation.color, for: .normal)
+        $0.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
     }
     
     lazy var studentCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
@@ -42,20 +43,26 @@ public final class StudentManagementViewController: BaseViewController {
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
+    @objc func filterButtonTapped() {
+        let bottomSheetVC = FilterBottomSheetVC()
+        bottomSheetVC.modalPresentationStyle = .overFullScreen
+        self.present(bottomSheetVC, animated: false, completion: nil)
+    }
+    
     // MARK: - Life Cycel
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        studentCollectionView.reloadData()
-    }
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
         viewModel.getUserList {
             self.userList = self.viewModel.userListDatas
-            self.configNavigation()
             self.setupCollectionView()
             self.setupSearchBar()
         }
+        studentCollectionView.reloadData()
+    }
+    
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
     }
     
     override func configNavigation() {

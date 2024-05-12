@@ -3,6 +3,26 @@
     {
       "filename" : "cancelButton.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "cancel.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "cancelButton 1.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

@@ -14,6 +14,7 @@ import Kingfisher
 
 public final class StudentCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
+    
     static let identifier = "StudentCell"
     
     let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 48, height: 48))
@@ -55,11 +56,13 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
     
     @objc func editButtonTapped() {
         guard let window = UIApplication.shared.keyWindow,
-              let rootViewController = window.rootViewController else {
-            return
-        }
+              let rootViewController = window.rootViewController else { return }
+        
+        let userData = studentManagementVC.userList[indexPath.row]
         
         let bottomSheetVC = AuthorityBottomSheetVC()
+        bottomSheetVC.userData = userData
+        bottomSheetVC.userDataIndex = indexPath.row
         bottomSheetVC.modalPresentationStyle = .overFullScreen
         rootViewController.present(bottomSheetVC, animated: false, completion: nil)
     }
@@ -80,11 +83,24 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
         } else {
             studentInfoLabel.text = "\(userData.grade)기 | AI"
         }
+        
+        if userData.authority == "ROLE_STUDENT_COUNCIL" {
+            profileImageView.layer.borderColor = UIColor(red: 0.706, green: 0.525, blue: 0.976, alpha: 1).cgColor
+            nameLabel.textColor = .color.gomsAdmin.color
+        }
+        
+        if userData.isBlackList == true {
+            profileImageView.layer.borderColor = UIColor(red: 0.895, green: 0.213, blue: 0.125, alpha: 1).cgColor
+            nameLabel.textColor = .color.gomsNegative.color
+        }
     }
     
     private func configureUI() {
         profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
         profileImageView.clipsToBounds = true
+        
+        profileImageView.layer.borderWidth = 4
+        profileImageView.layer.borderColor = UIColor.clear.cgColor
     }
     
     // MARK: - Add View

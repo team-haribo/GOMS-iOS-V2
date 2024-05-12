@@ -21,8 +21,8 @@ struct UserData {
     let isBlackList: Bool
 }
 
+
 public final class StudentManagementViewModel: BaseViewModel {
-    
     private let studentCouncilProvider = MoyaProvider<StudentCouncilServices>()
     
     var userList: [StudentListResponse] = []

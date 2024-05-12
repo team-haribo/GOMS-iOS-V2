@@ -11,6 +11,15 @@ import UIKit
 public final class AuthorityBottomSheetVC: BaseViewController {
 
     // MARK: - Properties
+    var userData: UserData?
+    var userDataIndex: Int?
+    
+    private let viewModel = StudentManagementViewModel()
+    
+    private let dimmedView = UIView().then {
+        $0.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 1).withAlphaComponent(0.6)
+    }
+    
     private let bottomSheetView = UIView().then {
         $0.setDynamicBackgroundColor(darkModeColor: UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1), lightModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1))
         $0.layer.cornerRadius = 12
@@ -42,8 +51,9 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         $0.font = .pretendard(size: 12, weight: .regular)
     }
     
-    let prohibitionOutingSwitch = UISwitch().then {
+    lazy var prohibitionOutingSwitch = UISwitch().then {
         $0.onTintColor = .color.gomsAdmin.color
+        $0.addTarget(self, action: #selector(blackListSwitchValueChanged), for: .valueChanged)
     }
     
     private let authorityTitle = UILabel().then {
@@ -58,11 +68,17 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         $0.font = .pretendard(size: 12, weight: .regular)
     }
     
-    let authoritySwitch = UISwitch().then {
+    lazy var authoritySwitch = UISwitch().then {
         $0.onTintColor = .color.gomsAdmin.color
+        $0.addTarget(self, action: #selector(authoritySwitchValueChanged(_:)), for: .valueChanged)
     }
 
     // MARK: - Life Cycel
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.view.backgroundColor = .clear
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -71,14 +87,38 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         self.dismiss(animated: false, completion: nil)
     }
     
+    @objc func blackListSwitchValueChanged(_ sender: UISwitch) {
+        guard let userData = userData, let index = userDataIndex else { return }
+        
+        if sender.isOn {
+            viewModel.blackList(index: index) {
+                print("blackList")
+            }
+        } else {
+            viewModel.cancelBlackList(index: index) {
+                print("blaclist cancel")
+            }
+        }
+    }
+  
+    @objc func authoritySwitchValueChanged(_ sender: UISwitch) {
+        guard let userData = userData else { return }
+    }
+    
     // MARK: - Add View
     override func addView() {
         [titleLabel, closeButton, prohibitionOutingTitle, prohibitionOutingLabel, prohibitionOutingSwitch, authorityTitle, authorityLabel, authoritySwitch].forEach { self.bottomSheetView.addSubview($0) }
-        view.addSubview(bottomSheetView)
+        dimmedView.addSubview(bottomSheetView)
+        view.addSubview(dimmedView)
     }
 
     // MARK: Layout
     override func setLayout() {
+        dimmedView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.top.bottom.equalToSuperview()
+        }
+        
         bottomSheetView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(bounds.height * 0.34)
