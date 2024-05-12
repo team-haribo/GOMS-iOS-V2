@@ -179,8 +179,8 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
-        [logo, settingButton, content, qrButton].forEach { view.addSubview($0) }
+        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
+        [logo, settingButton, content].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -256,7 +256,7 @@ public final class MainViewController: BaseViewController {
         }
         
         qrButton.snp.makeConstraints {
-            $0.trailing.equalTo(-(bounds.width * 0.09))
+            $0.trailing.equalToSuperview()
             $0.bottom.equalTo(-(bounds.height * 0.06))
             $0.height.width.equalTo(64)
         }
