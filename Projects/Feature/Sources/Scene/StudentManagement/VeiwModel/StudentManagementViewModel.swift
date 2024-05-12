@@ -57,31 +57,33 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     func changeAuthority(index: Int, completion: @escaping () -> Void) {
-        let selectedUser = userList[index]
-        let accountIdx = selectedUser.accountIdx
-        let authority = selectedUser.authority
-        
-        let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authority)
-        studentCouncilProvider.request(.editAuthority(authorization: accessToken, param: param)) { response in
-            switch response {
-            case .success(let result):
-                let statusCode = result.statusCode
-                switch statusCode {
-                case 200:
-                    print("success")
-                    completion()
-                case 401:
-                    self.gomsRefreshToken.tokenReissuance()
-                case 403:
-                    print("학생회 계정이 아닌데 요청할 경우")
-                case 404:
-                    print("계정을 찾을 수 없을 경우")
-                default:
-                    print(result)
+        self.getUserList {
+            let selectedUser = self.userList[index]
+            let accountIdx = selectedUser.accountIdx
+            let authority = selectedUser.authority
+            
+            let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authority)
+            self.studentCouncilProvider.request(.editAuthority(authorization: self.accessToken, param: param)) { response in
+                switch response {
+                case .success(let result):
+                    let statusCode = result.statusCode
+                    switch statusCode {
+                    case 200..<300:
+                        print("success")
+                        completion()
+                    case 401:
+                        self.gomsRefreshToken.tokenReissuance()
+                    case 403:
+                        print("학생회 계정이 아닌데 요청할 경우")
+                    case 404:
+                        print("계정을 찾을 수 없을 경우")
+                    default:
+                        print(result)
+                    }
+                    
+                case .failure(let err):
+                    print(err.localizedDescription)
                 }
-                
-            case .failure(let err):
-                print(err.localizedDescription)
             }
         }
     }
@@ -96,7 +98,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case .success(let result):
                     let statusCode = result.statusCode
                     switch statusCode {
-                    case 201:
+                    case 200..<300:
                         print("Created")
                         completion()
                     case 401:

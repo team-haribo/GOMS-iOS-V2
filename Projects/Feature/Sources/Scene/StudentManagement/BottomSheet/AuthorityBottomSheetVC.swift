@@ -92,6 +92,12 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         } else {
             prohibitionOutingSwitch.isOn = false
         }
+        
+        if let userData = userData, userData.authority == "ROLE_STUDENT_COUNCIL" {
+            authoritySwitch.isOn = true
+        } else {
+            authoritySwitch.isOn = false
+        }
     }
     
     @objc func closeButtonTapped() {
@@ -126,7 +132,29 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     }
   
     @objc func authoritySwitchValueChanged(_ sender: UISwitch) {
+        guard let userData = userData, let index = userDataIndex else { return }
         
+        if sender.isOn {
+            viewModel.changeAuthority(index: index) {
+                print("권한 수정")
+                let cell = StudentCollectionViewCell()
+                let userData = userData
+    
+                cell.configureData(with: userData)
+                self.setupSwitch()
+                self.studentManagementVC.studentCollectionView.reloadData()
+            }
+        } else {
+            viewModel.changeAuthority(index: index) {
+                print("권한 수정")
+                let cell = StudentCollectionViewCell()
+                let userData = userData
+    
+                cell.configureData(with: userData)
+                self.setupSwitch()
+                self.studentManagementVC.studentCollectionView.reloadData()
+            }
+        }
     }
     
     // MARK: - Add View
