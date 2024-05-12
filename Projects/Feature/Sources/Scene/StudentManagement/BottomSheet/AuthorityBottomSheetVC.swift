@@ -15,6 +15,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     var userDataIndex: Int?
     
     private let viewModel = StudentManagementViewModel()
+    let studentManagementVC = StudentManagementViewController()
     
     private let dimmedView = UIView().then {
         $0.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 1).withAlphaComponent(0.6)
@@ -93,6 +94,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         if sender.isOn {
             viewModel.blackList(index: index) {
                 print("blackList")
+                self.studentManagementVC.studentCollectionView.reloadData()
             }
         } else {
             viewModel.cancelBlackList(index: index) {
@@ -102,7 +104,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     }
   
     @objc func authoritySwitchValueChanged(_ sender: UISwitch) {
-        guard let userData = userData else { return }
+        
     }
     
     // MARK: - Add View

@@ -55,18 +55,31 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func editButtonTapped() {
-        guard let window = UIApplication.shared.keyWindow,
-              let rootViewController = window.rootViewController else { return }
+        guard let parentViewController = findParentViewController() as? StudentManagementViewController else { return }
         
-        let userData = studentManagementVC.userList[indexPath.row]
+        guard let indexPath = parentViewController.studentCollectionView.indexPath(for: self) else {
+            return }
         
+        let userData = parentViewController.userList[indexPath.row]
+
         let bottomSheetVC = AuthorityBottomSheetVC()
         bottomSheetVC.userData = userData
         bottomSheetVC.userDataIndex = indexPath.row
         bottomSheetVC.modalPresentationStyle = .overFullScreen
-        rootViewController.present(bottomSheetVC, animated: false, completion: nil)
+        parentViewController.present(bottomSheetVC, animated: false, completion: nil)
     }
 
+    private func findParentViewController() -> UIViewController? {
+        var parentResponder: UIResponder? = self
+        while let responder = parentResponder {
+            if let viewController = responder as? UIViewController {
+                return viewController
+            }
+            parentResponder = responder.next
+        }
+        return nil
+    }
+    
     // MARK: - Configure
     func configureData(with userData: UserData) {
         if let imageURL = userData.profileImageURL, let url = URL(string: imageURL) {
