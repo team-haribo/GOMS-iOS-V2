@@ -17,13 +17,14 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         $0.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
     }
     
-    private let qrIcon = UIImageView().then {
-        $0.image = .image.gomsqrIcon.image
+    private let qrFrame = UIImageView().then {
+        $0.image = .image.qr.image
     }
     
     // MARK: - Life Cycel
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.view.backgroundColor = .clear
         self.navigationController?.navigationBar.isHidden = true
         self.navigationItem.hidesBackButton = true
     }
@@ -33,14 +34,23 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         setupCamera()
     }
     
+    // MARK: - Selector
+    @objc func closeButtonDidTap() {
+        let mainVC = MainViewController()
+        self.navigationController?.pushViewController(mainVC, animated: true)
+    }
+
     // MARK: - Add View
     public override func addView() {
-        [gomsLogo, closeButton, qrIcon].forEach {
-            view.addSubview($0)
-        }
+        [gomsLogo, closeButton, qrFrame].forEach { self.view.addSubview($0) }
     }
     
     // MARK: - Layout
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        previewLayer.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
+    }
+    
     public override func setLayout() {
         gomsLogo.snp.makeConstraints {
             $0.top.equalToSuperview().offset(48)
@@ -53,23 +63,20 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             $0.trailing.equalToSuperview().inset(20)
         }
         
-        qrIcon.snp.makeConstraints {
-            $0.width.height.equalTo(232)
+        qrFrame.snp.makeConstraints {
+            $0.width.height.equalTo(bounds.width * 0.64)
             $0.centerY.centerX.equalToSuperview()
         }
     }
 
     public func setupCamera() {
-        guard let camera = AVCaptureDevice.default(for: .video) else {
-            print("카메라를 찾을 수 없습니다.")
-            return
-        }
+        guard let camera = AVCaptureDevice.default(for: .video) else { return }
 
         do {
             let input = try AVCaptureDeviceInput(device: camera)
             captureSession.addInput(input)
         } catch {
-            print("카메라 입력을 설정하는 중 오류 발생: \(error.localizedDescription)")
+            print(error.localizedDescription)
             return
         }
 
@@ -80,6 +87,7 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
+        [gomsLogo, closeButton, qrFrame].forEach { self.view.addSubview($0) }
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.captureSession.startRunning()
@@ -125,25 +133,5 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         } catch {
             print("비디오 프레임 처리 중 오류 발생: \(error.localizedDescription)")
         }
-    }
-    
-    public override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        let screenWidth = view.bounds.width
-        let screenHeight = view.bounds.height
-        let previewSize: CGFloat = 200
-        
-        let previewX = (screenWidth - previewSize) / 2
-        let previewY = (screenHeight - previewSize) / 2
-        
-        previewLayer.frame = CGRect(x: previewX, y: previewY, width: previewSize, height: previewSize)
-    }
-    
-    // MARK: Action
-    @objc func closeButtonDidTap() {
-        print("터치")
-        let mainVC = MainViewController()
-        self.navigationController?.pushViewController(mainVC, animated: true)
     }
 }
