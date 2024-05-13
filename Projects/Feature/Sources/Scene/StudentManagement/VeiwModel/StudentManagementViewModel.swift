@@ -27,6 +27,34 @@ public final class StudentManagementViewModel: BaseViewModel {
     var userList: [StudentListResponse] = []
     var userListDatas: [UserData] = []
     
+    private var grade: Int = 0
+    private var gender: String = ""
+    private var name: String = ""
+    private var isBlackList: Bool = false
+    private var authority: String = ""
+    
+    // MARK: - Setting
+    func setupGrade(grade: Int) {
+        self.grade = grade
+    }
+    
+    func setupGender(gender: String) {
+        self.gender = gender
+    }
+    
+    func setupName(name: String) {
+        self.name = name
+    }
+    
+    func setupIsBlackList(isBlackList: Bool) {
+        self.isBlackList = isBlackList
+    }
+    
+    func setupAuthority(authority: String) {
+        self.authority = authority
+    }
+    
+    // MARK: - Get User List
     func getUserList(completion: @escaping () -> Void) {
         studentCouncilProvider.request(.studentList(authorization: accessToken)) { response in
             switch response {
@@ -56,6 +84,7 @@ public final class StudentManagementViewModel: BaseViewModel {
         }
     }
     
+    // MARK: - Change Student Council Authority
     func changeAuthority(index: Int, completion: @escaping () -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
@@ -88,6 +117,7 @@ public final class StudentManagementViewModel: BaseViewModel {
         }
     }
     
+    // MARK: - Black List
     func blackList(index: Int, completion: @escaping () -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
@@ -117,6 +147,7 @@ public final class StudentManagementViewModel: BaseViewModel {
         }
     }
     
+    // MARK: - Delete Black List
     func cancelBlackList(index: Int, completion: @escaping () -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
@@ -142,6 +173,30 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case .failure(let err):
                     print(err.localizedDescription)
                 }
+            }
+        }
+    }
+    
+    // MARK: - Search User
+    func serachStudent(completion: @escaping () -> Void) {
+        let parm = SearchStudentRequest.init(grade: self.grade, gender: self.gender, name: self.name, isBlackList: self.isBlackList, authority: self.authority)
+        
+        studentCouncilProvider.request(.searchStudent(authorization: self.accessToken, parm: parm)) { response in
+            switch response {
+            case .success(let result):
+                let statusCode = result.statusCode
+                switch statusCode {
+                case 200..<300:
+                    print("ok")
+                case 401:
+                    self.gomsRefreshToken.tokenReissuance()
+                case 403:
+                    print("학생회 계정이 아닌데 요청할 경우")
+                default:
+                    print(result)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
             }
         }
     }

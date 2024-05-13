@@ -144,7 +144,7 @@ public class AdminMainViewController: BaseViewController {
     }
     
     @objc func qrButtonTapped() {
-        let qrCodeVC = QRCodeViewController()
+        let qrCodeVC = AdminQRCodeViewController()
         self.navigationController?.pushViewController(qrCodeVC, animated: true)
     }
     

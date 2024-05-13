@@ -8,15 +8,11 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
     
     let metadataObjectTypes: [AVMetadataObject.ObjectType] = [.qr]
     
-    private let qrScanBackground = UIImageView().then {
-        $0.image = .image.gomsqrBackground.image
-    }
-    
     private let gomsLogo = UIImageView().then {
         $0.image = .image.gomsWhiteLogo.image
     }
     
-    private let closeButton = UIButton().then {
+    private lazy var closeButton = UIButton().then {
         $0.setImage(.image.gomsCloseButton.image, for: .normal)
         $0.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
     }
@@ -25,25 +21,27 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         $0.image = .image.gomsqrIcon.image
     }
     
+    // MARK: - Life Cycel
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+        self.navigationItem.hidesBackButton = true
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationItem.hidesBackButton = true
-        
         setupCamera()
     }
     
+    // MARK: - Add View
     public override func addView() {
-        [qrScanBackground, gomsLogo, closeButton, qrIcon].forEach {
+        [gomsLogo, closeButton, qrIcon].forEach {
             view.addSubview($0)
         }
     }
     
+    // MARK: - Layout
     public override func setLayout() {
-        qrScanBackground.snp.makeConstraints {
-            $0.top.leading.trailing.bottom.equalToSuperview()
-        }
-        
         gomsLogo.snp.makeConstraints {
             $0.top.equalToSuperview().offset(48)
             $0.leading.equalToSuperview()
