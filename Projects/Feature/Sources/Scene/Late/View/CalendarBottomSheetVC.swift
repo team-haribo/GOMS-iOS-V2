@@ -16,9 +16,13 @@ class CalendarBottomSheetVC: BaseViewController {
     let latecomerListVC = LatecomerListViewController()
     
     var selectedDate: DateComponents? = nil
+    
+    private let dimmedView = UIView().then {
+        $0.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
+    }
 
     private let bottomSheetView = UIView().then {
-        $0.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+        $0.setDynamicBackgroundColor(darkModeColor: UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1), lightModeColor: UIColor(red: 1, green: 1, blue: 1, alpha: 1))
         $0.layer.cornerRadius = 12
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.clipsToBounds = true
@@ -74,11 +78,16 @@ class CalendarBottomSheetVC: BaseViewController {
     // MARK: - Add View
     override func addView() {
         [titleLabel, closeButton, calendarView].forEach { bottomSheetView.addSubview($0) }
-        view.addSubview(bottomSheetView)
+        dimmedView.addSubview(bottomSheetView)
+        view.addSubview(dimmedView)
     }
 
     // MARK: - Layout
     override func setLayout() {
+        dimmedView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
         bottomSheetView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(bounds.height * 0.56)
