@@ -27,30 +27,30 @@ public final class StudentManagementViewModel: BaseViewModel {
     var userList: [StudentListResponse] = []
     var userListDatas: [UserData] = []
     
-    private var grade: Int = 0
-    private var gender: String = ""
-    private var name: String = ""
-    private var isBlackList: Bool = false
-    private var authority: String = ""
+    private var grade: Int?
+    private var gender: String?
+    private var name: String?
+    private var isBlackList: Bool?
+    private var authority: String?
     
     // MARK: - Setting
-    func setupGrade(grade: Int) {
+    func setupGrade(grade: Int?) {
         self.grade = grade
     }
     
-    func setupGender(gender: String) {
+    func setupGender(gender: String?) {
         self.gender = gender
     }
     
-    func setupName(name: String) {
+    func setupName(name: String?) {
         self.name = name
     }
     
-    func setupIsBlackList(isBlackList: Bool) {
+    func setupIsBlackList(isBlackList: Bool?) {
         self.isBlackList = isBlackList
     }
     
-    func setupAuthority(authority: String) {
+    func setupAuthority(authority: String?) {
         self.authority = authority
     }
     
@@ -178,8 +178,8 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Search User
-    func serachStudent(completion: @escaping () -> Void) {
-        let parm = SearchStudentRequest.init(grade: self.grade, gender: self.gender, name: self.name, isBlackList: self.isBlackList, authority: self.authority)
+    func serachStudent(grade: Int?, gender: String?, name: String?, isBlackList: Bool?, authority: String?, completion: @escaping () -> Void) {
+        let parm = SearchStudentRequest.init(grade: grade, gender: gender, name: name, isBlackList: isBlackList ?? false, authority: authority)
         
         studentCouncilProvider.request(.searchStudent(authorization: self.accessToken, parm: parm)) { response in
             switch response {

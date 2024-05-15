@@ -182,7 +182,7 @@ public class AdminMainViewController: BaseViewController {
         }
         
         content.snp.makeConstraints {
-            $0.top.equalTo(logo.snp.bottom)
+            $0.top.equalTo(logo.snp.bottom).offset(40)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.bottom.equalToSuperview()
@@ -192,7 +192,7 @@ public class AdminMainViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(84)
             $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview().inset(24)
+            $0.top.equalToSuperview()
         }
 
         latecomerLabel.snp.makeConstraints {

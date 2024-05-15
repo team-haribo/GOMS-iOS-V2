@@ -65,7 +65,6 @@ public final class SignInViewController: BaseViewController {
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
-        navigationItem.hidesBackButton = true
     }
     
     // MARK: - Seletors

@@ -38,6 +38,8 @@ public final class MainViewController: BaseViewController {
         $0.backgroundColor = .clear
     }
     
+    private let outingView = UIView()
+    
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출현황"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
@@ -118,10 +120,24 @@ public final class MainViewController: BaseViewController {
     
     func nilLatecomers() {
         lateNilView.isHidden = false
+
+//        outingView.snp.remakeConstraints {
+//            $0.leading.equalTo(bounds.width * 0.05)
+//            $0.trailing.equalTo(-(bounds.width * 0.05))
+//            $0.top.equalTo(lateNilView.snp.bottom).offset(32)
+//            $0.bottom.equalToSuperview()
+//        }
     }
     
     func showLatecomers() {
         lateNilView.isHidden = true
+
+//        outingView.snp.remakeConstraints {
+//            $0.leading.equalTo(bounds.width * 0.05)
+//            $0.trailing.equalTo(-(bounds.width * 0.05))
+//            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+//            $0.bottom.equalToSuperview()
+//        }
     }
     
     func setupProfileView() {
@@ -179,7 +195,8 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
+        [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
+        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.content.addSubview($0) }
         [logo, settingButton, content].forEach { view.addSubview($0) }
     }
     
@@ -199,7 +216,7 @@ public final class MainViewController: BaseViewController {
         }
         
         content.snp.makeConstraints {
-            $0.top.equalTo(logo.snp.bottom)
+            $0.top.equalTo(logo.snp.bottom).offset(40)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.bottom.equalToSuperview()
@@ -209,7 +226,7 @@ public final class MainViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(84)
             $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview().inset(24)
+            $0.top.equalToSuperview()
         }
 
         latecomerLabel.snp.makeConstraints {
@@ -230,14 +247,20 @@ public final class MainViewController: BaseViewController {
             $0.height.equalTo(136)
         }
         
+        outingView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+            $0.bottom.equalToSuperview()
+        }
+        
         outingStatusLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
             $0.height.equalTo(32)
-            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+            $0.top.equalToSuperview()
         }
         
         outingCountLabel.snp.makeConstraints {
-            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+            $0.top.equalToSuperview()
             $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
             $0.height.equalTo(32)
         }

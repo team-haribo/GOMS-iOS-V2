@@ -128,11 +128,17 @@ public final class FilterBottomSheetVC: BaseViewController {
         
         switch role {
         case "학생":
-            print("학생 버튼이 선택되었습니다.")
+            studentButton.isSelected = true
+            adminButton.isSelected = false
+            blackListButton.isSelected = false
         case "학생회":
-            print("학생회 버튼이 선택되었습니다.")
+            studentButton.isSelected = false
+            adminButton.isSelected = true
+            blackListButton.isSelected = false
         case "외출금지":
-            print("외출금지 버튼이 선택되었습니다.")
+            studentButton.isSelected = false
+            adminButton.isSelected = false
+            blackListButton.isSelected = true
         default:
             break
         }
@@ -143,11 +149,17 @@ public final class FilterBottomSheetVC: BaseViewController {
         
         switch grade {
         case "1학년":
-            viewModel.setupGrade(grade: 1)
+            grade1Button.isSelected = true
+            grade2Button.isSelected = false
+            grade3Button.isSelected = false
         case "2학년":
-            viewModel.setupGrade(grade: 2)
+            grade1Button.isSelected = false
+            grade2Button.isSelected = true
+            grade3Button.isSelected = false
         case "3학년":
-            viewModel.setupGrade(grade: 3)
+            grade1Button.isSelected = false
+            grade2Button.isSelected = false
+            grade3Button.isSelected = true
         default:
             break
         }
@@ -158,9 +170,11 @@ public final class FilterBottomSheetVC: BaseViewController {
         
         switch gender {
         case "남성":
-            viewModel.setupGender(gender: "MAN")
+            manButton.isSelected = true
+            womanButton.isSelected = false
         case "여성":
-            viewModel.setupGender(gender: "WOMAN")
+            manButton.isSelected = false
+            womanButton.isSelected = true
         default:
             break
         }
@@ -168,12 +182,37 @@ public final class FilterBottomSheetVC: BaseViewController {
 
     @objc func majorButtonTapped(sender: BottomSheetButton) {
         guard let major = sender.title(for: .normal) else { return }
- 
         
+        switch major {
+        case "SW":
+            swButton.isSelected = true
+            iotButton.isSelected = false
+            aiButton.isSelected = false
+        case "IoT":
+            swButton.isSelected = false
+            iotButton.isSelected = true
+            aiButton.isSelected = false
+        case "AI":
+            swButton.isSelected = false
+            iotButton.isSelected = false
+            aiButton.isSelected = true
+        default:
+            break
+        }
     }
     
     @objc func resetButtonTapped() {
-        
+        studentButton.isSelected = false
+        adminButton.isSelected = false
+        blackListButton.isSelected = false
+        grade1Button.isSelected = false
+        grade2Button.isSelected = false
+        grade3Button.isSelected = false
+        manButton.isSelected = false
+        womanButton.isSelected = false
+        swButton.isSelected = false
+        iotButton.isSelected = false
+        aiButton.isSelected = false
     }
     
     // MARK: - Add View
