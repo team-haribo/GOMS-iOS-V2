@@ -109,24 +109,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.image = .image.gomsBottomButton.image
     }
     
-    let pushcheckText = UILabel().then {
-        $0.text = "외출제 푸시 알람"
-        $0.textColor = .color.gomsTextDefault.color
-        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
-    }
-    
-    let pushcheckDescription = UILabel().then {
-        $0.text = "외출할 시간이 될 떄마다 알려드려요"
-        $0.textColor = .color.gomsTertiary.color
-        $0.font = UIFont.pretendard(size: 12, weight: .regular)
-    }
-    
-    let pushchecktoggleButton: UISwitch = UISwitch().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.onTintColor = .color.gomsPrimary.color
-        $0.tintColor = .color.gomsTertiary.color
-    }
-    
     let cameranowonText = UILabel().then {
         $0.text = "카메라 바로 켜기"
         $0.textColor = .color.gomsTextDefault.color
@@ -399,9 +381,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             perceptionNum,
             perceptionText,
             userProfilepencil,
-            pushcheckText,
-            pushcheckDescription,
-            pushchecktoggleButton,
             repassword,
             line1View,
             line2View,
@@ -521,49 +500,30 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(repassword.snp.top)
         }
         
-        pushcheckText.snp.makeConstraints {
+        cameranowonText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(repassword.snp.leading).offset(8)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
         
-        pushcheckDescription.snp.makeConstraints {
-            $0.width.equalTo(184)
-            $0.height.equalTo(20)
-            $0.leading.equalTo(pushcheckText.snp.leading)
-            $0.top.equalTo(pushcheckText.snp.bottom)
-        }
-        
-        pushchecktoggleButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
-        }
-        
-        cameranowonText.snp.makeConstraints {
-            $0.width.equalTo(184)
-            $0.height.equalTo(28)
-            $0.leading.equalTo(pushcheckText.snp.leading)
-            $0.top.equalTo(pushcheckDescription.snp.bottom).offset(32)
-        }
-        
         cameranowonDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
+            $0.leading.equalTo(cameranowonText.snp.leading)
             $0.top.equalTo(cameranowonText.snp.bottom)
-            $0.leading.equalTo(pushcheckText.snp.leading)
         }
         
         cameranowontoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(pushchecktoggleButton.snp.bottom).offset(48)
+            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
 
         logoutButton.snp.makeConstraints {
             $0.width.equalTo(335)
             $0.height.equalTo(48)
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(cameranowonDescription.snp.top).offset(108)
+            $0.top.equalTo(cameranowonDescription.snp.top).offset(188)
         }
     }
 }

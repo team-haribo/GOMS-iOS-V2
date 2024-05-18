@@ -15,10 +15,10 @@ let package = Package(
         .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.0.1"),
         .package(url: "https://github.com/Moya/Moya.git", from: "15.0.0"),
         .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0"),
-        .package(url: "https://github.com/devxoul/Then", from: "2"),
+        .package(url: "https://github.com/devxoul/Then", from: "2.0.0"),
         .package(url: "https://github.com/GSM-MSG/GAuthSignin-Swift", from: "0.0.3"),
         .package(url: "https://github.com/dmrschmidt/QRCode", from: "1.0.0"),
         .package(url: "https://github.com/yannickl/QRCodeReader.swift.git", from: "10.1.0"),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.4.0")
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.22.0")
     ]
 )
