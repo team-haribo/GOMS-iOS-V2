@@ -22,17 +22,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let AdminisSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
         print("\(isSwitchOn)|\(AdminisSwitchOn)")
         
-//        if isSwitchOn == true {
-//            window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-//        } else if AdminisSwitchOn == true {
-//            window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
-//        } else {
-//            window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
-//        }
+        applySavedTheme()
         
-        window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
+        if isSwitchOn == true {
+            window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+        } else if AdminisSwitchOn == true {
+            window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
+        } else {
+            window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
+        }
+        
+        
+        
+//        window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
         
         window?.makeKeyAndVisible()
+    }
+    
+    private func applySavedTheme() {
+        let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
+        let savedTheme = UIUserInterfaceStyle(rawValue: savedThemeValue) ?? .unspecified
+        window?.overrideUserInterfaceStyle = savedTheme
+        
+        if let rootViewController = window?.rootViewController as? UserProfileViewController {
+            rootViewController.updateThemeText()
+        }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {}
@@ -45,3 +59,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneDidEnterBackground(_ scene: UIScene) {}
 }
+

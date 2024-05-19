@@ -96,7 +96,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.layer.borderWidth = 1.0
     }
     let themesettingText = UILabel().then {
-        $0.text = "시스템 테마 설정"
+        $0.text = ""
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
@@ -150,39 +150,63 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         print("테스트: \(isSwitchMakeOn)")
     }
     
-    @IBAction func ShowActionSheetClick(_ sender: UIButton) {
-        updateImage(isActionSheetShowing: true)
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            print("다크(default) 모드로 변경")
-            if let window = UIApplication.shared.windows.first {
-                window.overrideUserInterfaceStyle = .dark
-                self?.themesettingText.text = "다크(기본)"
+    @IBAction private func ShowActionSheetClick(_ sender: UIButton) {
+            updateImage(isActionSheetShowing: true)
+            
+            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] _ in
+                self?.setTheme(.dark, themeText: "다크(기본)")
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] _ in
+                self?.setTheme(.light, themeText: "라이트")
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] _ in
+                self?.setTheme(.unspecified, themeText: "시스템 테마 설정")
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
+                self?.updateImage(isActionSheetShowing: false)
+            }))
+            
+            self.present(actionSheet, animated: true, completion: nil)
+        }
+
+    private func applySavedTheme() {
+            let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
+
+            let savedTheme: UIUserInterfaceStyle
+            switch savedThemeValue {
+            case 1: savedTheme = .light
+            case 2: savedTheme = .dark
+            default: savedTheme = .unspecified
             }
-        }))
-        
-        actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            print("라이트(Light) 모드로 변경")
-            if let window = UIApplication.shared.windows.first {
-                window.overrideUserInterfaceStyle = .light
-                self?.themesettingText.text = "라이트"
+
+            guard let window = UIApplication.shared.windows.first else {
+                return
             }
-        }))
-        
-        actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            print("시스템 기본(basics) 테마로 변경")
+
+            window.overrideUserInterfaceStyle = savedTheme
+            updateThemeText()
+        }
+    
+        private func setTheme(_ style: UIUserInterfaceStyle, themeText: String) {
             if let window = UIApplication.shared.windows.first {
-                window.overrideUserInterfaceStyle = .unspecified
-                self?.themesettingText.text = "시스템 테마 설정"
+                window.overrideUserInterfaceStyle = style
+                themesettingText.text = themeText
+                
+                UserDefaults.standard.set(style.rawValue, forKey: "selectedTheme")
+                UserDefaults.standard.set(themeText, forKey: "themeText")
             }
-        }))
+        }
+
+
         
-        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
-            self?.updateImage(isActionSheetShowing: false)
-        }))
-        
-        self.present(actionSheet, animated: true, completion: nil)
+
+    public func updateThemeText() {
+        self.themesettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
     }
     
     @objc func logoutButtonTapped() {
@@ -240,6 +264,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        applySavedTheme()
         viewModel.loadProfileInfo()
         
         viewModel.$profileInfo.sink { [weak self] profileInfo in
