@@ -10,7 +10,7 @@ import ProjectDescriptionHelpers
 
 let project = Project.makeModule(
     name: "GOMS-iOS-V2",
-    platform: .iOS,
+    destinations: .iOS,
     product: .app,
     dependencies: [
         .project(target: "Feature", path: .relativeToRoot("Projects/Feature"))
