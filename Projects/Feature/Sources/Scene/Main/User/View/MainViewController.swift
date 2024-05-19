@@ -120,24 +120,10 @@ public final class MainViewController: BaseViewController {
     
     func nilLatecomers() {
         lateNilView.isHidden = false
-
-//        outingView.snp.remakeConstraints {
-//            $0.leading.equalTo(bounds.width * 0.05)
-//            $0.trailing.equalTo(-(bounds.width * 0.05))
-//            $0.top.equalTo(lateNilView.snp.bottom).offset(32)
-//            $0.bottom.equalToSuperview()
-//        }
     }
     
     func showLatecomers() {
         lateNilView.isHidden = true
-
-//        outingView.snp.remakeConstraints {
-//            $0.leading.equalTo(bounds.width * 0.05)
-//            $0.trailing.equalTo(-(bounds.width * 0.05))
-//            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
-//            $0.bottom.equalToSuperview()
-//        }
     }
     
     func setupProfileView() {

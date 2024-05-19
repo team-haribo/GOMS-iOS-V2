@@ -29,10 +29,10 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     
     lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.backgroundColor = .clear
-        $0.isScrollEnabled = false
+        $0.isScrollEnabled = true
         $0.showsHorizontalScrollIndicator = false
-        $0.showsVerticalScrollIndicator = true
         $0.clipsToBounds = true
+        $0.showsVerticalScrollIndicator = true
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
