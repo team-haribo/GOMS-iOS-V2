@@ -145,7 +145,11 @@ extension StudentManagementViewController: UISearchResultsUpdating {
         if searchString.isEmpty {
             userList = viewModel.userListDatas
         } else {
-           
+            viewModel.serachStudent(searchString: searchString) {
+                self.userList = self.viewModel.userSearchListDatas
+                print(self.userList)
+                self.studentCollectionView.reloadData()
+            }
         }
     }
 }

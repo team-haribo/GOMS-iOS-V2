@@ -27,31 +27,43 @@ public final class StudentManagementViewModel: BaseViewModel {
     var userList: [StudentListResponse] = []
     var userListDatas: [UserData] = []
     
+    var userSearchList: [StudentListResponse] = []
+    var userSearchListDatas: [UserData] = []
+    
     private var grade: Int?
     private var gender: String?
-    private var name: String?
     private var isBlackList: Bool?
     private var authority: String?
+    private var major: String?
     
     // MARK: - Setting
     func setupGrade(grade: Int?) {
-        self.grade = grade
+        self.grade = grade!
+        print("graddddddddd")
     }
     
     func setupGender(gender: String?) {
-        self.gender = gender
+        self.gender = gender!
     }
-    
-    func setupName(name: String?) {
-        self.name = name
-    }
-    
+
     func setupIsBlackList(isBlackList: Bool?) {
-        self.isBlackList = isBlackList
+        self.isBlackList = isBlackList!
     }
     
     func setupAuthority(authority: String?) {
-        self.authority = authority
+        self.authority = authority!
+    }
+    
+    func setupMajor(major: String?) {
+        self.major = major!
+    }
+    
+    func resetInfo() {
+        self.grade = nil
+        self.gender = nil
+        self.isBlackList = nil
+        self.authority = nil
+        self.major = nil
     }
     
     // MARK: - Get User List
@@ -178,12 +190,27 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Search User
-    func serachStudent(grade: Int?, gender: String?, name: String?, isBlackList: Bool?, authority: String?, completion: @escaping () -> Void) {
-        let parm = SearchStudentRequest.init(grade: grade, gender: gender, name: name, isBlackList: isBlackList ?? false, authority: authority)
+    func serachStudent(searchString: String, completion: @escaping () -> Void) {
+        let parm = SearchStudentRequest.init(grade: grade, gender: gender, name: searchString, isBlackList: isBlackList ?? false, authority: authority, major: major)
         
         studentCouncilProvider.request(.searchStudent(authorization: self.accessToken, parm: parm)) { response in
             switch response {
             case .success(let result):
+                let responseData = result.data
+                do {
+                    print("searchString: \(searchString)")
+                    print(self.grade)
+                    print(self.gender)
+                    print(self.isBlackList)
+                    print(self.authority)
+                    print(self.major)
+                    self.userSearchList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
+                    self.userSearchListDatas = self.userSearchList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
+                    print("User Search: \(self.userSearchList)")
+                    completion()
+                } catch(let err) {
+                    print(String(describing: err))
+                }
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 200..<300:

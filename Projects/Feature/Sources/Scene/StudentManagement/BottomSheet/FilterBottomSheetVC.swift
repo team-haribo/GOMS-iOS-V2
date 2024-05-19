@@ -131,14 +131,18 @@ public final class FilterBottomSheetVC: BaseViewController {
             studentButton.isSelected = true
             adminButton.isSelected = false
             blackListButton.isSelected = false
+            viewModel.setupAuthority(authority: "ROLE_STUDENT")
         case "학생회":
             studentButton.isSelected = false
             adminButton.isSelected = true
             blackListButton.isSelected = false
+            viewModel.setupAuthority(authority: "ROLE_STUDENT_COUNCIL")
+            print("학생회 버튼")
         case "외출금지":
             studentButton.isSelected = false
             adminButton.isSelected = false
             blackListButton.isSelected = true
+            viewModel.setupIsBlackList(isBlackList: true)
         default:
             break
         }
@@ -152,14 +156,17 @@ public final class FilterBottomSheetVC: BaseViewController {
             grade1Button.isSelected = true
             grade2Button.isSelected = false
             grade3Button.isSelected = false
+            viewModel.setupGrade(grade: 1)
         case "2학년":
             grade1Button.isSelected = false
             grade2Button.isSelected = true
             grade3Button.isSelected = false
+            viewModel.setupGrade(grade: 2)
         case "3학년":
             grade1Button.isSelected = false
             grade2Button.isSelected = false
             grade3Button.isSelected = true
+            viewModel.setupGrade(grade: 3)
         default:
             break
         }
@@ -172,9 +179,11 @@ public final class FilterBottomSheetVC: BaseViewController {
         case "남성":
             manButton.isSelected = true
             womanButton.isSelected = false
+            viewModel.setupGender(gender: "MAN")
         case "여성":
             manButton.isSelected = false
             womanButton.isSelected = true
+            viewModel.setupGender(gender: "WOMAN")
         default:
             break
         }
@@ -188,14 +197,17 @@ public final class FilterBottomSheetVC: BaseViewController {
             swButton.isSelected = true
             iotButton.isSelected = false
             aiButton.isSelected = false
+            viewModel.setupMajor(major: "SW_DEVELOP")
         case "IoT":
             swButton.isSelected = false
             iotButton.isSelected = true
             aiButton.isSelected = false
+            viewModel.setupMajor(major: "SMART_IOT")
         case "AI":
             swButton.isSelected = false
             iotButton.isSelected = false
             aiButton.isSelected = true
+            viewModel.setupMajor(major: "AI")
         default:
             break
         }
@@ -213,6 +225,8 @@ public final class FilterBottomSheetVC: BaseViewController {
         swButton.isSelected = false
         iotButton.isSelected = false
         aiButton.isSelected = false
+        
+        viewModel.resetInfo()
     }
     
     // MARK: - Add View
