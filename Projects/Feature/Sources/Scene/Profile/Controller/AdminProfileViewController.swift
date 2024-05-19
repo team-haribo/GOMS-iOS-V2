@@ -96,7 +96,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.layer.borderWidth = 1.0
     }
     let themesettingText = UILabel().then {
-        $0.text = "시스템 테마 설정"
+        $0.text = ""
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
@@ -145,37 +145,26 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         UserDefaults.standard.set(sender.isOn, forKey: "isSwitchMakeOn")
         
         let defaults = UserDefaults.standard
-            
-            let isSwitchMakeOn = defaults.bool(forKey: "isSwitchMakeOn")
+        
+        let isSwitchMakeOn = defaults.bool(forKey: "isSwitchMakeOn")
         print("테스트: \(isSwitchMakeOn)")
     }
     
-    @IBAction func ShowActionSheetClick(_ sender: UIButton) {
+    @IBAction private func ShowActionSheetClick(_ sender: UIButton) {
         updateImage(isActionSheetShowing: true)
+        
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            print("다크(default) 모드로 변경")
-            if let window = UIApplication.shared.windows.first {
-                window.overrideUserInterfaceStyle = .dark
-                self?.themesettingText.text = "다크(기본)"
-            }
+        actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] _ in
+            self?.setTheme(.dark, themeText: "다크(기본)")
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            print("라이트(Light) 모드로 변경")
-            if let window = UIApplication.shared.windows.first {
-                window.overrideUserInterfaceStyle = .light
-                self?.themesettingText.text = "라이트"
-            }
+        actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] _ in
+            self?.setTheme(.light, themeText: "라이트")
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            print("시스템 기본(basics) 테마로 변경")
-            if let window = UIApplication.shared.windows.first {
-                window.overrideUserInterfaceStyle = .unspecified
-                self?.themesettingText.text = "시스템 테마 설정"
-            }
+        actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] _ in
+            self?.setTheme(.unspecified, themeText: "시스템 테마 설정")
         }))
         
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
@@ -183,6 +172,39 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }))
         
         self.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    private func applySavedTheme() {
+        let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
+        
+        let savedTheme: UIUserInterfaceStyle
+        switch savedThemeValue {
+        case 1: savedTheme = .light
+        case 2: savedTheme = .dark
+        default: savedTheme = .unspecified
+            
+        }
+        
+        guard let window = UIApplication.shared.windows.first else {
+            return
+        }
+        
+        window.overrideUserInterfaceStyle = savedTheme
+        updateThemeText()
+    }
+    
+    private func setTheme(_ style: UIUserInterfaceStyle, themeText: String) {
+        if let window = UIApplication.shared.windows.first {
+            window.overrideUserInterfaceStyle = style
+            themesettingText.text = themeText
+            
+            UserDefaults.standard.set(style.rawValue, forKey: "selectedTheme")
+            UserDefaults.standard.set(themeText, forKey: "themeText")
+        }
+    }
+   
+    public func updateThemeText() {
+        self.themesettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
     }
     
     @objc func logoutButtonTapped() {
@@ -240,6 +262,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        applySavedTheme()
         viewModel.loadProfileInfo()
         
         viewModel.$profileInfo.sink { [weak self] profileInfo in
@@ -259,7 +282,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
                 }
                 let finalText = "\(profileInfo.grade)기ㅣ\(majorText)"
                 let profileUrlString = profileInfo.profileUrl ?? ""
-
+                
                 if let profileUrl = URL(string: profileUrlString) {
                     URLSession.shared.dataTask(with: profileUrl) { data, response, error in
                         if let error = error {
@@ -275,13 +298,12 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
                     }
                     .resume()
                 }
-
+                
                 let uploadimage = profileInfo.profileUrl
                 self?.userGradeDepartment.text = finalText
             }
         }
         .store(in: &cancellables)
-
         
         view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
         
@@ -307,9 +329,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         actionSheet.addAction(UIAlertAction(title: "기본 프로필 사용", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
             self?.userProfile.image = .image.gomsBasicProfile.image
             let viewModel = ProfileViewModel()
-                viewModel.deleteProfileImage()
+            viewModel.deleteProfileImage()
         }))
-
+        
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
             self?.updateImage(isActionSheetShowing: false)
         }))
@@ -318,38 +340,42 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     func presentGallery() {
-            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-                imagePickerController.sourceType = .photoLibrary
-                present(imagePickerController, animated: true, completion: nil)
-            } else {
-                let alertController = UIAlertController(title: "알림", message: "사용할 수 있는 앨범이 없습니다.", preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-                present(alertController, animated: true, completion: nil)
-            }
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            imagePickerController.sourceType = .photoLibrary
+            present(imagePickerController, animated: true, completion: nil)
+        } else {
+            let alertController = UIAlertController(title: "알림", message: "사용할 수 있는 앨범이 없습니다.", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
         }
-
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let pickedImage = info[.originalImage] as? UIImage,
-               let imageData = pickedImage.jpegData(compressionQuality: 0.8) {
-                let providerserve = MoyaProvider<ProfileServices>()
-                providerserve.request(.submit(authorization: "", imageData: imageData)) { result in
-                    switch result {
-                    case let .success(response):
-                        print(response)
-                        DispatchQueue.main.async { [weak self] in
-                            self?.userProfile.image = pickedImage
-                        }
-                    case let .failure(error):
-                        print(error)
-                    }
-                }
-            }
-            dismiss(animated: true, completion: nil)
-        }
+    }
     
-        public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            dismiss(animated: true, completion: nil)
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        
+        if let selectedImage = info[.originalImage] as? UIImage {
+            userProfile.image = selectedImage
+            
+            if let jpegData = selectedImage.jpegData(compressionQuality: 0.5) {
+                viewModel.updateProfileImage(imageData: jpegData)
+                    .sink { completion in
+                        switch completion {
+                        case .finished:
+                            print("Image upload finished.")
+                        case .failure(let error):
+                            print("Image upload failed with error: \(error)")
+                        }
+                    } receiveValue: { response in
+                        print("Image upload response: \(response)")
+                    }
+                    .store(in: &cancellables)
+            }
         }
+    }
+    
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
     
     override func addView() {
         [

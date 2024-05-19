@@ -100,31 +100,13 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     let themesettingText = UILabel().then {
-        $0.text = "시스템 테마 설정"
+        $0.text = ""
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
     
     let themesettingImg = UIImageView().then {
         $0.image = .image.gomsBottomButton.image
-    }
-    
-    let pushcheckText = UILabel().then {
-        $0.text = "외출제 푸시 알람"
-        $0.textColor = .color.gomsTextDefault.color
-        $0.font = UIFont.pretendard(size: 16, weight: .semibold)
-    }
-    
-    let pushcheckDescription = UILabel().then {
-        $0.text = "외출할 시간이 될 떄마다 알려드려요"
-        $0.textColor = .color.gomsTertiary.color
-        $0.font = UIFont.pretendard(size: 12, weight: .regular)
-    }
-    
-    let pushchecktoggleButton: UISwitch = UISwitch().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.onTintColor = .color.gomsPrimary.color
-        $0.tintColor = .color.gomsTertiary.color
     }
     
     let cameranowonText = UILabel().then {
@@ -184,39 +166,26 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
         
         let defaults = UserDefaults.standard
-            
-            let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+        
+        let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
         print("테스트: \(isSwitchOn)")
     }
     
-    @IBAction func ShowActionSheetClick(_ sender: UIButton) {
+    @IBAction private func ShowActionSheetClick(_ sender: UIButton) {
         updateImage(isActionSheetShowing: true)
+        
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            print("다크(default) 모드로 변경")
-            if let window = UIApplication.shared.windows.first {
-                window.overrideUserInterfaceStyle = .dark
-                self?.themesettingText.text = "다크(기본)"
-                
-            }
+        actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] _ in
+            self?.setTheme(.dark, themeText: "다크(기본)")
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            print("라이트(Light) 모드로 변경")
-            if let window = UIApplication.shared.windows.first {
-                window.overrideUserInterfaceStyle = .light
-                self?.themesettingText.text = "라이트"
-                
-            }
+        actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] _ in
+            self?.setTheme(.light, themeText: "라이트")
         }))
-        actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
-            print("시스템 기본(basics) 테마로 변경")
-            if let window = UIApplication.shared.windows.first {
-                window.overrideUserInterfaceStyle = .unspecified
-                self?.themesettingText.text = "시스템 테마 설정"
-                
-            }
+        
+        actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] _ in
+            self?.setTheme(.unspecified, themeText: "시스템 테마 설정")
         }))
         
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
@@ -225,7 +194,39 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         
         self.present(actionSheet, animated: true, completion: nil)
     }
+    
+    private func applySavedTheme() {
+        let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
+        
+        let savedTheme: UIUserInterfaceStyle
+        switch savedThemeValue {
+        case 1: savedTheme = .light
+        case 2: savedTheme = .dark
+        default: savedTheme = .unspecified
+        }
+        
+        guard let window = UIApplication.shared.windows.first else {
+            return
+        }
+        
+        window.overrideUserInterfaceStyle = savedTheme
+        updateThemeText()
+    }
+    
+    private func setTheme(_ style: UIUserInterfaceStyle, themeText: String) {
+        if let window = UIApplication.shared.windows.first {
+            window.overrideUserInterfaceStyle = style
+            themesettingText.text = themeText
+            
+            UserDefaults.standard.set(style.rawValue, forKey: "selectedTheme")
+            UserDefaults.standard.set(themeText, forKey: "themeText")
+        }
+    }
 
+    public func updateThemeText() {
+        self.themesettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
+    }
+    
     @objc func logoutButtonTapped() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         
@@ -292,10 +293,10 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         actionSheet.addAction(UIAlertAction(title: "기본 프로필 사용", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
             self?.userProfile.image = .image.gomsBasicProfile.image
             let viewModel = ProfileViewModel()
-                viewModel.deleteProfileImage()
+            viewModel.deleteProfileImage()
             
         }))
-
+        
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
             self?.updateImage(isActionSheetShowing: false)
         }))
@@ -304,41 +305,47 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     func presentGallery() {
-            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-                imagePickerController.sourceType = .photoLibrary
-                present(imagePickerController, animated: true, completion: nil)
-            } else {
-                let alertController = UIAlertController(title: "알림", message: "사용할 수 있는 앨범이 없습니다.", preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-                present(alertController, animated: true, completion: nil)
-            }
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            imagePickerController.sourceType = .photoLibrary
+            present(imagePickerController, animated: true, completion: nil)
+        } else {
+            let alertController = UIAlertController(title: "알림", message: "사용할 수 있는 앨범이 없습니다.", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
         }
-
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let pickedImage = info[.originalImage] as? UIImage,
-               let imageData = pickedImage.jpegData(compressionQuality: 0.8) {
-                let providerserve = MoyaProvider<ProfileServices>()
-                providerserve.request(.submit(authorization: "", imageData: imageData)) { result in
-                    switch result {
-                    case let .success(response):
-                        print(response)
-                        DispatchQueue.main.async { [weak self] in
-                            self?.userProfile.image = pickedImage
-                        }
-                    case let .failure(error):
-                        print(error)
-                    }
-                }
-            }
-            dismiss(animated: true, completion: nil)
-        }
+    }
     
-        public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            dismiss(animated: true, completion: nil)
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        
+        if let selectedImage = info[.originalImage] as? UIImage {
+            userProfile.image = selectedImage
+            
+            if let jpegData = selectedImage.jpegData(compressionQuality: 0.5) {
+                viewModel.updateProfileImage(imageData: jpegData)
+                    .sink { completion in
+                        switch completion {
+                        case .finished:
+                            print("Image upload finished.")
+                        case .failure(let error):
+                            print("Image upload failed with error: \(error)")
+                        }
+                    } receiveValue: { response in
+                        print("Image upload response: \(response)")
+                    }
+                    .store(in: &cancellables)
+            }
         }
+    }
+    
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        applySavedTheme()
+        
         viewModel.loadProfileInfo()
         
         viewModel.$profileInfo.sink { [weak self] profileInfo in
@@ -358,7 +365,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                 }
                 let finalText = "\(profileInfo.grade)기ㅣ\(majorText)"
                 let profileUrlString = profileInfo.profileUrl ?? ""
-
+                
                 if let profileUrl = URL(string: profileUrlString) {
                     URLSession.shared.dataTask(with: profileUrl) { data, response, error in
                         if let error = error {
@@ -374,13 +381,12 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                     }
                     .resume()
                 }
-
+                
                 let uploadimage = profileInfo.profileUrl
                 self?.userGradeDepartment.text = finalText
             }
         }
         .store(in: &cancellables)
-
         
         view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
         
@@ -399,9 +405,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             perceptionNum,
             perceptionText,
             userProfilepencil,
-            pushcheckText,
-            pushcheckDescription,
-            pushchecktoggleButton,
             repassword,
             line1View,
             line2View,
@@ -419,7 +422,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             view.addSubview($0)
         }
     }
-
+    
     override func setLayout() {
         userProfile.snp.makeConstraints {
             $0.width.equalTo(64)
@@ -427,12 +430,12 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.leading.equalToSuperview().inset(20)
             $0.top.equalToSuperview().inset(136)
         }
-
+        
         userProfilepencil.snp.makeConstraints {
             $0.top.equalTo(userGradeDepartment.snp.top)
             $0.trailing.equalTo(userProfile.snp.trailing)
         }
-
+        
         userName.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(32)
@@ -493,7 +496,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(line2View.snp.top).offset(24)
             $0.leading.equalTo(repassword.snp.leading).offset(8)
         }
-
+        
         themeChangRec.snp.makeConstraints {
             $0.width.equalTo(335)
             $0.height.equalTo(64)
@@ -521,49 +524,30 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(repassword.snp.top)
         }
         
-        pushcheckText.snp.makeConstraints {
+        cameranowonText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(repassword.snp.leading).offset(8)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
         
-        pushcheckDescription.snp.makeConstraints {
-            $0.width.equalTo(184)
-            $0.height.equalTo(20)
-            $0.leading.equalTo(pushcheckText.snp.leading)
-            $0.top.equalTo(pushcheckText.snp.bottom)
-        }
-        
-        pushchecktoggleButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
-        }
-        
-        cameranowonText.snp.makeConstraints {
-            $0.width.equalTo(184)
-            $0.height.equalTo(28)
-            $0.leading.equalTo(pushcheckText.snp.leading)
-            $0.top.equalTo(pushcheckDescription.snp.bottom).offset(32)
-        }
-        
         cameranowonDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
+            $0.leading.equalTo(cameranowonText.snp.leading)
             $0.top.equalTo(cameranowonText.snp.bottom)
-            $0.leading.equalTo(pushcheckText.snp.leading)
         }
         
         cameranowontoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(pushchecktoggleButton.snp.bottom).offset(48)
+            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
-
+        
         logoutButton.snp.makeConstraints {
             $0.width.equalTo(335)
             $0.height.equalTo(48)
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(cameranowonDescription.snp.top).offset(108)
+            $0.top.equalTo(cameranowonDescription.snp.top).offset(188)
         }
     }
 }

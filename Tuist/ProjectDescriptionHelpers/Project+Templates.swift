@@ -3,11 +3,10 @@ import ProjectDescription
 public extension Project {
     static func makeModule(
         name: String,
-        platform: Platform = .iOS,
+        destinations: Destinations = .iOS,
         product: Product,
         organizationName: String = "HARIBO",
         packages: [Package] = [],
-        deploymentTarget: DeploymentTarget? = .iOS(targetVersion: "15.0", devices: [.iphone, .ipad]),
         dependencies: [TargetDependency] = [],
         sources: SourceFilesList = ["Sources/**"],
         resources: ResourceFileElements? = nil,
@@ -20,12 +19,11 @@ public extension Project {
                 .release(name: .release)
             ], defaultSettings: .recommended)
 
-        let appTarget = Target(
+        let appTarget: Target = .target(
             name: name,
-            platform: platform,
+            destinations: destinations,
             product: product,
             bundleId: "\(organizationName).\(name)",
-            deploymentTarget: deploymentTarget,
             infoPlist: infoPlist,
             sources: sources,
             resources: resources,

@@ -63,15 +63,15 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         navigationTitle.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.width.equalTo(183)
-            $0.top.equalToSuperview().inset(bounds.height * 0.09)
+            $0.top.equalToSuperview().inset(100)
             $0.leading.equalToSuperview().inset(bounds.width * 0.05)
         }
         
         passwordTextField.snp.makeConstraints {
             $0.height.equalTo(64)
             $0.width.equalTo(335)
-            
-            textFieldBottomConstraint = $0.bottom.equalToSuperview().inset(bounds.height * 0.47).constraint
+            $0.bottom.equalTo(navigationTitle.snp.bottom).offset(90)
+            //$0.bottom.equalToSuperview().inset(28)
             $0.leading.equalToSuperview().inset(bounds.width * 0.05)
             $0.trailing.equalToSuperview().inset(bounds.width * 0.05)
         }
