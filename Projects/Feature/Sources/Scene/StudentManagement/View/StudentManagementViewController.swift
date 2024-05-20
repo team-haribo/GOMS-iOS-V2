@@ -141,6 +141,15 @@ extension StudentManagementViewController: UICollectionViewDelegateFlowLayout {
 
 extension StudentManagementViewController: UISearchResultsUpdating {
     public func updateSearchResults(for searchController: UISearchController) {
-      
+        guard let searchString = searchController.searchBar.text else { return }
+        if searchString.isEmpty {
+            userList = viewModel.userListDatas
+        } else {
+            viewModel.serachStudent(searchString: searchString) {
+                self.userList = self.viewModel.userSearchListDatas
+                print(self.userList)
+                self.studentCollectionView.reloadData()
+            }
+        }
     }
 }

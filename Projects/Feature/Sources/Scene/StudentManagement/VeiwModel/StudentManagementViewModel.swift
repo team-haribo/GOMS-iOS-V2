@@ -27,6 +27,46 @@ public final class StudentManagementViewModel: BaseViewModel {
     var userList: [StudentListResponse] = []
     var userListDatas: [UserData] = []
     
+    var userSearchList: [StudentListResponse] = []
+    var userSearchListDatas: [UserData] = []
+    
+    private var grade: Int?
+    private var gender: String?
+    private var isBlackList: Bool?
+    private var authority: String?
+    private var major: String?
+    
+    // MARK: - Setting
+    func setupGrade(grade: Int?) {
+        self.grade = grade!
+        print("graddddddddd")
+    }
+    
+    func setupGender(gender: String?) {
+        self.gender = gender!
+    }
+
+    func setupIsBlackList(isBlackList: Bool?) {
+        self.isBlackList = isBlackList!
+    }
+    
+    func setupAuthority(authority: String?) {
+        self.authority = authority!
+    }
+    
+    func setupMajor(major: String?) {
+        self.major = major!
+    }
+    
+    func resetInfo() {
+        self.grade = nil
+        self.gender = nil
+        self.isBlackList = nil
+        self.authority = nil
+        self.major = nil
+    }
+    
+    // MARK: - Get User List
     func getUserList(completion: @escaping () -> Void) {
         studentCouncilProvider.request(.studentList(authorization: accessToken)) { response in
             switch response {
@@ -56,6 +96,7 @@ public final class StudentManagementViewModel: BaseViewModel {
         }
     }
     
+    // MARK: - Change Student Council Authority
     func changeAuthority(index: Int, completion: @escaping () -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
@@ -88,6 +129,7 @@ public final class StudentManagementViewModel: BaseViewModel {
         }
     }
     
+    // MARK: - Black List
     func blackList(index: Int, completion: @escaping () -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
@@ -117,6 +159,7 @@ public final class StudentManagementViewModel: BaseViewModel {
         }
     }
     
+    // MARK: - Delete Black List
     func cancelBlackList(index: Int, completion: @escaping () -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
@@ -142,6 +185,45 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case .failure(let err):
                     print(err.localizedDescription)
                 }
+            }
+        }
+    }
+    
+    // MARK: - Search User
+    func serachStudent(searchString: String, completion: @escaping () -> Void) {
+        let parm = SearchStudentRequest.init(grade: grade, gender: gender, name: searchString, isBlackList: isBlackList ?? false, authority: authority, major: major)
+        
+        studentCouncilProvider.request(.searchStudent(authorization: self.accessToken, parm: parm)) { response in
+            switch response {
+            case .success(let result):
+                let responseData = result.data
+                do {
+                    print("searchString: \(searchString)")
+                    print(self.grade)
+                    print(self.gender)
+                    print(self.isBlackList)
+                    print(self.authority)
+                    print(self.major)
+                    self.userSearchList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
+                    self.userSearchListDatas = self.userSearchList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
+                    print("User Search: \(self.userSearchList)")
+                    completion()
+                } catch(let err) {
+                    print(String(describing: err))
+                }
+                let statusCode = result.statusCode
+                switch statusCode {
+                case 200..<300:
+                    print("ok")
+                case 401:
+                    self.gomsRefreshToken.tokenReissuance()
+                case 403:
+                    print("학생회 계정이 아닌데 요청할 경우")
+                default:
+                    print(result)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
             }
         }
     }

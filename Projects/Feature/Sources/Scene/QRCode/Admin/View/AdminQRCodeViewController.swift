@@ -3,6 +3,7 @@ import UIKit
 import QRCode
 
 public class AdminQRCodeViewController: BaseViewController {
+    
     // MARK: Propertices
     let viewModel = QRCodeViewModel()
     
@@ -86,27 +87,27 @@ public class AdminQRCodeViewController: BaseViewController {
     }
     
     func createQrCode() {
-            let urlUUID = self.viewModel.outingUUID
-            let qrCodeURLString = "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2/outing/\(urlUUID)"
-            
-            var qrCode = QRCode(string: qrCodeURLString) // qr 생성 데이터
-            qrCode?.color = .black  // qr 코드 선 색상
-            qrCode?.backgroundColor = .white // qr 코드 배경 색상
-            qrCode?.size = CGSize(width: 200, height: 200) // 사이즈 정의
-            qrCode?.scale = 1.0 // scaling
-            qrCode?.inputCorrection = .quartile
-            
-            guard let qrCodeImage = qrCode?.image else {
-                return
-            }
-            
-            let qrImageView = UIImageView.init(qrCode: qrCode! as QRCode)
-            
-            self.qrCodeView.addSubview(qrImageView)
-            
-            qrImageView.snp.makeConstraints {
-                $0.height.width.equalTo(200)
-                $0.edges.equalToSuperview()
-            }
+        let urlUUID = self.viewModel.outingUUID
+        let qrCodeURLString = "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2/outing/\(urlUUID)"
+        
+        var qrCode = QRCode(string: qrCodeURLString) // qr 생성 데이터
+        qrCode?.color = .black  // qr 코드 선 색상
+        qrCode?.backgroundColor = .white // qr 코드 배경 색상
+        qrCode?.size = CGSize(width: 200, height: 200) // 사이즈 정의
+        qrCode?.scale = 1.0 // scaling
+        qrCode?.inputCorrection = .quartile
+        
+        guard (qrCode?.image) != nil else {
+            return
+        }
+        
+        let qrImageView = UIImageView.init(qrCode: qrCode! as QRCode)
+        
+        self.qrCodeView.addSubview(qrImageView)
+        
+        qrImageView.snp.makeConstraints {
+            $0.height.width.equalTo(bounds.width * 0.53)
+            $0.edges.equalToSuperview()
+        }
     }
 }

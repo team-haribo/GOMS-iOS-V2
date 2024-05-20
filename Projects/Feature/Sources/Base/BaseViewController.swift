@@ -16,8 +16,6 @@ public class BaseViewController: UIViewController {
 
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        self.navigationController?.navigationBar.isHidden = false
         
         view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
         
@@ -26,6 +24,7 @@ public class BaseViewController: UIViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+    
         setupKeyboardEvent()
         configureUI()
         addView()
@@ -54,6 +53,9 @@ public class BaseViewController: UIViewController {
         
         let backBarButtonItem = UIBarButtonItem(title: "돌아가기", style: .plain, target: self, action: nil)
         navigationItem.backBarButtonItem = backBarButtonItem
+        
+        self.navigationController?.navigationBar.clipsToBounds = true
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     func setupKeyboardEvent() {

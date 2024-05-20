@@ -144,7 +144,7 @@ public class AdminMainViewController: BaseViewController {
     }
     
     @objc func qrButtonTapped() {
-        let qrCodeVC = QRCodeViewController()
+        let qrCodeVC = AdminQRCodeViewController()
         self.navigationController?.pushViewController(qrCodeVC, animated: true)
     }
     
@@ -161,8 +161,8 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.content.addSubview($0) }
-        [logo, adminMenuButton, content, qrButton].forEach { view.addSubview($0) }
+        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
+        [logo, adminMenuButton, content].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -182,7 +182,7 @@ public class AdminMainViewController: BaseViewController {
         }
         
         content.snp.makeConstraints {
-            $0.top.equalTo(logo.snp.bottom)
+            $0.top.equalTo(logo.snp.bottom).offset(40)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.bottom.equalToSuperview()
@@ -192,7 +192,7 @@ public class AdminMainViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(84)
             $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview().inset(24)
+            $0.top.equalToSuperview()
         }
 
         latecomerLabel.snp.makeConstraints {
@@ -239,7 +239,7 @@ public class AdminMainViewController: BaseViewController {
         }
         
         qrButton.snp.makeConstraints {
-            $0.trailing.equalTo(-(bounds.width * 0.09))
+            $0.trailing.equalToSuperview()
             $0.bottom.equalTo(-(bounds.height * 0.06))
             $0.height.width.equalTo(64)
         }

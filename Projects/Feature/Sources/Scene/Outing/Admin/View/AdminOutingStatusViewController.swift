@@ -29,10 +29,10 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     
     lazy var outingListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.backgroundColor = .clear
-        $0.isScrollEnabled = false
+        $0.isScrollEnabled = true
         $0.showsHorizontalScrollIndicator = false
-        $0.showsVerticalScrollIndicator = true
         $0.clipsToBounds = true
+        $0.showsVerticalScrollIndicator = true
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
@@ -51,6 +51,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     
     // MARK: - Setting
     override func configNavigation() {
+        self.navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "외출 현황"
         navigationItem.searchController = searchController
@@ -152,7 +153,7 @@ extension AdminOutingViewController: UICollectionViewDelegate {
 
 extension AdminOutingViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width * 0.9
+        let width = bounds.width * 0.9
         let height: CGFloat = 72
         return CGSize(width: width, height: height)
     }

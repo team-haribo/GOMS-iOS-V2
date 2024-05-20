@@ -11,6 +11,8 @@ import UIKit
 public final class FilterBottomSheetVC: BaseViewController {
     
     // MARK: - Properties
+    private let viewModel = StudentManagementViewModel()
+    
     private let dimmedView = UIView().then {
         $0.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
     }
@@ -40,10 +42,17 @@ public final class FilterBottomSheetVC: BaseViewController {
         $0.textColor = .color.gomsTextDefault.color
     }
     
-    private let studentButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "학생")
-    private let studentCouncilButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "학생회")
-    private let prohibitionOutingButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "외출금지")
+    private lazy var studentButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "학생").then {
+        $0.addTarget(self, action: #selector(roleTapped), for: .touchUpInside)
+    }
     
+    private lazy var adminButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "학생회").then {
+        $0.addTarget(self, action: #selector(roleTapped), for: .touchUpInside)
+    }
+    
+    private lazy var blackListButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "외출금지").then {
+        $0.addTarget(self, action: #selector(roleTapped), for: .touchUpInside)
+    }
     
     private let gradeLabel = UILabel().then {
         $0.font = .pretendard(size: 19, weight: .semibold)
@@ -51,9 +60,17 @@ public final class FilterBottomSheetVC: BaseViewController {
         $0.textColor = .color.gomsTextDefault.color
     }
     
-    private let grade1Button = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "1학년")
-    private let grade2Button = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "2한년")
-    private let grade3Button = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "3학년")
+    private lazy var grade1Button = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "1학년").then {
+        $0.addTarget(self, action: #selector(gradeButtonTappped), for: .touchUpInside)
+    }
+    
+    private lazy var grade2Button = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "2학년").then {
+        $0.addTarget(self, action: #selector(gradeButtonTappped), for: .touchUpInside)
+    }
+    
+    private lazy var grade3Button = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "3학년").then {
+        $0.addTarget(self, action: #selector(gradeButtonTappped), for: .touchUpInside)
+    }
     
     private let genderLabel = UILabel().then {
         $0.font = .pretendard(size: 19, weight: .semibold)
@@ -61,8 +78,13 @@ public final class FilterBottomSheetVC: BaseViewController {
         $0.textColor = .color.gomsTextDefault.color
     }
     
-    private let manButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "남성")
-    private let womanButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "여성")
+    private lazy var manButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "남성").then {
+        $0.addTarget(self, action: #selector(genderButtonTapped), for: .touchUpInside)
+    }
+    
+    private lazy var womanButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "여성").then {
+        $0.addTarget(self, action: #selector(genderButtonTapped), for: .touchUpInside)
+    }
     
     private let majorLabel = UILabel().then {
         $0.font = .pretendard(size: 19, weight: .semibold)
@@ -70,24 +92,146 @@ public final class FilterBottomSheetVC: BaseViewController {
         $0.textColor = .color.gomsTextDefault.color
     }
     
-    private let swButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "SW")
-    private let iotButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "IoT")
-    private let aiButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "AI")
+    private lazy var swButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "SW").then {
+        $0.addTarget(self, action: #selector(majorButtonTapped), for: .touchUpInside)
+    }
     
-    private let resetButton = ResetButton()
+    private lazy var iotButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "IoT").then {
+        $0.addTarget(self, action: #selector(majorButtonTapped), for: .touchUpInside)
+    }
+    
+    private lazy var aiButton = BottomSheetButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "AI").then {
+        $0.addTarget(self, action: #selector(majorButtonTapped), for: .touchUpInside)
+    }
+    
+    private lazy var resetButton = ResetButton().then {
+        $0.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
+    }
     
     // MARK: - Life Cycel
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.view.backgroundColor = .clear
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
     }
     
+    // MARK: - Selectors
     @objc func closeButtonTapped() {
         self.dismiss(animated: false, completion: nil)
     }
     
+    @objc func roleTapped(sender: BottomSheetButton) {
+        guard let role = sender.title(for: .normal) else { return }
+        
+        switch role {
+        case "학생":
+            studentButton.isSelected = true
+            adminButton.isSelected = false
+            blackListButton.isSelected = false
+            viewModel.setupAuthority(authority: "ROLE_STUDENT")
+        case "학생회":
+            studentButton.isSelected = false
+            adminButton.isSelected = true
+            blackListButton.isSelected = false
+            viewModel.setupAuthority(authority: "ROLE_STUDENT_COUNCIL")
+            print("학생회 버튼")
+        case "외출금지":
+            studentButton.isSelected = false
+            adminButton.isSelected = false
+            blackListButton.isSelected = true
+            viewModel.setupIsBlackList(isBlackList: true)
+        default:
+            break
+        }
+    }
+    
+    @objc func gradeButtonTappped(sender: BottomSheetButton) {
+        guard let grade = sender.title(for: .normal) else { return }
+        
+        switch grade {
+        case "1학년":
+            grade1Button.isSelected = true
+            grade2Button.isSelected = false
+            grade3Button.isSelected = false
+            viewModel.setupGrade(grade: 1)
+        case "2학년":
+            grade1Button.isSelected = false
+            grade2Button.isSelected = true
+            grade3Button.isSelected = false
+            viewModel.setupGrade(grade: 2)
+        case "3학년":
+            grade1Button.isSelected = false
+            grade2Button.isSelected = false
+            grade3Button.isSelected = true
+            viewModel.setupGrade(grade: 3)
+        default:
+            break
+        }
+    }
+    
+    @objc func genderButtonTapped(sender: BottomSheetButton) {
+        guard let gender = sender.title(for: .normal) else { return }
+        
+        switch gender {
+        case "남성":
+            manButton.isSelected = true
+            womanButton.isSelected = false
+            viewModel.setupGender(gender: "MAN")
+        case "여성":
+            manButton.isSelected = false
+            womanButton.isSelected = true
+            viewModel.setupGender(gender: "WOMAN")
+        default:
+            break
+        }
+    }
+
+    @objc func majorButtonTapped(sender: BottomSheetButton) {
+        guard let major = sender.title(for: .normal) else { return }
+        
+        switch major {
+        case "SW":
+            swButton.isSelected = true
+            iotButton.isSelected = false
+            aiButton.isSelected = false
+            viewModel.setupMajor(major: "SW_DEVELOP")
+        case "IoT":
+            swButton.isSelected = false
+            iotButton.isSelected = true
+            aiButton.isSelected = false
+            viewModel.setupMajor(major: "SMART_IOT")
+        case "AI":
+            swButton.isSelected = false
+            iotButton.isSelected = false
+            aiButton.isSelected = true
+            viewModel.setupMajor(major: "AI")
+        default:
+            break
+        }
+    }
+    
+    @objc func resetButtonTapped() {
+        studentButton.isSelected = false
+        adminButton.isSelected = false
+        blackListButton.isSelected = false
+        grade1Button.isSelected = false
+        grade2Button.isSelected = false
+        grade3Button.isSelected = false
+        manButton.isSelected = false
+        womanButton.isSelected = false
+        swButton.isSelected = false
+        iotButton.isSelected = false
+        aiButton.isSelected = false
+        
+        viewModel.resetInfo()
+    }
+    
     // MARK: - Add View
     override func addView() {
-        [titleLabel, closeButton, roleLabel, studentButton, studentCouncilButton, prohibitionOutingButton, gradeLabel, grade1Button, grade2Button, grade3Button, genderLabel, manButton, womanButton, majorLabel, swButton, iotButton, aiButton, resetButton].forEach { self.bottomSheetView.addSubview($0) }
+        [titleLabel, closeButton, roleLabel, studentButton, adminButton, blackListButton, gradeLabel, grade1Button, grade2Button, grade3Button, genderLabel, manButton, womanButton, majorLabel, swButton, iotButton, aiButton, resetButton].forEach { self.bottomSheetView.addSubview($0) }
         dimmedView.addSubview(bottomSheetView)
         view.addSubview(dimmedView)
     }
@@ -129,14 +273,14 @@ public final class FilterBottomSheetVC: BaseViewController {
             $0.top.equalTo(roleLabel.snp.bottom).offset(8)
         }
         
-        studentCouncilButton.snp.makeConstraints {
+        adminButton.snp.makeConstraints {
             $0.width.equalTo(bounds.width * 0.27)
             $0.top.equalTo(roleLabel.snp.bottom).offset(8)
             $0.height.equalTo(56)
             $0.centerX.equalToSuperview()
         }
         
-        prohibitionOutingButton.snp.makeConstraints {
+        blackListButton.snp.makeConstraints {
             $0.width.equalTo(bounds.width * 0.27)
             $0.top.equalTo(roleLabel.snp.bottom).offset(8)
             $0.height.equalTo(56)

@@ -11,6 +11,8 @@ import UIKit
 public final class AuthorityBottomSheetVC: BaseViewController {
 
     // MARK: - Properties
+    var userList: [UserData] = []
+    
     var userData: UserData?
     var userDataIndex: Int?
     
@@ -40,36 +42,36 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         $0.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
     
-    private let prohibitionOutingTitle = UILabel().then {
+    private let blackListTitle = UILabel().then {
         $0.text = "외출금지"
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 16, weight: .semibold)
     }
     
-    private let prohibitionOutingLabel = UILabel().then {
+    private let blackListLabel = UILabel().then {
         $0.text = "이 학생은 외출을 할 수 없어요"
         $0.textColor = .color.gomsTertiary.color
         $0.font = .pretendard(size: 12, weight: .regular)
     }
     
-    lazy var prohibitionOutingSwitch = UISwitch().then {
+    lazy var blackListSwitch = UISwitch().then {
         $0.onTintColor = .color.gomsAdmin.color
         $0.addTarget(self, action: #selector(blackListSwitchValueChanged), for: .valueChanged)
     }
     
-    private let authorityTitle = UILabel().then {
+    private let adminTitle = UILabel().then {
         $0.text = "학생회 권한 부여"
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 16, weight: .semibold)
     }
     
-    private let authorityLabel = UILabel().then {
+    private let adminLabel = UILabel().then {
         $0.text = "이 학생은 학생회에요"
         $0.textColor = .color.gomsTertiary.color
         $0.font = .pretendard(size: 12, weight: .regular)
     }
     
-    lazy var authoritySwitch = UISwitch().then {
+    lazy var adminSwitch = UISwitch().then {
         $0.onTintColor = .color.gomsAdmin.color
         $0.addTarget(self, action: #selector(authoritySwitchValueChanged(_:)), for: .valueChanged)
     }
@@ -82,21 +84,20 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupSwitch()
     }
     
     func setupSwitch() {
         if let userData = userData, userData.isBlackList {
-            prohibitionOutingSwitch.isOn = true
+            blackListSwitch.isOn = true
         } else {
-            prohibitionOutingSwitch.isOn = false
+            blackListSwitch.isOn = false
         }
         
         if let userData = userData, userData.authority == "ROLE_STUDENT_COUNCIL" {
-            authoritySwitch.isOn = true
+            adminSwitch.isOn = true
         } else {
-            authoritySwitch.isOn = false
+            adminSwitch.isOn = false
         }
     }
     
@@ -110,23 +111,19 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         
         if sender.isOn {
             viewModel.blackList(index: index) {
-                print("blackList")
-                let cell = StudentCollectionViewCell()
-                let userData = userData
-    
-                cell.configureData(with: userData)
-                self.setupSwitch()
-                self.studentManagementVC.studentCollectionView.reloadData()
+                self.viewModel.getUserList {
+                    let cell = StudentCollectionViewCell()
+                    cell.configureData(with: userData)
+                    self.studentManagementVC.studentCollectionView.reloadData()
+                }
             }
         } else {
             viewModel.cancelBlackList(index: index) {
-                print("Delete blackList")
-                let cell = StudentCollectionViewCell()
-                let userData = userData
-    
-                cell.configureData(with: userData)
-                self.setupSwitch()
-                self.studentManagementVC.studentCollectionView.reloadData()
+                self.viewModel.getUserList {
+                    let cell = StudentCollectionViewCell()
+                    cell.configureData(with: userData)
+                    self.studentManagementVC.studentCollectionView.reloadData()
+                }
             }
         }
     }
@@ -141,7 +138,6 @@ public final class AuthorityBottomSheetVC: BaseViewController {
                 let userData = userData
     
                 cell.configureData(with: userData)
-                self.setupSwitch()
                 self.studentManagementVC.studentCollectionView.reloadData()
             }
         } else {
@@ -151,7 +147,6 @@ public final class AuthorityBottomSheetVC: BaseViewController {
                 let userData = userData
     
                 cell.configureData(with: userData)
-                self.setupSwitch()
                 self.studentManagementVC.studentCollectionView.reloadData()
             }
         }
@@ -159,7 +154,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [titleLabel, closeButton, prohibitionOutingTitle, prohibitionOutingLabel, prohibitionOutingSwitch, authorityTitle, authorityLabel, authoritySwitch].forEach { self.bottomSheetView.addSubview($0) }
+        [titleLabel, closeButton, blackListTitle, blackListLabel, blackListSwitch, adminTitle, adminLabel, adminSwitch].forEach { self.bottomSheetView.addSubview($0) }
         dimmedView.addSubview(bottomSheetView)
         view.addSubview(dimmedView)
     }
@@ -189,38 +184,38 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             $0.width.height.equalTo(24)
         }
         
-        prohibitionOutingTitle.snp.makeConstraints {
+        blackListTitle.snp.makeConstraints {
             $0.height.equalTo(28)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.top.equalTo(titleLabel.snp.bottom).offset(32)
         }
         
-        prohibitionOutingLabel.snp.makeConstraints {
+        blackListLabel.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(20)
-            $0.top.equalTo(prohibitionOutingTitle.snp.bottom)
+            $0.top.equalTo(blackListTitle.snp.bottom)
         }
         
-        prohibitionOutingSwitch.snp.makeConstraints {
+        blackListSwitch.snp.makeConstraints {
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.top.equalTo(closeButton.snp.bottom).offset(44)
         }
         
-        authorityTitle.snp.makeConstraints {
+        adminTitle.snp.makeConstraints {
             $0.height.equalTo(28)
             $0.leading.equalTo(bounds.width * 0.05)
-            $0.top.equalTo(prohibitionOutingLabel.snp.bottom).offset(32)
+            $0.top.equalTo(blackListLabel.snp.bottom).offset(32)
         }
         
-        authorityLabel.snp.makeConstraints {
+        adminLabel.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(20)
-            $0.top.equalTo(authorityTitle.snp.bottom)
+            $0.top.equalTo(adminTitle.snp.bottom)
         }
         
-        authoritySwitch.snp.makeConstraints {
+        adminSwitch.snp.makeConstraints {
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(prohibitionOutingSwitch.snp.bottom).offset(48)
+            $0.top.equalTo(blackListSwitch.snp.bottom).offset(48)
         }
     }
 }
