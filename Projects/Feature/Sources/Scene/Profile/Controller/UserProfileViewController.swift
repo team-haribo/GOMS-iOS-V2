@@ -348,6 +348,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         
         viewModel.loadProfileInfo()
         
+        let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
+            cameranowontoggleButton.isOn = isSwitchOn
+        
         viewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
             DispatchQueue.main.async {
