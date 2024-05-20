@@ -265,10 +265,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         applySavedTheme()
         viewModel.loadProfileInfo()
         
-        let defaults = UserDefaults.standard
-        
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchMakeOn")
-            qrmakeontoggleButton.isOn = isSwitchOn
+        qrmakeontoggleButton.isOn = isSwitchOn
         
         viewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
