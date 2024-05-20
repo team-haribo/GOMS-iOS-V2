@@ -265,6 +265,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         applySavedTheme()
         viewModel.loadProfileInfo()
         
+        let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
+            cameranowontoggleButton.isOn = isSwitchOn
+        
         viewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
             DispatchQueue.main.async {
