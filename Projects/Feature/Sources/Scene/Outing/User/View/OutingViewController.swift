@@ -66,6 +66,7 @@ public final class OutingViewController: BaseViewController {
     
     // MARK: - Setting
     override func configNavigation() {
+        self.navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "외출 현황"
         navigationItem.searchController = searchController
