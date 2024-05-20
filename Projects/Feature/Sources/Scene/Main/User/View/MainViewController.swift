@@ -29,8 +29,8 @@ public final class MainViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
-    let lateNilView = LateNilView()
-
+    lazy var lateNilView = LateNilView()
+    
     private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
@@ -92,6 +92,15 @@ public final class MainViewController: BaseViewController {
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        viewModel.getProfile {
+            self.setupProfileView()
+        }
+        viewModel.getLateList {
+            self.viewModel.getOutingList {
+                self.setup()
+            }
+        }
+        
         latecomerCollectionView.reloadData()
         outingStatusCollectionView.reloadData()
         
@@ -102,30 +111,19 @@ public final class MainViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.getProfile {
-            self.setupProfileView()
-        }
-        viewModel.getLateList {
-            self.viewModel.getOutingList {
-                self.setup()
-            }
-        }
     }
     
     // MARK: - Setting
     func setup() {
+        if self.viewModel.lateListDatas.count >= 1 {
+            lateNilView.isHidden = true
+        } else {
+            lateNilView.isHidden = false
+        }
         self.setCollectionView()
         self.setupCountLable()
     }
-    
-    func nilLatecomers() {
-        lateNilView.isHidden = false
-    }
-    
-    func showLatecomers() {
-        lateNilView.isHidden = true
-    }
-    
+
     func setupProfileView() {
         guard let grade = viewModel.profileData?.grade else { return }
         

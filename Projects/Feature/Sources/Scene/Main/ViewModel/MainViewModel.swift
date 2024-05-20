@@ -50,29 +50,22 @@ public final class MainViewModel: BaseViewModel {
             switch response {
             case .success(let result):
                 let responseData = result.data
+                let statusCode = result.statusCode
                 do {
                     self.lateList = try JSONDecoder().decode([LatecomerResponse].self, from: responseData)
                     self.lateListDatas = self.lateList.map { LatecomerData(profileImageURL: $0.profileUrl, name: $0.name, grade: $0.grade, major: $0.major) }
+                    print("test: \(statusCode)")
                     completion()
                 } catch(let err) {
                     print(String(describing: err))
                 }
-                let statusCode = result.statusCode
                 switch statusCode {
                 case 200:
                     print("OK")
-                    let adminVC = AdminMainViewController()
-                    let userVC = MainViewController()
-                    adminVC.showLatecomers()
-                    userVC.showLatecomers()
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
                 case 404:
                     print("지각자 없음")
-                    let adminVC = AdminMainViewController()
-                    let userVC = MainViewController()
-                    adminVC.nilLatecomers()
-                    userVC.nilLatecomers()
                 case 500:
                     print("SERVER ERROR")
                 default:

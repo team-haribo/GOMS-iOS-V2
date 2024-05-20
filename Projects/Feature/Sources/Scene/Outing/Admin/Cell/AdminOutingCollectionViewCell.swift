@@ -70,8 +70,9 @@ final class AdminOutingCollectionViewCell: UICollectionViewCell {
         if let imageURL = outingData.profileImageURL, let url = URL(string: imageURL) {
             profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
         } else {
-            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+            profileImageView.image = .image.gomsProfile.image
         }
+        
         nameLabel.text = outingData.name
         if outingData.major == "SW_DEVELOP" {
             studentInfoLabel.text = "\(outingData.grade)기 | SW개발"
