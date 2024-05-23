@@ -67,6 +67,16 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        viewModel.getProfile {
+            self.setupProfileView()
+        }
+        
+        viewModel.getLateList {
+            self.viewModel.getOutingList {
+                self.setup()
+            }
+        }
+        
         latecomerCollectionView.reloadData()
         outingStatusCollectionView.reloadData()
         
@@ -77,29 +87,18 @@ public class AdminMainViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.getProfile {
-            self.setupProfileView()
-        }
-        
-        viewModel.getLateList {
-            self.viewModel.getOutingList {
-                self.setup()
-            }
-        }
     }
     
     // MARK: - Setting
     func setup() {
+        if self.viewModel.lateListDatas.count >= 1 {
+            lateNilView.isHidden = true
+        } else {
+            lateNilView.isHidden = false
+        }
+        
         self.setCollectionView()
         self.setupCountLable()
-    }
-    
-    func nilLatecomers() {
-        lateNilView.isHidden = false
-    }
-    
-    func showLatecomers() {
-        lateNilView.isHidden = true
     }
     
     private func setCollectionView() {
