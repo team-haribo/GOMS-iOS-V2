@@ -195,6 +195,10 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         let defaults = UserDefaults.standard
         
         let isClockOn = defaults.bool(forKey: "isClockOn")
+        
+        if let mainViewController = navigationController?.viewControllers.first(where: { $0 is MainViewController }) as? MainViewController {
+                mainViewController.isClockOn = sender.isOn
+            }
     }
     
     @IBAction private func ShowActionSheetClick(_ sender: UIButton) {
@@ -375,7 +379,13 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         viewModel.loadProfileInfo()
         
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
-            cameranowontoggleButton.isOn = isSwitchOn
+        cameranowontoggleButton.isOn = isSwitchOn
+        
+        let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
+        clocktoggleButton.isOn = isClockOn
+        
+
+        
         
         viewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }

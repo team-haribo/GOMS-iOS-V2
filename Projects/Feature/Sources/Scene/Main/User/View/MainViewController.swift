@@ -7,12 +7,17 @@
 //
 
 import UIKit
+import Service
 
 public final class MainViewController: BaseViewController {
     
     // MARK: - Properties
     private let viewModel = MainViewModel()
+    private let viewModel2 = ProfileViewModel()
     private let profileView = MainProfileView()
+    private let basicsProfileView = ProfileCardView()
+    
+    var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn")
     
     let content = UIView()
     
@@ -111,6 +116,9 @@ public final class MainViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setupProfileView()
+        
+        
     }
     
     // MARK: - Setting
@@ -123,31 +131,43 @@ public final class MainViewController: BaseViewController {
         self.setCollectionView()
         self.setupCountLable()
     }
-
+    
     func setupProfileView() {
         guard let grade = viewModel.profileData?.grade else { return }
         
+      basicsProfileView.nameLabel.text = viewModel.profileData?.name
         profileView.nameLabel.text = viewModel.profileData?.name
         if viewModel.profileData?.major == "SW_DEVELOP" {
             profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
+            basicsProfileView.studentInformationLabel.text = "\(grade)기 | SW개발"
         } else if viewModel.profileData?.major == "SMART_IOT" {
             profileView.studentInformationLabel.text = "\(grade)기 | IoT"
+            basicsProfileView.studentInformationLabel.text = "\(grade)기 | IoT"
         } else {
             profileView.studentInformationLabel.text = "\(grade)기 | AI"
+            basicsProfileView.studentInformationLabel.text = "\(grade)기 | AI"
         }
         
         if let isBlackList = viewModel.profileData?.isBlackList, let isOuting = viewModel.profileData?.isOuting {
             if isBlackList {
                 profileView.profileStatus.text = "외출 금지"
                 profileView.profileStatus.textColor = .color.gomsNegative.color
+                basicsProfileView.myOutingStatusLabel.text = "외출 금지"
+                basicsProfileView.myOutingStatusLabel.textColor = .color.gomsNegative.color
             } else if isOuting {
                 profileView.profileStatus.text = "외출 중"
                 profileView.profileStatus.textColor = .color.gomsPrimary.color
+                basicsProfileView.myOutingStatusLabel.text = "외출 중"
+                basicsProfileView.myOutingStatusLabel.textColor = .color.gomsPrimary.color
             } else {
                 profileView.profileStatus.text = "외출 대기 중"
                 profileView.profileStatus.textColor = .color.gomsSecondary.color
+                basicsProfileView.myOutingStatusLabel.text = "외출 대기 중"
+                basicsProfileView.myOutingStatusLabel.textColor = .color.gomsSecondary.color
             }
         }
+        
+        
     }
     
     private func setCollectionView() {
@@ -180,7 +200,7 @@ public final class MainViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
-        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.content.addSubview($0) }
+        [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.content.addSubview($0) }
         [logo, settingButton, content].forEach { view.addSubview($0) }
     }
     
@@ -206,18 +226,37 @@ public final class MainViewController: BaseViewController {
             $0.bottom.equalToSuperview()
         }
         
-        profileView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(84)
-            $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview()
+        if isClockOn == true {
+            profileView.snp.makeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.height.equalTo(84)
+                $0.centerX.equalToSuperview()
+                $0.top.equalToSuperview()
+            }
+            
+            latecomerLabel.snp.makeConstraints {
+                $0.top.equalTo(profileView.snp.bottom).offset(24)
+                $0.leading.equalToSuperview()
+                $0.height.equalTo(32)
+            }
+            
+        } else {
+            basicsProfileView.snp.makeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.height.equalTo(84)
+                $0.centerX.equalToSuperview()
+                $0.top.equalToSuperview()
+            }
+            
+            latecomerLabel.snp.makeConstraints {
+                $0.top.equalTo(basicsProfileView.snp.bottom).offset(24)
+                $0.leading.equalToSuperview()
+                $0.height.equalTo(32)
+            }
+            
         }
 
-        latecomerLabel.snp.makeConstraints {
-            $0.top.equalTo(profileView.snp.bottom).offset(24)
-            $0.leading.equalToSuperview()
-            $0.height.equalTo(32)
-        }
+        
         
         lateNilView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()

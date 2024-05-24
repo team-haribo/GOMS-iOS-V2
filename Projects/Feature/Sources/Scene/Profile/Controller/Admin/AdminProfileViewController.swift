@@ -294,6 +294,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchMakeOn")
         qrmakeontoggleButton.isOn = isSwitchOn
         
+        let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
+        clocktoggleButton.isOn = isClockOn
+        
         viewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
             DispatchQueue.main.async {

@@ -12,7 +12,7 @@ public struct ProfileModel: Decodable {
     let date: ProfileResponse
 }
 
-public struct ProfileResponse: Codable {
+public struct ProfileResponse: Decodable {
     public let name: String
     public let grade: Int
     public let major: String

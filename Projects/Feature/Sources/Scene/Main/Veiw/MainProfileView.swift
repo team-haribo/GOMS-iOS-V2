@@ -13,6 +13,12 @@ import Then
 
 public final class MainProfileView: UIView {
     
+    var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
+            didSet {
+                setLayout()
+            }
+        }
+    
     // MARK: - Properties
     let nameLabel = UILabel().then {
         $0.textColor = .color.gomsTextDefault.color
@@ -58,6 +64,7 @@ public final class MainProfileView: UIView {
     
     // MARK: - Layout
     private func setLayout() {
+
         nameLabel.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.top.equalToSuperview().inset(16)
@@ -75,7 +82,7 @@ public final class MainProfileView: UIView {
             $0.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(28)
         }
-        
+    
         currentTime.snp.makeConstraints {
             $0.bottom.equalToSuperview().inset(12)
             $0.trailing.equalToSuperview()
