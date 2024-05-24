@@ -62,6 +62,10 @@ public final class IntroViewController: BaseViewController {
     public override func viewDidLoad() {
         self.navigationController?.navigationBar.isHidden = true
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     // MARK: - Seletors

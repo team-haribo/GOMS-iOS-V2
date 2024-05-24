@@ -278,8 +278,8 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         alertController.addAction(cancelAction)
         
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
-            let signInVC = SignInViewController(viewModel: AuthViewModel())
-            self?.navigationController?.pushViewController(signInVC, animated: true)
+            let introVC = IntroViewController()
+            self?.navigationController?.pushViewController(introVC, animated: true)
         }
         alertController.addAction(confirmAction)
         

@@ -16,7 +16,7 @@ final class ProfileCardView: UIView {
     let profileImageView = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
         $0.contentMode = .scaleAspectFill
-        $0.layer.cornerRadius = 25
+        $0.layer.cornerRadius = 32
         $0.clipsToBounds = true
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -61,21 +61,6 @@ final class ProfileCardView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - Configure UI
-//    private func configureUI() {
-//        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
-//        profileImageView.clipsToBounds = true
-//        
-//        self.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: .white)
-//        self.layer.borderWidth = 1
-//        self.layer.borderColor = UIColor.color.gomsTertiary.color.cgColor
-//        self.clipsToBounds = true
-//        self.layer.cornerRadius = 12
-//    }
-    
-    
-
     
     // MARK: - Add View
     private func addView() {
