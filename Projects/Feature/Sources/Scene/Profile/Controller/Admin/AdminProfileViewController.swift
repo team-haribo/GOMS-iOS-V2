@@ -56,7 +56,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     
     let perceptionNum = UILabel().then {
-        $0.text = ""
+        $0.text = "0"
         $0.textColor = .color.gomsNegative.color
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
@@ -105,6 +105,26 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.image = .image.gomsBottomButton.image
     }
     
+    let clockText = UILabel().then {
+        $0.text = "시계 나타내기"
+        $0.textColor = .color.gomsTextDefault.color
+        $0.font = .pretendard(size: 16, weight: .semibold)
+    }
+    
+    let clockDescription = UILabel().then {
+        $0.text = "프로필 카드에 초 단위의 시간을 나타내요"
+        $0.textColor = .color.gomsTertiary.color
+        $0.font = .pretendard(size: 12, weight: .regular)
+    }
+    
+    let clocktoggleButton: UISwitch = UISwitch().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.onTintColor = .color.gomsAdmin.color
+        $0.tintColor = .color.gomsTertiary.color
+        $0.addTarget(self, action: #selector(switchClockOn(_:)), for: .valueChanged)
+        $0.isOn = false
+    }
+    
     let qrmakeonText = UILabel().then {
         $0.text = "QR 생성 바로 켜기"
         $0.textColor = .color.gomsTextDefault.color
@@ -139,15 +159,21 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     @objc func switchQRMake(_ sender: UISwitch) {
-        let QRState = sender.isOn
-        print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
-        print(QRState)
+        print("QR카메라 바로생성: \(sender.isOn ? "On" : "Off")")
         UserDefaults.standard.set(sender.isOn, forKey: "isSwitchMakeOn")
         
         let defaults = UserDefaults.standard
         
         let isSwitchMakeOn = defaults.bool(forKey: "isSwitchMakeOn")
-        print("테스트: \(isSwitchMakeOn)")
+    }
+    
+    @objc func switchClockOn(_ sender: UISwitch) {
+        print("시계 나타내기: \(sender.isOn ? "On" : "Off")")
+        UserDefaults.standard.set(sender.isOn, forKey: "isClockOn")
+        
+        let defaults = UserDefaults.standard
+        
+        let isClockOn = defaults.bool(forKey: "isClockOn")
     }
     
     @IBAction private func ShowActionSheetClick(_ sender: UIButton) {
@@ -389,6 +415,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             perceptionNum,
             perceptionText,
             userProfilepencil,
+            clockText,
+            clockDescription,
+            clocktoggleButton,
             qrmakeonText,
             qrmakeonDescription,
             qrmakeontoggleButton,
@@ -435,16 +464,16 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.leading.equalTo(userName.snp.leading)
         }
         
-        perceptionNum.snp.makeConstraints {
-            $0.height.equalTo(32)
-            $0.trailing.equalTo(perceptionText.snp.leading).inset(-1)
-            $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
+        perceptionCount.snp.makeConstraints {
+            $0.width.equalTo(60)
+            $0.height.equalTo(28)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(userName.snp.top).inset(0)
         }
         
         perceptionNum.snp.makeConstraints {
-            $0.width.equalTo(18)
             $0.height.equalTo(32)
-            $0.trailing.equalTo(perceptionText.snp.leading)
+            $0.trailing.equalTo(perceptionText.snp.leading).inset(-1)
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
         
@@ -510,11 +539,30 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalTo(repassword.snp.top)
         }
         
-        qrmakeonText.snp.makeConstraints {
+        clockText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(repassword.snp.leading).offset(8)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
+        }
+        
+        clockDescription.snp.makeConstraints {
+            $0.width.equalTo(200)
+            $0.height.equalTo(20)
+            $0.leading.equalTo(clockText.snp.leading)
+            $0.top.equalTo(clockText.snp.bottom)
+        }
+        
+        clocktoggleButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(28)
+            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
+        }
+        
+        qrmakeonText.snp.makeConstraints {
+            $0.width.equalTo(184)
+            $0.height.equalTo(28)
+            $0.leading.equalTo(clockText.snp.leading)
+            $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
         
         qrmakeonDescription.snp.makeConstraints {
@@ -526,7 +574,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         
         qrmakeontoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
+            $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
         
         logoutButton.snp.makeConstraints {
