@@ -13,7 +13,7 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Properties
     private let mainViewModel = MainViewModel()
-    private let viewModel2 = ProfileViewModel()
+    private let profileViewModel = ProfileViewModel()
     private let profileView = MainProfileView()
     private let basicsProfileView = ProfileCardView()
     
