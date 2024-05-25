@@ -32,7 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
         }
         
-//        window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
+//        window?.rootViewController =  UINavigationController(rootViewController: MainViewController())
         
         window?.makeKeyAndVisible()
     }
