@@ -174,6 +174,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         let defaults = UserDefaults.standard
         
         let isClockOn = defaults.bool(forKey: "isClockOn")
+        if let mainViewController = navigationController?.viewControllers.first(where: { $0 is AdminMainViewController  }) as? AdminMainViewController {
+                mainViewController.isClockOn = sender.isOn
+            }
     }
     
     @IBAction private func ShowActionSheetClick(_ sender: UIButton) {

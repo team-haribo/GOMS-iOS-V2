@@ -6,7 +6,11 @@ public class AdminMainViewController: BaseViewController {
     private let viewModel = MainViewModel()
     private let basicsProfileView = ProfileCardView()
     
-    var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn")
+    var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
+            didSet {
+                updateLayout()
+            }
+        }
     
     
     let content = UIView()
@@ -195,35 +199,7 @@ public class AdminMainViewController: BaseViewController {
             $0.bottom.equalToSuperview()
         }
         
-        if isClockOn == true {
-            profileView.snp.makeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.height.equalTo(84)
-                $0.centerX.equalToSuperview()
-                $0.top.equalToSuperview()
-            }
-            
-            latecomerLabel.snp.makeConstraints {
-                $0.top.equalTo(profileView.snp.bottom).offset(24)
-                $0.leading.equalToSuperview()
-                $0.height.equalTo(32)
-            }
-            
-        } else {
-            basicsProfileView.snp.makeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.height.equalTo(84)
-                $0.centerX.equalToSuperview()
-                $0.top.equalToSuperview()
-            }
-            
-            latecomerLabel.snp.makeConstraints {
-                $0.top.equalTo(basicsProfileView.snp.bottom).offset(24)
-                $0.leading.equalToSuperview()
-                $0.height.equalTo(32)
-            }
-            
-        }
+        updateLayout()
         
         lateNilView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
@@ -323,4 +299,36 @@ extension AdminMainViewController: UICollectionViewDelegateFlowLayout {
         }
         return 0
     }
+    
+    func updateLayout() {
+            profileView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.height.equalTo(84)
+                $0.centerX.equalToSuperview()
+                $0.top.equalToSuperview()
+            }
+            
+            latecomerLabel.snp.remakeConstraints {
+                $0.top.equalTo(profileView.snp.bottom).offset(24)
+                $0.leading.equalToSuperview()
+                $0.height.equalTo(32)
+            }
+            
+            basicsProfileView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.height.equalTo(84)
+                $0.centerX.equalToSuperview()
+                $0.top.equalToSuperview()
+            }
+            
+            if isClockOn {
+                profileView.isHidden = false
+                basicsProfileView.isHidden = true
+            } else {
+                profileView.isHidden = true
+                basicsProfileView.isHidden = false
+            }
+            
+            view.layoutIfNeeded()
+        }
 }
