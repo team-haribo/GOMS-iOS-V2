@@ -129,6 +129,26 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.isOn = false
     }
     
+    let clockText = UILabel().then {
+        $0.text = "시계 나타내기"
+        $0.textColor = .color.gomsTextDefault.color
+        $0.font = .pretendard(size: 16, weight: .semibold)
+    }
+    
+    let clockDescription = UILabel().then {
+        $0.text = "프로필 카드에 초 단위의 시간을 나타내요"
+        $0.textColor = .color.gomsTertiary.color
+        $0.font = .pretendard(size: 12, weight: .regular)
+    }
+    
+    let clocktoggleButton: UISwitch = UISwitch().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.onTintColor = .color.gomsPrimary.color
+        $0.tintColor = .color.gomsTertiary.color
+        $0.addTarget(self, action: #selector(switchClockOn(_:)), for: .valueChanged)
+        $0.isOn = false
+    }
+    
     let lightmodeText = UILabel().then {
         $0.text = "라이트 모드 켜기"
         $0.textColor = .white
@@ -160,15 +180,25 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     @objc func switchQROn(_ sender: UISwitch) {
-        let QRState = sender.isOn
         print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
-        print(QRState)
         UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
         
         let defaults = UserDefaults.standard
         
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-        print("테스트: \(isSwitchOn)")
+    }
+    
+    @objc func switchClockOn(_ sender: UISwitch) {
+        print("시계 나타내기: \(sender.isOn ? "On" : "Off")")
+        UserDefaults.standard.set(sender.isOn, forKey: "isClockOn")
+        
+        let defaults = UserDefaults.standard
+        
+        let isClockOn = defaults.bool(forKey: "isClockOn")
+        
+        if let mainViewController = navigationController?.viewControllers.first(where: { $0 is MainViewController }) as? MainViewController {
+                mainViewController.isClockOn = sender.isOn
+            }
     }
     
     @IBAction private func ShowActionSheetClick(_ sender: UIButton) {
@@ -248,8 +278,8 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         alertController.addAction(cancelAction)
         
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
-            let signInVC = SignInViewController(viewModel: AuthViewModel())
-            self?.navigationController?.pushViewController(signInVC, animated: true)
+            let introVC = IntroViewController()
+            self?.navigationController?.pushViewController(introVC, animated: true)
         }
         alertController.addAction(confirmAction)
         
@@ -349,7 +379,13 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         viewModel.loadProfileInfo()
         
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
-            cameranowontoggleButton.isOn = isSwitchOn
+        cameranowontoggleButton.isOn = isSwitchOn
+        
+        let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
+        clocktoggleButton.isOn = isClockOn
+        
+
+        
         
         viewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
@@ -415,6 +451,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             cameranowonText,
             cameranowonDescription,
             cameranowontoggleButton,
+            clockText,
+            clockDescription,
+            clocktoggleButton,
             logoutButton,
             themeChangText,
             themeChangRec,
@@ -527,11 +566,30 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(repassword.snp.top)
         }
         
-        cameranowonText.snp.makeConstraints {
+        clockText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(repassword.snp.leading).offset(8)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
+        }
+        
+        clockDescription.snp.makeConstraints {
+            $0.width.equalTo(200)
+            $0.height.equalTo(20)
+            $0.leading.equalTo(clockText.snp.leading)
+            $0.top.equalTo(clockText.snp.bottom)
+        }
+        
+        clocktoggleButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(28)
+            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
+        }
+        
+        cameranowonText.snp.makeConstraints {
+            $0.width.equalTo(184)
+            $0.height.equalTo(28)
+            $0.leading.equalTo(clockDescription.snp.leading)
+            $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
         
         cameranowonDescription.snp.makeConstraints {
@@ -543,8 +601,10 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         
         cameranowontoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
+            $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
+        
+        
         
         logoutButton.snp.makeConstraints {
             $0.width.equalTo(335)

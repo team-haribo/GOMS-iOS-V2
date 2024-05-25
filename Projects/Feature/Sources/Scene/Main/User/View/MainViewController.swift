@@ -7,12 +7,21 @@
 //
 
 import UIKit
+import Service
 
 public final class MainViewController: BaseViewController {
     
     // MARK: - Properties
-    private let viewModel = MainViewModel()
+    private let mainViewModel = MainViewModel()
+    private let profileViewModel = ProfileViewModel()
     private let profileView = MainProfileView()
+    private let basicsProfileView = ProfileCardView()
+    
+    var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
+            didSet {
+                updateLayout()
+            }
+        }
     
     let content = UIView()
     
@@ -92,11 +101,11 @@ public final class MainViewController: BaseViewController {
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.getProfile {
+        mainViewModel.getProfile {
             self.setupProfileView()
         }
-        viewModel.getLateList {
-            self.viewModel.getOutingList {
+        mainViewModel.getLateList {
+            self.mainViewModel.getOutingList {
                 self.setup()
             }
         }
@@ -111,11 +120,14 @@ public final class MainViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setupProfileView()
+        
+        
     }
     
     // MARK: - Setting
     func setup() {
-        if self.viewModel.lateListDatas.count >= 1 {
+        if self.mainViewModel.lateListDatas.count >= 1 {
             lateNilView.isHidden = true
         } else {
             lateNilView.isHidden = false
@@ -123,31 +135,43 @@ public final class MainViewController: BaseViewController {
         self.setCollectionView()
         self.setupCountLable()
     }
-
+    
     func setupProfileView() {
-        guard let grade = viewModel.profileData?.grade else { return }
+        guard let grade = mainViewModel.profileData?.grade else { return }
         
-        profileView.nameLabel.text = viewModel.profileData?.name
-        if viewModel.profileData?.major == "SW_DEVELOP" {
+      basicsProfileView.nameLabel.text = mainViewModel.profileData?.name
+        profileView.nameLabel.text = mainViewModel.profileData?.name
+        if mainViewModel.profileData?.major == "SW_DEVELOP" {
             profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
-        } else if viewModel.profileData?.major == "SMART_IOT" {
+            basicsProfileView.studentInformationLabel.text = "\(grade)기 | SW개발"
+        } else if mainViewModel.profileData?.major == "SMART_IOT" {
             profileView.studentInformationLabel.text = "\(grade)기 | IoT"
+            basicsProfileView.studentInformationLabel.text = "\(grade)기 | IoT"
         } else {
             profileView.studentInformationLabel.text = "\(grade)기 | AI"
+            basicsProfileView.studentInformationLabel.text = "\(grade)기 | AI"
         }
         
-        if let isBlackList = viewModel.profileData?.isBlackList, let isOuting = viewModel.profileData?.isOuting {
+        if let isBlackList = mainViewModel.profileData?.isBlackList, let isOuting = mainViewModel.profileData?.isOuting {
             if isBlackList {
                 profileView.profileStatus.text = "외출 금지"
                 profileView.profileStatus.textColor = .color.gomsNegative.color
+                basicsProfileView.myOutingStatusLabel.text = "외출 금지"
+                basicsProfileView.myOutingStatusLabel.textColor = .color.gomsNegative.color
             } else if isOuting {
                 profileView.profileStatus.text = "외출 중"
                 profileView.profileStatus.textColor = .color.gomsPrimary.color
+                basicsProfileView.myOutingStatusLabel.text = "외출 중"
+                basicsProfileView.myOutingStatusLabel.textColor = .color.gomsPrimary.color
             } else {
                 profileView.profileStatus.text = "외출 대기 중"
                 profileView.profileStatus.textColor = .color.gomsSecondary.color
+                basicsProfileView.myOutingStatusLabel.text = "외출 대기 중"
+                basicsProfileView.myOutingStatusLabel.textColor = .color.gomsSecondary.color
             }
         }
+        
+        
     }
     
     private func setCollectionView() {
@@ -162,8 +186,8 @@ public final class MainViewController: BaseViewController {
     }
     
     func setupCountLable() {
-        let attributedString = NSMutableAttributedString(string: "\(self.viewModel.outingListDatas.count)명이 외출 중")
-        let range = (attributedString.string as NSString).range(of: "\(self.viewModel.outingListDatas.count)")
+        let attributedString = NSMutableAttributedString(string: "\(self.mainViewModel.outingListDatas.count)명이 외출 중")
+        let range = (attributedString.string as NSString).range(of: "\(self.mainViewModel.outingListDatas.count)")
 
         attributedString.addAttribute(.foregroundColor, value: UIColor.color.gomsPrimary.color, range: range)
         attributedString.addAttribute(.font, value: UIFont.pretendard(size: 12, weight: .semibold), range: range)
@@ -180,7 +204,7 @@ public final class MainViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
-        [profileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.content.addSubview($0) }
+        [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.content.addSubview($0) }
         [logo, settingButton, content].forEach { view.addSubview($0) }
     }
     
@@ -206,18 +230,9 @@ public final class MainViewController: BaseViewController {
             $0.bottom.equalToSuperview()
         }
         
-        profileView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(84)
-            $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview()
-        }
+        updateLayout()
 
-        latecomerLabel.snp.makeConstraints {
-            $0.top.equalTo(profileView.snp.bottom).offset(24)
-            $0.leading.equalToSuperview()
-            $0.height.equalTo(32)
-        }
+        
         
         lateNilView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
@@ -274,9 +289,9 @@ public final class MainViewController: BaseViewController {
 extension MainViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == outingStatusCollectionView {
-            return viewModel.outingListDatas.count
+            return mainViewModel.outingListDatas.count
         } else if collectionView == latecomerCollectionView {
-            return viewModel.lateListDatas.count
+            return mainViewModel.lateListDatas.count
         }
         return 0
     }
@@ -285,14 +300,14 @@ extension MainViewController: UICollectionViewDataSource {
         if collectionView == outingStatusCollectionView {
             let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
             
-            let outingData = viewModel.outingListDatas[indexPath.row]
+            let outingData = mainViewModel.outingListDatas[indexPath.row]
             cell.setupData(with: outingData)
             
             return cell
         } else if collectionView == latecomerCollectionView {
             let cell = latecomerCollectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as! LateCell
 
-            let lateData = viewModel.lateListDatas[indexPath.row]
+            let lateData = mainViewModel.lateListDatas[indexPath.row]
             cell.setupData(with: lateData)
             
             return cell
@@ -323,4 +338,36 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         }
         return 0
     }
+    
+    func updateLayout() {
+            profileView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.height.equalTo(84)
+                $0.centerX.equalToSuperview()
+                $0.top.equalToSuperview()
+            }
+            
+            latecomerLabel.snp.remakeConstraints {
+                $0.top.equalTo(profileView.snp.bottom).offset(24)
+                $0.leading.equalToSuperview()
+                $0.height.equalTo(32)
+            }
+            
+            basicsProfileView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.height.equalTo(84)
+                $0.centerX.equalToSuperview()
+                $0.top.equalToSuperview()
+            }
+            
+            if isClockOn {
+                profileView.isHidden = false
+                basicsProfileView.isHidden = true
+            } else {
+                profileView.isHidden = true
+                basicsProfileView.isHidden = false
+            }
+            
+            view.layoutIfNeeded()
+        }
 }
