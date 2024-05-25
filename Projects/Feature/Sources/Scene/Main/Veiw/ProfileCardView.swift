@@ -16,9 +16,8 @@ final class ProfileCardView: UIView {
     let profileImageView = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
         $0.contentMode = .scaleAspectFill
-        $0.layer.cornerRadius = 32
+        $0.layer.cornerRadius = 26
         $0.clipsToBounds = true
-        $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     let nameLabel = UILabel().then {
