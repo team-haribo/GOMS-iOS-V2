@@ -12,7 +12,7 @@ import Service
 public final class MainViewController: BaseViewController {
     
     // MARK: - Properties
-    private let viewModel = MainViewModel()
+    private let mainViewModel = MainViewModel()
     private let viewModel2 = ProfileViewModel()
     private let profileView = MainProfileView()
     private let basicsProfileView = ProfileCardView()
@@ -101,11 +101,11 @@ public final class MainViewController: BaseViewController {
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.getProfile {
+        mainViewModel.getProfile {
             self.setupProfileView()
         }
-        viewModel.getLateList {
-            self.viewModel.getOutingList {
+        mainViewModel.getLateList {
+            self.mainViewModel.getOutingList {
                 self.setup()
             }
         }
@@ -127,7 +127,7 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Setting
     func setup() {
-        if self.viewModel.lateListDatas.count >= 1 {
+        if self.mainViewModel.lateListDatas.count >= 1 {
             lateNilView.isHidden = true
         } else {
             lateNilView.isHidden = false
@@ -137,14 +137,14 @@ public final class MainViewController: BaseViewController {
     }
     
     func setupProfileView() {
-        guard let grade = viewModel.profileData?.grade else { return }
+        guard let grade = mainViewModel.profileData?.grade else { return }
         
-      basicsProfileView.nameLabel.text = viewModel.profileData?.name
-        profileView.nameLabel.text = viewModel.profileData?.name
-        if viewModel.profileData?.major == "SW_DEVELOP" {
+      basicsProfileView.nameLabel.text = mainViewModel.profileData?.name
+        profileView.nameLabel.text = mainViewModel.profileData?.name
+        if mainViewModel.profileData?.major == "SW_DEVELOP" {
             profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | SW개발"
-        } else if viewModel.profileData?.major == "SMART_IOT" {
+        } else if mainViewModel.profileData?.major == "SMART_IOT" {
             profileView.studentInformationLabel.text = "\(grade)기 | IoT"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | IoT"
         } else {
@@ -152,7 +152,7 @@ public final class MainViewController: BaseViewController {
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | AI"
         }
         
-        if let isBlackList = viewModel.profileData?.isBlackList, let isOuting = viewModel.profileData?.isOuting {
+        if let isBlackList = mainViewModel.profileData?.isBlackList, let isOuting = mainViewModel.profileData?.isOuting {
             if isBlackList {
                 profileView.profileStatus.text = "외출 금지"
                 profileView.profileStatus.textColor = .color.gomsNegative.color
@@ -186,8 +186,8 @@ public final class MainViewController: BaseViewController {
     }
     
     func setupCountLable() {
-        let attributedString = NSMutableAttributedString(string: "\(self.viewModel.outingListDatas.count)명이 외출 중")
-        let range = (attributedString.string as NSString).range(of: "\(self.viewModel.outingListDatas.count)")
+        let attributedString = NSMutableAttributedString(string: "\(self.mainViewModel.outingListDatas.count)명이 외출 중")
+        let range = (attributedString.string as NSString).range(of: "\(self.mainViewModel.outingListDatas.count)")
 
         attributedString.addAttribute(.foregroundColor, value: UIColor.color.gomsPrimary.color, range: range)
         attributedString.addAttribute(.font, value: UIFont.pretendard(size: 12, weight: .semibold), range: range)
@@ -289,9 +289,9 @@ public final class MainViewController: BaseViewController {
 extension MainViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == outingStatusCollectionView {
-            return viewModel.outingListDatas.count
+            return mainViewModel.outingListDatas.count
         } else if collectionView == latecomerCollectionView {
-            return viewModel.lateListDatas.count
+            return mainViewModel.lateListDatas.count
         }
         return 0
     }
@@ -300,14 +300,14 @@ extension MainViewController: UICollectionViewDataSource {
         if collectionView == outingStatusCollectionView {
             let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
             
-            let outingData = viewModel.outingListDatas[indexPath.row]
+            let outingData = mainViewModel.outingListDatas[indexPath.row]
             cell.setupData(with: outingData)
             
             return cell
         } else if collectionView == latecomerCollectionView {
             let cell = latecomerCollectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as! LateCell
 
-            let lateData = viewModel.lateListDatas[indexPath.row]
+            let lateData = mainViewModel.lateListDatas[indexPath.row]
             cell.setupData(with: lateData)
             
             return cell
