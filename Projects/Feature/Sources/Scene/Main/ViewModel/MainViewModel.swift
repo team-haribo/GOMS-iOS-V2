@@ -18,6 +18,7 @@ struct LatecomerData {
 }
 
 struct ProfileData {
+    let profileUrl: String?
     let name: String
     let grade: Int
     let major: String
@@ -119,7 +120,8 @@ public final class MainViewModel: BaseViewModel {
                     print("ok")
                     do {
                         self.profile = try JSONDecoder().decode(ProfileResponse.self, from: responseData)
-                        self.profileData = ProfileData(name: self.profile?.name ?? "",
+                        self.profileData = ProfileData(profileUrl: self.profile?.profileUrl, 
+                                                       name: self.profile?.name ?? "",
                                                        grade: self.profile?.grade ?? 0,
                                                        major: self.profile?.major ?? "",
                                                        authority: self.profile?.authority ?? "",

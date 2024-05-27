@@ -6,13 +6,12 @@ import Service
 final class ProfileCardView: UIView {
     
     var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
-            didSet {
-                setLayout()
-            }
+        didSet {
+            setLayout()
         }
+    }
     
     // MARK: - Properties
-    
     let profileImageView = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
         $0.contentMode = .scaleAspectFill
@@ -42,21 +41,16 @@ final class ProfileCardView: UIView {
         self.clipsToBounds = true
         self.layer.cornerRadius = 12
         self.backgroundColor = .color.gomsCardBackgroundColor.color
-
     }
 
     // MARK: - Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
-        //configureUI()
         addView()
         setLayout()
         configureUI()
-        
-        
     }
 
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

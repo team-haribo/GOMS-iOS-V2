@@ -64,7 +64,6 @@ public final class MainProfileView: UIView {
     
     // MARK: - Layout
     private func setLayout() {
-
         nameLabel.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.top.equalToSuperview().inset(16)
