@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 import Service
 
 public final class MainViewController: BaseViewController {
@@ -121,8 +122,6 @@ public final class MainViewController: BaseViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupProfileView()
-        
-        
     }
     
     // MARK: - Setting
@@ -138,6 +137,13 @@ public final class MainViewController: BaseViewController {
     
     func setupProfileView() {
         guard let grade = mainViewModel.profileData?.grade else { return }
+        
+        if let imageURL = mainViewModel.profileData?.profileUrl, let url = URL(string: imageURL) {
+            basicsProfileView.profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+            basicsProfileView.profileImageView.layer.cornerRadius = basicsProfileView.profileImageView.frame.width / 2
+        } else {
+            basicsProfileView.profileImageView.image = .image.gomsProfile.image
+        }
         
       basicsProfileView.nameLabel.text = mainViewModel.profileData?.name
         profileView.nameLabel.text = mainViewModel.profileData?.name
