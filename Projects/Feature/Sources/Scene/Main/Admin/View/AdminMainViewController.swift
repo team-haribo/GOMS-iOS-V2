@@ -134,6 +134,13 @@ public class AdminMainViewController: BaseViewController {
     func setupProfileView() {
         guard let grade = viewModel.profileData?.grade else { return }
         
+        if let imageURL = viewModel.profileData?.profileUrl, let url = URL(string: imageURL) {
+            basicsProfileView.profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+            basicsProfileView.profileImageView.layer.cornerRadius = basicsProfileView.profileImageView.frame.width / 2
+        } else {
+            basicsProfileView.profileImageView.image = .image.gomsProfile.image
+        }
+        
         profileView.nameLabel.text = viewModel.profileData?.name
         basicsProfileView.nameLabel.text = viewModel.profileData?.name
         if viewModel.profileData?.major == "SW_DEVELOP" {
