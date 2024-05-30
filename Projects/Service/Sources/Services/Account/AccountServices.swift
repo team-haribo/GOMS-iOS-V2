@@ -12,6 +12,7 @@ import Moya
 public enum AccountServices {
     case newPassword(param: NewPasswordRequest, authorization: String)
     case changPassword(param: ChangPasswordRequest, authorization: String)
+    case withdraw(password: String, authorization: String)
 }
 
 extension AccountServices: TargetType {
@@ -25,6 +26,8 @@ extension AccountServices: TargetType {
             return "/account/new-password"
         case .changPassword:
             return "/account/change-password"
+        case .withdraw:
+            return "/account/withdraw"
         }
     }
     
@@ -32,6 +35,8 @@ extension AccountServices: TargetType {
         switch self {
         case .newPassword,.changPassword:
             return .patch
+        case .withdraw:
+            return .delete
         }
     }
     
@@ -45,12 +50,16 @@ extension AccountServices: TargetType {
             return .requestJSONEncodable(param)
         case .changPassword(let param, _):
             return .requestJSONEncodable(param)
+        case .withdraw(let password, _):
+            return .requestJSONEncodable(password)
         }
     }
     
     public var headers: [String : String]? {
         switch self {
-        case .newPassword(_, let authorization), .changPassword(_, let authorization):
+        case .newPassword(_, let authorization), 
+             .changPassword(_, let authorization),
+             .withdraw(_, let authorization):
             return ["Content-Type": "application/json", "Authorization": authorization]
         default:
             return ["Content-Type": "application/json"]
