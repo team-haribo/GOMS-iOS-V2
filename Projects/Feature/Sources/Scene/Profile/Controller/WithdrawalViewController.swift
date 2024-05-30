@@ -11,6 +11,8 @@ import UIKit
 public class WithdrawalViewController: BaseViewController, UITextFieldDelegate {
 
     // MARK: - Properties
+    private let viewModel = ProfileViewModel()
+    
     let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "현재 비밀번호")
     
     lazy var visiblePasswordButton = UIButton().then {
@@ -18,7 +20,9 @@ public class WithdrawalViewController: BaseViewController, UITextFieldDelegate {
         $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
     }
     
-    private lazy var withdrawalButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "회원 탈퇴하기")
+    private lazy var withdrawalButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "회원 탈퇴하기").then {
+        $0.addTarget(self, action: #selector(withdrawalButtonTapped), for: .touchUpInside)
+    }
     
     // MARK: - Life Cycel
     public override func viewDidLoad() {
@@ -28,6 +32,10 @@ public class WithdrawalViewController: BaseViewController, UITextFieldDelegate {
     }
     
     // MARK: - Selectors
+    @objc func withdrawalButtonTapped() {
+        viewModel.setupPassword(password: passwordTextField.text ?? "")
+    }
+    
     @objc func visiblePasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()
         passwordTextField.isSelected.toggle()
