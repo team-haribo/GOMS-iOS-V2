@@ -170,10 +170,21 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let borderView = UIView().then() {
         $0.backgroundColor = .color.gomsDivider.color
     }
+
     
     @objc func withdrawalButtonTapped() {
-        let withdrawalVC = WithdrawalViewController()
-        navigationController?.pushViewController(withdrawalVC , animated: true)
+        let alert = UIAlertController(title: "회원 탈퇴", message: "정말로 회원을 탈퇴하시겠습니까?", preferredStyle: .alert)
+        
+        let cancel = UIAlertAction(title: "취소", style: .default, handler: nil)
+        let withdrawal = UIAlertAction(title: "회원 탈퇴", style: .default) { action in
+            let withdrawalVC = WithdrawalViewController()
+            self.navigationController?.pushViewController(withdrawalVC , animated: true)
+        }
+        
+        alert.addAction(cancel)
+        alert.addAction(withdrawal)
+        
+        self.present(alert, animated: true)
     }
     
     @objc func switchQROn(_ sender: UISwitch) {
