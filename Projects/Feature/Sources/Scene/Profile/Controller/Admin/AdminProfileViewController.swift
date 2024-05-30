@@ -147,7 +147,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
     }
     
-    let withdrawalButton = ProfileButton(icon: .image.withdrawal.image, title: "회원탈퇴")
+    lazy var withdrawalButton = ProfileButton(icon: .image.withdrawal.image, title: "회원탈퇴").then {
+        $0.addTarget(self, action: #selector(withdrawalButtonTapped), for: .touchUpInside)
+    }
     
     let borderView = UIView().then() {
         $0.backgroundColor = .color.gomsDivider.color
@@ -229,6 +231,11 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
    
     public func updateThemeText() {
         self.themesettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
+    }
+    
+    @objc func withdrawalButtonTapped() {
+        let withdrawalVC = WithdrawalViewController()
+        navigationController?.pushViewController(withdrawalVC , animated: true)
     }
     
     @objc func logoutButtonTapped() {

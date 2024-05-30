@@ -163,10 +163,17 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
     }
     
-    let withdrawalButton = ProfileButton(icon: .image.withdrawal.image, title: "회원탈퇴")
+    lazy var withdrawalButton = ProfileButton(icon: .image.withdrawal.image, title: "회원탈퇴").then {
+        $0.addTarget(self, action: #selector(withdrawalButtonTapped), for: .touchUpInside)
+    }
     
     let borderView = UIView().then() {
         $0.backgroundColor = .color.gomsDivider.color
+    }
+    
+    @objc func withdrawalButtonTapped() {
+        let withdrawalVC = WithdrawalViewController()
+        navigationController?.pushViewController(withdrawalVC , animated: true)
     }
     
     @objc func switchQROn(_ sender: UISwitch) {
