@@ -105,17 +105,18 @@ final class ProfileViewModel: ObservableObject {
             case .success(let result):
                 let statusCode = result.statusCode
                 switch statusCode {
-                case 200...300:
+                case 205:
                     print("ok")
                     completion(true)
                 case 404:
                     print("유저가 존재하지 않음")
                     completion(false)
                 case 400:
+                    print(self.password)
                     print("비밀번호가 일치하지 않을 때")
                     completion(false)
                 default:
-                    print("error")
+                    print(result)
                     completion(false)
                 }
             case .failure(let err):

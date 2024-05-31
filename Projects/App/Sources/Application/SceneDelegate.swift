@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else if AdminisSwitchOn == true {
             window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
         } else {
-            window?.rootViewController =  UINavigationController(rootViewController: UserProfileViewController())
+            window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
         }
         
         window?.makeKeyAndVisible()

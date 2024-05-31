@@ -236,8 +236,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     @objc func withdrawalButtonTapped() {
         let alert = UIAlertController(title: "회원 탈퇴", message: "정말로 회원을 탈퇴하시겠습니까?", preferredStyle: .alert)
         
-        let cancel = UIAlertAction(title: "취소", style: .default, handler: nil)
-        let withdrawal = UIAlertAction(title: "회원 탈퇴", style: .default) { action in
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let withdrawal = UIAlertAction(title: "회원 탈퇴", style: .destructive) { action in
             let withdrawalVC = WithdrawalViewController()
             self.navigationController?.pushViewController(withdrawalVC , animated: true)
         }

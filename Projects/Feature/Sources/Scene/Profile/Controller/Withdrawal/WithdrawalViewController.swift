@@ -8,12 +8,14 @@
 
 import UIKit
 
-public class WithdrawalViewController: BaseViewController, UITextFieldDelegate {
+public class WithdrawalViewController: BaseViewController {
 
     // MARK: - Properties
     private let viewModel = ProfileViewModel()
     
-    let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "현재 비밀번호")
+    let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "현재 비밀번호").then {
+        $0.isSecureTextEntry = true
+    }
     
     lazy var visiblePasswordButton = UIButton().then {
         $0.setImage(.image.visible.image, for: .normal)
@@ -34,6 +36,18 @@ public class WithdrawalViewController: BaseViewController, UITextFieldDelegate {
     // MARK: - Selectors
     @objc func withdrawalButtonTapped() {
         viewModel.setupPassword(password: passwordTextField.text ?? "")
+        viewModel.withdraw { success in
+            if success {
+                let alert = UIAlertController(title: "회원 탈퇴 완료", message: "그동안 GOMS를 이용해주셔서 감사합니다.\n안녕히 가세요!", preferredStyle: .alert)
+                
+                let ok = UIAlertAction(title: "완료", style: .default, handler: nil)
+                
+                alert.addAction(ok)
+                self.present(alert, animated: true)
+            } else {
+                print("탈퇴하기 실패")
+            }
+        }
     }
     
     @objc func visiblePasswordButtonTapped() {
@@ -50,7 +64,7 @@ public class WithdrawalViewController: BaseViewController, UITextFieldDelegate {
     @objc override func keyboardWillShow(_ sender: Notification) {
         withdrawalButton.snp.remakeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(-bounds.height * 0.41)
+            $0.bottom.equalTo(-bounds.height * 0.41)
             $0.height.equalTo(48)
         }
     }
@@ -72,6 +86,7 @@ public class WithdrawalViewController: BaseViewController, UITextFieldDelegate {
     
     // MARK: - Add View
     override func addView() {
+        passwordTextField.addSubview(visiblePasswordButton)
         [passwordTextField, withdrawalButton].forEach { view.addSubview($0) }
     }
     
@@ -83,6 +98,11 @@ public class WithdrawalViewController: BaseViewController, UITextFieldDelegate {
             $0.height.equalTo(56)
         }
         
+        visiblePasswordButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.centerY.equalToSuperview()
+        }
+        
         withdrawalButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottom.equalTo(-bounds.height * 0.16)
@@ -90,3 +110,13 @@ public class WithdrawalViewController: BaseViewController, UITextFieldDelegate {
         }
     }
 }
+
+// MARK: - Extension
+extension WithdrawalViewController: UITextFieldDelegate {
+    public func textFieldDidChange(_ textField: UITextField) {
+        if textField == passwordTextField {
+            viewModel.setupPassword(password: textField.text ?? "")
+        }
+    }
+}
+
