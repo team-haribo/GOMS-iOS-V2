@@ -98,4 +98,31 @@ final class ProfileViewModel: ObservableObject {
             }
         }
     }
+    
+    func withdraw(completion: @escaping (Bool) -> Void) {
+        providerserve.request(.withdraw(password: self.password, authorization: accessToken)) { response in
+            switch response {
+            case .success(let result):
+                let statusCode = result.statusCode
+                switch statusCode {
+                case 205:
+                    print(result.data)
+                    completion(true)
+                case 404:
+                    print(result.data)
+                    completion(false)
+                case 400:
+                    print("현재 비밀번호 입력 String: \(self.password)")
+                    print(result.data)
+                    completion(false)
+                default:
+                    print(result)
+                    completion(false)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(false)
+            }
+        }
+    }
 }

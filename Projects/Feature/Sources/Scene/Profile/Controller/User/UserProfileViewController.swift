@@ -30,11 +30,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
     }
     
-    let repasswordRight = UIButton().then {
-        $0.setImage(.image.gomsRightButton.image, for: .normal)
-        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
-    }
-    
     let userName = UILabel().then {
         $0.text = ""
         $0.textColor = .color.gomsTextDefault.color
@@ -72,14 +67,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let line2View = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
-    
-    let repassword : UIButton = UIButton().then {
-        $0.setTitle("비밀번호 재설정", for: .normal)
-        $0.setTitleColor(.color.gomsTextDefault.color, for: .normal)
-        $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
-        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
-    }
-    
+        
     let themeChangText = UILabel().then {
         $0.text = "앱 테마 설정"
         $0.textColor = .color.gomsTextDefault.color
@@ -167,16 +155,35 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.tintColor = .color.gomsTertiary.color
     }
     
-    let logoutButton = UIButton().then {
-        $0.backgroundColor = .systemRed
-        $0.layer.cornerRadius = 12
-        $0.setTitle("로그아웃", for: .normal)
-        $0.titleLabel?.font = .pretendard(size: 16, weight: .semibold)
+    lazy var passwordResetButton = ProfileButton(icon: .image.passwordReset.image, title: "비밀번호 재설정").then {
+        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
+    }
+    
+    lazy var logoutButton = ProfileButton(icon: .image.logout.image, title: "로그아웃").then {
         $0.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+    }
+    
+    lazy var withdrawalButton = ProfileButton(icon: .image.withdrawal.image, title: "회원탈퇴").then {
+        $0.addTarget(self, action: #selector(withdrawalButtonTapped), for: .touchUpInside)
     }
     
     let borderView = UIView().then() {
         $0.backgroundColor = .color.gomsDivider.color
+    }
+
+    @objc func withdrawalButtonTapped() {
+        let alert = UIAlertController(title: "회원 탈퇴", message: "정말로 회원을 탈퇴하시겠습니까?", preferredStyle: .alert)
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let withdrawal = UIAlertAction(title: "회원 탈퇴", style: .destructive) { action in
+            let withdrawalVC = WithdrawalViewController()
+            self.navigationController?.pushViewController(withdrawalVC , animated: true)
+        }
+        
+        alert.addAction(cancel)
+        alert.addAction(withdrawal)
+        
+        self.present(alert, animated: true)
     }
     
     @objc func switchQROn(_ sender: UISwitch) {
@@ -384,9 +391,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
         clocktoggleButton.isOn = isClockOn
         
-
-        
-        
         viewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
             DispatchQueue.main.async {
@@ -444,10 +448,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             perceptionNum,
             perceptionText,
             userProfilepencil,
-            repassword,
+            passwordResetButton,
             line1View,
             line2View,
-            repasswordRight,
             cameranowonText,
             cameranowonDescription,
             cameranowontoggleButton,
@@ -459,7 +462,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             themeChangRec,
             themesettingImg,
             themesettingText,
-            themeChangLine
+            themeChangLine,
+            logoutButton,
+            withdrawalButton
         ].forEach {
             view.addSubview($0)
         }
@@ -518,25 +523,17 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.trailing.equalToSuperview().inset(20)
         }
         
-        repassword.snp.makeConstraints {
-            $0.width.equalTo(117)
-            $0.height.equalTo(28)
-            $0.leading.equalTo(userProfile.snp.leading)
-            $0.top.equalTo(line1View.snp.top).offset(22)
-        }
-        
         line2View.snp.makeConstraints {
             $0.height.equalTo(1)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalTo(repassword.snp.bottom).offset(22)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(cameranowonDescription.snp.bottom).offset(24)
         }
         
         themeChangText.snp.makeConstraints {
             $0.width.equalTo(93)
             $0.height.equalTo(28)
-            $0.top.equalTo(line2View.snp.top).offset(24)
-            $0.leading.equalTo(repassword.snp.leading).offset(8)
+            $0.top.equalTo(line1View.snp.top).offset(24)
+            $0.leading.equalToSuperview().inset(28)
         }
         
         themeChangRec.snp.makeConstraints {
@@ -560,16 +557,11 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(themeChangRec.snp.top).offset(20)
             $0.trailing.equalToSuperview().inset(32)
         }
-        
-        repasswordRight.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(repassword.snp.top)
-        }
-        
+                
         clockText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
-            $0.leading.equalTo(repassword.snp.leading).offset(8)
+            $0.leading.equalToSuperview().inset(28)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
         
@@ -604,13 +596,22 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
         
-        
+        passwordResetButton.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(bounds.height * 0.08)
+            $0.top.equalTo(line2View.snp.bottom).offset(bounds.height * 0.01)
+        }
         
         logoutButton.snp.makeConstraints {
-            $0.width.equalTo(335)
-            $0.height.equalTo(48)
-            $0.centerX.equalToSuperview()
-            $0.top.equalTo(cameranowonDescription.snp.top).offset(188)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(bounds.height * 0.08)
+            $0.top.equalTo(passwordResetButton.snp.bottom)
+        }
+        
+        withdrawalButton.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(bounds.height * 0.08)
+            $0.top.equalTo(logoutButton.snp.bottom)
         }
     }
 }
