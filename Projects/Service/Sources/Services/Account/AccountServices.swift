@@ -51,7 +51,7 @@ extension AccountServices: TargetType {
         case .changPassword(let param, _):
             return .requestJSONEncodable(param)
         case .withdraw(let password, _):
-            return .requestJSONEncodable(password)
+            return .requestParameters(parameters: ["password": password], encoding: URLEncoding.default)
         }
     }
     
