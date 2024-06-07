@@ -5,6 +5,15 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Properties
     private let viewModel = MainViewModel()
     private let basicsProfileView = ProfileCardView()
+    let refreshControl = UIRefreshControl()
+        
+    let scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    let contentView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
             didSet {
@@ -95,6 +104,61 @@ public class AdminMainViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        configureRefreshControl()
+        setupScrollView()
+        setupProfileView()
+    }
+    
+    func configureRefreshControl () {
+        scrollView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+    
+    @objc func handleRefreshControl() {
+        viewModel.getLateList {
+        }
+        
+        viewModel.getProfile {
+                self.setupProfileView()
+                self.view.layoutIfNeeded()
+            }
+            
+            viewModel.getLateList {
+                self.viewModel.getOutingList {
+                    self.setup()
+                    self.view.layoutIfNeeded()
+                }
+            }
+            
+            // Reload collection views
+            latecomerCollectionView.reloadData()
+            outingStatusCollectionView.reloadData()
+            setupCountLable()
+        
+        let offset = CGPoint(x: 0, y: 0)
+        self.view.frame.origin.y += offset.y
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.refreshControl.endRefreshing()
+            self.view.frame.origin.y = 0
+        }
+    }
+    
+    
+    func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+        }
+        
+        addView()
     }
     
     // MARK: - Setting

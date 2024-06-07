@@ -482,7 +482,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                     make.width.equalTo(scrollView)
                 }
                 
-                addView() // 기존 addView() 메서드를 호출하여 contentView에 뷰 요소를 추가합니다.
+                addView()
             }
     
     override func addView() {
