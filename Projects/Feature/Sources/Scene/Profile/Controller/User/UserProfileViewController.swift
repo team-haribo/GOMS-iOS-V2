@@ -16,6 +16,15 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let imagePickerController = UIImagePickerController()
     let viewModel = ProfileViewModel()
     var cancellables = Set<AnyCancellable>()
+    let refreshControl = UIRefreshControl()
+    
+    let scrollView = UIScrollView().then {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+    let contentView = UIView().then {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
     
     let userProfile = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
@@ -437,7 +446,49 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         self.navigationItem.backBarButtonItem = backBarButtonItem
         
         imagePickerController.delegate = self
+        
+        configureRefreshControl()
+        setupScrollView()
     }
+    
+    func configureRefreshControl () {
+                scrollView.refreshControl = refreshControl
+                refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+            }
+            
+        @objc func handleRefreshControl() {
+            viewModel.loadProfileInfo()
+            // Update your content…
+
+            // Scroll the entire view down slightly for visual effect
+            let offset = CGPoint(x: 0, y: 0) // Adjust the offset as needed
+            self.view.frame.origin.y += offset.y
+
+            // Dismiss the refresh control after a delay.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.refreshControl.endRefreshing()
+                
+                // Scroll back to the top
+                self.view.frame.origin.y = 0
+            }
+        }
+
+            
+            func setupScrollView() {
+                view.addSubview(scrollView)
+                scrollView.addSubview(contentView)
+                
+                scrollView.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+                
+                contentView.snp.makeConstraints { make in
+                    make.edges.equalTo(scrollView)
+                    make.width.equalTo(scrollView)
+                }
+                
+                addView() // 기존 addView() 메서드를 호출하여 contentView에 뷰 요소를 추가합니다.
+            }
     
     override func addView() {
         [
