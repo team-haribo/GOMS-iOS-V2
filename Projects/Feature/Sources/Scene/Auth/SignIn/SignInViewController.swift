@@ -41,6 +41,11 @@ public final class SignInViewController: BaseViewController {
         $0.isSecureTextEntry = true
     }
     
+    lazy var visiblePasswordButton = UIButton().then {
+        $0.setImage(.image.visible.image, for: .normal)
+        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+    }
+    
     private let findPasswordLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 48)).then {
         $0.text = "비밀번호를 잊으셨나요?"
         $0.textColor = .color.gomsTertiary.color
@@ -92,6 +97,17 @@ public final class SignInViewController: BaseViewController {
         }
     }
     
+    @objc func visiblePasswordButtonTapped() {
+        passwordTextField.isSecureTextEntry.toggle()
+        passwordTextField.isSelected.toggle()
+        
+        if passwordTextField.isSelected {
+            visiblePasswordButton.setImage(.image.invisible.image, for: .normal)
+        } else {
+            visiblePasswordButton.setImage(.image.visible.image, for: .normal)
+        }
+    }
+    
     @objc override func keyboardWillShow(_ sender: Notification) {
         signInButton.snp.remakeConstraints {
             $0.height.equalTo(48)
@@ -120,6 +136,7 @@ public final class SignInViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         emailTextField.addSubview(defaultDomain)
+        passwordTextField.addSubview(visiblePasswordButton)
         [emailTextField, passwordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
         [textFieldStackView, findPasswordLabel, findPasswordButton, signInButton].forEach { view.addSubview($0) }
     }
@@ -138,6 +155,11 @@ public final class SignInViewController: BaseViewController {
         
         passwordTextField.snp.makeConstraints {
             $0.height.equalTo(56)
+        }
+        
+        visiblePasswordButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.centerY.equalToSuperview()
         }
         
         textFieldStackView.snp.makeConstraints {
