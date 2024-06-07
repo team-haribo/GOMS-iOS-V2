@@ -36,7 +36,15 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
-    private let outingNillView = OutingNilView().then {
+    private let coffeeIcon = UIImageView().then {
+        $0.image = .image.grayCoffee.image
+        $0.isHidden = true
+    }
+    
+    private let outingNilLabel = UILabel().then {
+        $0.text = "텅 비어있네요... 다들 바쁜가 봐요!"
+        $0.textColor = .color.gomsTertiary.color
+        $0.font = UIFont.pretendard(size: 14, weight: .semibold)
         $0.isHidden = true
     }
     
@@ -60,10 +68,12 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     func setup() {
         if outingList.isEmpty {
             searchTitle.isHidden = true
-            outingNillView.isHidden = false
+            coffeeIcon.isHidden = false
+            outingNilLabel.isHidden = false
         } else {
             searchTitle.isHidden = false
-            outingNillView.isHidden = true
+            coffeeIcon.isHidden = true
+            outingNilLabel.isHidden = true
         }
         
         setupCollectionView()
@@ -89,7 +99,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     
     // MARK: - Add View
     override func addView() {
-        [searchTitle, outingListCollectionView, outingNillView].forEach { view.addSubview($0) }
+        [searchTitle, outingListCollectionView, coffeeIcon, outingNilLabel].forEach { view.addSubview($0) }
     }
         
     // MARK: - Layout
@@ -107,11 +117,16 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
             $0.bottom.equalToSuperview()
         }
         
-        outingNillView.snp.makeConstraints {
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-(bounds.width * 0.05))
-            $0.height.equalTo(40)
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+        coffeeIcon.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.height.width.equalTo(80)
+            $0.top.equalTo(bounds.height * 0.49)
+        }
+        
+        outingNilLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(24)
+            $0.top.equalTo(coffeeIcon.snp.bottom).offset(8)
         }
     }
 }
