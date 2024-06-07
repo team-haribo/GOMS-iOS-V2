@@ -17,7 +17,7 @@ class OutingNilView: UIView {
     
     private let mainLabel = UILabel().then {
         $0.text = "텅 비어있네요... 다들 바쁜가 봐요!"
-        $0.textColor = .color.gomsTextDefault.color
+        $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 14, weight: .semibold)
     }
     
@@ -30,14 +30,8 @@ class OutingNilView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.setDynamicBackgroundColor(darkModeColor: .color.gomsDarkGray.color, lightModeColor: UIColor(red: 0.967, green: 0.97, blue: 0.973, alpha: 1))
-        self.layer.cornerRadius = 12
-    }
-    
     private func configureUI() {
-        coffeeIcon.image = .image.coffee.image
+        coffeeIcon.image = .image.grayCoffee.image
         
         [coffeeIcon, mainLabel].forEach { self.addSubview($0) }
         
