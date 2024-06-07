@@ -17,6 +17,15 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     let imagePickerController = UIImagePickerController()
     let viewModel = ProfileViewModel()
     var cancellables = Set<AnyCancellable>()
+    let refreshControl = UIRefreshControl()
+    
+    let scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    let contentView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     let userProfile = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
@@ -74,7 +83,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     let line2View = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
-
+    
     let themeChangText = UILabel().then {
         $0.text = "앱 테마 설정"
         $0.textColor = .color.gomsTextDefault.color
@@ -172,8 +181,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         
         let isClockOn = defaults.bool(forKey: "isClockOn")
         if let mainViewController = navigationController?.viewControllers.first(where: { $0 is AdminMainViewController  }) as? AdminMainViewController {
-                mainViewController.isClockOn = sender.isOn
-            }
+            mainViewController.isClockOn = sender.isOn
+        }
     }
     
     @IBAction private func ShowActionSheetClick(_ sender: UIButton) {
@@ -228,7 +237,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             UserDefaults.standard.set(themeText, forKey: "themeText")
         }
     }
-   
+    
     public func updateThemeText() {
         self.themesettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
     }
@@ -358,6 +367,43 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         self.navigationItem.backBarButtonItem = backBarButtonItem
         
         imagePickerController.delegate = self
+        
+        configureRefreshControl()
+        setupScrollView()
+    }
+    
+    func configureRefreshControl () {
+        scrollView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+    
+    @objc func handleRefreshControl() {
+        viewModel.loadProfileInfo()
+        
+        let offset = CGPoint(x: 0, y: 0)
+        self.view.frame.origin.y += offset.y
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.refreshControl.endRefreshing()
+            self.view.frame.origin.y = 0
+        }
+    }
+    
+    
+    func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+        }
+        
+        addView()
     }
     
     @objc func passwordResetPage() {
@@ -544,7 +590,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalTo(themeChangRec.snp.top).offset(20)
             $0.trailing.equalToSuperview().inset(32)
         }
-    
+        
         clockText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)

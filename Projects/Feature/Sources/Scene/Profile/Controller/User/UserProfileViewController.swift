@@ -458,17 +458,12 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             
         @objc func handleRefreshControl() {
             viewModel.loadProfileInfo()
-            // Update your content…
-
-            // Scroll the entire view down slightly for visual effect
-            let offset = CGPoint(x: 0, y: 0) // Adjust the offset as needed
+            
+            let offset = CGPoint(x: 0, y: 0)
             self.view.frame.origin.y += offset.y
 
-            // Dismiss the refresh control after a delay.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.refreshControl.endRefreshing()
-                
-                // Scroll back to the top
                 self.view.frame.origin.y = 0
             }
         }
