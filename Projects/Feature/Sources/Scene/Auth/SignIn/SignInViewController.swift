@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Service
 
 public final class SignInViewController: BaseViewController {
 
@@ -17,6 +18,16 @@ public final class SignInViewController: BaseViewController {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
+    
+    private var listModel : StudentListModel?
+    
+    init(listModel: StudentListModel) {
+        self.listModel = listModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    private var profileModel = ProfileViewModel()
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -86,14 +97,17 @@ public final class SignInViewController: BaseViewController {
                 UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPassword")
                 let defaults = UserDefaults.standard
                 let localPassword = defaults.string(forKey: "localPassword")
-                if self.viewModel.email == "s22070@gsm.hs.kr" {
+                self.profileModel.loadProfileInfo()
+                let authority = self.profileModel.profileInfo?.authority
+                if authority == "ROLE_STUDENT_COUNCIL" {
                     let mainVC = AdminMainViewController()
                     self.navigationController?.pushViewController(mainVC, animated: true)
-                } else {
+                } else if authority == "ROLE_STUDENT" {
                     let mainVC = MainViewController()
                     self.navigationController?.pushViewController(mainVC, animated: true)
-                }
-            }
+                } else {
+                    print("권한이 없습니다.")
+                }            }
         }
     }
     
