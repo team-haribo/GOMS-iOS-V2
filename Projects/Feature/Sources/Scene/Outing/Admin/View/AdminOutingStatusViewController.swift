@@ -19,6 +19,16 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
          }
      }
     
+    let refreshControl = UIRefreshControl()
+    
+    let scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    let contentView1 = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     private let searchController = UISearchController(searchResultsController: nil)
     
     private let searchTitle = UILabel().then {
@@ -76,9 +86,41 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
             outingNilLabel.isHidden = true
         }
         
-        setupCollectionView()
         setupSearchBar()
+        setupCollectionView()
+        setupScrollView()
     }
+    
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView1)
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        contentView1.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+            make.bottom.equalTo(outingListCollectionView.snp.bottom)
+        }
+        addView()
+        configureRefreshControl()
+    }
+        // MARK: - Refresh Control Setup
+    private func configureRefreshControl() {
+        outingListCollectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+
+    @objc private func handleRefreshControl() {
+        viewModel.getOutingList {
+            self.outingList = self.viewModel.outingListDatas
+            DispatchQueue.main.async {
+                self.outingListCollectionView.reloadData()
+                self.refreshControl.endRefreshing()
+            }
+        }
+    }
+
 
     private func setupCollectionView() {
         self.outingListCollectionView.dataSource = self
@@ -106,21 +148,21 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     override func setLayout() {
         searchTitle.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
-            $0.leading.equalTo(bounds.width * 0.05)
+            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(bounds.width * 0.05)
             $0.height.equalTo(32)
         }
         
         outingListCollectionView.snp.makeConstraints {
             $0.top.equalTo(searchTitle.snp.bottom).offset(8)
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-(bounds.width * 0.05))
+            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(bounds.width * 0.05)
+            $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-(bounds.width * 0.05))
             $0.bottom.equalToSuperview()
         }
         
         coffeeIcon.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.height.width.equalTo(80)
-            $0.top.equalTo(bounds.height * 0.49)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(bounds.height * 0.49)
         }
         
         outingNilLabel.snp.makeConstraints {
@@ -129,6 +171,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
             $0.top.equalTo(coffeeIcon.snp.bottom).offset(8)
         }
     }
+
 }
 
 // MARK: - Extension

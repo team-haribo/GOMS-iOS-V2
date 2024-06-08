@@ -5,6 +5,15 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Properties
     private let viewModel = MainViewModel()
     private let basicsProfileView = ProfileCardView()
+    let refreshControl = UIRefreshControl()
+        
+    let scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    let contentView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
             didSet {
@@ -95,6 +104,59 @@ public class AdminMainViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        configureRefreshControl()
+        setupScrollView()
+        setupProfileView()
+    }
+    
+    func configureRefreshControl () {
+        scrollView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+    
+    @objc func handleRefreshControl() {
+            viewModel.getLateList { [weak self] in
+                guard let self = self else { return }
+                
+                self.viewModel.getProfile {
+                    self.setupProfileView()
+                    self.view.layoutIfNeeded()
+                    
+                    self.viewModel.getOutingList {
+                        self.setup()
+                        self.view.layoutIfNeeded()
+                        
+                        self.setupCountLable()
+                        self.setCollectionView()
+                        self.setup()
+                        self.setupProfileView()
+                        self.latecomerCollectionView.reloadData()
+                        self.outingStatusCollectionView.reloadData()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            self.refreshControl.endRefreshing()
+                            self.view.frame.origin.y = 0
+                        }
+                    }
+                }
+            }
+        }
+    
+    
+    func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+        }
+        
+        addView()
     }
     
     // MARK: - Setting

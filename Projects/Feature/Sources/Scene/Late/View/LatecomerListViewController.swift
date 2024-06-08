@@ -19,6 +19,17 @@ public final class LatecomerListViewController: BaseViewController {
         }
     }
     
+    private let viewModel = LetecomerViewModel()
+    let refreshControl = UIRefreshControl()
+    
+    let scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    let contentView1 = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     private let titleLabel = UILabel().then {
         $0.text = "검색 결과"
         $0.textColor = .color.gomsTextDefault.color
@@ -46,7 +57,39 @@ public final class LatecomerListViewController: BaseViewController {
         super.viewDidLoad()
         setupCollectionView()
         configNavigation()
+        setupScrollView()
     }
+    
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView1)
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        contentView1.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+            make.bottom.equalTo(lateListCollectionView.snp.bottom)
+        }
+        addView()
+        configureRefreshControl()
+    }
+        // MARK: - Refresh Control Setup
+    private func configureRefreshControl() {
+        lateListCollectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+
+    @objc private func handleRefreshControl() {
+        viewModel.getLatecomerList {
+            self.latecomerList = self.viewModel.latecomerListDatas
+            DispatchQueue.main.async {
+                self.lateListCollectionView.reloadData()
+                self.refreshControl.endRefreshing()
+            }
+        }
+    }
+
     
     @objc func filterButtonTapped() {
         let bottomSheetVC = CalendarBottomSheetVC()

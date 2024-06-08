@@ -16,6 +16,15 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let imagePickerController = UIImagePickerController()
     let viewModel = ProfileViewModel()
     var cancellables = Set<AnyCancellable>()
+    let refreshControl = UIRefreshControl()
+    
+    let scrollView = UIScrollView().then {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+    let contentView = UIView().then {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
     
     let userProfile = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
@@ -437,7 +446,44 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         self.navigationItem.backBarButtonItem = backBarButtonItem
         
         imagePickerController.delegate = self
+        
+        configureRefreshControl()
+        setupScrollView()
     }
+    
+    func configureRefreshControl () {
+                scrollView.refreshControl = refreshControl
+                refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+            }
+            
+        @objc func handleRefreshControl() {
+            viewModel.loadProfileInfo()
+            
+            let offset = CGPoint(x: 0, y: 0)
+            self.view.frame.origin.y += offset.y
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.refreshControl.endRefreshing()
+                self.view.frame.origin.y = 0
+            }
+        }
+
+            
+            func setupScrollView() {
+                view.addSubview(scrollView)
+                scrollView.addSubview(contentView)
+                
+                scrollView.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+                
+                contentView.snp.makeConstraints { make in
+                    make.edges.equalTo(scrollView)
+                    make.width.equalTo(scrollView)
+                }
+                
+                addView()
+            }
     
     override func addView() {
         [
