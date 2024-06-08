@@ -22,7 +22,14 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         $0.font = .pretendard(size: 29, weight: .bold)
     }
     
-    let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "현재 비밀번호")
+    let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "현재 비밀번호").then {
+        $0.isSecureTextEntry = true
+    }
+    
+    lazy var visiblePasswordButton = UIButton().then {
+        $0.setImage(.image.visible.image, for: .normal)
+        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+    }
     
     private lazy var doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "다음으로").then {
         $0.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
@@ -42,6 +49,17 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         }
     }
     
+    @objc func visiblePasswordButtonTapped() {
+        passwordTextField.isSecureTextEntry.toggle()
+        passwordTextField.isSelected.toggle()
+        
+        if passwordTextField.isSelected {
+            visiblePasswordButton.setImage(.image.invisible.image, for: .normal)
+        } else {
+            visiblePasswordButton.setImage(.image.visible.image, for: .normal)
+        }
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,6 +68,8 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
     }
     
     override func addView() {
+        passwordTextField.addSubview(visiblePasswordButton)
+        
         [
             navigationTitle,
             passwordTextField,
@@ -71,9 +91,13 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
             $0.height.equalTo(64)
             $0.width.equalTo(335)
             $0.bottom.equalTo(navigationTitle.snp.bottom).offset(90)
-            //$0.bottom.equalToSuperview().inset(28)
             $0.leading.equalToSuperview().inset(bounds.width * 0.05)
             $0.trailing.equalToSuperview().inset(bounds.width * 0.05)
+        }
+        
+        visiblePasswordButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.centerY.equalToSuperview()
         }
         
         doneButton.snp.makeConstraints {
