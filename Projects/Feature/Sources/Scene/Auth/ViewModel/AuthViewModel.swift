@@ -69,6 +69,12 @@ public final class AuthViewModel: BaseViewModel {
                         self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
                         self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
                         completion(true)
+                    case 400:
+                        print("비밀번호가 일치하지 않음")
+                        completion(true)
+                    case 404:
+                        print("존재하지 않는 이메일")
+                        completion(true)
                     case 500:
                         print("SERVER ERROR")
                         completion(false)

@@ -37,6 +37,13 @@ public final class SignInViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
+    let emailErrorLabel = UILabel().then {
+        $0.text = "존재하지 않는 이메일입니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
     private let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
         $0.isSecureTextEntry = true
     }
@@ -53,6 +60,13 @@ public final class SignInViewController: BaseViewController {
         $0.titleLabel?.font = UIFont.pretendard(size: 16, weight: .regular)
         $0.setTitleColor(.color.gomsInformation.color, for: .normal)
         $0.addTarget(self, action: #selector(findPasswordButtonTapped), for: .touchUpInside)
+    }
+    
+    let passwordErrorLabel = UILabel().then {
+        $0.text = "잘못된 비밀번호입니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
     }
     
     private lazy var signInButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "로그인").then {
@@ -108,6 +122,19 @@ public final class SignInViewController: BaseViewController {
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.16)
         }
+    }
+    
+    func emailError() {
+        emailTextField.setBorderColorMode(lightModeColor: .color.gomsNegative.color, darkModeColor: .color.gomsNegative.color)
+        emailTextField.setPlaceholderColor(.color.gomsNegative.color)
+        defaultDomain.textColor = .color.gomsNegative.color
+        emailTextField.isHidden = false
+    }
+    
+    func passwordError() {
+        passwordTextField.setBorderColorMode(lightModeColor: .color.gomsNegative.color, darkModeColor: .color.gomsNegative.color)
+        passwordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        
     }
     
     // MARK: - Navigaiton

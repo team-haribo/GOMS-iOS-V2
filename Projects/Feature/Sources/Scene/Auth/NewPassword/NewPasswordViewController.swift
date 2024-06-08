@@ -39,7 +39,7 @@ public final class NewPasswordViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    private lazy var doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "완료").then {
+    lazy var doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "완료").then {
         $0.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
     
@@ -53,8 +53,9 @@ public final class NewPasswordViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func doneButtonTapped() {
+        print("New Password Setting Done")
         viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
-        viewModel.newPassword {  success in
+        viewModel.newPassword { success in
             if success {
                 let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
                 
