@@ -141,21 +141,17 @@ public final class MainViewController: BaseViewController {
     }
     
     @objc func handleRefreshControl() {
-            // Fetch the late list data
         mainViewModel.getLateList { [weak self] in
                 guard let self = self else { return }
-                
-                // Fetch the profile data after getting the late list
+            
                 self.mainViewModel.getProfile {
                     self.setupProfileView()
                     self.view.layoutIfNeeded()
-                    
-                    // Fetch the outing list data after getting the profile
+                
                     self.mainViewModel.getOutingList {
                         self.setup()
                         self.view.layoutIfNeeded()
                         
-                        // Update UI components after all data is fetched
                         self.setupCountLable()
                         self.setCollectionView()
                         self.setup()
@@ -163,7 +159,6 @@ public final class MainViewController: BaseViewController {
                         self.latecomerCollectionView.reloadData()
                         self.outingStatusCollectionView.reloadData()
                         
-                        // Reset refresh control and view position
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             self.refreshControl.endRefreshing()
                             self.view.frame.origin.y = 0

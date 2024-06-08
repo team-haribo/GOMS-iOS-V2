@@ -115,21 +115,17 @@ public class AdminMainViewController: BaseViewController {
     }
     
     @objc func handleRefreshControl() {
-            // Fetch the late list data
             viewModel.getLateList { [weak self] in
                 guard let self = self else { return }
                 
-                // Fetch the profile data after getting the late list
                 self.viewModel.getProfile {
                     self.setupProfileView()
                     self.view.layoutIfNeeded()
                     
-                    // Fetch the outing list data after getting the profile
                     self.viewModel.getOutingList {
                         self.setup()
                         self.view.layoutIfNeeded()
                         
-                        // Update UI components after all data is fetched
                         self.setupCountLable()
                         self.setCollectionView()
                         self.setup()
@@ -137,7 +133,6 @@ public class AdminMainViewController: BaseViewController {
                         self.latecomerCollectionView.reloadData()
                         self.outingStatusCollectionView.reloadData()
                         
-                        // Reset refresh control and view position
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             self.refreshControl.endRefreshing()
                             self.view.frame.origin.y = 0
@@ -161,7 +156,7 @@ public class AdminMainViewController: BaseViewController {
             make.width.equalTo(scrollView)
         }
         
-        addView() // 기존 addView() 메서드를 호출하여 contentView에 뷰 요소를 추가합니다.
+        addView()
     }
     
     // MARK: - Setting
