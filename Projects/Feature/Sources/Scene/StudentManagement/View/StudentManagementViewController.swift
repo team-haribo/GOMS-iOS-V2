@@ -19,6 +19,17 @@ public final class StudentManagementViewController: BaseViewController {
         }
     }
     
+    let refreshControl = UIRefreshControl()
+    
+    let scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    let contentView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    
     private let searchController = UISearchController(searchResultsController: nil)
     
     private let titleLabel = UILabel().then {
@@ -63,7 +74,49 @@ public final class StudentManagementViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configureRefreshControl()
+        setupScrollView()
     }
+    
+    func configureRefreshControl () {
+                    scrollView.refreshControl = refreshControl
+                    refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+                }
+                
+            @objc func handleRefreshControl() {
+                viewModel.getUserList {
+                    self.userList = self.viewModel.userListDatas
+                    self.setupCollectionView()
+                    self.setupSearchBar()
+                    self.studentCollectionView.reloadData()
+                }
+                
+                let offset = CGPoint(x: 0, y: 0)
+                self.view.frame.origin.y += offset.y
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.refreshControl.endRefreshing()
+                    self.view.frame.origin.y = 0
+                }
+            }
+
+                
+                func setupScrollView() {
+                    view.addSubview(scrollView)
+                    scrollView.addSubview(contentView)
+                    
+                    scrollView.snp.makeConstraints { make in
+                        make.edges.equalToSuperview()
+                    }
+                    
+                    contentView.snp.makeConstraints { make in
+                        make.edges.equalTo(scrollView)
+                        make.width.equalTo(scrollView)
+                    }
+                    
+                    addView() // 기존 addView() 메서드를 호출하여 contentView에 뷰 요소를 추가합니다.
+                }
     
     override func configNavigation() {
         super.configNavigation()

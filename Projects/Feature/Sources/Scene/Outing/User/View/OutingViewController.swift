@@ -19,6 +19,16 @@ public final class OutingViewController: BaseViewController {
          }
      }
     
+    let refreshControl = UIRefreshControl()
+    
+    let scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    let contentView1 = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     private let searchController = UISearchController(searchResultsController: nil)
     
     private let searchTitle = UILabel().then {
@@ -92,6 +102,37 @@ public final class OutingViewController: BaseViewController {
         }
         setupSearchBar()
         setupCollectionView()
+        setupScrollView()
+    }
+    
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView1)
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        contentView1.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+            make.bottom.equalTo(outingListCollectionView.snp.bottom)
+        }
+        addView()
+        configureRefreshControl()
+    }
+        // MARK: - Refresh Control Setup
+    private func configureRefreshControl() {
+        outingListCollectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+
+    @objc private func handleRefreshControl() {
+        viewModel.getOutingList {
+            self.outingList = self.viewModel.outingListDatas
+            DispatchQueue.main.async {
+                self.outingListCollectionView.reloadData()
+                self.refreshControl.endRefreshing()
+            }
+        }
     }
     
     func setupSearchBar() {
