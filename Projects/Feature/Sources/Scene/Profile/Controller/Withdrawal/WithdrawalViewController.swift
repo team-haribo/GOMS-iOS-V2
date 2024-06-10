@@ -40,7 +40,12 @@ public class WithdrawalViewController: BaseViewController {
             if success {
                 let alert = UIAlertController(title: "회원 탈퇴 완료", message: "그동안 GOMS를 이용해주셔서 감사합니다.\n안녕히 가세요!", preferredStyle: .alert)
                 
-                let ok = UIAlertAction(title: "완료", style: .default, handler: nil)
+                let ok = UIAlertAction(title: "완료", style: .default) { _ in
+                                let introVC = IntroViewController()
+                    self.navigationController?.pushViewController(introVC, animated: true)
+                            }
+                
+                print("회원탈퇴 완료")
                 
                 alert.addAction(ok)
                 self.present(alert, animated: true)
