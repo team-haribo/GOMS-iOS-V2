@@ -113,9 +113,10 @@ public final class SignInViewController: BaseViewController {
             case 200:
                 self.signInSuccessUI()
                 UserDefaults.standard.set(true, forKey: "isLoggedIn")
-            
+                UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
                 let defaults = UserDefaults.standard
-                let localPassword = defaults.string(forKey: "localPassword")
+                let localPassword = defaults.string(forKey: "localPass")
+                print(localPassword)
                 self.profileModel.loadProfileInfo()
                 let authority = self.profileModel.profileInfo?.authority
                 if authority == "ROLE_STUDENT_COUNCIL" {
