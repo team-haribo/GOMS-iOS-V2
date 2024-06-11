@@ -295,6 +295,16 @@ extension SignInViewController: UITextFieldDelegate {
         }
     }
     
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            if textField == emailTextField {
+                let currentText = textField.text ?? ""
+                guard let stringRange = Range(range, in: currentText) else { return false }
+                let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+                return updatedText.count <= 6
+            }
+            return true
+        }
+    
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if emailTextField.text != "", passwordTextField.text != "" {
             passwordTextField.resignFirstResponder()
