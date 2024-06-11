@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import Moya
 import Service
+import CoreImage.CIFilterBuiltins
 
 public final class QRCodeViewModel: BaseViewModel {
     private let studentCouncilProvider = MoyaProvider<StudentCouncilServices>()
@@ -34,14 +35,25 @@ public final class QRCodeViewModel: BaseViewModel {
         }
     }
     
-    func makeQR(completion: @escaping (Bool) -> Void) {
+    func makeQR(completion: @escaping (UIImage?) -> Void) {
         studentCouncilProvider.request(.makeQRCode(authorization: accessToken)) { response  in
             switch response {
             case .success(let result):
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 200:
-                    print("생성")
+                    do {
+                        let responseJSON = try result.mapJSON() as? [String: Any]
+                        if let outingUUIDString = responseJSON?["outingUUID"] as? String,
+                           let outingUUID = UUID(uuidString: outingUUIDString) {
+                            self.outingUUID = outingUUID
+                            print("outingUUID 저장 완료")
+                        } else {
+                            print("outingUUID를 가져올 수 없습니다.")
+                        }
+                    } catch {
+                        print(error.localizedDescription)
+                    }
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
                 case 403:
@@ -53,35 +65,7 @@ public final class QRCodeViewModel: BaseViewModel {
                 }
             case .failure(let err):
                 print(err.localizedDescription)
-            }
-        }
-    }
-
-    
-    public func QRCode(completion: @escaping (Bool) -> Void) {
-        let param = QRCodeRequest(outingUUID: outingUUID)
-        let outingUUIDString = param.outingUUID.uuidString
-        let queryParameters: [String: Any] = ["outingUUID": outingUUIDString]
-        let queryString = queryParameters.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
-        
-        studentCouncilProvider.request(.makeQRCode(authorization: queryString)) { response in
-            switch response {
-            case .success(let result):
-                let statusCode = result.statusCode
-                switch statusCode {
-                case 200:
-                    print("OK")
-                    completion(true)
-                case 500:
-                    print("SERVER ERROR")
-                    completion(false)
-                default:
-                    print(result)
-                    completion(false)
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-                completion(false)
+                completion(nil)
             }
         }
     }
