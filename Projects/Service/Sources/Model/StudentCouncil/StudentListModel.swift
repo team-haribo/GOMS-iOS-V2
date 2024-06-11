@@ -9,7 +9,7 @@
 import Foundation
 
 public struct StudentListModel: Codable {
-    let data: StudentListResponse
+    public let data: StudentListResponse
 }
 
 public struct StudentListResponse: Codable {

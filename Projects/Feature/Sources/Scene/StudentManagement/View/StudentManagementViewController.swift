@@ -19,6 +19,16 @@ public final class StudentManagementViewController: BaseViewController {
         }
     }
     
+    let refreshControl = UIRefreshControl()
+    
+    let scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    let contentView1 = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     private let searchController = UISearchController(searchResultsController: nil)
     
     private let titleLabel = UILabel().then {
@@ -63,7 +73,42 @@ public final class StudentManagementViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configureRefreshControl()
+        setupScrollView()
     }
+    
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView1)
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        contentView1.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+            make.bottom.equalTo(studentCollectionView.snp.bottom)
+        }
+        addView()
+        configureRefreshControl()
+    }
+        // MARK: - Refresh Control Setup
+    private func configureRefreshControl() {
+        studentCollectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+
+    @objc private func handleRefreshControl() {
+        viewModel.getUserList {
+            self.userList = self.viewModel.userListDatas
+            DispatchQueue.main.async {
+                self.studentCollectionView.reloadData()
+                self.refreshControl.endRefreshing()
+            }
+        }
+    }
+    
+   
     
     override func configNavigation() {
         super.configNavigation()

@@ -17,23 +17,23 @@ public enum AccountServices {
 
 extension AccountServices: TargetType {
     public var baseURL: URL {
-        return URL(string: "https://port-0-goms-backend-v2-12fhqa2bln49rbi0.sel5.cloudtype.app/api/v2")!
+        return URL(string: "https://port-0-goms-backend-v2-12fhqa2bln49rbi0.sel5.cloudtype.app/api/v2/account")!
     }
     
     public var path: String {
         switch self {
         case .newPassword:
-            return "/account/new-password"
+            return "/new-password"
         case .changPassword:
-            return "/account/change-password"
-        case .withdraw:
-            return "/account/withdraw"
+            return "/change-password"
+        case .withdraw(let password, _):
+            return "/withdraw/\(password)"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-        case .newPassword,.changPassword:
+        case .newPassword, .changPassword:
             return .patch
         case .withdraw:
             return .delete
@@ -50,14 +50,14 @@ extension AccountServices: TargetType {
             return .requestJSONEncodable(param)
         case .changPassword(let param, _):
             return .requestJSONEncodable(param)
-        case .withdraw(let password, _):
-            return .requestParameters(parameters: ["password": password], encoding: URLEncoding.default)
+        case .withdraw:
+            return .requestPlain
         }
     }
     
     public var headers: [String : String]? {
         switch self {
-        case .newPassword(_, let authorization), 
+        case .newPassword(_, let authorization),
              .changPassword(_, let authorization),
              .withdraw(_, let authorization):
             return ["Content-Type": "application/json", "Authorization": authorization]

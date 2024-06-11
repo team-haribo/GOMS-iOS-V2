@@ -111,17 +111,21 @@ final class ProfileViewModel: ObservableObject {
                 case 404:
                     print(result.data)
                     completion(false)
+                    print("응 오류ㅋㅋㅋㅋㅋㅋㅋ")
                 case 400:
                     print("현재 비밀번호 입력 String: \(self.password)")
                     print(result.data)
                     completion(false)
+                    print("응 오류ㅋㅋㅋ")
                 default:
                     print(result)
                     completion(false)
+                    print("응 오류ㅋㅋㅋㅋ")
                 }
             case .failure(let err):
                 print(err.localizedDescription)
                 completion(false)
+                print("응 오류ㅋㅋㅋㅋㅋ")
             }
         }
     }
