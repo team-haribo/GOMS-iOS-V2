@@ -78,6 +78,8 @@ public final class NewPasswordViewController: BaseViewController {
         viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         viewModel.newPassword { success in
             if success {
+                let defaults = UserDefaults.standard
+                UserDefaults.standard.set(self.checkPasswordTextField.text, forKey: "localPass")
                 let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
                 
                 let check = UIAlertAction(title: "확인", style: .default) { action in
