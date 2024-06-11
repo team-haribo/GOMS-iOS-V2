@@ -30,6 +30,13 @@ public final class FindPasswordViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
+    let emailErrorLabel = UILabel().then {
+        $0.text = "존재하지 않는 이메일입니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
     private lazy var authCodeButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기").then {
         $0.addTarget(self, action: #selector(authCodeButtonTapped), for: .touchUpInside)
     }
@@ -49,6 +56,22 @@ public final class FindPasswordViewController: BaseViewController {
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
             }
         }
+    }
+    
+    func signInSuccessUI() {
+        emailTextField.setPlaceholderColor(.color.gomsTertiary.color)
+        defaultDomain.textColor = .color.gomsTertiary.color
+        emailErrorLabel.isHidden = true
+        emailTextField.layer.borderColor = UIColor.clear.cgColor
+        emailTextField.layer.borderWidth = 0
+    }
+    
+    func emailErrorUI() {
+        emailTextField.setPlaceholderColor(.color.gomsNegative.color)
+        defaultDomain.textColor = .color.gomsNegative.color
+        emailErrorLabel.isHidden = false
+        emailTextField.layer.borderColor = UIColor.systemRed.cgColor
+        emailTextField.layer.borderWidth = 1
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
@@ -79,7 +102,7 @@ public final class FindPasswordViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         emailTextField.addSubview(defaultDomain)
-        [emailTextField, authCodeButton].forEach { view.addSubview($0) }
+        [emailTextField, emailErrorLabel, authCodeButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -95,6 +118,12 @@ public final class FindPasswordViewController: BaseViewController {
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.height.equalTo(56)
             $0.top.equalTo(bounds.height * 0.21)
+        }
+        
+        emailErrorLabel.snp.makeConstraints {
+            $0.leading.equalTo(emailTextField.snp.leading)
+            $0.height.equalTo(48)
+            $0.top.equalTo(emailTextField.snp.bottom)
         }
         
         authCodeButton.snp.makeConstraints {

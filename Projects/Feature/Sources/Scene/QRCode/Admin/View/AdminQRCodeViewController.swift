@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import QRCode
+import CoreImage
 
 public class AdminQRCodeViewController: BaseViewController {
     
@@ -15,9 +16,7 @@ public class AdminQRCodeViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 29, weight: .bold)
     }
     
-    private let qrCodeView = UIView().then {
-        $0.backgroundColor = .clear
-    }
+    private let qrCodeImage = UIImageView()
     
     private let lastTimeText = UILabel().then {
         $0.text = "QR코드 만료까지"
@@ -34,33 +33,31 @@ public class AdminQRCodeViewController: BaseViewController {
     // MARK: Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         startTimer()
-        createQrCode()
+        createQRCode()
     }
     
     // MARK: Add View
     override func addView() {
-        [titleText, qrCodeView, lastTimeText, lastTimer].forEach {
-            view.addSubview($0)
-        }
+        [titleText, qrCodeImage, lastTimeText, lastTimer].forEach { view.addSubview($0) }
     }
     
-    // MARK: Set Layout
+    // MARK: Layout
     override func setLayout() {
         titleText.snp.makeConstraints {
             $0.top.equalToSuperview().offset(100)
             $0.leading.equalToSuperview().offset(20)
         }
         
-        qrCodeView.snp.makeConstraints {
+        qrCodeImage.snp.makeConstraints {
             $0.top.equalTo(titleText.snp.bottom).offset(124)
             $0.centerX.equalToSuperview()
+            $0.width.height.equalTo(200)
         }
         
         lastTimeText.snp.makeConstraints {
             $0.height.equalTo(24)
-            $0.top.equalTo(qrCodeView.snp.bottom).offset(32)
+            $0.top.equalTo(qrCodeImage.snp.bottom).offset(32)
             $0.centerX.equalToSuperview()
         }
         
@@ -69,7 +66,7 @@ public class AdminQRCodeViewController: BaseViewController {
             $0.centerX.equalToSuperview()
         }
     }
-
+    
     private func startTimer() {
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (t) in
             self.timer -= 1
@@ -80,34 +77,40 @@ public class AdminQRCodeViewController: BaseViewController {
             }
             else {
                 self.lastTimer.text = "0분 00초"
-                self.createQrCode()
                 self.timer = 300
+                self.createQRCode()
             }
         })
     }
     
-    func createQrCode() {
-        let urlUUID = self.viewModel.outingUUID
-        let qrCodeURLString = "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2/outing/\(urlUUID)"
-        
-        var qrCode = QRCode(string: qrCodeURLString) // qr 생성 데이터
-        qrCode?.color = .black  // qr 코드 선 색상
-        qrCode?.backgroundColor = .white // qr 코드 배경 색상
-        qrCode?.size = CGSize(width: 200, height: 200) // 사이즈 정의
-        qrCode?.scale = 1.0 // scaling
-        qrCode?.inputCorrection = .quartile
-        
-        guard (qrCode?.image) != nil else {
-            return
+    private func createQRCode() {
+        viewModel.makeQR { success in
+            if success {
+                let userQRVC = QRCodeViewController()
+                let outingUUIDString = self.viewModel.outingUUID.uuidString
+                if let qrCodeImage = self.generateQRCode(from: outingUUIDString) {
+                    DispatchQueue.main.async {
+                        self.qrCodeImage.image = qrCodeImage
+                    }
+                } else {
+                    print("Failed to generate QR code.")
+                }
+            }
         }
+    }
+
+    private func generateQRCode(from string: String) -> UIImage? {
+        guard let data = string.data(using: .utf8) else { return nil }
         
-        let qrImageView = UIImageView.init(qrCode: qrCode! as QRCode)
+        let qrFilter = CIFilter.qrCodeGenerator()
+        qrFilter.setValue(data, forKey: "inputMessage")
         
-        self.qrCodeView.addSubview(qrImageView)
+        guard let qrCodeCIImage = qrFilter.outputImage else { return nil }
         
-        qrImageView.snp.makeConstraints {
-            $0.height.width.equalTo(bounds.width * 0.53)
-            $0.edges.equalToSuperview()
-        }
+        let scaleX = qrCodeImage.frame.width / qrCodeCIImage.extent.width
+        let scaleY = qrCodeImage.frame.height / qrCodeCIImage.extent.height
+        let transformedImage = qrCodeCIImage.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
+        
+        return UIImage(ciImage: transformedImage)
     }
 }
