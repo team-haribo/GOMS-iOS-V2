@@ -54,7 +54,7 @@ public final class AuthViewModel: BaseViewModel {
     }
     
     // MARK: - Sign In
-    func signIn(completion: @escaping (Bool) -> Void) {
+    func signIn(completion: @escaping (Int) -> Void) {
         let param = SignInRequest.init(email: email, password: password)
         authProvider.request(.signIn(param: param)) { response in
             switch response {
@@ -68,21 +68,27 @@ public final class AuthViewModel: BaseViewModel {
                         self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
                         self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
                         self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
-                        completion(true)
+                        completion(statusCode)
+                    case 400:
+                        print("비밀번호가 일치하지 않음")
+                        completion(statusCode)
+                    case 404:
+                        print("존재하지 않는 이메일")
+                        completion(statusCode)
                     case 500:
                         print("SERVER ERROR")
-                        completion(false)
+                        completion(statusCode)
                     default:
                         print(result)
-                        completion(false)
+                        completion(statusCode)
                     }
                 } catch {
                     print("error")
-                    completion(false)
+                    completion(statusCode)
                 }
             case .failure(let err):
                 print(err.localizedDescription)
-                completion(false)
+                completion(0)
             }
         }
     }

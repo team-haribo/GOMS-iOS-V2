@@ -24,6 +24,13 @@ public final class NewPasswordViewController: BaseViewController {
         $0.isSecureTextEntry = true
     }
     
+    let passwordErrorLabel = UILabel().then {
+        $0.text = "잘못된 비밀번호입니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
     lazy var visiblePasswordButton = UIButton().then {
         $0.setImage(.image.visible.image, for: .normal)
         $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
@@ -39,7 +46,7 @@ public final class NewPasswordViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    private lazy var doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "완료").then {
+    lazy var doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "완료").then {
         $0.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
     
@@ -53,8 +60,9 @@ public final class NewPasswordViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func doneButtonTapped() {
+        print("New Password Setting Done")
         viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
-        viewModel.newPassword {  success in
+        viewModel.newPassword { success in
             if success {
                 let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
                 
@@ -95,6 +103,12 @@ public final class NewPasswordViewController: BaseViewController {
             $0.bottom.equalTo(-bounds.height * 0.16)
             $0.height.equalTo(48)
         }
+    }
+    
+    func passswordError() {
+        passwordTextField.setBorderColorMode(lightModeColor: .color.gomsNegative.color, darkModeColor: .color.gomsNegative.color)
+        passwordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        passwordErrorLabel.isHidden = false
     }
 
     // MARK: - Navigation
