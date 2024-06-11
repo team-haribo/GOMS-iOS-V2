@@ -42,7 +42,7 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         let defaults = UserDefaults.standard
         let localPassword = defaults.string(forKey: "localPassword")
         if localPassword == passwordTextField.text {
-            let newPasswordVC = NewPasswordViewController(viewModel: AuthViewModel(), email: "")
+            let newPasswordVC = ChangNewPasswordViewController()
             navigationController?.pushViewController(newPasswordVC, animated: true)
         } else {
             print("비밀번호가 틀렸습니다.")
