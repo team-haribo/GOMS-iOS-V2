@@ -112,27 +112,36 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             
             for barcode in barcodes {
                 if let payload = barcode.payloadStringValue {
-                    DispatchQueue.main.async {
-                        isScanningEnabled = false
-                        
-                        self.viewModel.outing { success in
-                            if success {
-                                let alert = UIAlertController(title: "외출 복귀", message: "외출 복귀 처리되었습니다.", preferredStyle: .alert)
-                                let action = UIAlertAction(title: "확인", style: .default) { _ in
-        
-                                    let mainVC = MainViewController()
-                                    self.navigationController?.pushViewController(mainVC, animated: true)
+                    let qrCodeBoundingBox = barcode.boundingBox
+                
+                    let qrFrameRect = CGRect(x: self.qrFrame.frame.origin.x,
+                                             y: self.qrFrame.frame.origin.y,
+                                             width: self.qrFrame.frame.width * self.view.bounds.width,
+                                             height: self.qrFrame.frame.height * self.view.bounds.height)
+                    
+                    if qrFrameRect.contains(CGPoint(x: qrCodeBoundingBox.midX * self.view.bounds.width,
+                                                    y: qrCodeBoundingBox.midY * self.view.bounds.height)) {
+                        DispatchQueue.main.async {
+                            isScanningEnabled = false
+                            
+                            self.viewModel.outing { success in
+                                if success {
+                                    let alert = UIAlertController(title: "외출 복귀", message: "외출 복귀 처리되었습니다.", preferredStyle: .alert)
+                                    let action = UIAlertAction(title: "확인", style: .default) { _ in
+                                        let mainVC = MainViewController()
+                                        self.navigationController?.pushViewController(mainVC, animated: true)
+                                    }
+                                    alert.addAction(action)
+                                    self.present(alert, animated: true, completion: nil)
+                                } else {
+                                    let alert = UIAlertController(title: "오류", message: "외출 처리 중 오류가 발생하였습니다.", preferredStyle: .alert)
+                                    let action = UIAlertAction(title: "확인", style: .default, handler: nil)
+                                    alert.addAction(action)
+                                    self.present(alert, animated: true, completion: nil)
                                 }
-                                alert.addAction(action)
-                                self.present(alert, animated: true, completion: nil)
-                            } else {
-                                let alert = UIAlertController(title: "오류", message: "외출 처리 중 오류가 발생하였습니다.", preferredStyle: .alert)
-                                let action = UIAlertAction(title: "확인", style: .default, handler: nil)
-                                alert.addAction(action)
-                                self.present(alert, animated: true, completion: nil)
                             }
+                            self.captureSession.stopRunning()
                         }
-                        self.captureSession.stopRunning()
                     }
                 }
             }
@@ -145,5 +154,6 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             print("비디오 프레임 처리 중 오류 발생: \(error.localizedDescription)")
         }
     }
+
 
 }

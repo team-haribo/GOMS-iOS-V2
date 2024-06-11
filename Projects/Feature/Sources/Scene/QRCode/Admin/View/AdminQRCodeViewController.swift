@@ -83,27 +83,14 @@ public class AdminQRCodeViewController: BaseViewController {
         })
     }
     
-    func generateQRCode(from string: String) -> UIImage? {
-        let data = string.data(using: String.Encoding.ascii)
-        
-        if let filter = CIFilter(name: "CIQRCodeGenerator") {
-            filter.setValue(data, forKey: "inputMessage")
-            let transform = CGAffineTransform(scaleX: 10, y: 10)
-            
-            if let output = filter.outputImage?.transformed(by: transform) {
-                return UIImage(ciImage: output)
-            }
-        }
-        
-        return nil
-    }
-    
     private func createQRCode() {
         viewModel.makeQR { success in
             if success {
                 let outingUUIDString = self.viewModel.outingUUID.uuidString
                 if let qrCodeImage = self.generateQRCode(from: outingUUIDString) {
-                    self.qrCodeImage.image = qrCodeImage
+                    DispatchQueue.main.async {
+                        self.qrCodeImage.image = qrCodeImage
+                    }
                 } else {
                     print("Failed to generate QR code.")
                 }
@@ -111,4 +98,18 @@ public class AdminQRCodeViewController: BaseViewController {
         }
     }
 
+    private func generateQRCode(from string: String) -> UIImage? {
+        guard let data = string.data(using: .utf8) else { return nil }
+        
+        let qrFilter = CIFilter.qrCodeGenerator()
+        qrFilter.setValue(data, forKey: "inputMessage")
+        
+        guard let qrCodeCIImage = qrFilter.outputImage else { return nil }
+        
+        let scaleX = qrCodeImage.frame.width / qrCodeCIImage.extent.width
+        let scaleY = qrCodeImage.frame.height / qrCodeCIImage.extent.height
+        let transformedImage = qrCodeCIImage.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
+        
+        return UIImage(ciImage: transformedImage)
+    }
 }
