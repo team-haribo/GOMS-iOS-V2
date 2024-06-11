@@ -35,6 +35,7 @@ final class ProfileViewModel: ObservableObject {
                     let decoder = JSONDecoder()
                     let profileModel = try decoder.decode(ProfileResponse.self, from: response.data)
                     self.profileInfo = profileModel
+                    
                     self.isDataLoaded = true
                 } catch {
                     self.errorMessage = "Failed to decode JSON response"

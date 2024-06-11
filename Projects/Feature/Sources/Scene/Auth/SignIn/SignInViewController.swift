@@ -128,6 +128,8 @@ public final class SignInViewController: BaseViewController {
                 } else {
                     print("권한이 없습니다.")
                 }
+//                let mainVC = AdminMainViewController()
+//                self.navigationController?.pushViewController(mainVC, animated: true)
             case 400:
                 self.passwordErrorUI()
             case 404:
