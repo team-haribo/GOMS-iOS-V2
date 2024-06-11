@@ -56,6 +56,7 @@ public final class AuthViewModel: BaseViewModel {
     // MARK: - Sign In
     func signIn(completion: @escaping (Int) -> Void) {
         let param = SignInRequest.init(email: email, password: password)
+        print(param)
         authProvider.request(.signIn(param: param)) { response in
             switch response {
             case .success(let result):
