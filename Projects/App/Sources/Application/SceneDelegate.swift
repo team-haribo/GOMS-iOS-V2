@@ -24,14 +24,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         applySavedTheme()
         
-        if isSwitchOn == true {
-            window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-        } else if AdminisSwitchOn == true {
-            window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
-        } else {
-            window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
-        }
+        let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
         
+        if isLoggedIn == true {
+            let authority = UserDefaults.standard.string(forKey: "authority")
+            switch authority {
+            case "ROLE_STUDENT_COUNCIL":
+                if isSwitchOn == true {
+                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+                } else if AdminisSwitchOn == true {
+                    window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
+                } else {
+                    window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
+                }
+            case "ROLE_STUDENT":
+                if isSwitchOn == true {
+                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+                } else if AdminisSwitchOn == true {
+                    window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
+                } else {
+                    window?.rootViewController = UINavigationController(rootViewController: MainViewController())
+                }
+            default:
+                window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+            }
+        } else {
+            window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+        }
+
         window?.makeKeyAndVisible()
     }
     

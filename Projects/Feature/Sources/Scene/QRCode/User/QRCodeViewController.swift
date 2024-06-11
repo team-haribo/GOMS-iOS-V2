@@ -3,6 +3,8 @@ import AVFoundation
 import Vision
 
 public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+    let viewModel = QRCodeViewModel()
+    
     let captureSession = AVCaptureSession()
     var previewLayer: AVCaptureVideoPreviewLayer!
     
@@ -113,14 +115,23 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
                     DispatchQueue.main.async {
                         isScanningEnabled = false
                         
-                        var alert = UIAlertController(title: "QR코드 스캔 성공", message: "외출을 시작합니다.\n 7시 30분까지 복귀해 주세요.", preferredStyle: .alert)
-                        let action = UIAlertAction(title: "Action", style: .default) { action in
-                            let mainVC = MainViewController()
-                            self.navigationController?.pushViewController(mainVC, animated: true)
+                        self.viewModel.outing { success in
+                            if success {
+                                let alert = UIAlertController(title: "외출 복귀", message: "외출 복귀 처리되었습니다.", preferredStyle: .alert)
+                                let action = UIAlertAction(title: "확인", style: .default) { _ in
+        
+                                    let mainVC = MainViewController()
+                                    self.navigationController?.pushViewController(mainVC, animated: true)
+                                }
+                                alert.addAction(action)
+                                self.present(alert, animated: true, completion: nil)
+                            } else {
+                                let alert = UIAlertController(title: "오류", message: "외출 처리 중 오류가 발생하였습니다.", preferredStyle: .alert)
+                                let action = UIAlertAction(title: "확인", style: .default, handler: nil)
+                                alert.addAction(action)
+                                self.present(alert, animated: true, completion: nil)
+                            }
                         }
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
-                        
                         self.captureSession.stopRunning()
                     }
                 }
@@ -134,4 +145,5 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             print("비디오 프레임 처리 중 오류 발생: \(error.localizedDescription)")
         }
     }
+
 }

@@ -95,13 +95,7 @@ public final class SignInViewController: BaseViewController {
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
-        
-        if let savedEmail = UserDefaults.standard.string(forKey: "email"),
-           let savedPassword = UserDefaults.standard.string(forKey: "password") {
-            emailTextField.text = savedEmail
-            passwordTextField.text = savedPassword
-            signInButtonTapped()
-        }
+
     }
     
     // MARK: - Seletors
@@ -117,10 +111,8 @@ public final class SignInViewController: BaseViewController {
             switch statusCode {
             case 200:
                 self.signInSuccessUI()
-                UserDefaults.standard.set(self.emailTextField.text, forKey: "email")
-                UserDefaults.standard.set(self.passwordTextField.text, forKey: "password")
-                
-                UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPassword")
+                UserDefaults.standard.set(true, forKey: "isLoggedIn")
+            
                 let defaults = UserDefaults.standard
                 let localPassword = defaults.string(forKey: "localPassword")
                 self.profileModel.loadProfileInfo()

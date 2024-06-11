@@ -76,7 +76,7 @@ public final class AuthCodeViewController: BaseViewController {
             if success {
                 self.authCodeSuccess()
                 if let previousVC = self.previousViewController as? FindPasswordViewController {
-                    let newPasswordVC = NewPasswordViewController()
+                    let newPasswordVC = NewPasswordViewController(viewModel: self.viewModel)
                     self.navigationController?.pushViewController(newPasswordVC, animated: true)
                 } else if let previousVC = self.previousViewController as? SignUpViewController {
                     let passwordSettingVC = PasswordSettingViewController(viewModel: self.viewModel)
