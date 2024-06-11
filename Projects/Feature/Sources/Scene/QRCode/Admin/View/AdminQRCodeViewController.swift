@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import QRCode
+import CoreImage
 
 public class AdminQRCodeViewController: BaseViewController {
     
@@ -82,12 +83,32 @@ public class AdminQRCodeViewController: BaseViewController {
         })
     }
     
+    func generateQRCode(from string: String) -> UIImage? {
+        let data = string.data(using: String.Encoding.ascii)
+        
+        if let filter = CIFilter(name: "CIQRCodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            let transform = CGAffineTransform(scaleX: 10, y: 10)
+            
+            if let output = filter.outputImage?.transformed(by: transform) {
+                return UIImage(ciImage: output)
+            }
+        }
+        
+        return nil
+    }
+    
     private func createQRCode() {
-        viewModel.makeQR { [weak self] qrImage in
-            guard let self = self, let qrImage = qrImage else { return }
-            DispatchQueue.main.async {
-                self.qrCodeImage.image = qrImage
+        viewModel.makeQR { success in
+            if success {
+                let outingUUIDString = self.viewModel.outingUUID.uuidString
+                if let qrCodeImage = self.generateQRCode(from: outingUUIDString) {
+                    self.qrCodeImage.image = qrCodeImage
+                } else {
+                    print("Failed to generate QR code.")
+                }
             }
         }
     }
+
 }

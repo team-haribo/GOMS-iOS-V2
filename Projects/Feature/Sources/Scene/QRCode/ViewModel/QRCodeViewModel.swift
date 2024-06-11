@@ -35,7 +35,7 @@ public final class QRCodeViewModel: BaseViewModel {
         }
     }
     
-    func makeQR(completion: @escaping (UIImage?) -> Void) {
+    func makeQR(completion: @escaping (Bool) -> Void) {
         studentCouncilProvider.request(.makeQRCode(authorization: accessToken)) { response  in
             switch response {
             case .success(let result):
@@ -48,6 +48,7 @@ public final class QRCodeViewModel: BaseViewModel {
                            let outingUUID = UUID(uuidString: outingUUIDString) {
                             self.outingUUID = outingUUID
                             print("outingUUID 저장 완료")
+                            completion(true)
                         } else {
                             print("outingUUID를 가져올 수 없습니다.")
                         }
@@ -58,14 +59,16 @@ public final class QRCodeViewModel: BaseViewModel {
                     self.gomsRefreshToken.tokenReissuance()
                 case 403:
                     print("학생회 계정이 아닌데 요청할 경우")
+                    completion(false)
                 case 500:
                     print("SERVER ERROR")
+                    completion(false)
                 default:
                     print(result)
                 }
             case .failure(let err):
                 print(err.localizedDescription)
-                completion(nil)
+                completion(false)
             }
         }
     }
