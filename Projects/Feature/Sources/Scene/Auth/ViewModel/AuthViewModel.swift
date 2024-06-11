@@ -24,6 +24,8 @@ public final class AuthViewModel: BaseViewModel {
     private var gender: String = ""
     private var major: String = ""
     
+    private var passwordServe: String = ""
+    
     func setupEmail(email: String) {
         self.email = "\(email)@gsm.hs.kr"
     }
@@ -56,7 +58,6 @@ public final class AuthViewModel: BaseViewModel {
     // MARK: - Sign In
     func signIn(completion: @escaping (Int) -> Void) {
         let param = SignInRequest.init(email: email, password: password)
-        print(param)
         authProvider.request(.signIn(param: param)) { response in
             switch response {
             case .success(let result):
@@ -155,8 +156,7 @@ public final class AuthViewModel: BaseViewModel {
     
     // MARK: - New Password
     func newPassword(completion: @escaping (Bool) -> Void) {
-        let param = NewPasswordRequest.init(email: self.email, newPassword: newPassword)
-        print("New param \(param)")
+        let param = NewPasswordRequest.init(email: email, newPassword: newPassword)
         accountProvider.request(.newPassword(param: param)) { response in
             switch response {
             case .success(let result):
@@ -164,15 +164,12 @@ public final class AuthViewModel: BaseViewModel {
                 switch statusCode {
                 case 204:
                     print("NO CONTENT")
-                    print(result)
                     completion(true)
                 case 404:
                     print("존재하지 않는 사용자일때")
-                    print(result)
                     completion(false)
                 case 400:
                     print("변경하려는 비밀번호가 이전 비밀번호와 같을 때")
-                    print(result)
                     completion(false)
                 case 500:
                     print("SERVER ERROR")
@@ -185,6 +182,36 @@ public final class AuthViewModel: BaseViewModel {
             }
         }
     }
+    
+    func changNewPassword(completion: @escaping (Bool) -> Void) {
+        let param = ChangPasswordRequest.init(password: password, newPassword: newPassword)
+        accountProvider.request(.changPassword(param: param, authorization: accessToken)) { response in
+            switch response {
+            case .success(let result):
+                let statusCode = result.statusCode
+                print(statusCode)
+                switch statusCode {
+                case 204:
+                    print("NO CONTENT")
+                    completion(true)
+                case 404:
+                    print("존재하지 않는 사용자일때")
+                    completion(false)
+                case 400:
+                    print("변경하려는 비밀번호가 이전 비밀번호와 같을 때")
+                    completion(false)
+                case 500:
+                    print("SERVER ERROR")
+                default:
+                    print(result)
+                    completion(false)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
+    
     
     // MARK: - Sign Up
     func signUp(completion: @escaping (Bool) -> Void) {
