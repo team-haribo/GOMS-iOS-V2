@@ -20,7 +20,7 @@ public enum AuthServices {
 
 extension AuthServices: TargetType {
     public var baseURL: URL {
-        return URL(string: "https://port-0-goms-backend-v2-12fhqa2bln49rbi0.sel5.cloudtype.app/api/v2")!
+        return URL(string: "https://357d-39-114-169-106.ngrok-free.app/api/v2")!
     }
     
     public var path: String {
