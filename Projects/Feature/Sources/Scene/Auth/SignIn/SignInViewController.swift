@@ -62,6 +62,7 @@ public final class SignInViewController: BaseViewController {
     lazy var visiblePasswordButton = UIButton().then {
         $0.setImage(.image.visible.image, for: .normal)
         $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        $0.isEnabled = true
     }
     
     private let findPasswordLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 48)).then {
@@ -95,13 +96,7 @@ public final class SignInViewController: BaseViewController {
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
-        
-        if let savedEmail = UserDefaults.standard.string(forKey: "email"),
-           let savedPassword = UserDefaults.standard.string(forKey: "password") {
-            emailTextField.text = savedEmail
-            passwordTextField.text = savedPassword
-            signInButtonTapped()
-        }
+
     }
     
     // MARK: - Seletors
@@ -117,10 +112,8 @@ public final class SignInViewController: BaseViewController {
             switch statusCode {
             case 200:
                 self.signInSuccessUI()
-                UserDefaults.standard.set(self.emailTextField.text, forKey: "email")
-                UserDefaults.standard.set(self.passwordTextField.text, forKey: "password")
-                
-                UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPassword")
+                UserDefaults.standard.set(true, forKey: "isLoggedIn")
+            
                 let defaults = UserDefaults.standard
                 let localPassword = defaults.string(forKey: "localPassword")
                 self.profileModel.loadProfileInfo()
@@ -156,6 +149,8 @@ public final class SignInViewController: BaseViewController {
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
+        self.visiblePasswordButton.isEnabled = true
+        self.signInButton.isEnabled = true
         signInButton.snp.remakeConstraints {
             $0.height.equalTo(48)
             $0.leading.equalTo(bounds.width * 0.05)
@@ -165,6 +160,8 @@ public final class SignInViewController: BaseViewController {
     }
     
     @objc override func keyboardWillHide(_ sender: Notification) {
+        self.visiblePasswordButton.isEnabled = true
+        self.signInButton.isEnabled = true
         signInButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.leading.equalTo(bounds.width * 0.05)
@@ -177,6 +174,7 @@ public final class SignInViewController: BaseViewController {
         emailTextField.setPlaceholderColor(.color.gomsTertiary.color)
         defaultDomain.textColor = .color.gomsTertiary.color
         emailErrorLabel.isHidden = true
+        passwordErrorLabel.isEnabled = true
         emailTextField.layer.borderColor = UIColor.clear.cgColor
         emailTextField.layer.borderWidth = 0
         findPasswordLabel.isHidden = false

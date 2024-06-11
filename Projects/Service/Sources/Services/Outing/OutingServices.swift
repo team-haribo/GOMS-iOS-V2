@@ -10,7 +10,7 @@ import Foundation
 import Moya
 
 public enum OutingServices {
-    case outing(authorization: String)
+    case outing(outingUUID: UUID, authorization: String)
     case outingList(authorization: String)
     case outingSearch(name: String?, authorization: String)
     case outingValidation(authorization: String)
@@ -23,8 +23,8 @@ extension OutingServices: TargetType {
     
     public var path: String {
         switch self {
-        case .outing:
-            return "/outing/{outingUUID}"
+        case .outing(let outingUUID, _):
+            return "/outing/\(outingUUID)"
         case .outingList:
             return "/outing/"
         case .outingSearch:
@@ -65,7 +65,8 @@ extension OutingServices: TargetType {
     public var headers: [String : String]? {
         switch self {
         case .outingList(let authorization),
-                .outingValidation(let authorization):
+             .outing(_, let authorization),
+             .outingValidation(let authorization):
             return ["Content-Type": "application/json", "Authorization": authorization]
         default:
             return ["Content-Type": "application/json"]

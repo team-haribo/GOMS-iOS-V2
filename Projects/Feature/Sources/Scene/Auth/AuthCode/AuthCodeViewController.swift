@@ -13,10 +13,12 @@ public final class AuthCodeViewController: BaseViewController {
     // MARK: - Properties
     private var viewModel = AuthViewModel()
     private var previousViewController: UIViewController?
+    var email: String?
         
-    init(viewModel: AuthViewModel, previousViewController: UIViewController?) {
+    init(viewModel: AuthViewModel, previousViewController: UIViewController?, email: String) {
         self.viewModel = viewModel
         self.previousViewController = previousViewController
+        self.email = email
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -72,11 +74,14 @@ public final class AuthCodeViewController: BaseViewController {
     
     @objc func authButtonTapped() {
         viewModel.setupAuthCode(authCode: authCodeTextField.text ?? "")
+        viewModel.setupEmail(email: self.email ?? "")
         viewModel.verifyAuthCode { success in
             if success {
                 self.authCodeSuccess()
                 if let previousVC = self.previousViewController as? FindPasswordViewController {
-                    let newPasswordVC = NewPasswordViewController()
+
+                    let newPasswordVC = NewPasswordViewController(viewModel: self.viewModel, email: self.email ?? "")
+                    
                     self.navigationController?.pushViewController(newPasswordVC, animated: true)
                 } else if let previousVC = self.previousViewController as? SignUpViewController {
                     let passwordSettingVC = PasswordSettingViewController(viewModel: self.viewModel)

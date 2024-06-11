@@ -11,7 +11,18 @@ import UIKit
 public final class NewPasswordViewController: BaseViewController {
 
     // MARK: - Properties
-    private let viewModel = AuthViewModel()
+    private var viewModel: AuthViewModel
+    var email: String
+
+    init(viewModel: AuthViewModel, email: String) {
+        self.viewModel = viewModel
+        self.email = email
+        super.init(nibName: nil, bundle: nil)
+    }
+        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let textFieldStackView = UIStackView().then {
         $0.spacing = 32
@@ -19,6 +30,7 @@ public final class NewPasswordViewController: BaseViewController {
         $0.distribution = .fillEqually
         $0.alignment = .fill
     }
+  
     
     let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
         $0.isSecureTextEntry = true
@@ -34,6 +46,7 @@ public final class NewPasswordViewController: BaseViewController {
     lazy var visiblePasswordButton = UIButton().then {
         $0.setImage(.image.visible.image, for: .normal)
         $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        $0.isEnabled = true
     }
     
     private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인").then {
@@ -46,14 +59,13 @@ public final class NewPasswordViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    lazy var doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "완료").then {
+     let doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "완료").then {
         $0.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         passwordTextField.delegate = self
         checkPasswordTextField.delegate = self
     }
@@ -61,6 +73,8 @@ public final class NewPasswordViewController: BaseViewController {
     // MARK: - Seletors
     @objc func doneButtonTapped() {
         print("New Password Setting Done")
+        print("사용자 이메일 : \(self.email)")
+        viewModel.setupEmail(email: self.email)
         viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         viewModel.newPassword { success in
             if success {
