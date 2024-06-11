@@ -72,17 +72,17 @@ public final class SignUpViewController: BaseViewController {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let swAction = UIAlertAction(title: "SW개발과", style: .default) { _ in
             self.majorTextField.setTitle("SW개발과", for: .normal)
-            self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
+            self.majorTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
             self.viewModel.setupMajor(major: "SW_DEVELOP")
         }
         let iotAction = UIAlertAction(title: "스마트IoT과", style: .default) { _ in
             self.majorTextField.setTitle("스마트IoT과", for: .normal)
-            self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
+            self.majorTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
             self.viewModel.setupMajor(major: "SMART_IOT")
         }
         let aiAction = UIAlertAction(title: "AI개발과", style: .default) { _ in
             self.majorTextField.setTitle("AI개발과", for: .normal)
-            self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
+            self.majorTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
             self.viewModel.setupMajor(major: "AI")
         }
         
