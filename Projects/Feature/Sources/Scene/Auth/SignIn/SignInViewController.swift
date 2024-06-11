@@ -117,19 +117,27 @@ public final class SignInViewController: BaseViewController {
                 let defaults = UserDefaults.standard
                 let localPassword = defaults.string(forKey: "localPass")
                 print(localPassword)
-                self.profileModel.loadProfileInfo()
-                let authority = self.profileModel.profileInfo?.authority
-                if authority == "ROLE_STUDENT_COUNCIL" {
-                    let mainVC = AdminMainViewController()
-                    self.navigationController?.pushViewController(mainVC, animated: true)
-                } else if authority == "ROLE_STUDENT" {
-                    let mainVC = MainViewController()
-                    self.navigationController?.pushViewController(mainVC, animated: true)
-                } else {
-                    print("권한이 없습니다.")
+                
+                // Load profile info and then navigate to the appropriate screen
+                self.profileModel.loadProfileInfo { success in
+                    if success {
+                        let authority = self.profileModel.profileInfo?.authority
+                        DispatchQueue.main.async {
+                            if authority == "ROLE_STUDENT_COUNCIL" {
+                                let mainVC = AdminMainViewController()
+                                self.navigationController?.pushViewController(mainVC, animated: true)
+                            } else if authority == "ROLE_STUDENT" {
+                                let mainVC = MainViewController()
+                                self.navigationController?.pushViewController(mainVC, animated: true)
+                            } else {
+                                print("권한이 없습니다.")
+                            }
+                        }
+                    } else {
+                        // Handle profile loading error if needed
+                        print("Failed to load profile info")
+                    }
                 }
-//                let mainVC = AdminMainViewController()
-//                self.navigationController?.pushViewController(mainVC, animated: true)
             case 400:
                 self.passwordErrorUI()
             case 404:
@@ -139,6 +147,7 @@ public final class SignInViewController: BaseViewController {
             }
         }
     }
+
     
     @objc func visiblePasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()

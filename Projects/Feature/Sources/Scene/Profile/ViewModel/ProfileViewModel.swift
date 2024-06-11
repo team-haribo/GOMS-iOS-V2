@@ -27,7 +27,7 @@ final class ProfileViewModel: ObservableObject {
         self.rePassword = rePassword
     }
 
-    func loadProfileInfo() {
+    func loadProfileInfo(completion: @escaping (Bool) -> Void) {
         provider.request(.getProfile(authorization: accessToken)) { result in
             switch result {
             case let .success(response):
@@ -35,18 +35,20 @@ final class ProfileViewModel: ObservableObject {
                     let decoder = JSONDecoder()
                     let profileModel = try decoder.decode(ProfileResponse.self, from: response.data)
                     self.profileInfo = profileModel
-                    
                     self.isDataLoaded = true
+                    completion(true) // 호출 성공 시 true 반환
                 } catch {
                     self.errorMessage = "Failed to decode JSON response"
+                    completion(false) // 호출 실패 시 false 반환
                 }
-
             case let .failure(err):
                 self.errorMessage = "Network request failed: \(err.localizedDescription)"
                 print("Network request failed: \(err)")
+                completion(false) // 호출 실패 시 false 반환
             }
         }
     }
+
 
     func submitProfileImage(imageData: Data) -> Future<Void, Error> {
         Future { promise in
