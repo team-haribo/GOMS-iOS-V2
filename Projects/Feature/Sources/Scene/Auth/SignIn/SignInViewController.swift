@@ -113,9 +113,10 @@ public final class SignInViewController: BaseViewController {
             case 200:
                 self.signInSuccessUI()
                 UserDefaults.standard.set(true, forKey: "isLoggedIn")
-            
+                UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
                 let defaults = UserDefaults.standard
-                let localPassword = defaults.string(forKey: "localPassword")
+                let localPassword = defaults.string(forKey: "localPass")
+                print(localPassword)
                 self.profileModel.loadProfileInfo()
                 let authority = self.profileModel.profileInfo?.authority
                 if authority == "ROLE_STUDENT_COUNCIL" {
@@ -293,6 +294,16 @@ extension SignInViewController: UITextFieldDelegate {
             viewModel.setupPassword(password: textField.text ?? "")
         }
     }
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            if textField == emailTextField {
+                let currentText = textField.text ?? ""
+                guard let stringRange = Range(range, in: currentText) else { return false }
+                let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+                return updatedText.count <= 6
+            }
+            return true
+        }
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if emailTextField.text != "", passwordTextField.text != "" {

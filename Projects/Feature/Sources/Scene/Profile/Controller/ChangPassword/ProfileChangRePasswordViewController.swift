@@ -40,7 +40,7 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
     
     @objc func doneButtonTapped() {
         let defaults = UserDefaults.standard
-        let localPassword = defaults.string(forKey: "localPassword")
+        let localPassword = defaults.string(forKey: "localPass")
         if localPassword == passwordTextField.text {
             let newPasswordVC = ChangNewPasswordViewController()
             navigationController?.pushViewController(newPasswordVC, animated: true)

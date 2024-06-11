@@ -69,7 +69,25 @@ public final class AuthCodeViewController: BaseViewController {
     
     @objc func resendButtonTapped() {
         viewModel.setupAuthCode(authCode: authCodeTextField.text ?? "")
-        viewModel.sendAuthCode { success in print("인증번호 재발송") }
+        viewModel.sendAuthCode { success in
+            if success {
+                let alert = UIAlertController(title: "재발송 완료", message: "인증코드 재발송이 완료되었습니다.\n이메일을 확인해주세요.", preferredStyle: .alert)
+                
+                let check = UIAlertAction(title: "확인", style: .cancel)
+                alert.addAction(check)
+                self.present(alert, animated: true)
+                
+                print("인증번호 재발송 완료")
+            } else {
+                let alert = UIAlertController(title: "재발송 실패", message: "인증코드 재발송이 실패했습니다.\n지속적인 오류 발생시 Team.HARIBO에 문의주세요.", preferredStyle: .alert)
+                
+                let check = UIAlertAction(title: "확인", style: .cancel)
+                alert.addAction(check)
+                self.present(alert, animated: true)
+                
+                print("재발송 실패")
+            }
+        }
     }
     
     @objc func authButtonTapped() {
@@ -192,4 +210,14 @@ extension AuthCodeViewController: UITextFieldDelegate {
             viewModel.setupAuthCode(authCode: textField.text ?? "")
         }
     }
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            if textField == authCodeTextField {
+                let currentText = textField.text ?? ""
+                guard let stringRange = Range(range, in: currentText) else { return false }
+                let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+                return updatedText.count <= 4
+            }
+            return true
+        }
 }
