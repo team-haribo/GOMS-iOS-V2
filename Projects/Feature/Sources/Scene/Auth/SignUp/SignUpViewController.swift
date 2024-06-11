@@ -82,7 +82,7 @@ public final class SignUpViewController: BaseViewController {
         }
         let aiAction = UIAlertAction(title: "AI개발과", style: .default) { _ in
             self.majorTextField.setTitle("AI개발과", for: .normal)
-            self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normalg)
+            self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
             self.viewModel.setupMajor(major: "AI")
         }
         
@@ -95,7 +95,7 @@ public final class SignUpViewController: BaseViewController {
         viewModel.setupName(name: nameTextField.text ?? "")
         viewModel.sendAuthCode { success in
             if success {
-                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel,  previousViewController: self)
+                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel,  previousViewController: self, email: "")
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
             }
         }

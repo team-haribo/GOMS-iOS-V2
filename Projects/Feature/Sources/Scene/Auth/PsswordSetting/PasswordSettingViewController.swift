@@ -36,6 +36,7 @@ public final class PasswordSettingViewController: BaseViewController {
     lazy var visiblePasswordButton = UIButton().then {
         $0.setImage(.image.visible.image, for: .normal)
         $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        $0.isEnabled = true
     }
     
     private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인").then {

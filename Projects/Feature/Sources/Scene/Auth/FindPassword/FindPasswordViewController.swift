@@ -45,7 +45,7 @@ public final class FindPasswordViewController: BaseViewController {
         viewModel.setupEmail(email: self.emailTextField.text ?? "")
         viewModel.sendAuthCode { success in
             if success {
-                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self)
+                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
             }
         }

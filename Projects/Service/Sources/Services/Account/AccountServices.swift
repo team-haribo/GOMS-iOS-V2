@@ -10,7 +10,7 @@ import Foundation
 import Moya
 
 public enum AccountServices {
-    case newPassword(param: NewPasswordRequest, authorization: String)
+    case newPassword(param: NewPasswordRequest)
     case changPassword(param: ChangPasswordRequest, authorization: String)
     case withdraw(password: String, authorization: String)
 }
@@ -46,7 +46,7 @@ extension AccountServices: TargetType {
     
     public var task: Task {
         switch self {
-        case .newPassword(let param, _):
+        case .newPassword(let param):
             return .requestJSONEncodable(param)
         case .changPassword(let param, _):
             return .requestJSONEncodable(param)
@@ -57,8 +57,9 @@ extension AccountServices: TargetType {
     
     public var headers: [String : String]? {
         switch self {
-        case .newPassword(_, let authorization),
-             .changPassword(_, let authorization),
+        case .newPassword:
+            return ["Content-Type": "application/json"]
+        case .changPassword(_, let authorization),
              .withdraw(_, let authorization):
             return ["Content-Type": "application/json", "Authorization": authorization]
         default:

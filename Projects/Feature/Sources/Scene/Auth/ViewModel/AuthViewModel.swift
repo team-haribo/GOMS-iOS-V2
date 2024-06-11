@@ -154,20 +154,24 @@ public final class AuthViewModel: BaseViewModel {
     
     // MARK: - New Password
     func newPassword(completion: @escaping (Bool) -> Void) {
-        let param = NewPasswordRequest.init(email: email, newPassword: newPassword)
-        accountProvider.request(.newPassword(param: param, authorization: accessToken)) { response in
+        let param = NewPasswordRequest.init(email: self.email, newPassword: newPassword)
+        print("New param \(param)")
+        accountProvider.request(.newPassword(param: param)) { response in
             switch response {
             case .success(let result):
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 204:
                     print("NO CONTENT")
+                    print(result)
                     completion(true)
                 case 404:
                     print("존재하지 않는 사용자일때")
+                    print(result)
                     completion(false)
                 case 400:
                     print("변경하려는 비밀번호가 이전 비밀번호와 같을 때")
+                    print(result)
                     completion(false)
                 case 500:
                     print("SERVER ERROR")
