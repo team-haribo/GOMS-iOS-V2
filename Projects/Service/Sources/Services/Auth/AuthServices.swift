@@ -14,7 +14,7 @@ public enum AuthServices {
     case signIn(param: SignInRequest)
     case refreshToken(refreshToken: String)
     case sendAuthCode(param: SendAuthCodeRequest)
-    case verifyAuthNumber(emaiil: String, authCode: String)
+    case verifyAuthNumber(email: String, authCode: String)
     case logoutToken(refreshToken: String)
 }
 

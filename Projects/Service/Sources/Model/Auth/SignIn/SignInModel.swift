@@ -9,7 +9,7 @@
 import Foundation
 
 public struct SignInModel: Codable {
-    let data: SignInResponse
+    public let data: SignInResponse?
 }
 
 public struct SignInResponse: Codable {

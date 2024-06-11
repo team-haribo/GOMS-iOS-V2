@@ -92,7 +92,6 @@ public final class AuthCodeViewController: BaseViewController {
     
     @objc func authButtonTapped() {
         viewModel.setupAuthCode(authCode: authCodeTextField.text ?? "")
-        viewModel.setupEmail(email: self.email ?? "")
         viewModel.verifyAuthCode { success in
             if success {
                 self.authCodeSuccess()

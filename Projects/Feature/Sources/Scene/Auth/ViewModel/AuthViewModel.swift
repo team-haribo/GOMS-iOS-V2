@@ -8,6 +8,7 @@
 
 import Moya
 import Service
+import Foundation
 
 public final class AuthViewModel: BaseViewModel {
     
@@ -15,7 +16,8 @@ public final class AuthViewModel: BaseViewModel {
     private let accountProvider = MoyaProvider<AccountServices>()
     
     var userData: SignInModel?
-    var email: String = ""
+    private var email: String = ""
+    private var profileModel = ProfileViewModel()
     
     private var password: String = ""
     private var authCode: String = ""
@@ -66,6 +68,11 @@ public final class AuthViewModel: BaseViewModel {
                     switch statusCode {
                     case 200:
                         print("success")
+                        //self.profileModel.loadProfileInfo()
+                        //UserDefaults.standard.set(self.profileModel.profileInfo?.authority, forKey: "권한")
+//                        let defaults = UserDefaults.standard
+//                        let authority = defaults.string(forKey: "권한")
+//                        print(authority)
                         let signInResponse = try result.map(SignInResponse.self)
                         self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
                         self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
@@ -124,7 +131,7 @@ public final class AuthViewModel: BaseViewModel {
     
     // MARK: - Verify Auth Code
     func verifyAuthCode(completion: @escaping (Bool) -> Void) {
-        authProvider.request(.verifyAuthNumber(emaiil: email, authCode: authCode)) { response in
+        authProvider.request(.verifyAuthNumber(email: email, authCode: authCode)) { response in
             switch response {
             case .success(let result):
                 do {
