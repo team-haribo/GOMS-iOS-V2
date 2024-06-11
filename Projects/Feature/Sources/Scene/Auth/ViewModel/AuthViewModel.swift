@@ -54,7 +54,45 @@ public final class AuthViewModel: BaseViewModel {
     }
     
     // MARK: - Sign In
-    func signIn(completion: @escaping (Bool) -> Void) {
+//    func signIn(completion: @escaping (Bool) -> Void) {
+//        let param = SignInRequest.init(email: email, password: password)
+//        authProvider.request(.signIn(param: param)) { response in
+//            switch response {
+//            case .success(let result):
+//                let statusCode = result.statusCode
+//                do {
+//                    switch statusCode {
+//                    case 200:
+//                        print("success")
+//                        let signInResponse = try result.map(SignInResponse.self)
+//                        self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
+//                        self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
+//                        self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
+//                        completion(true)
+//                    case 400:
+//                        print("비밀번호가 일치하지 않음")
+//                        completion(true)
+//                    case 404:
+//                        print("존재하지 않는 이메일")
+//                        completion(true)
+//                    case 500:
+//                        print("SERVER ERROR")
+//                        completion(false)
+//                    default:
+//                        print(result)
+//                        completion(false)
+//                    }
+//                } catch {
+//                    print("error")
+//                    completion(false)
+//                }
+//            case .failure(let err):
+//                print(err.localizedDescription)
+//                completion(false)
+//            }
+//        }
+//    }
+    func signIn(completion: @escaping ((Bool, Int)) -> Void) {
         let param = SignInRequest.init(email: email, password: password)
         authProvider.request(.signIn(param: param)) { response in
             switch response {
@@ -68,30 +106,31 @@ public final class AuthViewModel: BaseViewModel {
                         self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
                         self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
                         self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
-                        completion(true)
+                        completion((true, statusCode))
                     case 400:
                         print("비밀번호가 일치하지 않음")
-                        completion(true)
+                        completion((false, statusCode))
                     case 404:
                         print("존재하지 않는 이메일")
-                        completion(true)
+                        completion((false, statusCode))
                     case 500:
                         print("SERVER ERROR")
-                        completion(false)
+                        completion((false, statusCode))
                     default:
                         print(result)
-                        completion(false)
+                        completion((false, statusCode))
                     }
                 } catch {
                     print("error")
-                    completion(false)
+                    completion((false, statusCode))
                 }
             case .failure(let err):
                 print(err.localizedDescription)
-                completion(false)
+                completion((false, 0))
             }
         }
     }
+
     
     // MARK: - Send Auth Code
     func sendAuthCode(completion: @escaping (Bool) -> Void) {
