@@ -84,6 +84,13 @@ public final class SignInViewController: BaseViewController {
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
+        
+        if let savedEmail = UserDefaults.standard.string(forKey: "email"),
+           let savedPassword = UserDefaults.standard.string(forKey: "password") {
+            emailTextField.text = savedEmail
+            passwordTextField.text = savedPassword
+            signInButtonTapped()
+        }
     }
     
     // MARK: - Seletors
@@ -97,6 +104,9 @@ public final class SignInViewController: BaseViewController {
         viewModel.setupPassword(password: passwordTextField.text ?? "")
         viewModel.signIn { success in
             if success {
+                UserDefaults.standard.set(self.emailTextField.text, forKey: "email")
+                UserDefaults.standard.set(self.passwordTextField.text, forKey: "password")
+                
                 UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPassword")
                 let defaults = UserDefaults.standard
                 let localPassword = defaults.string(forKey: "localPassword")
@@ -150,7 +160,7 @@ public final class SignInViewController: BaseViewController {
     func passwordError() {
         passwordTextField.setBorderColorMode(lightModeColor: .color.gomsNegative.color, darkModeColor: .color.gomsNegative.color)
         passwordTextField.setPlaceholderColor(.color.gomsNegative.color)
-        
+        passwordErrorLabel.isHidden = false
     }
     
     // MARK: - Navigaiton

@@ -24,6 +24,13 @@ public final class NewPasswordViewController: BaseViewController {
         $0.isSecureTextEntry = true
     }
     
+    let passwordErrorLabel = UILabel().then {
+        $0.text = "잘못된 비밀번호입니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
     lazy var visiblePasswordButton = UIButton().then {
         $0.setImage(.image.visible.image, for: .normal)
         $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
@@ -96,6 +103,12 @@ public final class NewPasswordViewController: BaseViewController {
             $0.bottom.equalTo(-bounds.height * 0.16)
             $0.height.equalTo(48)
         }
+    }
+    
+    func passswordError() {
+        passwordTextField.setBorderColorMode(lightModeColor: .color.gomsNegative.color, darkModeColor: .color.gomsNegative.color)
+        passwordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        passwordErrorLabel.isHidden = false
     }
 
     // MARK: - Navigation

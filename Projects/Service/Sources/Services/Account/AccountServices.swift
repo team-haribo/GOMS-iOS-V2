@@ -17,7 +17,7 @@ public enum AccountServices {
 
 extension AccountServices: TargetType {
     public var baseURL: URL {
-        return URL(string: "https://port-0-goms-backend-v2-duzu222alg58k27h.sel3.cloudtype.app/api/v2")!
+        return URL(string: "https://port-0-goms-backend-v2-12fhqa2bln49rbi0.sel5.cloudtype.app/api/v2")!
     }
     
     public var path: String {
