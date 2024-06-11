@@ -86,6 +86,7 @@ public class AdminQRCodeViewController: BaseViewController {
     private func createQRCode() {
         viewModel.makeQR { success in
             if success {
+                let userQRVC = QRCodeViewController()
                 let outingUUIDString = self.viewModel.outingUUID.uuidString
                 if let qrCodeImage = self.generateQRCode(from: outingUUIDString) {
                     DispatchQueue.main.async {

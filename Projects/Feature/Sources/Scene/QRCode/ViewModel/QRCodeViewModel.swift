@@ -8,16 +8,19 @@ public final class QRCodeViewModel: BaseViewModel {
     private let studentCouncilProvider = MoyaProvider<StudentCouncilServices>()
     private let outingProvider = MoyaProvider<OutingServices>()
     
-    public var outingUUID = UUID()
-    
+    public var outingUUID: UUID = UUID()
+
     func outing(completion: @escaping (Bool) -> Void) {
         outingProvider.request(.outing(outingUUID: outingUUID, authorization: accessToken)) { response in
+            print("Outing Param : \(self.outingUUID)")
             switch response {
+
             case .success(let result):
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 201:
                     print("Created")
+                    completion(true)
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
                 case 403:
@@ -36,6 +39,7 @@ public final class QRCodeViewModel: BaseViewModel {
     }
     
     func makeQR(completion: @escaping (Bool) -> Void) {
+        print("UUID : \(self.outingUUID)")
         studentCouncilProvider.request(.makeQRCode(authorization: accessToken)) { response  in
             switch response {
             case .success(let result):
@@ -47,7 +51,7 @@ public final class QRCodeViewModel: BaseViewModel {
                         if let outingUUIDString = responseJSON?["outingUUID"] as? String,
                            let outingUUID = UUID(uuidString: outingUUIDString) {
                             self.outingUUID = outingUUID
-                            print("outingUUID 저장 완료")
+                            print("GOMS : UUID : \(self.outingUUID)")
                             completion(true)
                         } else {
                             print("outingUUID를 가져올 수 없습니다.")
@@ -72,4 +76,6 @@ public final class QRCodeViewModel: BaseViewModel {
             }
         }
     }
+    
 }
+
