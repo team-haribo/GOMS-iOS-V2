@@ -55,7 +55,7 @@ public final class NewPasswordViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    lazy var doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "완료").then {
+     let doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "완료").then {
         $0.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
     
