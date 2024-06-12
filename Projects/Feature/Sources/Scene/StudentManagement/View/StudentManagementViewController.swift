@@ -107,9 +107,7 @@ public final class StudentManagementViewController: BaseViewController {
             }
         }
     }
-    
-   
-    
+
     override func configNavigation() {
         super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true

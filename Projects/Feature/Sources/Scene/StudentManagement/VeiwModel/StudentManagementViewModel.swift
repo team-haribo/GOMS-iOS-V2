@@ -78,11 +78,14 @@ public final class StudentManagementViewModel: BaseViewModel {
                     do {
                         self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
                         self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
+                        print("--------- 학생 전체 리스트 ---------")
+                        print(self.userList)
+                        print("--------- 학생 데이터 ---------")
+                        print(self.userListDatas)
                         completion()
                     } catch(let err) {
                         print(String(describing: err))
                     }
-                    print("success")
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
                 case 403:

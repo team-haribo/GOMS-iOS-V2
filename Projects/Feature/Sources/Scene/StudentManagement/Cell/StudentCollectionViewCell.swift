@@ -89,6 +89,7 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
             profileImageView.image = .image.gomsProfile.image
         }
         nameLabel.text = userData.name
+        
         if userData.major == "SW_DEVELOP" {
             studentInfoLabel.text = "\(userData.grade)기 | SW개발"
         } else if userData.major == "SMART_IOT" {
@@ -99,12 +100,10 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
         
         if userData.authority == "ROLE_STUDENT_COUNCIL" {
             profileImageView.layer.borderColor = UIColor(red: 0.706, green: 0.525, blue: 0.976, alpha: 1).cgColor
-            nameLabel.textColor = .color.gomsAdmin.color
-        }
-        
-        if userData.isBlackList == true {
+        } else if userData.isBlackList == true {
             profileImageView.layer.borderColor = UIColor(red: 0.895, green: 0.213, blue: 0.125, alpha: 1).cgColor
-            nameLabel.textColor = .color.gomsNegative.color
+        } else {
+            profileImageView.layer.borderColor = UIColor.clear.cgColor
         }
     }
     
