@@ -26,9 +26,10 @@ public class AdminMainViewController: BaseViewController {
     
     private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
     
-    private lazy var adminMenuButton = UIButton().then {
+    private lazy var adminMenuButton = ExpandableButton().then {
         $0.setBackgroundImage(.image.adminMenu.image, for: .normal)
         $0.addTarget(self, action: #selector(adminMenuButtonTapped), for: .touchUpInside)
+        $0.expandedTouchArea = 30
     }
     
     private let profileView = MainProfileView()
