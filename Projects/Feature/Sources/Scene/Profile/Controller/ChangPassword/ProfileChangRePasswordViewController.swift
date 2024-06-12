@@ -26,6 +26,13 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         $0.isSecureTextEntry = true
     }
     
+    let passwordErrorLabel = UILabel().then {
+        $0.text = "잘못된 비밀번호입니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
     lazy var visiblePasswordButton = UIButton().then {
         $0.setImage(.image.visible.image, for: .normal)
         $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
@@ -46,7 +53,15 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
             navigationController?.pushViewController(newPasswordVC, animated: true)
         } else {
             print("비밀번호가 틀렸습니다.")
+            self.passwordErrorUI()
         }
+    }
+    
+    func passwordErrorUI() {
+        passwordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        passwordErrorLabel.isHidden = false
+        passwordTextField.layer.borderColor = UIColor.systemRed.cgColor
+        passwordTextField.layer.borderWidth = 1
     }
     
     @objc func visiblePasswordButtonTapped() {
@@ -73,7 +88,8 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         [
             navigationTitle,
             passwordTextField,
-            doneButton
+            doneButton,
+            passwordErrorLabel
         ].forEach {
             view.addSubview($0)
         }
@@ -93,6 +109,12 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
             $0.bottom.equalTo(navigationTitle.snp.bottom).offset(90)
             $0.leading.equalToSuperview().inset(bounds.width * 0.05)
             $0.trailing.equalToSuperview().inset(bounds.width * 0.05)
+        }
+        
+        passwordErrorLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(passwordTextField.snp.bottom)
+            $0.leading.equalTo(bounds.width * 0.07)
         }
         
         visiblePasswordButton.snp.makeConstraints {

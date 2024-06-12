@@ -200,8 +200,8 @@ public final class AuthViewModel: BaseViewModel {
         }
     }
     
-    func changNewPassword(completion: @escaping (Bool) -> Void) {
-        let param = ChangPasswordRequest.init(password: password, newPassword: newPassword)
+    func changNewPassword(completion: @escaping (Bool, Int) -> Void) {
+        let param = ChangPasswordRequest(password: password, newPassword: newPassword)
         accountProvider.request(.changPassword(param: param, authorization: accessToken)) { response in
             switch response {
             case .success(let result):
@@ -210,24 +210,27 @@ public final class AuthViewModel: BaseViewModel {
                 switch statusCode {
                 case 204:
                     print("NO CONTENT")
-                    completion(true)
+                    completion(true, statusCode)
                 case 404:
                     print("존재하지 않는 사용자일때")
-                    completion(false)
+                    completion(false, statusCode)
                 case 400:
                     print("변경하려는 비밀번호가 이전 비밀번호와 같을 때")
-                    completion(false)
+                    completion(false, statusCode)
                 case 500:
                     print("SERVER ERROR")
+                    completion(false, statusCode)
                 default:
                     print(result)
-                    completion(false)
+                    completion(false, statusCode)
                 }
             case .failure(let err):
                 print(err.localizedDescription)
+                completion(false, 0)
             }
         }
     }
+
     
     
     // MARK: - Sign Up

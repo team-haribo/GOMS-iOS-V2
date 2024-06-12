@@ -25,7 +25,14 @@ public final class ChangNewPasswordViewController: BaseViewController {
     }
     
     let passwordErrorLabel = UILabel().then {
-        $0.text = "잘못된 비밀번호입니다."
+        $0.text = "비밀번호가 서로 다릅니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
+    let passwordOverlapErrorLabel = UILabel().then {
+        $0.text = "이전 비밀번호와 같습니다."
         $0.textColor = .color.gomsNegative.color
         $0.font = .pretendard(size: 16, weight: .medium)
         $0.isHidden = true
@@ -68,7 +75,7 @@ public final class ChangNewPasswordViewController: BaseViewController {
         print("New Password Setting Done")
         viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         viewModel.setupPassword(password: localPassword ?? "")
-        viewModel.changNewPassword { success in
+        viewModel.changNewPassword { [self] success, statusCode in
             if success {
                 let defaults = UserDefaults.standard
                 UserDefaults.standard.set(self.checkPasswordTextField.text, forKey: "localPass")
@@ -78,10 +85,53 @@ public final class ChangNewPasswordViewController: BaseViewController {
                     let loginVC = SignInViewController(viewModel: self.viewModel)
                     self.navigationController?.pushViewController(loginVC, animated: true)
                 }
+                
+                passwordOverlapErrorLabel.isHidden = true
+                passwordTextField.layer.borderWidth = 0
+                passwordTextField.setPlaceholderColor(.color.gomsTertiary.color)
+                
+                passwordErrorLabel.isHidden = true
+                checkPasswordTextField.layer.borderWidth = 0
+                checkPasswordTextField.setPlaceholderColor(.color.gomsTertiary.color)
+                
                 alert.addAction(check)
                 self.present(alert, animated: true)
+            } else {
+                switch statusCode {
+                case 400:
+                    print("400")
+                    self.passwordOverlapErrorUI()
+                    conditionsLabel.isHidden = false
+                case 404:
+                    print("404")
+                default:
+                    print("Error: \(statusCode)")
+                }
+                
+                if passwordTextField.text != checkPasswordTextField.text {
+                    self.passwordErrorUI()
+                    conditionsLabel.isHidden = true
+                }
             }
         }
+    }
+    
+    func passwordErrorUI() {
+        checkPasswordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        passwordErrorLabel.isHidden = false
+        checkPasswordTextField.layer.borderColor = UIColor.systemRed.cgColor
+        checkPasswordTextField.layer.borderWidth = 1
+    }
+    
+    func passwordOverlapErrorUI() {
+        passwordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        passwordOverlapErrorLabel.isHidden = false
+        passwordTextField.layer.borderColor = UIColor.systemRed.cgColor
+        passwordTextField.layer.borderWidth = 1
+        
+        passwordErrorLabel.isHidden = true
+        checkPasswordTextField.layer.borderWidth = 0
+        checkPasswordTextField.setPlaceholderColor(.color.gomsTertiary.color)
     }
     
     @objc func visiblePasswordButtonTapped() {
@@ -130,7 +180,7 @@ public final class ChangNewPasswordViewController: BaseViewController {
     override func addView() {
         passwordTextField.addSubview(visiblePasswordButton)
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
-        [textFieldStackView, conditionsLabel, doneButton].forEach { view.addSubview($0) }
+        [textFieldStackView, conditionsLabel, doneButton,passwordErrorLabel,passwordOverlapErrorLabel].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -142,6 +192,19 @@ public final class ChangNewPasswordViewController: BaseViewController {
         checkPasswordTextField.snp.makeConstraints {
             $0.height.equalTo(56)
         }
+        
+        passwordErrorLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(checkPasswordTextField.snp.bottom).inset(5)
+            $0.leading.equalTo(bounds.width * 0.05)
+        }
+        
+        passwordOverlapErrorLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(passwordTextField.snp.bottom).inset(5)
+            $0.leading.equalTo(bounds.width * 0.05)
+        }
+
         
         textFieldStackView.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
