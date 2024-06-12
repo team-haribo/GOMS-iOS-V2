@@ -18,6 +18,7 @@ public final class MainViewController: BaseViewController {
     private let profileView = MainProfileView()
     private let basicsProfileView = ProfileCardView()
     let refreshControl = UIRefreshControl()
+    
         
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -37,9 +38,10 @@ public final class MainViewController: BaseViewController {
     
     private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
     
-    private lazy var settingButton = UIButton().then {
+    private lazy var settingButton = ExpandableButton().then {
         $0.setBackgroundImage(.image.gomsSetting.image, for: .normal)
         $0.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
+        $0.expandedTouchArea = 30
     }
     
     private let latecomerLabel = UILabel().then {
