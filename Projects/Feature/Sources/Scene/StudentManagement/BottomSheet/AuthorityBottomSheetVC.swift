@@ -110,12 +110,10 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         guard let userData = userData, let index = userDataIndex else { return }
         
         if sender.isOn {
-            viewModel.blackList(index: index) {
-                self.viewModel.getUserList {
-                    let cell = StudentCollectionViewCell()
-                    cell.configureData(with: userData)
-                    self.studentManagementVC.studentCollectionView.reloadData()
-                }
+            viewModel.blackList(index: index) { _ in
+                print("blacklist update")
+                let managementVC = StudentManagementViewController()
+                managementVC.configureRefreshControl()
             }
         } else {
             viewModel.cancelBlackList(index: index) {

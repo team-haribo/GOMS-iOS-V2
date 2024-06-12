@@ -93,7 +93,7 @@ public final class StudentManagementViewController: BaseViewController {
         configureRefreshControl()
     }
         // MARK: - Refresh Control Setup
-    private func configureRefreshControl() {
+    func configureRefreshControl() {
         studentCollectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
     }
@@ -113,6 +113,7 @@ public final class StudentManagementViewController: BaseViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "학생 관리"
         navigationItem.searchController = searchController
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     private func setupCollectionView() {

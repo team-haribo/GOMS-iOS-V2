@@ -112,9 +112,13 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case .success(let result):
                     let statusCode = result.statusCode
                     switch statusCode {
-                    case 200..<300:
-                        print("success")
-                        completion()
+                    case 205:
+                        print("권한 수정 성공")
+                        self.getUserList {
+                            print(selectedUser)
+                            print(authority)
+                            completion()
+                        }
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
@@ -133,7 +137,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Black List
-    func blackList(index: Int, completion: @escaping () -> Void) {
+    func blackList(index: Int, completion: @escaping (Bool) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
@@ -143,9 +147,10 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case .success(let result):
                     let statusCode = result.statusCode
                     switch statusCode {
-                    case 200..<300:
+                    case 201:
                         print("Created")
-                        completion()
+                        print("BlackList : \(selectedUser)")
+                        completion(true)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
@@ -202,11 +207,6 @@ public final class StudentManagementViewModel: BaseViewModel {
                 let responseData = result.data
                 do {
                     print("searchString: \(searchString)")
-                    print(self.grade)
-                    print(self.gender)
-                    print(self.isBlackList)
-                    print(self.authority)
-                    print(self.major)
                     self.userSearchList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
                     self.userSearchListDatas = self.userSearchList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
                     print("User Search: \(self.userSearchList)")
