@@ -162,7 +162,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
         coffeeIcon.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.height.width.equalTo(80)
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(bounds.height * 0.49)
+            $0.top.equalTo(bounds.height * 0.49)
         }
         
         outingNilLabel.snp.makeConstraints {
