@@ -27,7 +27,7 @@ class AdminQRButton: UIButton {
         self.addSubview(QRIcon)
         
         QRIcon.snp.makeConstraints {
-            $0.height.width.equalTo(36)
+            $0.height.width.equalTo(24)
             $0.centerX.centerY.equalToSuperview()
         }
     }
