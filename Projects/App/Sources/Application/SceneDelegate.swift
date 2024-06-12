@@ -18,7 +18,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         
         if UserDefaults.standard.bool(forKey: "isAutoLoginEnabled") {
-            print("토큰 있음")
             let accessToken = viewModel.accessToken
             
             viewModel.signInWithToken(accessToken: accessToken) { success in

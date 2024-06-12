@@ -17,7 +17,7 @@ public final class QRCodeViewModel: BaseViewModel {
             case .success(let result):
                 let statusCode = result.statusCode
                 switch statusCode {
-                case 201:
+                case 204:
                     print("Created")
                     completion(true)
                 case 401:
