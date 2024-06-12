@@ -168,7 +168,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Delete Black List
-    func cancelBlackList(index: Int, completion: @escaping () -> Void) {
+    func cancelBlackList(index: Int, completion: @escaping (Bool) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
@@ -178,9 +178,9 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case .success(let result):
                     let statusCode = result.statusCode
                     switch statusCode {
-                    case 200..<300:
+                    case 205:
                         print("Reset content")
-                        completion()
+                        completion(true)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
