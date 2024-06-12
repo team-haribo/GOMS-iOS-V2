@@ -280,8 +280,14 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         alertController.addAction(cancelAction)
         
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
-            let introVC = IntroViewController()
-            self?.navigationController?.pushViewController(introVC, animated: true)
+            self?.viewModel.profileLogout { [weak self] success in
+                if success {
+                    let introVC = IntroViewController()
+                    self?.navigationController?.pushViewController(introVC, animated: true)
+                } else {
+                    print("실패")
+                }
+            }
         }
         
         alertController.addAction(confirmAction)
