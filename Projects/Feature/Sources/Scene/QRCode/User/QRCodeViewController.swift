@@ -124,6 +124,8 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
                         DispatchQueue.main.async {
                             isScanningEnabled = false
                             
+                            print("QR 인식 후 UUID : \(self.viewModel.outingUUID)") 
+                            
                             self.viewModel.outing { success in
                                 if success {
                                     let alert = UIAlertController(title: "외출 복귀", message: "외출 복귀 처리되었습니다.", preferredStyle: .alert)

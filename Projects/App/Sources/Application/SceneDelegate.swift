@@ -11,48 +11,54 @@ import Feature
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    
+    let viewModel = AuthViewModel()
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let defaults = UserDefaults.standard
-        
-        let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-        let AdminisSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
-        print("\(isSwitchOn)|\(AdminisSwitchOn)")
-        
-        applySavedTheme()
-        
-        let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
-        
-        if isLoggedIn == true {
-            let authority = UserDefaults.standard.string(forKey: "authority")
-            switch authority {
-            case "ROLE_STUDENT_COUNCIL":
-                if isSwitchOn == true {
-                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-                } else if AdminisSwitchOn == true {
-                    window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
+        if UserDefaults.standard.bool(forKey: "isAutoLoginEnabled") {
+            print("토큰 있음")
+            let accessToken = viewModel.accessToken
+            
+            viewModel.signInWithToken(accessToken: accessToken) { success in
+                if success {
+                    self.viewModel.profileModel.loadProfileInfo { profileSuccess in
+                        if profileSuccess {
+                            DispatchQueue.main.async {
+                                let authority = self.viewModel.profileModel.profileInfo?.authority
+                                if authority == "ROLE_STUDENT_COUNCIL" {
+                                    let mainVC = AdminMainViewController()
+                                    self.window?.rootViewController = UINavigationController(rootViewController: mainVC)
+                                } else if authority == "ROLE_STUDENT" {
+                                    let mainVC = MainViewController()
+                                    self.window?.rootViewController = UINavigationController(rootViewController: mainVC)
+                                } else {
+                                    print("권한이 없습니다.")
+                                    self.presentToLogin()
+                                }
+                            }
+                        } else {
+                            print("프로필 정보 가져오기 실패")
+                            self.presentToLogin()
+                        }
+                    }
                 } else {
-                    window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
+                    print("자동 로그인 실패.")
+                    self.presentToLogin()
                 }
-            case "ROLE_STUDENT":
-                if isSwitchOn == true {
-                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-                } else if AdminisSwitchOn == true {
-                    window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
-                } else {
-                    window?.rootViewController = UINavigationController(rootViewController: MainViewController())
-                }
-            default:
-                window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
             }
         } else {
-            window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+            print("저장된 토큰이 없습니다.")
+            presentToLogin()
         }
-
+        
         window?.makeKeyAndVisible()
+    }
+
+    private func presentToLogin() {
+        let introVC = IntroViewController()
+        window?.rootViewController = UINavigationController(rootViewController: introVC)
     }
     
     private func applySavedTheme() {

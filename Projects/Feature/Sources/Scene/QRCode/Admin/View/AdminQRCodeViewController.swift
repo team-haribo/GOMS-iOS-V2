@@ -60,7 +60,7 @@ public class AdminQRCodeViewController: BaseViewController {
             $0.top.equalTo(qrCodeImage.snp.bottom).offset(32)
             $0.centerX.equalToSuperview()
         }
-        
+
         lastTimer.snp.makeConstraints {
             $0.top.equalTo(lastTimeText.snp.bottom)
             $0.centerX.equalToSuperview()
@@ -86,7 +86,6 @@ public class AdminQRCodeViewController: BaseViewController {
     private func createQRCode() {
         viewModel.makeQR { success in
             if success {
-                let userQRVC = QRCodeViewController()
                 let outingUUIDString = self.viewModel.outingUUID.uuidString
                 if let qrCodeImage = self.generateQRCode(from: outingUUIDString) {
                     DispatchQueue.main.async {
