@@ -91,7 +91,7 @@ public final class ProfileViewModel: ObservableObject {
         }
     }
 
-    func profileLogout(presentingViewController: UIViewController) {
+    func profileLogout(completion: @escaping (Bool) -> Void) {
         providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
             switch result {
             case .success:
@@ -102,6 +102,7 @@ public final class ProfileViewModel: ObservableObject {
                 print("Network request failed: \(err)")
             }
         }
+        completion(true)
     }
     
     func withdraw(completion: @escaping (Bool) -> Void) {
