@@ -11,53 +11,42 @@ import Feature
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    let viewModel = AuthViewModel()
-
+    let viewModel = BaseViewModel()
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        if UserDefaults.standard.bool(forKey: "isAutoLoginEnabled") {
-            let accessToken = viewModel.accessToken
-            
-            viewModel.signInWithToken(accessToken: accessToken) { success in
-                if success {
-                    self.viewModel.profileModel.loadProfileInfo { profileSuccess in
-                        if profileSuccess {
-                            DispatchQueue.main.async {
-                                let authority = self.viewModel.profileModel.profileInfo?.authority
-                                if authority == "ROLE_STUDENT_COUNCIL" {
-                                    let mainVC = AdminMainViewController()
-                                    self.window?.rootViewController = UINavigationController(rootViewController: mainVC)
-                                } else if authority == "ROLE_STUDENT" {
-                                    let mainVC = MainViewController()
-                                    self.window?.rootViewController = UINavigationController(rootViewController: mainVC)
-                                } else {
-                                    print("권한이 없습니다.")
-                                    self.presentToLogin()
-                                }
-                            }
-                        } else {
-                            print("프로필 정보 가져오기 실패")
-                            self.presentToLogin()
-                        }
-                    }
-                } else {
-                    print("자동 로그인 실패.")
-                    self.presentToLogin()
-                }
-            }
-        } else {
-            print("저장된 토큰이 없습니다.")
-            presentToLogin()
-        }
+        let defaults = UserDefaults.standard
         
-        window?.makeKeyAndVisible()
-    }
+        let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+        let AdminisSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
+        
+        applySavedTheme()
+        
+        let authority = UserDefaults.standard.string(forKey: "authority")
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            if self.viewModel.isLogin == true {
+                if AdminisSwitchOn == true {
+                    if isSwitchOn == true {
+                        self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
+                    } else {
+                        self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
+                    }
+                } else if AdminisSwitchOn == false {
+                    if isSwitchOn == true {
+                        self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
+                    } else {
+                        self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
+                    }
+                }
+            } else {
+                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+            }
+        }
 
-    private func presentToLogin() {
-        let introVC = IntroViewController()
-        window?.rootViewController = UINavigationController(rootViewController: introVC)
+        window?.makeKeyAndVisible()
     }
     
     private func applySavedTheme() {
