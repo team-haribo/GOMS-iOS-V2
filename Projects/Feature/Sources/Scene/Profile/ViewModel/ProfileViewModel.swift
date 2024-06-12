@@ -91,7 +91,7 @@ public final class ProfileViewModel: ObservableObject {
         }
     }
 
-    func ProfileLogout(presentingViewController: UIViewController) {
+    func profileLogout(presentingViewController: UIViewController) {
         providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
             switch result {
             case .success:

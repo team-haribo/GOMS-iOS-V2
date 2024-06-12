@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let authority = UserDefaults.standard.string(forKey: "authority")
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+        DispatchQueue.main.async {
             if self.viewModel.isLogin == true {
                 if AdminisSwitchOn == true {
                     if isSwitchOn == true {
