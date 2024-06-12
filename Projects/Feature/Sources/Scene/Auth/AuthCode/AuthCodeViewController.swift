@@ -79,7 +79,7 @@ public final class AuthCodeViewController: BaseViewController {
                 
                 print("인증번호 재발송 완료")
             } else {
-                let alert = UIAlertController(title: "재발송 실패", message: "인증코드 재발송이 실패했습니다.\n지속적인 오류 발생시 Team.HARIBO에 문의주세요.", preferredStyle: .alert)
+                let alert = UIAlertController(title: "재발송 실패", message: "인증코드 재발송이 실패했습니다.\n다시시도 해주세요.", preferredStyle: .alert)
                 
                 let check = UIAlertAction(title: "확인", style: .cancel)
                 alert.addAction(check)

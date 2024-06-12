@@ -97,6 +97,14 @@ public final class SignUpViewController: BaseViewController {
             if success {
                 let authCodeVC = AuthCodeViewController(viewModel: self.viewModel,  previousViewController: self, email: "")
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
+            } else {
+                let alert = UIAlertController(title: "인증코드 발송 실패", message: "인증코드 발송에 실패했습니다.\n다시시도 해주세요.", preferredStyle: .alert)
+                
+                let check = UIAlertAction(title: "확인", style: .cancel)
+                alert.addAction(check)
+                self.present(alert, animated: true)
+                
+                print("재발송 실패")
             }
         }
     }

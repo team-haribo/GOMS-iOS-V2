@@ -372,15 +372,19 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                     .sink { completion in
                         switch completion {
                         case .finished:
-                            print("Image upload finished.")
+                            print("이미지 업로드 완료.")
                         case .failure(let error):
-                            print("Image upload failed with error: \(error)")
+                            print("이미지 업로드 실패: \(error)")
                         }
                     } receiveValue: { response in
-                        print("Image upload response: \(response)")
+                        print("이미지 업로드 응답: \(response)")
                     }
                     .store(in: &cancellables)
+            } else {
+                print("이미지를 JPEG 데이터로 변환하는데 실패했습니다.")
             }
+        } else {
+            print("선택한 이미지를 가져오는데 실패했습니다.")
         }
     }
     
@@ -394,8 +398,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         
         viewModel.loadProfileInfo { success in
                 if success {
-                    print("성공")
+                    print("완료")
                 } else {
+                    // 프로필 정보를 가져오지 못했을 때의 처리
                     print("Failed to load profile information.")
                 }
             }
@@ -465,8 +470,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         @objc func handleRefreshControl() {
             viewModel.loadProfileInfo { success in
                     if success {
-                        print("성공")
+                        print("완료")
                     } else {
+                        // 프로필 정보를 가져오지 못했을 때의 처리
                         print("Failed to load profile information.")
                     }
                 }
