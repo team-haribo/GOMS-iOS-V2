@@ -11,6 +11,7 @@ import Feature
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
+    let viewModel = BaseViewModel()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -20,36 +21,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
         let AdminisSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
-        print("\(isSwitchOn)|\(AdminisSwitchOn)")
         
         applySavedTheme()
         
-        let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+        let authority = UserDefaults.standard.string(forKey: "authority")
         
-        if isLoggedIn == true {
-            let authority = UserDefaults.standard.string(forKey: "authority")
-            switch authority {
-            case "ROLE_STUDENT_COUNCIL":
-                if isSwitchOn == true {
-                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-                } else if AdminisSwitchOn == true {
-                    window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
-                } else {
-                    window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
+        DispatchQueue.main.async {
+            if self.viewModel.isLogin == true {
+                if AdminisSwitchOn == true {
+                    if isSwitchOn == true {
+                        self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
+                    } else {
+                        self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
+                    }
+                } else if AdminisSwitchOn == false {
+                    if isSwitchOn == true {
+                        self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
+                    } else {
+                        self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
+                    }
                 }
-            case "ROLE_STUDENT":
-                if isSwitchOn == true {
-                    window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-                } else if AdminisSwitchOn == true {
-                    window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
-                } else {
-                    window?.rootViewController = UINavigationController(rootViewController: MainViewController())
-                }
-            default:
-                window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+            } else {
+                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
             }
-        } else {
-            window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
         }
 
         window?.makeKeyAndVisible()

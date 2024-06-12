@@ -10,6 +10,8 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    var isLogin: Bool = false
 
     func application(
         _ application: UIApplication,

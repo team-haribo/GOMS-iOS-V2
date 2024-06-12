@@ -12,13 +12,12 @@ public final class QRCodeViewModel: BaseViewModel {
 
     func outing(completion: @escaping (Bool) -> Void) {
         outingProvider.request(.outing(outingUUID: outingUUID, authorization: accessToken)) { response in
-            print("Outing Param : \(self.outingUUID)")
+            print("상태 변경 요청 시  : \(self.outingUUID)")
             switch response {
-
             case .success(let result):
                 let statusCode = result.statusCode
                 switch statusCode {
-                case 201:
+                case 204:
                     print("Created")
                     completion(true)
                 case 401:
@@ -39,7 +38,6 @@ public final class QRCodeViewModel: BaseViewModel {
     }
     
     func makeQR(completion: @escaping (Bool) -> Void) {
-        print("UUID : \(self.outingUUID)")
         studentCouncilProvider.request(.makeQRCode(authorization: accessToken)) { response  in
             switch response {
             case .success(let result):
@@ -51,7 +49,7 @@ public final class QRCodeViewModel: BaseViewModel {
                         if let outingUUIDString = responseJSON?["outingUUID"] as? String,
                            let outingUUID = UUID(uuidString: outingUUIDString) {
                             self.outingUUID = outingUUID
-                            print("GOMS : UUID : \(self.outingUUID)")
+                            print("서버에서 받아온 UUID : \(self.outingUUID)")
                             completion(true)
                         } else {
                             print("outingUUID를 가져올 수 없습니다.")
@@ -76,6 +74,5 @@ public final class QRCodeViewModel: BaseViewModel {
             }
         }
     }
-    
 }
 

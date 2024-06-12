@@ -4,30 +4,32 @@ import Moya
 import Combine
 import UIKit
 
-final class ProfileViewModel: ObservableObject {
-    @Published var errorMessage = ""
-    @Published var isDataLoaded = false
-    @Published var profileInfo: ProfileResponse?
+public final class ProfileViewModel: ObservableObject {
+    @Published public var errorMessage = ""
+    @Published public var isDataLoaded = false
+    @Published public var profileInfo: ProfileResponse?
+    
+    public init() {}
 
-    let provider = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
+    public let provider = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
     let providerserve = MoyaProvider<AccountServices>(plugins: [NetworkLoggerPlugin()])
     let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
-    lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
+    public lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
     private lazy var refreshToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.refreshToken) ?? "")
 
     private var password: String = ""
     private var rePassword: String = ""
 
-    func setupPassword(password: String) {
+    public func setupPassword(password: String) {
         self.password = password
     }
 
-    func setupRePassword(rePassword: String) {
+    public func setupRePassword(rePassword: String) {
         self.rePassword = rePassword
     }
 
-    func loadProfileInfo(completion: @escaping (Bool) -> Void) {
+    public func loadProfileInfo(completion: @escaping (Bool) -> Void) {
         provider.request(.getProfile(authorization: accessToken)) { result in
             switch result {
             case let .success(response):
@@ -89,7 +91,7 @@ final class ProfileViewModel: ObservableObject {
         }
     }
 
-    func ProfileLogout(presentingViewController: UIViewController) {
+    func profileLogout(presentingViewController: UIViewController) {
         providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
             switch result {
             case .success:
@@ -114,21 +116,17 @@ final class ProfileViewModel: ObservableObject {
                 case 404:
                     print(result.data)
                     completion(false)
-                    print("응 오류ㅋㅋㅋㅋㅋㅋㅋ")
                 case 400:
                     print("현재 비밀번호 입력 String: \(self.password)")
                     print(result.data)
                     completion(false)
-                    print("응 오류ㅋㅋㅋ")
                 default:
                     print(result)
                     completion(false)
-                    print("응 오류ㅋㅋㅋㅋ")
                 }
             case .failure(let err):
                 print(err.localizedDescription)
                 completion(false)
-                print("응 오류ㅋㅋㅋㅋㅋ")
             }
         }
     }

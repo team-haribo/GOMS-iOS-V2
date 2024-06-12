@@ -108,17 +108,12 @@ public final class SignInViewController: BaseViewController {
     @objc func signInButtonTapped() {
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupPassword(password: passwordTextField.text ?? "")
-        viewModel.signIn { statusCode in
+        viewModel.signIn { [self] statusCode in
             switch statusCode {
             case 200:
                 self.signInSuccessUI()
-                UserDefaults.standard.set(true, forKey: "isLoggedIn")
-                UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
                 let defaults = UserDefaults.standard
-                let localPassword = defaults.string(forKey: "localPass")
-                print(localPassword)
-                
-                // Load profile info and then navigate to the appropriate screen
+                UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
                 self.profileModel.loadProfileInfo { success in
                     if success {
                         let authority = self.profileModel.profileInfo?.authority

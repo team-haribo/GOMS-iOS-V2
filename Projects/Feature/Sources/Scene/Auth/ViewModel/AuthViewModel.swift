@@ -15,9 +15,18 @@ public final class AuthViewModel: BaseViewModel {
     private let authProvider = MoyaProvider<AuthServices>()
     private let accountProvider = MoyaProvider<AccountServices>()
     
+    public override init() {}
+        
+    public func signInWithToken(accessToken: String, completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.accessToken = accessToken
+            completion(true)
+        }
+    }
+    
     var userData: SignInModel?
     private var email: String = ""
-    private var profileModel = ProfileViewModel()
+    public let profileModel = ProfileViewModel()
     
     private var password: String = ""
     private var authCode: String = ""
@@ -61,6 +70,7 @@ public final class AuthViewModel: BaseViewModel {
     func signIn(completion: @escaping (Int) -> Void) {
         let param = SignInRequest.init(email: email, password: password)
         authProvider.request(.signIn(param: param)) { response in
+            print("SignIn Param: \(param)")
             switch response {
             case .success(let result):
                 let statusCode = result.statusCode
