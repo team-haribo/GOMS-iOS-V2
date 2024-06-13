@@ -22,7 +22,15 @@ public final class LetecomerViewModel: BaseViewModel {
     
     private let studentCouncilProvider = MoyaProvider<StudentCouncilServices>()
     
-    var date: String = ""
+    var date: String = {
+        let currentDate = Date()
+        let recentWednesday = currentDate.recentWednesday()
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        return formatter.string(from: recentWednesday)
+    }()
     
     var latecomerList: [LatecomerListResponse] = []
     var latecomerListDatas: [LatecomerListData] = []
@@ -31,20 +39,7 @@ public final class LetecomerViewModel: BaseViewModel {
         self.date = date
     }
     
-    func getRecentWednesday() -> String {
-        let currentDate = Date()
-        let recentWednesday = currentDate.recentWednesday()
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        return formatter.string(from: recentWednesday)
-    }
-    
     func getLatecomerList(completion: @escaping () -> Void) {
-        let recentWednesday = getRecentWednesday()
-        setupDate(date: recentWednesday)
-        
         studentCouncilProvider.request(.lateList(authorization: accessToken, date: date)) { response in
             switch response {
             case .success(let result):

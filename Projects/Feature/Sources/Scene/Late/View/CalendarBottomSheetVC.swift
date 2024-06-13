@@ -126,6 +126,7 @@ extension CalendarBottomSheetVC: UICalendarViewDelegate, UICalendarSelectionSing
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             viewModel.setupDate(date: formatter.string(from: selectedDate))
+            print("달력 날짜 : \(viewModel.date)")
             viewModel.getLatecomerList {
                 self.latecomerListVC.latecomerList = self.viewModel.latecomerListDatas
                 DispatchQueue.main.async {
@@ -134,8 +135,6 @@ extension CalendarBottomSheetVC: UICalendarViewDelegate, UICalendarSelectionSing
                     print(self.latecomerListVC.latecomerList)
                     print(self.latecomerListVC.latecomerList.count)
                 }
-                //                self.latecomerListVC.latecomerList = self.viewModel.latecomerListDatas
-                //                self.latecomerListVC.lateListCollectionView.reloadData()
                 
             }
         }

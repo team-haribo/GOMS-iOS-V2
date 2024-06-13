@@ -84,12 +84,12 @@ public final class LatecomerListViewController: BaseViewController {
         viewModel.getLatecomerList {
             self.latecomerList = self.viewModel.latecomerListDatas
             DispatchQueue.main.async {
+                self.latecomerList = self.viewModel.latecomerListDatas
                 self.lateListCollectionView.reloadData()
                 self.refreshControl.endRefreshing()
             }
         }
     }
-
     
     @objc func filterButtonTapped() {
         let bottomSheetVC = CalendarBottomSheetVC()
