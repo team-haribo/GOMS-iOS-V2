@@ -30,6 +30,13 @@ public final class SignUpViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
+    let noneInputError = UILabel().then {
+        $0.text = "입력되지 않았습니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
     lazy var genderTextField = GOMSTextFieldButton(frame: CGRect(x: 0, y: 0, width: 0, height: 64), title: "성별").then {
         $0.addTarget(self, action: #selector(genderButtonTapped), for: .touchUpInside)
     }
@@ -93,18 +100,29 @@ public final class SignUpViewController: BaseViewController {
     @objc func authCodeButtonTapped() {
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupName(name: nameTextField.text ?? "")
-        viewModel.sendAuthCode { success in
+        viewModel.sendAuthCode { success, statusCode in
             if success {
-                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel,  previousViewController: self, email: "")
+                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
                 self.navigationController?.pushViewController(authCodeVC, animated: true)
             } else {
-                let alert = UIAlertController(title: "인증코드 발송 실패", message: "인증코드 발송에 실패했습니다.\n다시시도 해주세요.", preferredStyle: .alert)
-                
-                let check = UIAlertAction(title: "확인", style: .cancel)
-                alert.addAction(check)
-                self.present(alert, animated: true)
-                
-                print("재발송 실패")
+                switch statusCode {
+                case 429:
+                    let alert = UIAlertController(title: "이메일 요청 초과", message: "이메일 요청 한도인 5번을 초과했습니다.\n다음에 다시 시도해 주세요.", preferredStyle: .alert)
+                    
+                    let check = UIAlertAction(title: "확인", style: .cancel)
+                    alert.addAction(check)
+                    self.present(alert, animated: true)
+                    
+                default:
+                    let alert = UIAlertController(title: "인증코드 발송 실패", message: "인증코드 발송에 실패했습니다.\n다시 시도해 주세요.", preferredStyle: .alert)
+                    
+                    let check = UIAlertAction(title: "확인", style: .cancel)
+                    alert.addAction(check)
+                    self.present(alert, animated: true)
+                    
+                    print("재발송 실패")
+                    print("Error: \(statusCode)")
+                }
             }
         }
     }

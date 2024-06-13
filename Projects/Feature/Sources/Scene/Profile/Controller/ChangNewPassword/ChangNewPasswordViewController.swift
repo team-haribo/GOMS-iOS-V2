@@ -25,14 +25,14 @@ public final class ChangNewPasswordViewController: BaseViewController {
     }
     
     let passwordErrorLabel = UILabel().then {
-        $0.text = "비밀번호가 서로 다릅니다."
+        $0.text = "비밀번호가 일치하지 않습니다."
         $0.textColor = .color.gomsNegative.color
         $0.font = .pretendard(size: 16, weight: .medium)
         $0.isHidden = true
     }
     
     let passwordOverlapErrorLabel = UILabel().then {
-        $0.text = "이전 비밀번호와 같습니다."
+        $0.text = "이미 사용중인 비밀번호입니다."
         $0.textColor = .color.gomsNegative.color
         $0.font = .pretendard(size: 16, weight: .medium)
         $0.isHidden = true
