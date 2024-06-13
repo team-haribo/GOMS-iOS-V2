@@ -200,7 +200,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
         
         let defaults = UserDefaults.standard
-        
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
     }
     
