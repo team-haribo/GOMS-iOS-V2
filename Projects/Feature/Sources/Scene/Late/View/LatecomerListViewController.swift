@@ -53,11 +53,20 @@ public final class LatecomerListViewController: BaseViewController {
     }
     
     // MARK: - Life Cycel
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        viewModel.getLatecomerList {
+            self.latecomerList = self.viewModel.latecomerListDatas
+            self.setupCollectionView()
+        }
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setupCollectionView()
-        configNavigation()
-        setupScrollView()
+        
+        self.configNavigation()
+        self.setupScrollView()
     }
     
     private func setupScrollView() {
