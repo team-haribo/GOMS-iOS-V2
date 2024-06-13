@@ -151,12 +151,9 @@ public final class FilterBottomSheetVC: BaseViewController {
         }
         
         viewModel.serachStudent(searchString: nil) {
-            DispatchQueue.main.async {
-                let studentManagementVC =  StudentManagementViewController()
-                self.userList = self.viewModel.userListDatas
-                studentManagementVC.userList = self.userList
-                studentManagementVC.studentCollectionView.reloadData()
-            }
+            let studentManagementVC =  StudentManagementViewController()
+            studentManagementVC.userList = self.viewModel.userListDatas
+            studentManagementVC.studentCollectionView.reloadData()
         }
     }
     
@@ -184,7 +181,9 @@ public final class FilterBottomSheetVC: BaseViewController {
         }
         
         viewModel.serachStudent(searchString: nil) {
-            print("검색 요청")
+            let studentManagementVC =  StudentManagementViewController()
+            studentManagementVC.userList = self.viewModel.userListDatas
+            studentManagementVC.studentCollectionView.reloadData()
         }
     }
     
@@ -205,7 +204,9 @@ public final class FilterBottomSheetVC: BaseViewController {
         }
         
         viewModel.serachStudent(searchString: nil) {
-            print("검색 요청")
+            let studentManagementVC =  StudentManagementViewController()
+            studentManagementVC.userList = self.viewModel.userListDatas
+            studentManagementVC.studentCollectionView.reloadData()
         }
     }
 
@@ -233,7 +234,9 @@ public final class FilterBottomSheetVC: BaseViewController {
         }
         
         viewModel.serachStudent(searchString: nil) {
-            print("검색 요청")
+            let studentManagementVC =  StudentManagementViewController()
+            studentManagementVC.userList = self.viewModel.userListDatas
+            studentManagementVC.studentCollectionView.reloadData()
         }
     }
     

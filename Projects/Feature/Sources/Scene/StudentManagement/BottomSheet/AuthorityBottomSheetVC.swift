@@ -112,14 +112,18 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         if sender.isOn {
             viewModel.blackList(index: index) { _ in
                 print("blacklist update")
-                let managementVC = StudentManagementViewController()
-                managementVC.configureRefreshControl()
+                DispatchQueue.main.async {
+                    let managementVC = StudentManagementViewController()
+                    managementVC.configureRefreshControl()
+                }
             }
         } else {
             viewModel.cancelBlackList(index: index) { _ in
                 print("blacklist delete")
-                let managementVC = StudentManagementViewController()
-                managementVC.configureRefreshControl()
+                DispatchQueue.main.async {
+                    let managementVC = StudentManagementViewController()
+                    managementVC.configureRefreshControl()
+                }
             }
         }
     }
@@ -129,12 +133,17 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         
         if sender.isOn {
             viewModel.changeAuthority(index: index) {
-
+                DispatchQueue.main.async {
+                    let managementVC = StudentManagementViewController()
+                    managementVC.configureRefreshControl()
+                }
             }
         } else {
             viewModel.changeAuthority(index: index) {
-                print("권한 수정")
-                print(userData)
+                DispatchQueue.main.async {
+                    let managementVC = StudentManagementViewController()
+                    managementVC.configureRefreshControl()
+                }
             }
         }
     }

@@ -72,6 +72,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
         self.navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "외출 현황"
+        self.navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController = searchController
     }
     

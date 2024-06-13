@@ -67,14 +67,13 @@ public final class StudentManagementViewController: BaseViewController {
             self.userList = self.viewModel.userListDatas
             self.setupCollectionView()
             self.setupSearchBar()
+            self.configureRefreshControl()
             self.studentCollectionView.reloadData()
         }
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configureRefreshControl()
         setupScrollView()
     }
     
@@ -114,6 +113,7 @@ public final class StudentManagementViewController: BaseViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "학생 관리"
         navigationItem.searchController = searchController
+        self.navigationItem.hidesSearchBarWhenScrolling = false
         self.navigationController?.navigationBar.isHidden = false
     }
     
@@ -192,7 +192,6 @@ extension StudentManagementViewController: UISearchResultsUpdating {
         } else {
             viewModel.serachStudent(searchString: searchString) {
                 self.userList = self.viewModel.userListDatas
-                print(self.userList)
                 self.studentCollectionView.reloadData()
             }
         }
