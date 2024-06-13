@@ -26,6 +26,14 @@ public class WithdrawalViewController: BaseViewController {
         $0.addTarget(self, action: #selector(withdrawalButtonTapped), for: .touchUpInside)
     }
     
+    
+    let passwordErrorLabel = UILabel().then {
+        $0.text = "잘못된 비밀번호입니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
     // MARK: - Life Cycel
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,8 +59,16 @@ public class WithdrawalViewController: BaseViewController {
                 self.present(alert, animated: true)
             } else {
                 print("탈퇴하기 실패")
+                self.passwordErrorUI()
             }
         }
+    }
+    
+    func passwordErrorUI() {
+        passwordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        passwordErrorLabel.isHidden = false
+        passwordTextField.layer.borderColor = UIColor.systemRed.cgColor
+        passwordTextField.layer.borderWidth = 1
     }
     
     @objc func visiblePasswordButtonTapped() {
@@ -92,7 +108,7 @@ public class WithdrawalViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         passwordTextField.addSubview(visiblePasswordButton)
-        [passwordTextField, withdrawalButton].forEach { view.addSubview($0) }
+        [passwordTextField, withdrawalButton, passwordErrorLabel].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -101,6 +117,12 @@ public class WithdrawalViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(bounds.height * 0.21)
             $0.height.equalTo(56)
+        }
+        
+        passwordErrorLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(passwordTextField.snp.bottom)
+            $0.leading.equalTo(bounds.width * 0.07)
         }
         
         visiblePasswordButton.snp.makeConstraints {

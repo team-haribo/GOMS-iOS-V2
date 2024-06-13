@@ -81,7 +81,6 @@ public final class StudentManagementViewModel: BaseViewModel {
                     } catch(let err) {
                         print(String(describing: err))
                     }
-                    print("success")
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
                 case 403:
@@ -101,16 +100,31 @@ public final class StudentManagementViewModel: BaseViewModel {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
             let authority = selectedUser.authority
+            var authorityString: String = ""
             
-            let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authority)
+            if authority == "ROLE_STUDENT" {
+                authorityString = "ROLE_STUDENT_COUNCIL"
+            } else {
+                authorityString = "ROLE_STUDENT"
+            }
+            
+            let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authorityString)
+            print("권한 수정 Request : \(param)")
+            print("권한을 수정하려는 학생 : \(selectedUser)")
+            print("=================================")
             self.studentCouncilProvider.request(.editAuthority(authorization: self.accessToken, param: param)) { response in
                 switch response {
                 case .success(let result):
                     let statusCode = result.statusCode
                     switch statusCode {
-                    case 200..<300:
-                        print("success")
-                        completion()
+                    case 205:
+                        print("권한 수정 성공")
+                        print(result)
+                        self.getUserList {
+                            print(selectedUser)
+                            print(authority)
+                            completion()
+                        }
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
@@ -129,7 +143,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Black List
-    func blackList(index: Int, completion: @escaping () -> Void) {
+    func blackList(index: Int, completion: @escaping (Bool) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
@@ -139,9 +153,10 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case .success(let result):
                     let statusCode = result.statusCode
                     switch statusCode {
-                    case 200..<300:
+                    case 201:
                         print("Created")
-                        completion()
+                        print("BlackList : \(selectedUser)")
+                        completion(true)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
@@ -159,7 +174,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Delete Black List
-    func cancelBlackList(index: Int, completion: @escaping () -> Void) {
+    func cancelBlackList(index: Int, completion: @escaping (Bool) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
@@ -169,9 +184,9 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case .success(let result):
                     let statusCode = result.statusCode
                     switch statusCode {
-                    case 200..<300:
+                    case 205:
                         print("Reset content")
-                        completion()
+                        completion(true)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
@@ -205,6 +220,7 @@ public final class StudentManagementViewModel: BaseViewModel {
             case .success(let result):
                 let responseData = result.data
                 do {
+                    print("searchString: \(searchString)")
                     self.userSearchList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
                     self.userSearchListDatas = self.userSearchList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
                     print("User Search: \(self.userSearchList)")
