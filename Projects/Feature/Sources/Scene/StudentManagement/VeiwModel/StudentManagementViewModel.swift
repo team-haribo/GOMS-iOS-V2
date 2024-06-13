@@ -100,8 +100,15 @@ public final class StudentManagementViewModel: BaseViewModel {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
             let authority = selectedUser.authority
+            var authorityString: String = ""
             
-            let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authority)
+            if authority == "ROLE_STUDENT" {
+                authorityString = "ROLE_STUDENT_COUNCIL"
+            } else {
+                authorityString = "ROLE_STUDENT"
+            }
+            
+            let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authorityString)
             print("권한 수정 Request : \(param)")
             print("권한을 수정하려는 학생 : \(selectedUser)")
             print("=================================")
