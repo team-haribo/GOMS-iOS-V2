@@ -39,7 +39,6 @@ public final class StudentManagementViewModel: BaseViewModel {
     // MARK: - Setting
     func setupGrade(grade: Int?) {
         self.grade = grade!
-        print("graddddddddd")
     }
     
     func setupGender(gender: String?) {
@@ -78,10 +77,6 @@ public final class StudentManagementViewModel: BaseViewModel {
                     do {
                         self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
                         self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
-                        print("--------- 학생 전체 리스트 ---------")
-                        print(self.userList)
-                        print("--------- 학생 데이터 ---------")
-                        print(self.userListDatas)
                         completion()
                     } catch(let err) {
                         print(String(describing: err))
@@ -107,6 +102,9 @@ public final class StudentManagementViewModel: BaseViewModel {
             let authority = selectedUser.authority
             
             let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authority)
+            print("권한 수정 Request : \(param)")
+            print("권한을 수정하려는 학생 : \(selectedUser)")
+            print("=================================")
             self.studentCouncilProvider.request(.editAuthority(authorization: self.accessToken, param: param)) { response in
                 switch response {
                 case .success(let result):
@@ -114,6 +112,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     switch statusCode {
                     case 205:
                         print("권한 수정 성공")
+                        print(result)
                         self.getUserList {
                             print(selectedUser)
                             print(authority)
