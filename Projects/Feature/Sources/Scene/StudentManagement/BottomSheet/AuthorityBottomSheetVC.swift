@@ -87,6 +87,11 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         setupSwitch()
     }
     
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.studentManagementVC.configureRefreshControl()
+    }
+    
     func setupSwitch() {
         if let userData = userData, userData.isBlackList {
             blackListSwitch.isOn = true
@@ -112,18 +117,17 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         if sender.isOn {
             viewModel.blackList(index: index) { _ in
                 print("blacklist update")
-                DispatchQueue.main.async {
-                    let managementVC = StudentManagementViewController()
-                    managementVC.configureRefreshControl()
-                }
+                self.studentManagementVC.userList = self.viewModel.userListDatas
+                self.studentManagementVC.reloadItem(at: index)
+                self.studentManagementVC.configureRefreshControl()
+                
             }
         } else {
             viewModel.cancelBlackList(index: index) { _ in
                 print("blacklist delete")
-                DispatchQueue.main.async {
-                    let managementVC = StudentManagementViewController()
-                    managementVC.configureRefreshControl()
-                }
+                self.studentManagementVC.userList = self.viewModel.userListDatas
+                self.studentManagementVC.reloadItem(at: index)
+                self.studentManagementVC.configureRefreshControl()
             }
         }
     }
@@ -133,17 +137,15 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         
         if sender.isOn {
             viewModel.changeAuthority(index: index) {
-                DispatchQueue.main.async {
-                    let managementVC = StudentManagementViewController()
-                    managementVC.configureRefreshControl()
-                }
+                self.studentManagementVC.userList = self.viewModel.userListDatas
+                self.studentManagementVC.reloadItem(at: index)
+                self.studentManagementVC.configureRefreshControl()
             }
         } else {
             viewModel.changeAuthority(index: index) {
-                DispatchQueue.main.async {
-                    let managementVC = StudentManagementViewController()
-                    managementVC.configureRefreshControl()
-                }
+                self.studentManagementVC.userList = self.viewModel.userListDatas
+                self.studentManagementVC.reloadItem(at: index)
+                self.studentManagementVC.configureRefreshControl()
             }
         }
     }

@@ -197,3 +197,11 @@ extension StudentManagementViewController: UISearchResultsUpdating {
         }
     }
 }
+
+extension StudentManagementViewController {
+
+    func reloadItem(at index: Int) {
+        let indexPath = IndexPath(item: index, section: 0)
+        studentCollectionView.reloadItems(at: [indexPath])
+    }
+}
