@@ -84,7 +84,7 @@ public final class NewPasswordViewController: BaseViewController {
         
         print("New Password Setting Done")
         viewModel.setupEmail(email: self.email)
-        viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
+        viewModel.setupNewServePassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         viewModel.setupPassword(password: localPassword ?? "")
         viewModel.newPassword { [self] success, statusCode in
             if success {

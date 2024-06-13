@@ -31,6 +31,7 @@ public final class AuthViewModel: BaseViewModel {
     private var password: String = ""
     private var authCode: String = ""
     private var newPassword: String = ""
+    private var newServePassword: String = ""
     private var name: String = ""
     private var gender: String = ""
     private var major: String = ""
@@ -52,6 +53,11 @@ public final class AuthViewModel: BaseViewModel {
     func setupNewPassword(newPassword: String, checkPassword: String) {
         guard newPassword == checkPassword else { return }
         self.newPassword = newPassword
+    }
+    
+    func setupNewServePassword(newPassword: String, checkPassword: String) {
+        guard newPassword == checkPassword else { return }
+        self.newServePassword = newPassword
     }
     
     func setupName(name: String) {
@@ -168,7 +174,7 @@ public final class AuthViewModel: BaseViewModel {
     
     // MARK: - New Password
     func newPassword(completion: @escaping (Bool, Int) -> Void) {
-        let param = NewPasswordRequest.init(email: email, newPassword: newPassword)
+        let param = NewPasswordRequest.init(email: email, newPassword: newServePassword)
         accountProvider.request(.newPassword(param: param)) { response in
             switch response {
             case .success(let result):
