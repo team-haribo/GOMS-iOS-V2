@@ -92,7 +92,8 @@ public final class StudentManagementViewController: BaseViewController {
         addView()
         configureRefreshControl()
     }
-        // MARK: - Refresh Control Setup
+    
+    // MARK: - Refresh Control Setup
     func configureRefreshControl() {
         studentCollectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
@@ -190,7 +191,7 @@ extension StudentManagementViewController: UISearchResultsUpdating {
             userList = viewModel.userListDatas
         } else {
             viewModel.serachStudent(searchString: searchString) {
-                self.userList = self.viewModel.userSearchListDatas
+                self.userList = self.viewModel.userListDatas
                 print(self.userList)
                 self.studentCollectionView.reloadData()
             }

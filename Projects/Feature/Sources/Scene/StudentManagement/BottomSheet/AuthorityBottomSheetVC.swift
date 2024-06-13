@@ -129,21 +129,12 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         
         if sender.isOn {
             viewModel.changeAuthority(index: index) {
-//                let cell = StudentCollectionViewCell()
-//                let userData = userData
-//    
-//                cell.configureData(with: userData)
-//                self.studentManagementVC.studentCollectionView.reloadData()
+
             }
         } else {
             viewModel.changeAuthority(index: index) {
                 print("권한 수정")
                 print(userData)
-//                let cell = StudentCollectionViewCell()
-//                let userData = userData
-//    
-//                cell.configureData(with: userData)
-//                self.studentManagementVC.studentCollectionView.reloadData()
             }
         }
     }

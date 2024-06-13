@@ -11,6 +11,8 @@ import UIKit
 public final class FilterBottomSheetVC: BaseViewController {
     
     // MARK: - Properties
+    var userList: [UserData] = []
+    
     private let viewModel = StudentManagementViewModel()
     
     private let dimmedView = UIView().then {
@@ -149,7 +151,12 @@ public final class FilterBottomSheetVC: BaseViewController {
         }
         
         viewModel.serachStudent(searchString: nil) {
-            print("검색 요청")
+            DispatchQueue.main.async {
+                let studentManagementVC =  StudentManagementViewController()
+                self.userList = self.viewModel.userListDatas
+                studentManagementVC.userList = self.userList
+                studentManagementVC.studentCollectionView.reloadData()
+            }
         }
     }
     

@@ -27,8 +27,8 @@ public final class StudentManagementViewModel: BaseViewModel {
     var userList: [StudentListResponse] = []
     var userListDatas: [UserData] = []
     
-    var userSearchList: [StudentListResponse] = []
-    var userSearchListDatas: [UserData] = []
+//    var userSearchList: [StudentListResponse] = []
+//    var userSearchListDatas: [UserData] = []
     
     private var grade: Int?
     private var gender: String?
@@ -77,6 +77,8 @@ public final class StudentManagementViewModel: BaseViewModel {
                     do {
                         self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
                         self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
+                        print("학생 리스트 : \(self.userListDatas)")
+                        print("=================================")
                         completion()
                     } catch(let err) {
                         print(String(describing: err))
@@ -178,7 +180,6 @@ public final class StudentManagementViewModel: BaseViewModel {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
-            
             self.studentCouncilProvider.request(.cancelBlackList(authorization: self.accessToken, accountIdx: accountIdx)) { response in
                 switch response {
                 case .success(let result):
@@ -221,9 +222,9 @@ public final class StudentManagementViewModel: BaseViewModel {
                 let responseData = result.data
                 do {
                     print("searchString: \(searchString)")
-                    self.userSearchList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
-                    self.userSearchListDatas = self.userSearchList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
-                    print("User Search: \(self.userSearchList)")
+                    self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
+                    self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
+                    print("User Search: \(self.userList)")
                     completion()
                 } catch(let err) {
                     print(String(describing: err))
