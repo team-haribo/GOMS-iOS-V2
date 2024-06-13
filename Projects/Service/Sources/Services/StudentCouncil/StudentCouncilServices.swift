@@ -14,7 +14,7 @@ public enum StudentCouncilServices {
 
 extension StudentCouncilServices: TargetType {
     public var baseURL: URL {
-        return URL(string: "https://port-0-goms-backend-v2-12fhqa2bln49rbi0.sel5.cloudtype.app/api/v2")!
+        return URL(string: "https://ec38-210-218-52-13.ngrok-free.app/api/v2")!
     }
     
     public var path: String {
@@ -71,7 +71,13 @@ extension StudentCouncilServices: TargetType {
         case .editAuthority(_, let param):
             return .requestJSONEncodable(param)
         case .searchStudent(_, let param):
-            return .requestParameters(parameters: ["grade": param.grade ?? 0, "gender": param.gender ?? "", "name": param.name ?? "", "isBlackList": param.isBlackList, "authority": param.authority ?? ""], encoding: URLEncoding.queryString)
+            var parameters: [String: Any] = [:]
+            if let grade = param.grade { parameters["grade"] = grade }
+            if let gender = param.gender { parameters["gender"] = gender }
+            if let name = param.name { parameters["name"] = name }
+            if let isBlackList = param.isBlackList { parameters["isBlackList"] = isBlackList }
+            if let authority = param.authority { parameters["authority"] = authority }
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
         case .lateList(_ , let date):
             return .requestParameters(parameters: ["date": date], encoding: URLEncoding.default)
         }

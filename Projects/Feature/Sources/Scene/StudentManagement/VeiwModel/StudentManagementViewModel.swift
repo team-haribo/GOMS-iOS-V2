@@ -39,7 +39,6 @@ public final class StudentManagementViewModel: BaseViewModel {
     // MARK: - Setting
     func setupGrade(grade: Int?) {
         self.grade = grade!
-        print("graddddddddd")
     }
     
     func setupGender(gender: String?) {
@@ -190,20 +189,22 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Search User
-    func serachStudent(searchString: String, completion: @escaping () -> Void) {
-        let parm = SearchStudentRequest.init(grade: grade, gender: gender, name: searchString, isBlackList: isBlackList ?? false, authority: authority, major: major)
+    func serachStudent(searchString: String?, completion: @escaping () -> Void) {
+        let gradeToSend = self.grade
+        let gender = self.gender
+        let isBlackList = self.isBlackList
+        let authority = self.authority
+        let major = self.major
+            
+        let parm = SearchStudentRequest(grade: gradeToSend, gender: gender, name: searchString, isBlackList: isBlackList, authority: authority, major: major)
+        
+        print("검색 요청 파라미터: \(parm)")
         
         studentCouncilProvider.request(.searchStudent(authorization: self.accessToken, parm: parm)) { response in
             switch response {
             case .success(let result):
                 let responseData = result.data
                 do {
-                    print("searchString: \(searchString)")
-                    print(self.grade)
-                    print(self.gender)
-                    print(self.isBlackList)
-                    print(self.authority)
-                    print(self.major)
                     self.userSearchList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
                     self.userSearchListDatas = self.userSearchList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
                     print("User Search: \(self.userSearchList)")
@@ -213,7 +214,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                 }
                 let statusCode = result.statusCode
                 switch statusCode {
-                case 200..<300:
+                case 200:
                     print("ok")
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
