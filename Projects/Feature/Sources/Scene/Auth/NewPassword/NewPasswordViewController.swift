@@ -99,7 +99,13 @@ public final class NewPasswordViewController: BaseViewController {
             if !isValidPassword {
                         self.passwordWrongRegularExpressionUI()
                     
-        } else if !success {
+        } else if passwordTextField.text != checkPasswordTextField.text {
+            self.passwordErrorUI()
+            conditionsLabel.isHidden = true
+        } else if passwordTextField.text == "" {
+            self.passwordErrorUI()
+        }
+            else if !success {
                 switch statusCode {
                 case 400:
                     print("400")
@@ -109,11 +115,6 @@ public final class NewPasswordViewController: BaseViewController {
                     print("404")
                 default:
                     print("Error: \(statusCode)")
-                }
-                
-                if passwordTextField.text != checkPasswordTextField.text {
-                    self.passwordErrorUI()
-                    conditionsLabel.isHidden = true
                 }
             } else if success {
                 let defaults = UserDefaults.standard
