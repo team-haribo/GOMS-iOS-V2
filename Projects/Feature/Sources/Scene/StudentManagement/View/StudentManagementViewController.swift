@@ -188,6 +188,11 @@ extension StudentManagementViewController: UISearchResultsUpdating {
     public func updateSearchResults(for searchController: UISearchController) {
         guard let searchString = searchController.searchBar.text else { return }
         if searchString.isEmpty {
+            viewModel.resetInfo()
+            viewModel.serachStudent(searchString: nil) { newList in
+                self.userList = newList
+                self.studentCollectionView.reloadData()
+            }
             userList = viewModel.userListDatas
         } else {
             viewModel.serachStudent(searchString: searchString) { newList in

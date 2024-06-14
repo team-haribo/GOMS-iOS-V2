@@ -60,8 +60,6 @@ public final class StudentManagementViewModel: BaseViewModel {
         self.isBlackList = nil
         self.authority = nil
         self.major = nil
-        
-        
     }
     
     // MARK: - Get User List

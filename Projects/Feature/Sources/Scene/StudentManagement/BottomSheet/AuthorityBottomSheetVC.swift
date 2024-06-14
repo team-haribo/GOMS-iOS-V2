@@ -118,7 +118,6 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             viewModel.blackList(index: index) { _ in
                 print("blacklist update")
                 self.studentManagementVC.userList = self.viewModel.userListDatas
-                self.studentManagementVC.reloadItem(at: index)
                 self.studentManagementVC.configureRefreshControl()
                 
             }
@@ -126,7 +125,6 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             viewModel.cancelBlackList(index: index) { _ in
                 print("blacklist delete")
                 self.studentManagementVC.userList = self.viewModel.userListDatas
-                self.studentManagementVC.reloadItem(at: index)
                 self.studentManagementVC.configureRefreshControl()
             }
         }
@@ -138,13 +136,11 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         if sender.isOn {
             viewModel.changeAuthority(index: index) {
                 self.studentManagementVC.userList = self.viewModel.userListDatas
-                self.studentManagementVC.reloadItem(at: index)
                 self.studentManagementVC.configureRefreshControl()
             }
         } else {
             viewModel.changeAuthority(index: index) {
                 self.studentManagementVC.userList = self.viewModel.userListDatas
-                self.studentManagementVC.reloadItem(at: index)
                 self.studentManagementVC.configureRefreshControl()
             }
         }
