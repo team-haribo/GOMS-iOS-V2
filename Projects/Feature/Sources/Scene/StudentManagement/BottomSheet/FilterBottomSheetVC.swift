@@ -125,11 +125,6 @@ public final class FilterBottomSheetVC: BaseViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.view.backgroundColor = .clear
-        
-        for (button, isSelected) in buttonStates {
-            button.isSelected = isSelected
-            button.backgroundColor = isSelected ? UIColor(red: 0.71, green: 0.53, blue: 0.98, alpha: 0.25) : .clear
-        }
     }
     
     public override func viewDidLoad() {
