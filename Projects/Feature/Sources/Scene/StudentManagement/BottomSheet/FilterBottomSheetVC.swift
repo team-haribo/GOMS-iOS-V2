@@ -125,6 +125,11 @@ public final class FilterBottomSheetVC: BaseViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.view.backgroundColor = .clear
+        
+        for (button, isSelected) in buttonStates {
+            button.isSelected = isSelected
+            button.backgroundColor = isSelected ? UIColor(red: 0.71, green: 0.53, blue: 0.98, alpha: 0.25) : .clear
+        }
     }
     
     public override func viewDidLoad() {
@@ -148,22 +153,26 @@ public final class FilterBottomSheetVC: BaseViewController {
         
         switch role {
         case "학생":
-            studentButton.isSelected = true
+            studentButton.isSelected.toggle()
             adminButton.isSelected = false
             blackListButton.isSelected = false
-            viewModel.setupAuthority(authority: "ROLE_STUDENT")
-            
+            if studentButton.isSelected == true {
+                viewModel.setupAuthority(authority: "ROLE_STUDENT")
+            }
         case "학생회":
             studentButton.isSelected = false
-            adminButton.isSelected = true
+            adminButton.isSelected.toggle()
             blackListButton.isSelected = false
-            viewModel.setupAuthority(authority: "ROLE_STUDENT_COUNCIL")
-            print("학생회 버튼")
+            if adminButton.isSelected == true {
+                viewModel.setupAuthority(authority: "ROLE_STUDENT_COUNCIL")
+            }
         case "외출금지":
             studentButton.isSelected = false
             adminButton.isSelected = false
-            blackListButton.isSelected = true
-            viewModel.setupIsBlackList(isBlackList: true)
+            blackListButton.isSelected.toggle()
+            if blackListButton.isSelected == true {
+                viewModel.setupIsBlackList(isBlackList: true)
+            }
         default:
             break
         }
@@ -180,20 +189,27 @@ public final class FilterBottomSheetVC: BaseViewController {
         
         switch grade {
         case "1학년":
-            grade1Button.isSelected = true
+            grade1Button.isSelected.toggle()
             grade2Button.isSelected = false
             grade3Button.isSelected = false
-            viewModel.setupGrade(grade: 8)
+            if grade1Button.isSelected == true {
+                viewModel.setupGrade(grade: 8)
+            }
+            
         case "2학년":
             grade1Button.isSelected = false
-            grade2Button.isSelected = true
+            grade2Button.isSelected.toggle()
             grade3Button.isSelected = false
-            viewModel.setupGrade(grade: 7)
+            if grade2Button.isSelected == true {
+                viewModel.setupGrade(grade: 7)
+            }
         case "3학년":
             grade1Button.isSelected = false
             grade2Button.isSelected = false
-            grade3Button.isSelected = true
-            viewModel.setupGrade(grade: 6)
+            grade3Button.isSelected.toggle()
+            if grade3Button.isSelected == true {
+                viewModel.setupGrade(grade: 6)
+            }
         default:
             break
         }
@@ -208,13 +224,17 @@ public final class FilterBottomSheetVC: BaseViewController {
         
         switch gender {
         case "남성":
-            manButton.isSelected = true
+            manButton.isSelected.toggle()
             womanButton.isSelected = false
-            viewModel.setupGender(gender: "MAN")
+            if manButton.isSelected == true {
+                viewModel.setupGender(gender: "MAN")
+            }
         case "여성":
             manButton.isSelected = false
-            womanButton.isSelected = true
-            viewModel.setupGender(gender: "WOMAN")
+            womanButton.isSelected.toggle()
+            if womanButton.isSelected == true {
+                viewModel.setupGender(gender: "WOMAN")
+            }
         default:
             break
         }
@@ -229,20 +249,26 @@ public final class FilterBottomSheetVC: BaseViewController {
         
         switch major {
         case "SW":
-            swButton.isSelected = true
+            swButton.isSelected.toggle()
             iotButton.isSelected = false
             aiButton.isSelected = false
-            viewModel.setupMajor(major: "SW_DEVELOP")
+            if swButton.isSelected == true {
+                viewModel.setupMajor(major: "SW_DEVELOP")
+            }
         case "IoT":
             swButton.isSelected = false
-            iotButton.isSelected = true
+            iotButton.isSelected.toggle()
             aiButton.isSelected = false
-            viewModel.setupMajor(major: "SMART_IOT")
+            if iotButton.isSelected == true {
+                viewModel.setupMajor(major: "SMART_IOT")
+            }
         case "AI":
             swButton.isSelected = false
             iotButton.isSelected = false
-            aiButton.isSelected = true
-            viewModel.setupMajor(major: "AI")
+            aiButton.isSelected.toggle()
+            if aiButton.isSelected == true {
+                viewModel.setupMajor(major: "AI")
+            }
         default:
             break
         }
@@ -253,19 +279,21 @@ public final class FilterBottomSheetVC: BaseViewController {
     }
     
     @objc func resetButtonTapped() {
-        studentButton.isSelected = false
-        adminButton.isSelected = false
-        blackListButton.isSelected = false
-        grade1Button.isSelected = false
-        grade2Button.isSelected = false
-        grade3Button.isSelected = false
-        manButton.isSelected = false
-        womanButton.isSelected = false
-        swButton.isSelected = false
-        iotButton.isSelected = false
-        aiButton.isSelected = false
+        let buttons: [BottomSheetButton] = [
+            studentButton, adminButton, blackListButton,
+            grade1Button, grade2Button, grade3Button,
+            manButton, womanButton, swButton,
+            iotButton, aiButton
+        ]
+
+        for button in buttons {
+            button.isSelected = false
+        }
         
         viewModel.resetInfo()
+        viewModel.serachStudent(searchString: nil) { newList in
+            self.updateUserList(newList)
+        }
     }
     
     // MARK: - Add View
