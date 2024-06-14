@@ -204,6 +204,8 @@ public final class StudentManagementViewModel: BaseViewModel {
             
         let parm = SearchStudentRequest(grade: gradeToSend, gender: gender, name: searchString, isBlackList: isBlackList, authority: authority, major: major)
         
+        print("요청: \(parm)")
+        
         studentCouncilProvider.request(.searchStudent(authorization: self.accessToken, parm: parm)) { response in
             switch response {
             case .success(let result):

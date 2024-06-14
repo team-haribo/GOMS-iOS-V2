@@ -172,9 +172,6 @@ public final class FilterBottomSheetVC: BaseViewController {
             DispatchQueue.main.async {
                 self.updateUserList(newList)
             }
-//            let studentManagementVC =  StudentManagementViewController()
-//            studentManagementVC.userList = self.viewModel.userListDatas
-//            studentManagementVC.studentCollectionView.reloadData()
         }
     }
     
@@ -250,7 +247,7 @@ public final class FilterBottomSheetVC: BaseViewController {
             break
         }
         
-        viewModel.serachStudent(searchString: nil) { newList in 
+        viewModel.serachStudent(searchString: nil) { newList in
             self.updateUserList(newList)
         }
     }
