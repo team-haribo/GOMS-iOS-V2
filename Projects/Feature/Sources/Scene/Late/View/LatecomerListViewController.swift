@@ -9,7 +9,7 @@
 import UIKit
 
 public final class LatecomerListViewController: BaseViewController {
-
+    
     // MARK: - Properties
     var latecomerList: [LatecomerListData] = [] {
         didSet {
@@ -17,9 +17,11 @@ public final class LatecomerListViewController: BaseViewController {
                 self.lateListCollectionView.reloadData()
             }
         }
+        
     }
     
     private let viewModel = LetecomerViewModel()
+    
     let refreshControl = UIRefreshControl()
     
     let scrollView = UIScrollView().then {
@@ -53,22 +55,18 @@ public final class LatecomerListViewController: BaseViewController {
     }
     
     // MARK: - Life Cycel
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-        viewModel.getLatecomerList {
-            self.latecomerList = self.viewModel.latecomerListDatas
-            self.setupCollectionView()
-        }
-    }
-    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.configNavigation()
-        self.setupScrollView()
+        viewModel.getLatecomerList {
+            self.latecomerList = self.viewModel.latecomerListDatas
+        }
+        
+        setupCollectionView()
+        configNavigation()
+        setupScrollView()
     }
-    
+  
     private func setupScrollView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView1)
@@ -83,17 +81,17 @@ public final class LatecomerListViewController: BaseViewController {
         addView()
         configureRefreshControl()
     }
-        // MARK: - Refresh Control Setup
+    
+    // MARK: - Refresh Control Setup
     private func configureRefreshControl() {
         lateListCollectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
     }
-
+    
     @objc private func handleRefreshControl() {
         viewModel.getLatecomerList {
             self.latecomerList = self.viewModel.latecomerListDatas
             DispatchQueue.main.async {
-                self.latecomerList = self.viewModel.latecomerListDatas
                 self.lateListCollectionView.reloadData()
                 self.refreshControl.endRefreshing()
             }

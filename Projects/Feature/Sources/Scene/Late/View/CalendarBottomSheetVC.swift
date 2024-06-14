@@ -8,11 +8,10 @@
 
 import UIKit
 
-class CalendarBottomSheetVC: BaseViewController {
-
+class CalendarBottomSheetVC: BaseViewController, UICalendarViewDelegate {
+    
     // MARK: - Properties
     private let viewModel = LetecomerViewModel()
-    
     let latecomerListVC = LatecomerListViewController()
     
     var selectedDate: DateComponents? = nil
@@ -59,6 +58,7 @@ class CalendarBottomSheetVC: BaseViewController {
     }
     
     @objc func closeButtonTapped() {
+        self.updateLatecomerList(self.viewModel.latecomerListDatas)
         self.dismiss(animated: false, completion: nil)
     }
     
@@ -114,7 +114,17 @@ class CalendarBottomSheetVC: BaseViewController {
     }
 }
 
-extension CalendarBottomSheetVC: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
+extension CalendarBottomSheetVC: UICalendarSelectionSingleDateDelegate {
+    func updateLatecomerList(_ newList: [LatecomerListData]) {
+        self.latecomerListVC.latecomerList = newList
+        DispatchQueue.main.async {
+            self.latecomerListVC.lateListCollectionView.reloadData()
+            print("=============")
+            print("지각자 데이터 업데이트: \(newList)")
+            print("=============") 
+        }
+    }
+    
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
         guard let dateComponents = dateComponents else { return }
         
@@ -128,15 +138,11 @@ extension CalendarBottomSheetVC: UICalendarViewDelegate, UICalendarSelectionSing
             viewModel.setupDate(date: formatter.string(from: selectedDate))
             print("달력 날짜 : \(viewModel.date)")
             viewModel.getLatecomerList {
-                self.latecomerListVC.latecomerList = self.viewModel.latecomerListDatas
                 DispatchQueue.main.async {
-                    
-                    self.latecomerListVC.lateListCollectionView.reloadData()
-                    print(self.latecomerListVC.latecomerList)
-                    print(self.latecomerListVC.latecomerList.count)
+                    self.updateLatecomerList(self.viewModel.latecomerListDatas)
                 }
-                
             }
         }
     }
 }
+
