@@ -43,6 +43,13 @@ public final class NewPasswordViewController: BaseViewController {
         $0.isHidden = true
     }
     
+    let passwordWrongRegularExpression = UILabel().then {
+        $0.text = "잘못된 비밀번호입니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
     let passwordOverlapErrorLabel = UILabel().then {
         $0.text = "이미 사용중인 비밀번호입니다."
         $0.textColor = .color.gomsNegative.color
@@ -81,33 +88,18 @@ public final class NewPasswordViewController: BaseViewController {
     @objc func doneButtonTapped() {
         let defaults = UserDefaults.standard
         let localPassword = defaults.string(forKey: "localPass")
-        
+        self.validatePassword()
+        let isValidPassword = self.validatePassword()
+            
         print("New Password Setting Done")
         viewModel.setupEmail(email: self.email)
         viewModel.setupNewServePassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         viewModel.setupPassword(password: localPassword ?? "")
         viewModel.newPassword { [self] success, statusCode in
-            if success {
-                let defaults = UserDefaults.standard
-                UserDefaults.standard.set(self.checkPasswordTextField.text, forKey: "localPass")
-                let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
-                
-                let check = UIAlertAction(title: "확인", style: .default) { action in
-                    let loginVC = SignInViewController(viewModel: self.viewModel)
-                    self.navigationController?.pushViewController(loginVC, animated: true)
-                }
-                
-                passwordOverlapErrorLabel.isHidden = true
-                passwordTextField.layer.borderWidth = 0
-                passwordTextField.setPlaceholderColor(.color.gomsTertiary.color)
-                
-                passwordErrorLabel.isHidden = true
-                checkPasswordTextField.layer.borderWidth = 0
-                checkPasswordTextField.setPlaceholderColor(.color.gomsTertiary.color)
-                
-                alert.addAction(check)
-                self.present(alert, animated: true)
-            } else {
+            if !isValidPassword {
+                        self.passwordWrongRegularExpressionUI()
+                    
+        } else if !success {
                 switch statusCode {
                 case 400:
                     print("400")
@@ -123,9 +115,31 @@ public final class NewPasswordViewController: BaseViewController {
                     self.passwordErrorUI()
                     conditionsLabel.isHidden = true
                 }
+            } else if success {
+                let defaults = UserDefaults.standard
+                UserDefaults.standard.set(self.checkPasswordTextField.text, forKey: "localPass")
+                let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
+                
+                let check = UIAlertAction(title: "확인", style: .default) { action in
+                    let loginVC = IntroViewController()
+                    self.navigationController?.pushViewController(loginVC, animated: true)
+                }
+                
+                passwordOverlapErrorLabel.isHidden = true
+                passwordTextField.layer.borderWidth = 0
+                passwordTextField.setPlaceholderColor(.color.gomsTertiary.color)
+                
+                passwordErrorLabel.isHidden = true
+                checkPasswordTextField.layer.borderWidth = 0
+                checkPasswordTextField.setPlaceholderColor(.color.gomsTertiary.color)
+                
+                alert.addAction(check)
+                self.present(alert, animated: true)
             }
         }
     }
+
+
     
     @objc func visiblePasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()
@@ -156,10 +170,31 @@ public final class NewPasswordViewController: BaseViewController {
         }
     }
     
+    @objc private func validatePassword() -> Bool {
+            guard let password = passwordTextField.text else { return false }
+            
+            let regexPattern = "^(?=.*[a-z])(?=.*\\d)(?=.*[\\W_])[A-Za-z\\d\\W_]{6,16}$"
+            let passwordTest = NSPredicate(format: "SELF MATCHES %@", regexPattern)
+            let isValid = passwordTest.evaluate(with: password)
+            
+            if isValid {
+                print("정규식에 알맞는 비밀번호입니다.")
+            } else {
+                print("정규식에 맞지 않는 비밀번호입니다.")
+            }
+            return isValid
+        }
+    
     func passwordErrorUI() {
-        passwordTextField.setBorderColorMode(lightModeColor: .color.gomsNegative.color, darkModeColor: .color.gomsNegative.color)
-        passwordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        checkPasswordTextField.setPlaceholderColor(.color.gomsNegative.color)
         passwordErrorLabel.isHidden = false
+        checkPasswordTextField.layer.borderColor = UIColor.systemRed.cgColor
+        checkPasswordTextField.layer.borderWidth = 1
+        
+        passwordOverlapErrorLabel.isHidden = true
+        passwordWrongRegularExpression.isHidden = true
+        passwordTextField.layer.borderWidth = 0
+        passwordTextField.setPlaceholderColor(.color.gomsTertiary.color)
     }
     
     func passwordOverlapErrorUI() {
@@ -168,6 +203,19 @@ public final class NewPasswordViewController: BaseViewController {
         passwordTextField.layer.borderColor = UIColor.systemRed.cgColor
         passwordTextField.layer.borderWidth = 1
         
+        passwordWrongRegularExpression.isHidden = true
+        passwordErrorLabel.isHidden = true
+        checkPasswordTextField.layer.borderWidth = 0
+        checkPasswordTextField.setPlaceholderColor(.color.gomsTertiary.color)
+    }
+    
+    func passwordWrongRegularExpressionUI() {
+        passwordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        passwordWrongRegularExpression.isHidden = false
+        passwordTextField.layer.borderColor = UIColor.systemRed.cgColor
+        passwordTextField.layer.borderWidth = 1
+        
+        passwordOverlapErrorLabel.isHidden = true
         passwordErrorLabel.isHidden = true
         checkPasswordTextField.layer.borderWidth = 0
         checkPasswordTextField.setPlaceholderColor(.color.gomsTertiary.color)
@@ -184,7 +232,7 @@ public final class NewPasswordViewController: BaseViewController {
     override func addView() {
         passwordTextField.addSubview(visiblePasswordButton)
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
-        [textFieldStackView, conditionsLabel, doneButton,passwordErrorLabel,passwordOverlapErrorLabel].forEach { view.addSubview($0) }
+        [textFieldStackView, conditionsLabel, doneButton,passwordErrorLabel,passwordOverlapErrorLabel, passwordWrongRegularExpression].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -195,6 +243,24 @@ public final class NewPasswordViewController: BaseViewController {
         
         checkPasswordTextField.snp.makeConstraints {
             $0.height.equalTo(56)
+        }
+        
+        passwordErrorLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(checkPasswordTextField.snp.bottom).inset(5)
+            $0.leading.equalTo(bounds.width * 0.07)
+        }
+        
+        passwordOverlapErrorLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(passwordTextField.snp.bottom).inset(5)
+            $0.leading.equalTo(bounds.width * 0.07)
+        }
+        
+        passwordWrongRegularExpression.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(passwordTextField.snp.bottom).inset(5)
+            $0.leading.equalTo(bounds.width * 0.07)
         }
         
         textFieldStackView.snp.makeConstraints {
