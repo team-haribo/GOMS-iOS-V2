@@ -27,9 +27,6 @@ public final class StudentManagementViewModel: BaseViewModel {
     var userList: [StudentListResponse] = []
     var userListDatas: [UserData] = []
     
-//    var userSearchList: [StudentListResponse] = []
-//    var userSearchListDatas: [UserData] = []
-    
     private var grade: Int?
     private var gender: String?
     private var isBlackList: Bool?
@@ -63,6 +60,8 @@ public final class StudentManagementViewModel: BaseViewModel {
         self.isBlackList = nil
         self.authority = nil
         self.major = nil
+        
+        
     }
     
     // MARK: - Get User List
@@ -111,20 +110,15 @@ public final class StudentManagementViewModel: BaseViewModel {
             }
             
             let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authorityString)
-            print("권한 수정 Request : \(param)")
-            print("권한을 수정하려는 학생 : \(selectedUser)")
-            print("=================================")
+            
             self.studentCouncilProvider.request(.editAuthority(authorization: self.accessToken, param: param)) { response in
                 switch response {
                 case .success(let result):
                     let statusCode = result.statusCode
                     switch statusCode {
                     case 205:
-                        print("권한 수정 성공")
                         print(result)
                         self.getUserList {
-                            print(selectedUser)
-                            print(authority)
                             completion()
                         }
                     case 401:
@@ -205,7 +199,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Search User
-    func serachStudent(searchString: String?, completion: @escaping () -> Void) {
+    func serachStudent(searchString: String?, completion: @escaping ([UserData]) -> Void) {
         let gradeToSend = self.grade
         let gender = self.gender
         let isBlackList = self.isBlackList
@@ -214,18 +208,15 @@ public final class StudentManagementViewModel: BaseViewModel {
             
         let parm = SearchStudentRequest(grade: gradeToSend, gender: gender, name: searchString, isBlackList: isBlackList, authority: authority, major: major)
         
-        print("검색 요청 파라미터: \(parm)")
-        
         studentCouncilProvider.request(.searchStudent(authorization: self.accessToken, parm: parm)) { response in
             switch response {
             case .success(let result):
                 let responseData = result.data
                 do {
-                    print("searchString: \(searchString)")
                     self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
                     self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
                     print("User Search: \(self.userList)")
-                    completion()
+                    completion(self.userListDatas)
                 } catch(let err) {
                     print(String(describing: err))
                 }

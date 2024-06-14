@@ -13,7 +13,18 @@ public final class FilterBottomSheetVC: BaseViewController {
     // MARK: - Properties
     var userList: [UserData] = []
     
-    private let viewModel = StudentManagementViewModel()
+    let viewModel = StudentManagementViewModel()
+    
+    var studentManagementVC: StudentManagementViewController
+            
+    init(studentManagementVC: StudentManagementViewController) {
+        self.studentManagementVC = studentManagementVC
+        super.init(nibName: nil, bundle: nil)
+    }
+        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let dimmedView = UIView().then {
         $0.backgroundColor = UIColor.darkGray.withAlphaComponent(0.7)
@@ -120,6 +131,13 @@ public final class FilterBottomSheetVC: BaseViewController {
         super.viewDidLoad()
     }
     
+    func updateUserList(_ newList: [UserData]) {
+        self.studentManagementVC.userList = newList
+        DispatchQueue.main.async {
+            self.studentManagementVC.studentCollectionView.reloadData()
+        }
+    }
+    
     // MARK: - Selectors
     @objc func closeButtonTapped() {
         self.dismiss(animated: false, completion: nil)
@@ -150,10 +168,13 @@ public final class FilterBottomSheetVC: BaseViewController {
             break
         }
         
-        viewModel.serachStudent(searchString: nil) {
-            let studentManagementVC =  StudentManagementViewController()
-            studentManagementVC.userList = self.viewModel.userListDatas
-            studentManagementVC.studentCollectionView.reloadData()
+        viewModel.serachStudent(searchString: nil) { newList in
+            DispatchQueue.main.async {
+                self.updateUserList(newList)
+            }
+//            let studentManagementVC =  StudentManagementViewController()
+//            studentManagementVC.userList = self.viewModel.userListDatas
+//            studentManagementVC.studentCollectionView.reloadData()
         }
     }
     
@@ -180,10 +201,8 @@ public final class FilterBottomSheetVC: BaseViewController {
             break
         }
         
-        viewModel.serachStudent(searchString: nil) {
-            let studentManagementVC =  StudentManagementViewController()
-            studentManagementVC.userList = self.viewModel.userListDatas
-            studentManagementVC.studentCollectionView.reloadData()
+        viewModel.serachStudent(searchString: nil) { newList in
+            self.updateUserList(newList)
         }
     }
     
@@ -203,10 +222,8 @@ public final class FilterBottomSheetVC: BaseViewController {
             break
         }
         
-        viewModel.serachStudent(searchString: nil) {
-            let studentManagementVC =  StudentManagementViewController()
-            studentManagementVC.userList = self.viewModel.userListDatas
-            studentManagementVC.studentCollectionView.reloadData()
+        viewModel.serachStudent(searchString: nil) { newList in
+            self.updateUserList(newList)
         }
     }
 
@@ -233,10 +250,8 @@ public final class FilterBottomSheetVC: BaseViewController {
             break
         }
         
-        viewModel.serachStudent(searchString: nil) {
-            let studentManagementVC =  StudentManagementViewController()
-            studentManagementVC.userList = self.viewModel.userListDatas
-            studentManagementVC.studentCollectionView.reloadData()
+        viewModel.serachStudent(searchString: nil) { newList in 
+            self.updateUserList(newList)
         }
     }
     

@@ -54,9 +54,9 @@ public final class StudentManagementViewController: BaseViewController {
     }
     
     @objc func filterButtonTapped() {
-        let bottomSheetVC = FilterBottomSheetVC()
-        bottomSheetVC.modalPresentationStyle = .overFullScreen
-        self.present(bottomSheetVC, animated: false, completion: nil)
+        let filterVC = FilterBottomSheetVC(studentManagementVC: self)
+        filterVC.modalPresentationStyle = .overFullScreen
+        self.present(filterVC, animated: false, completion: nil)
     }
     
     // MARK: - Life Cycel
@@ -91,7 +91,7 @@ public final class StudentManagementViewController: BaseViewController {
         addView()
         configureRefreshControl()
     }
-    
+
     // MARK: - Refresh Control Setup
     func configureRefreshControl() {
         studentCollectionView.refreshControl = refreshControl
@@ -190,18 +190,10 @@ extension StudentManagementViewController: UISearchResultsUpdating {
         if searchString.isEmpty {
             userList = viewModel.userListDatas
         } else {
-            viewModel.serachStudent(searchString: searchString) {
-                self.userList = self.viewModel.userListDatas
+            viewModel.serachStudent(searchString: searchString) { newList in
+                self.userList = newList
                 self.studentCollectionView.reloadData()
             }
         }
-    }
-}
-
-extension StudentManagementViewController {
-
-    func reloadItem(at index: Int) {
-        let indexPath = IndexPath(item: index, section: 0)
-        studentCollectionView.reloadItems(at: [indexPath])
     }
 }
