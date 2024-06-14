@@ -11,8 +11,18 @@ import UIKit
 class CalendarBottomSheetVC: BaseViewController, UICalendarViewDelegate {
     
     // MARK: - Properties
-    private let viewModel = LetecomerViewModel()
-    let latecomerListVC = LatecomerListViewController()
+    let viewModel = LetecomerViewModel()
+    
+    var latecomerListVC: LatecomerListViewController
+        
+    init(latecomerListVC: LatecomerListViewController) {
+        self.latecomerListVC = latecomerListVC
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     var selectedDate: DateComponents? = nil
     
@@ -137,9 +147,10 @@ extension CalendarBottomSheetVC: UICalendarSelectionSingleDateDelegate {
             formatter.dateFormat = "yyyy-MM-dd"
             viewModel.setupDate(date: formatter.string(from: selectedDate))
             print("달력 날짜 : \(viewModel.date)")
-            viewModel.getLatecomerList {
+            
+            viewModel.getLatecomerList { newList in
                 DispatchQueue.main.async {
-                    self.updateLatecomerList(self.viewModel.latecomerListDatas)
+                    self.updateLatecomerList(newList)
                 }
             }
         }

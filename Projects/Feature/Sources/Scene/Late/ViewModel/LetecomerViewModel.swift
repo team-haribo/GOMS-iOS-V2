@@ -39,7 +39,7 @@ public final class LetecomerViewModel: BaseViewModel {
         self.date = date
     }
     
-    func getLatecomerList(completion: @escaping () -> Void) {
+    func getLatecomerList(completion: @escaping ([LatecomerListData]) -> Void) {
         studentCouncilProvider.request(.lateList(authorization: accessToken, date: date)) { response in
             switch response {
             case .success(let result):
@@ -47,7 +47,7 @@ public final class LetecomerViewModel: BaseViewModel {
                 do {
                     self.latecomerList = try JSONDecoder().decode([LatecomerListResponse].self, from: responseData)
                     self.latecomerListDatas = self.latecomerList.map { LatecomerListData(id: $0.accountIdx, profileImageURL: $0.profileUrl, name: $0.name, grade: $0.grade, major: $0.major) }
-                    completion()
+                    completion(self.latecomerListDatas)
                 } catch(let err) {
                     print(String(describing: err))
                 }

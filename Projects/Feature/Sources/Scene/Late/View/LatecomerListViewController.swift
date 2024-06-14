@@ -9,7 +9,7 @@
 import UIKit
 
 public final class LatecomerListViewController: BaseViewController {
-    
+
     // MARK: - Properties
     var latecomerList: [LatecomerListData] = [] {
         didSet {
@@ -17,12 +17,9 @@ public final class LatecomerListViewController: BaseViewController {
                 self.lateListCollectionView.reloadData()
             }
         }
-        
     }
     
     private let viewModel = LetecomerViewModel()
-    
-    let refreshControl = UIRefreshControl()
     
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -55,18 +52,25 @@ public final class LatecomerListViewController: BaseViewController {
     }
     
     // MARK: - Life Cycel
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        let calendarBottomSheetVC = CalendarBottomSheetVC(latecomerListVC: self)
+        calendarBottomSheetVC.viewModel.getLatecomerList(completion: { latecomerList in
+            self.latecomerList = latecomerList
+        })
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel.getLatecomerList {
-            self.latecomerList = self.viewModel.latecomerListDatas
-        }
+        self.lateListCollectionView.dataSource = self
+        self.lateListCollectionView.delegate = self
         
         setupCollectionView()
         configNavigation()
         setupScrollView()
     }
-  
+    
     private func setupScrollView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView1)
@@ -79,27 +83,10 @@ public final class LatecomerListViewController: BaseViewController {
             make.bottom.equalTo(lateListCollectionView.snp.bottom)
         }
         addView()
-        configureRefreshControl()
     }
-    
-    // MARK: - Refresh Control Setup
-    private func configureRefreshControl() {
-        lateListCollectionView.refreshControl = refreshControl
-        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
-    }
-    
-    @objc private func handleRefreshControl() {
-        viewModel.getLatecomerList {
-            self.latecomerList = self.viewModel.latecomerListDatas
-            DispatchQueue.main.async {
-                self.lateListCollectionView.reloadData()
-                self.refreshControl.endRefreshing()
-            }
-        }
-    }
-    
+
     @objc func filterButtonTapped() {
-        let bottomSheetVC = CalendarBottomSheetVC()
+        let bottomSheetVC = CalendarBottomSheetVC(latecomerListVC: self)
         bottomSheetVC.modalPresentationStyle = .overFullScreen
         self.present(bottomSheetVC, animated: false, completion: nil)
     }
