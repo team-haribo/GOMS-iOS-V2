@@ -21,14 +21,6 @@ public final class StudentManagementViewController: BaseViewController {
     
     let refreshControl = UIRefreshControl()
     
-    let scrollView = UIScrollView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    let contentView1 = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
     private let searchController = UISearchController(searchResultsController: nil)
     
     private let titleLabel = UILabel().then {
@@ -78,16 +70,6 @@ public final class StudentManagementViewController: BaseViewController {
     }
     
     private func setupScrollView() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView1)
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        contentView1.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView)
-            make.width.equalTo(scrollView)
-            make.bottom.equalTo(studentCollectionView.snp.bottom)
-        }
         addView()
         configureRefreshControl()
     }

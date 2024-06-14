@@ -74,8 +74,6 @@ public final class StudentManagementViewModel: BaseViewModel {
                     do {
                         self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
                         self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
-                        print("학생 리스트 : \(self.userListDatas)")
-                        print("=================================")
                         completion()
                     } catch(let err) {
                         print(String(describing: err))
@@ -94,7 +92,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Change Student Council Authority
-    func changeAuthority(index: Int, completion: @escaping () -> Void) {
+    func changeAuthority(index: Int, completion: @escaping ([UserData]) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
@@ -117,7 +115,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     case 205:
                         print(result)
                         self.getUserList {
-                            completion()
+                            completion(self.userListDatas)
                         }
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
@@ -137,7 +135,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Black List
-    func blackList(index: Int, completion: @escaping (Bool) -> Void) {
+    func blackList(index: Int, completion: @escaping ([UserData]) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
@@ -150,7 +148,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     case 201:
                         print("Created")
                         print("BlackList : \(selectedUser)")
-                        completion(true)
+                        completion(self.userListDatas)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
@@ -168,7 +166,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Delete Black List
-    func cancelBlackList(index: Int, completion: @escaping (Bool) -> Void) {
+    func cancelBlackList(index: Int, completion: @escaping ([UserData]) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
@@ -179,7 +177,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     switch statusCode {
                     case 205:
                         print("Reset content")
-                        completion(true)
+                        completion(self.userListDatas)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
