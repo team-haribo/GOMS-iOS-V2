@@ -70,6 +70,26 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             $0.centerY.centerX.equalToSuperview()
         }
     }
+    
+    func qrScanSuccess() {
+        let alert = UIAlertController(title: "외출 복귀", message: "외출 복귀 처리되었습니다.", preferredStyle: .alert)
+        let action = UIAlertAction(title: "확인", style: .default) { _ in
+            let mainVC = MainViewController()
+            self.navigationController?.pushViewController(mainVC, animated: true)
+        }
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func qrScanfailed() {
+        let alert = UIAlertController(title: "QR코드 스캔 실패", message: "예기치 못한 오류가 발생했습니다.\n다시 시도해 주세요.", preferredStyle: .alert)
+        let action = UIAlertAction(title: "확인", style: .default) { _ in
+            let mainVC = MainViewController()
+            self.navigationController?.pushViewController(mainVC, animated: true)
+        }
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
 
     public func setupCamera() {
         guard let camera = AVCaptureDevice.default(for: .video) else { return }
