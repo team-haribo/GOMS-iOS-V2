@@ -181,7 +181,7 @@ public final class SignInViewController: BaseViewController {
         emailTextField.setPlaceholderColor(.color.gomsTertiary.color)
         defaultDomain.textColor = .color.gomsTertiary.color
         emailErrorLabel.isHidden = true
-        passwordErrorLabel.isEnabled = true
+        passwordErrorLabel.isHidden = true
         emailTextField.layer.borderColor = UIColor.clear.cgColor
         emailTextField.layer.borderWidth = 0
         findPasswordLabel.isHidden = false

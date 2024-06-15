@@ -41,7 +41,7 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         let mainVC = MainViewController()
         self.navigationController?.pushViewController(mainVC, animated: true)
     }
-
+    
     // MARK: - Add View
     public override func addView() {
         [gomsLogo, closeButton, qrFrame].forEach { self.view.addSubview($0) }
@@ -93,7 +93,7 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
 
     public func setupCamera() {
         guard let camera = AVCaptureDevice.default(for: .video) else { return }
-
+        
         do {
             let input = try AVCaptureDeviceInput(device: camera)
             captureSession.addInput(input)
@@ -101,7 +101,7 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             print(error.localizedDescription)
             return
         }
-
+        
         let output = AVCaptureVideoDataOutput()
         output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
         captureSession.addOutput(output)
@@ -110,12 +110,12 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
         [gomsLogo, closeButton, qrFrame].forEach { self.view.addSubview($0) }
-
+        
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.captureSession.startRunning()
         }
     }
-
+    
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
@@ -133,18 +133,20 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             for barcode in barcodes {
                 if let payload = barcode.payloadStringValue {
                     let qrCodeBoundingBox = barcode.boundingBox
-                
-                    let qrFrameRect = CGRect(x: self.qrFrame.frame.origin.x,
-                                             y: self.qrFrame.frame.origin.y,
-                                             width: self.qrFrame.frame.width * self.view.bounds.width,
-                                             height: self.qrFrame.frame.height * self.view.bounds.height)
                     
-                    if qrFrameRect.contains(CGPoint(x: qrCodeBoundingBox.midX * self.view.bounds.width,
-                                                    y: qrCodeBoundingBox.midY * self.view.bounds.height)) {
-                        DispatchQueue.main.async {
+                    DispatchQueue.main.async {
+                        let qrFrameRect = CGRect(x: self.qrFrame.frame.origin.x,
+                                                 y: self.qrFrame.frame.origin.y,
+                                                 width: self.qrFrame.frame.width * self.view.bounds.width,
+                                                 height: self.qrFrame.frame.height * self.view.bounds.height
+                        )
+                        
+                        if qrFrameRect.contains(CGPoint(x: qrCodeBoundingBox.midX * self.view.bounds.width,
+                                                        y: qrCodeBoundingBox.midY * self.view.bounds.height)) {
+                            
                             isScanningEnabled = false
                             
-                            print("QR 인식 후 UUID : \(self.viewModel.outingUUID)") 
+                            print("QR 인식 후 UUID : \(self.viewModel.outingUUID)")
                             self.viewModel.outingUUID = UUID(uuidString: payload) ?? UUID()
                             self.viewModel.outing { success in
                                 if success {
@@ -176,6 +178,4 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             print("비디오 프레임 처리 중 오류 발생: \(error.localizedDescription)")
         }
     }
-
-
 }

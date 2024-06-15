@@ -86,6 +86,7 @@ public final class MainViewModel: BaseViewModel {
                 do {
                     self.outingList = try JSONDecoder().decode([OutingListResponse].self, from: responseData)
                     self.outingListDatas = self.outingList.map { OutingListData(id: $0.accountIdx, profileImageURL: $0.profileUrl, name: $0.name, grade: $0.grade, major: $0.major, outingTime: $0.createdTime) }
+                    print("외출자 리스트 : \(self.outingListDatas)")
                     completion()
                 } catch(let err) {
                     print(String(describing: err))

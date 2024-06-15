@@ -28,7 +28,9 @@ public final class AuthCodeViewController: BaseViewController {
     
     var limitTime = 300
     
-    private let authCodeTextField = GOMSTextField()
+    private let authCodeTextField = GOMSTextField().then {
+        $0.keyboardType = .numberPad
+    }
     
     private let timeLabel = UILabel().then {
         $0.font = .pretendard(size: 16, weight: .regular)
@@ -69,7 +71,7 @@ public final class AuthCodeViewController: BaseViewController {
     
     @objc func resendButtonTapped() {
         viewModel.setupAuthCode(authCode: authCodeTextField.text ?? "")
-        viewModel.sendAuthCode { success in
+        viewModel.sendAuthCode { success, statusCode in
             if success {
                 let alert = UIAlertController(title: "재발송 완료", message: "인증코드 재발송이 완료되었습니다.\n이메일을 확인해주세요.", preferredStyle: .alert)
                 

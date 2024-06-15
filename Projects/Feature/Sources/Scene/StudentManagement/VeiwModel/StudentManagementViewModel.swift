@@ -27,9 +27,6 @@ public final class StudentManagementViewModel: BaseViewModel {
     var userList: [StudentListResponse] = []
     var userListDatas: [UserData] = []
     
-    var userSearchList: [StudentListResponse] = []
-    var userSearchListDatas: [UserData] = []
-    
     private var grade: Int?
     private var gender: String?
     private var isBlackList: Bool?
@@ -95,7 +92,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Change Student Council Authority
-    func changeAuthority(index: Int, completion: @escaping () -> Void) {
+    func changeAuthority(index: Int, completion: @escaping ([UserData]) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
@@ -109,21 +106,16 @@ public final class StudentManagementViewModel: BaseViewModel {
             }
             
             let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authorityString)
-            print("권한 수정 Request : \(param)")
-            print("권한을 수정하려는 학생 : \(selectedUser)")
-            print("=================================")
+            
             self.studentCouncilProvider.request(.editAuthority(authorization: self.accessToken, param: param)) { response in
                 switch response {
                 case .success(let result):
                     let statusCode = result.statusCode
                     switch statusCode {
                     case 205:
-                        print("권한 수정 성공")
                         print(result)
                         self.getUserList {
-                            print(selectedUser)
-                            print(authority)
-                            completion()
+                            completion(self.userListDatas)
                         }
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
@@ -143,7 +135,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Black List
-    func blackList(index: Int, completion: @escaping (Bool) -> Void) {
+    func blackList(index: Int, completion: @escaping ([UserData]) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
@@ -156,7 +148,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     case 201:
                         print("Created")
                         print("BlackList : \(selectedUser)")
-                        completion(true)
+                        completion(self.userListDatas)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
@@ -174,11 +166,10 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Delete Black List
-    func cancelBlackList(index: Int, completion: @escaping (Bool) -> Void) {
+    func cancelBlackList(index: Int, completion: @escaping ([UserData]) -> Void) {
         self.getUserList {
             let selectedUser = self.userList[index]
             let accountIdx = selectedUser.accountIdx
-            
             self.studentCouncilProvider.request(.cancelBlackList(authorization: self.accessToken, accountIdx: accountIdx)) { response in
                 switch response {
                 case .success(let result):
@@ -186,7 +177,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     switch statusCode {
                     case 205:
                         print("Reset content")
-                        completion(true)
+                        completion(self.userListDatas)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
@@ -204,25 +195,32 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Search User
-    func serachStudent(searchString: String, completion: @escaping () -> Void) {
-        let parm = SearchStudentRequest.init(grade: grade, gender: gender, name: searchString, isBlackList: isBlackList ?? false, authority: authority, major: major)
+    func serachStudent(searchString: String?, completion: @escaping ([UserData]) -> Void) {
+        let gradeToSend = self.grade
+        let gender = self.gender
+        let isBlackList = self.isBlackList
+        let authority = self.authority
+        let major = self.major
+            
+        let parm = SearchStudentRequest(grade: gradeToSend, gender: gender, name: searchString, isBlackList: isBlackList, authority: authority, major: major)
+        
+        print("요청: \(parm)")
         
         studentCouncilProvider.request(.searchStudent(authorization: self.accessToken, parm: parm)) { response in
             switch response {
             case .success(let result):
                 let responseData = result.data
                 do {
-                    print("searchString: \(searchString)")
-                    self.userSearchList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
-                    self.userSearchListDatas = self.userSearchList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
-                    print("User Search: \(self.userSearchList)")
-                    completion()
+                    self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
+                    self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
+                    print("User Search: \(self.userList)")
+                    completion(self.userListDatas)
                 } catch(let err) {
                     print(String(describing: err))
                 }
                 let statusCode = result.statusCode
                 switch statusCode {
-                case 200..<300:
+                case 200:
                     print("ok")
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
