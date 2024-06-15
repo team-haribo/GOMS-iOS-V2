@@ -22,7 +22,15 @@ public final class LetecomerViewModel: BaseViewModel {
     
     private let studentCouncilProvider = MoyaProvider<StudentCouncilServices>()
     
-    var date: String = ""
+    var date: String = {
+        let currentDate = Date()
+        let recentWednesday = currentDate.recentWednesday()
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        return formatter.string(from: recentWednesday)
+    }()
     
     var latecomerList: [LatecomerListResponse] = []
     var latecomerListDatas: [LatecomerListData] = []
@@ -31,20 +39,7 @@ public final class LetecomerViewModel: BaseViewModel {
         self.date = date
     }
     
-    func getRecentWednesday() -> String {
-        let currentDate = Date()
-        let recentWednesday = currentDate.recentWednesday()
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        return formatter.string(from: recentWednesday)
-    }
-    
-    func getLatecomerList(completion: @escaping () -> Void) {
-        let recentWednesday = getRecentWednesday()
-        setupDate(date: recentWednesday)
-        
+    func getLatecomerList(completion: @escaping ([LatecomerListData]) -> Void) {
         studentCouncilProvider.request(.lateList(authorization: accessToken, date: date)) { response in
             switch response {
             case .success(let result):
@@ -52,7 +47,7 @@ public final class LetecomerViewModel: BaseViewModel {
                 do {
                     self.latecomerList = try JSONDecoder().decode([LatecomerListResponse].self, from: responseData)
                     self.latecomerListDatas = self.latecomerList.map { LatecomerListData(id: $0.accountIdx, profileImageURL: $0.profileUrl, name: $0.name, grade: $0.grade, major: $0.major) }
-                    completion()
+                    completion(self.latecomerListDatas)
                 } catch(let err) {
                     print(String(describing: err))
                 }

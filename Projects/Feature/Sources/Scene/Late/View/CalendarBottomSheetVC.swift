@@ -8,12 +8,21 @@
 
 import UIKit
 
-class CalendarBottomSheetVC: BaseViewController {
-
-    // MARK: - Properties
-    private let viewModel = LetecomerViewModel()
+class CalendarBottomSheetVC: BaseViewController, UICalendarViewDelegate {
     
-    let latecomerListVC = LatecomerListViewController()
+    // MARK: - Properties
+    let viewModel = LetecomerViewModel()
+    
+    var latecomerListVC: LatecomerListViewController
+        
+    init(latecomerListVC: LatecomerListViewController) {
+        self.latecomerListVC = latecomerListVC
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     var selectedDate: DateComponents? = nil
     
@@ -59,6 +68,7 @@ class CalendarBottomSheetVC: BaseViewController {
     }
     
     @objc func closeButtonTapped() {
+        self.updateLatecomerList(self.viewModel.latecomerListDatas)
         self.dismiss(animated: false, completion: nil)
     }
     
@@ -114,7 +124,17 @@ class CalendarBottomSheetVC: BaseViewController {
     }
 }
 
-extension CalendarBottomSheetVC: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
+extension CalendarBottomSheetVC: UICalendarSelectionSingleDateDelegate {
+    func updateLatecomerList(_ newList: [LatecomerListData]) {
+        self.latecomerListVC.latecomerList = newList
+        DispatchQueue.main.async {
+            self.latecomerListVC.lateListCollectionView.reloadData()
+            print("=============")
+            print("지각자 데이터 업데이트: \(newList)")
+            print("=============") 
+        }
+    }
+    
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
         guard let dateComponents = dateComponents else { return }
         
@@ -126,18 +146,14 @@ extension CalendarBottomSheetVC: UICalendarViewDelegate, UICalendarSelectionSing
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             viewModel.setupDate(date: formatter.string(from: selectedDate))
-            viewModel.getLatecomerList {
-                self.latecomerListVC.latecomerList = self.viewModel.latecomerListDatas
+            print("달력 날짜 : \(viewModel.date)")
+            
+            viewModel.getLatecomerList { newList in
                 DispatchQueue.main.async {
-                    
-                    self.latecomerListVC.lateListCollectionView.reloadData()
-                    print(self.latecomerListVC.latecomerList)
-                    print(self.latecomerListVC.latecomerList.count)
+                    self.updateLatecomerList(newList)
                 }
-                //                self.latecomerListVC.latecomerList = self.viewModel.latecomerListDatas
-                //                self.latecomerListVC.lateListCollectionView.reloadData()
-                
             }
         }
     }
 }
+

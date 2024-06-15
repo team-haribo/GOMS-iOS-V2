@@ -26,25 +26,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let authority = UserDefaults.standard.string(forKey: "authority")
         
-        DispatchQueue.main.async {
-            if self.viewModel.isLogin == true {
-                if AdminisSwitchOn == true {
-                    if isSwitchOn == true {
-                        self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
-                    } else {
-                        self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
-                    }
-                } else if AdminisSwitchOn == false {
-                    if isSwitchOn == true {
-                        self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
-                    } else {
-                        self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
-                    }
-                }
-            } else {
-                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-            }
-        }
+        self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+        
+//        DispatchQueue.main.async {
+//            if self.viewModel.isLogin == true {
+//                if AdminisSwitchOn == true {
+//                    if isSwitchOn == true {
+//                        self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
+//                    } else {
+//                        self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
+//                    }
+//                } else if AdminisSwitchOn == false {
+//                    if isSwitchOn == true {
+//                        self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
+//                    } else {
+//                        self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
+//                    }
+//                }
+//            } else {
+//                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+//            }
+//        }
 
         window?.makeKeyAndVisible()
     }

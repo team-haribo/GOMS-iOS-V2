@@ -20,7 +20,6 @@ public final class LatecomerListViewController: BaseViewController {
     }
     
     private let viewModel = LetecomerViewModel()
-    let refreshControl = UIRefreshControl()
     
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -53,8 +52,20 @@ public final class LatecomerListViewController: BaseViewController {
     }
     
     // MARK: - Life Cycel
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        let calendarBottomSheetVC = CalendarBottomSheetVC(latecomerListVC: self)
+        calendarBottomSheetVC.viewModel.getLatecomerList(completion: { latecomerList in
+            self.latecomerList = latecomerList
+        })
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.lateListCollectionView.dataSource = self
+        self.lateListCollectionView.delegate = self
+        
         setupCollectionView()
         configNavigation()
         setupScrollView()
@@ -72,27 +83,10 @@ public final class LatecomerListViewController: BaseViewController {
             make.bottom.equalTo(lateListCollectionView.snp.bottom)
         }
         addView()
-        configureRefreshControl()
-    }
-        // MARK: - Refresh Control Setup
-    private func configureRefreshControl() {
-        lateListCollectionView.refreshControl = refreshControl
-        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
     }
 
-    @objc private func handleRefreshControl() {
-        viewModel.getLatecomerList {
-            self.latecomerList = self.viewModel.latecomerListDatas
-            DispatchQueue.main.async {
-                self.lateListCollectionView.reloadData()
-                self.refreshControl.endRefreshing()
-            }
-        }
-    }
-
-    
     @objc func filterButtonTapped() {
-        let bottomSheetVC = CalendarBottomSheetVC()
+        let bottomSheetVC = CalendarBottomSheetVC(latecomerListVC: self)
         bottomSheetVC.modalPresentationStyle = .overFullScreen
         self.present(bottomSheetVC, animated: false, completion: nil)
     }
@@ -153,7 +147,7 @@ extension LatecomerListViewController: UICollectionViewDataSource {
 
 extension LatecomerListViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width * 0.9
+        let width = bounds.width * 0.9
         let height: CGFloat = 72
         return CGSize(width: width, height: height)
     }
