@@ -81,8 +81,16 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         self.present(alert, animated: true, completion: nil)
     }
     
-    func qrScanfailed() {
-        let alert = UIAlertController(title: "QR코드 스캔 실패", message: "예기치 못한 오류가 발생했습니다.\n다시 시도해 주세요.", preferredStyle: .alert)
+    func qrScanfailed(statusCode: Int) {
+        var message = ""
+        
+        if statusCode == 400 {
+            message = "외출 금지 상태에서는\nQR 스캔을 할 수 없습니다."
+        } else {
+            message = "예기치 못한 오류가 발생했습니다.\n다시 시도해 주세요."
+        }
+    
+        let alert = UIAlertController(title: "QR코드 스캔 실패", message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "확인", style: .default) { _ in
             let mainVC = MainViewController()
             self.navigationController?.pushViewController(mainVC, animated: true)
@@ -148,20 +156,14 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
                             
                             print("QR 인식 후 UUID : \(self.viewModel.outingUUID)")
                             self.viewModel.outingUUID = UUID(uuidString: payload) ?? UUID()
-                            self.viewModel.outing { success in
-                                if success {
-                                    let alert = UIAlertController(title: "외출 복귀", message: "외출 복귀 처리되었습니다.", preferredStyle: .alert)
-                                    let action = UIAlertAction(title: "확인", style: .default) { _ in
-                                        let mainVC = MainViewController()
-                                        self.navigationController?.pushViewController(mainVC, animated: true)
-                                    }
-                                    alert.addAction(action)
-                                    self.present(alert, animated: true, completion: nil)
-                                } else {
-                                    let alert = UIAlertController(title: "오류", message: "외출 처리 중 오류가 발생하였습니다.", preferredStyle: .alert)
-                                    let action = UIAlertAction(title: "확인", style: .default, handler: nil)
-                                    alert.addAction(action)
-                                    self.present(alert, animated: true, completion: nil)
+                            self.viewModel.outing { statusCode in
+                                switch statusCode {
+                                case 204:
+                                    self.qrScanSuccess()
+                                case 400:
+                                    self.qrScanfailed(statusCode: statusCode)
+                                default:
+                                    self.qrScanfailed(statusCode: statusCode)
                                 }
                             }
                             self.captureSession.stopRunning()
