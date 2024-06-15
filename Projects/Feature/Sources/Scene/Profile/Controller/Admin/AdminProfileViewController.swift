@@ -388,7 +388,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     @objc func handleRefreshControl() {
-        viewModel.gomsRefreshToken.tokenReissuance()
+      //  viewModel.gomsRefreshToken.tokenReissuance()
         viewModel.loadProfileInfo { success in
                 if success {
                     print("성공")

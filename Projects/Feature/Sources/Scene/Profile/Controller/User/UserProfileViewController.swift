@@ -473,6 +473,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             }
             
         @objc func handleRefreshControl() {
+            viewModel.gomsRefreshToken.tokenReissuance()
             viewModel.loadProfileInfo { success in
                     if success {
                         print("완료")
