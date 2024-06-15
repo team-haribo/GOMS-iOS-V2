@@ -17,8 +17,18 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     var userDataIndex: Int?
     
     private let viewModel = StudentManagementViewModel()
-    let studentManagementVC = StudentManagementViewController()
     
+    var studentManagementVC: StudentManagementViewController
+            
+    init(studentManagementVC: StudentManagementViewController) {
+        self.studentManagementVC = studentManagementVC
+        super.init(nibName: nil, bundle: nil)
+    }
+        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+        
     private let dimmedView = UIView().then {
         $0.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 1).withAlphaComponent(0.6)
     }
@@ -87,6 +97,11 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         setupSwitch()
     }
     
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.studentManagementVC.configureRefreshControl()
+    }
+    
     func setupSwitch() {
         if let userData = userData, userData.isBlackList {
             blackListSwitch.isOn = true
@@ -101,6 +116,13 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         }
     }
     
+    func updateUserList(_ newList: [UserData]) {
+        self.studentManagementVC.userList = newList
+        DispatchQueue.main.async {
+            self.studentManagementVC.studentCollectionView.reloadData()
+        }
+    }
+    
     @objc func closeButtonTapped() {
         self.studentManagementVC.studentCollectionView.reloadData()
         self.dismiss(animated: false, completion: nil)
@@ -110,16 +132,12 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         guard let userData = userData, let index = userDataIndex else { return }
         
         if sender.isOn {
-            viewModel.blackList(index: index) { _ in
-                print("blacklist update")
-                let managementVC = StudentManagementViewController()
-                managementVC.configureRefreshControl()
+            viewModel.blackList(index: index) { newList in
+                self.updateUserList(newList)
             }
         } else {
-            viewModel.cancelBlackList(index: index) { _ in
-                print("blacklist delete")
-                let managementVC = StudentManagementViewController()
-                managementVC.configureRefreshControl()
+            viewModel.cancelBlackList(index: index) { newList in
+                self.updateUserList(newList)
             }
         }
     }
@@ -128,22 +146,12 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         guard let userData = userData, let index = userDataIndex else { return }
         
         if sender.isOn {
-            viewModel.changeAuthority(index: index) {
-//                let cell = StudentCollectionViewCell()
-//                let userData = userData
-//    
-//                cell.configureData(with: userData)
-//                self.studentManagementVC.studentCollectionView.reloadData()
+            viewModel.changeAuthority(index: index) { newList in 
+                self.updateUserList(newList)
             }
         } else {
-            viewModel.changeAuthority(index: index) {
-                print("권한 수정")
-                print(userData)
-//                let cell = StudentCollectionViewCell()
-//                let userData = userData
-//    
-//                cell.configureData(with: userData)
-//                self.studentManagementVC.studentCollectionView.reloadData()
+            viewModel.changeAuthority(index: index) { newList in
+                self.updateUserList(newList)
             }
         }
     }

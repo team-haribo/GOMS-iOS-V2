@@ -61,8 +61,8 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
             return }
         
         let userData = parentViewController.userList[indexPath.row]
-
-        let bottomSheetVC = AuthorityBottomSheetVC()
+    
+        let bottomSheetVC = AuthorityBottomSheetVC(studentManagementVC: parentViewController)
         bottomSheetVC.userData = userData
         bottomSheetVC.userDataIndex = indexPath.row
         bottomSheetVC.modalPresentationStyle = .overFullScreen

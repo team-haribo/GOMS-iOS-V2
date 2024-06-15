@@ -53,12 +53,17 @@ public final class SignUpViewController: BaseViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        
         nameTextField.delegate = self
         emailTextField.delegate = self
     }
     
     // MARK: - Selectors
     @objc func genderButtonTapped() {
+        view.endEditing(true)
+        
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let menAction = UIAlertAction(title: "남성", style: .default) { _ in
             self.genderTextField.setTitle("남성", for: .normal)
@@ -76,6 +81,8 @@ public final class SignUpViewController: BaseViewController {
     }
     
     @objc func departmentButtonTapped() {
+        view.endEditing(true)
+        
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let swAction = UIAlertAction(title: "SW개발과", style: .default) { _ in
             self.majorTextField.setTitle("SW개발과", for: .normal)
@@ -201,4 +208,10 @@ extension SignUpViewController: UITextFieldDelegate {
             }
             return true
         }
+}
+
+extension SignUpViewController {
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }

@@ -21,14 +21,6 @@ public final class StudentManagementViewController: BaseViewController {
     
     let refreshControl = UIRefreshControl()
     
-    let scrollView = UIScrollView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    let contentView1 = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
     private let searchController = UISearchController(searchResultsController: nil)
     
     private let titleLabel = UILabel().then {
@@ -54,9 +46,9 @@ public final class StudentManagementViewController: BaseViewController {
     }
     
     @objc func filterButtonTapped() {
-        let bottomSheetVC = FilterBottomSheetVC()
-        bottomSheetVC.modalPresentationStyle = .overFullScreen
-        self.present(bottomSheetVC, animated: false, completion: nil)
+        let filterVC = FilterBottomSheetVC(studentManagementVC: self)
+        filterVC.modalPresentationStyle = .overFullScreen
+        self.present(filterVC, animated: false, completion: nil)
     }
     
     // MARK: - Life Cycel
@@ -67,32 +59,22 @@ public final class StudentManagementViewController: BaseViewController {
             self.userList = self.viewModel.userListDatas
             self.setupCollectionView()
             self.setupSearchBar()
+            self.configureRefreshControl()
             self.studentCollectionView.reloadData()
         }
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configureRefreshControl()
         setupScrollView()
     }
     
     private func setupScrollView() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView1)
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        contentView1.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView)
-            make.width.equalTo(scrollView)
-            make.bottom.equalTo(studentCollectionView.snp.bottom)
-        }
         addView()
         configureRefreshControl()
     }
-        // MARK: - Refresh Control Setup
+
+    // MARK: - Refresh Control Setup
     func configureRefreshControl() {
         studentCollectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
@@ -113,6 +95,7 @@ public final class StudentManagementViewController: BaseViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "학생 관리"
         navigationItem.searchController = searchController
+        self.navigationItem.hidesSearchBarWhenScrolling = false
         self.navigationController?.navigationBar.isHidden = false
     }
     
@@ -187,11 +170,15 @@ extension StudentManagementViewController: UISearchResultsUpdating {
     public func updateSearchResults(for searchController: UISearchController) {
         guard let searchString = searchController.searchBar.text else { return }
         if searchString.isEmpty {
+            viewModel.resetInfo()
+            viewModel.serachStudent(searchString: nil) { newList in
+                self.userList = newList
+                self.studentCollectionView.reloadData()
+            }
             userList = viewModel.userListDatas
         } else {
-            viewModel.serachStudent(searchString: searchString) {
-                self.userList = self.viewModel.userSearchListDatas
-                print(self.userList)
+            viewModel.serachStudent(searchString: searchString) { newList in
+                self.userList = newList
                 self.studentCollectionView.reloadData()
             }
         }

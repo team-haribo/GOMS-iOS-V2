@@ -28,7 +28,9 @@ public final class AuthCodeViewController: BaseViewController {
     
     var limitTime = 300
     
-    private let authCodeTextField = GOMSTextField()
+    private let authCodeTextField = GOMSTextField().then {
+        $0.keyboardType = .numberPad
+    }
     
     private let timeLabel = UILabel().then {
         $0.font = .pretendard(size: 16, weight: .regular)
