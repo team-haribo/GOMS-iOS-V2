@@ -95,6 +95,7 @@ public final class ProfileViewModel: ObservableObject {
         providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
             switch result {
             case .success:
+                self?.keyChain.delete(key: Const.KeyChainKey.accessToken)
                 print("Logout successfully")
 
             case let .failure(err):

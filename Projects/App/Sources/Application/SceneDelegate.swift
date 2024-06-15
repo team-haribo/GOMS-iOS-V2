@@ -11,7 +11,8 @@ import Feature
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    let viewModel = BaseViewModel()
+    
+    private var profileModel = ProfileViewModel()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -20,37 +21,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let defaults = UserDefaults.standard
         
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-        let AdminisSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
+        let adminIsSwitchOn = defaults.bool(forKey: "AdminisSwitchOn")
         
         applySavedTheme()
         
-        let authority = UserDefaults.standard.string(forKey: "authority")
-        
-        self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-        
-//        DispatchQueue.main.async {
-//            if self.viewModel.isLogin == true {
-//                if AdminisSwitchOn == true {
-//                    if isSwitchOn == true {
-//                        self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
-//                    } else {
-//                        self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
-//                    }
-//                } else if AdminisSwitchOn == false {
-//                    if isSwitchOn == true {
-//                        self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
-//                    } else {
-//                        self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
-//                    }
-//                }
-//            } else {
-//                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-//            }
-//        }
-
-        window?.makeKeyAndVisible()
+        if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
+            self.profileModel.loadProfileInfo { success in
+                if success {
+                    let authority = self.profileModel.profileInfo?.authority
+                    DispatchQueue.main.async {
+                        if authority == "ROLE_STUDENT_COUNCIL" {
+                            self.window?.rootViewController =  UINavigationController(rootViewController: AdminMainViewController())
+                        } else if authority == "ROLE_STUDENT" {
+                            self.window?.rootViewController =  UINavigationController(rootViewController: MainViewController())
+                        } else {
+                            self.window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
+                        }
+                    }
+                } else {
+                    self.window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
+                }
+            }
+        } else {
+            window?.rootViewController =  UINavigationController(rootViewController: IntroViewController())
+        }
+        self.window?.makeKeyAndVisible()
     }
     
+
+//        if isSwitchOn == true {
+//            self.window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
+//        } else if adminIsSwitchOn == true {
+//            self.window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
+//        } else {
+//            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+//        }
+
     private func applySavedTheme() {
         let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
         let savedTheme = UIUserInterfaceStyle(rawValue: savedThemeValue) ?? .unspecified
@@ -60,7 +66,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             rootViewController.updateThemeText()
         }
     }
-    
+
     func sceneDidDisconnect(_ scene: UIScene) {}
     
     func sceneDidBecomeActive(_ scene: UIScene) {}

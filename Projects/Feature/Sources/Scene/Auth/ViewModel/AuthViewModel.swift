@@ -16,13 +16,6 @@ public final class AuthViewModel: BaseViewModel {
     private let accountProvider = MoyaProvider<AccountServices>()
     
     public override init() {}
-        
-    public func signInWithToken(accessToken: String, completion: @escaping (Bool) -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.accessToken = accessToken
-            completion(true)
-        }
-    }
     
     var userData: SignInModel?
     private var email: String = ""
