@@ -11,11 +11,13 @@ import Service
 import Foundation
 
 public class BaseViewModel {
+    public static let shared = BaseViewModel()
+    
     public let keyChain = KeyChain()
     let gomsRefreshToken = GOMSRefreshToken.shared
     public lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
     public var isLogin: Bool {
-        return !accessToken.isEmpty
+        return accessToken != nil
     }
     
     public init() {}

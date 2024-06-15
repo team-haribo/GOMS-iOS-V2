@@ -12,6 +12,8 @@ import Security
 import Foundation
 
 public class KeyChain {
+    public static let shared = KeyChain()
+    
     func create(key: String, token: String) {
         let query: NSDictionary = [
             kSecClass: kSecClassGenericPassword,
@@ -23,7 +25,7 @@ public class KeyChain {
         assert(status == noErr, "failed to save Token")
     }
     
-    func read(key: String) -> String? {
+    public func read(key: String) -> String? {
         let query: NSDictionary = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: key,
@@ -61,14 +63,22 @@ public class KeyChain {
         return result
     }
     
-    func delete() {
+    func delete(key: String) {
+        let query: NSDictionary = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrAccount: key
+        ]
         
+        let status = SecItemDelete(query)
+        if status != errSecSuccess {
+            print("Failed to delete item from Keychain with status code \(status)")
+        }
     }
 }
 
 public struct Const {
-    struct KeyChainKey {
-        static let accessToken = "accessToken"
+    public struct KeyChainKey {
+        public static let accessToken = "accessToken"
         static let refreshToken = "refreshToken"
         static let authority = "authority"
     }

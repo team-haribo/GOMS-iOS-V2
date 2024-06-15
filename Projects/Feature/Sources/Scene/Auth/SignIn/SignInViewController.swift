@@ -125,6 +125,7 @@ public final class SignInViewController: BaseViewController {
                         DispatchQueue.main.async {
                             if authority == "ROLE_STUDENT_COUNCIL" {
                                 let mainVC = AdminMainViewController()
+                                // 권한저장
                                 self.navigationController?.pushViewController(mainVC, animated: true)
                             } else if authority == "ROLE_STUDENT" {
                                 let mainVC = MainViewController()
@@ -134,7 +135,6 @@ public final class SignInViewController: BaseViewController {
                             }
                         }
                     } else {
-                        // Handle profile loading error if needed
                         print("Failed to load profile info")
                     }
                 }
