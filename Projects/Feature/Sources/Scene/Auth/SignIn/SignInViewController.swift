@@ -181,10 +181,12 @@ public final class SignInViewController: BaseViewController {
         emailTextField.setPlaceholderColor(.color.gomsTertiary.color)
         defaultDomain.textColor = .color.gomsTertiary.color
         emailErrorLabel.isHidden = true
-        passwordErrorLabel.isHidden = true
         emailTextField.layer.borderColor = UIColor.clear.cgColor
         emailTextField.layer.borderWidth = 0
+        passwordErrorLabel.isHidden = true
         findPasswordLabel.isHidden = false
+        passwordTextField.layer.borderColor = UIColor.clear.cgColor
+        passwordTextField.layer.borderWidth = 0
         
         passwordTextField.snp.remakeConstraints {
             $0.height.equalTo(56)
@@ -200,6 +202,10 @@ public final class SignInViewController: BaseViewController {
         emailErrorLabel.isHidden = false
         emailTextField.layer.borderColor = UIColor.systemRed.cgColor
         emailTextField.layer.borderWidth = 1
+        passwordErrorLabel.isHidden = true
+        findPasswordLabel.isHidden = false
+        passwordTextField.layer.borderColor = UIColor.clear.cgColor
+        passwordTextField.layer.borderWidth = 0
         
         passwordTextField.snp.remakeConstraints {
             $0.height.equalTo(48)
@@ -215,6 +221,18 @@ public final class SignInViewController: BaseViewController {
         passwordTextField.layer.borderColor = UIColor.systemRed.cgColor
         passwordTextField.layer.borderWidth = 1
         findPasswordLabel.isHidden = true
+        emailTextField.setPlaceholderColor(.color.gomsTertiary.color)
+        defaultDomain.textColor = .color.gomsTertiary.color
+        emailErrorLabel.isHidden = true
+        emailTextField.layer.borderColor = UIColor.clear.cgColor
+        emailTextField.layer.borderWidth = 0
+        
+        passwordTextField.snp.remakeConstraints {
+            $0.height.equalTo(56)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(emailTextField.snp.bottom).offset(24)
+        }
     }
     
     // MARK: - Navigaiton
