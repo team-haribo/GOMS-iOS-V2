@@ -55,15 +55,21 @@ public final class SignInViewController: BaseViewController {
         $0.isHidden = true
     }
     
-    private let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
-        $0.isSecureTextEntry = true
-    }
-    
-    lazy var visiblePasswordButton = UIButton().then {
-        $0.setImage(.image.visible.image, for: .normal)
-        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
-        $0.isEnabled = true
-    }
+    lazy var passwordTextField: GOMSTextField = {
+        let textField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호")
+        textField.isSecureTextEntry = true
+        textField.rightView = visiblePasswordButton
+        textField.rightViewMode = .always
+        return textField
+    }()
+
+    lazy var visiblePasswordButton: UIButton = {
+        let button = UIButton()
+        button.setImage(.image.visible.image, for: .normal)
+        button.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        button.isEnabled = true
+        return button
+    }()
     
     private let findPasswordLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 48)).then {
         $0.text = "비밀번호를 잊으셨나요?"
@@ -96,7 +102,6 @@ public final class SignInViewController: BaseViewController {
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
-
     }
     
     // MARK: - Seletors
@@ -146,9 +151,9 @@ public final class SignInViewController: BaseViewController {
     
     @objc func visiblePasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()
-        passwordTextField.isSelected.toggle()
-        
-        if passwordTextField.isSelected {
+        visiblePasswordButton.isSelected.toggle()
+
+        if visiblePasswordButton.isSelected {
             visiblePasswordButton.setImage(.image.invisible.image, for: .normal)
         } else {
             visiblePasswordButton.setImage(.image.visible.image, for: .normal)
@@ -175,6 +180,12 @@ public final class SignInViewController: BaseViewController {
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.16)
         }
+        
+        visiblePasswordButton.snp.remakeConstraints {
+               $0.trailing.equalTo(passwordTextField).inset(16)
+               $0.centerY.equalTo(passwordTextField)
+               $0.width.height.equalTo(24)
+           }
     }
     
     func signInSuccessUI() {
@@ -194,6 +205,13 @@ public final class SignInViewController: BaseViewController {
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.top.equalTo(emailTextField.snp.bottom).offset(24)
         }
+        
+        visiblePasswordButton.snp.remakeConstraints {
+               $0.trailing.equalTo(passwordTextField).inset(16)
+               $0.centerY.equalTo(passwordTextField)
+               $0.width.height.equalTo(24)
+           }
+        
     }
     
     func emailErrorUI() {
@@ -251,63 +269,63 @@ public final class SignInViewController: BaseViewController {
     
     // MARK: - Layout
     override func setLayout() {
-        defaultDomain.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
-            $0.height.equalTo(28)
-            $0.centerY.equalToSuperview()
-        }
-        
-        emailTextField.snp.makeConstraints {
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.2)
-            $0.height.equalTo(56)
-        }
-        
-        emailErrorLabel.snp.makeConstraints {
-            $0.leading.equalTo(emailTextField.snp.leading)
-            $0.height.equalTo(48)
-            $0.top.equalTo(emailTextField.snp.bottom)
-        }
-        
-        passwordTextField.snp.makeConstraints {
-            $0.height.equalTo(56)
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(emailTextField.snp.bottom).offset(24)
-        }
-        
-        visiblePasswordButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
-            $0.centerY.equalToSuperview()
-        }
-        
-        findPasswordLabel.snp.makeConstraints {
-            $0.height.equalTo(48)
-            $0.top.equalTo(passwordTextField.snp.bottom)
-            $0.leading.equalTo(bounds.width * 0.07)
-        }
-        
-        passwordErrorLabel.snp.makeConstraints {
-            $0.height.equalTo(48)
-            $0.top.equalTo(passwordTextField.snp.bottom)
-            $0.leading.equalTo(bounds.width * 0.07)
-        }
-        
-        findPasswordButton.snp.makeConstraints {
-            $0.height.equalTo(48)
-            $0.trailing.equalTo(-bounds.width * 0.07)
-            $0.top.equalTo(passwordTextField.snp.bottom)
-        }
-        
-        signInButton.snp.makeConstraints {
-            $0.height.equalTo(48)
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.bottom.equalTo(-bounds.height * 0.16)
+            defaultDomain.snp.makeConstraints {
+                $0.trailing.equalToSuperview().inset(16)
+                $0.height.equalTo(28)
+                $0.centerY.equalToSuperview()
+            }
+            
+            emailTextField.snp.makeConstraints {
+                $0.leading.equalTo(bounds.width * 0.05)
+                $0.trailing.equalTo(-bounds.width * 0.05)
+                $0.top.equalTo(bounds.height * 0.2)
+                $0.height.equalTo(56)
+            }
+            
+            emailErrorLabel.snp.makeConstraints {
+                $0.leading.equalTo(emailTextField.snp.leading)
+                $0.height.equalTo(48)
+                $0.top.equalTo(emailTextField.snp.bottom)
+            }
+            
+            passwordTextField.snp.makeConstraints {
+                $0.height.equalTo(56)
+                $0.leading.equalTo(bounds.width * 0.05)
+                $0.trailing.equalTo(-bounds.width * 0.05)
+                $0.top.equalTo(emailTextField.snp.bottom).offset(24)
+            }
+            
+            visiblePasswordButton.snp.makeConstraints {
+                $0.trailing.equalToSuperview().inset(16)
+                $0.centerY.equalToSuperview()
+            }
+            
+            findPasswordLabel.snp.makeConstraints {
+                $0.height.equalTo(48)
+                $0.top.equalTo(passwordTextField.snp.bottom)
+                $0.leading.equalTo(bounds.width * 0.07)
+            }
+            
+            passwordErrorLabel.snp.makeConstraints {
+                $0.height.equalTo(48)
+                $0.top.equalTo(passwordTextField.snp.bottom)
+                $0.leading.equalTo(bounds.width * 0.07)
+            }
+            
+            findPasswordButton.snp.makeConstraints {
+                $0.height.equalTo(48)
+                $0.trailing.equalTo(-bounds.width * 0.07)
+                $0.top.equalTo(passwordTextField.snp.bottom)
+            }
+            
+            signInButton.snp.makeConstraints {
+                $0.height.equalTo(48)
+                $0.leading.equalTo(bounds.width * 0.05)
+                $0.trailing.equalTo(-bounds.width * 0.05)
+                $0.bottom.equalTo(-bounds.height * 0.16)
+            }
         }
     }
-}
 
 // MARK: - Extension
 extension SignInViewController: UITextFieldDelegate {

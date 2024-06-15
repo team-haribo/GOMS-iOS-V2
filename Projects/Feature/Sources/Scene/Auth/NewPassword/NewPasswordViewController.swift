@@ -30,11 +30,6 @@ public final class NewPasswordViewController: BaseViewController {
         $0.distribution = .fillEqually
         $0.alignment = .fill
     }
-  
-    
-    let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
-        $0.isSecureTextEntry = true
-    }
     
     let passwordErrorLabel = UILabel().then {
         $0.text = "비밀번호가 일치하지 않습니다."
@@ -57,11 +52,21 @@ public final class NewPasswordViewController: BaseViewController {
         $0.isHidden = true
     }
     
-    lazy var visiblePasswordButton = UIButton().then {
-        $0.setImage(.image.visible.image, for: .normal)
-        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
-        $0.isEnabled = true
-    }
+    public lazy var passwordTextField: GOMSTextField = {
+        let textField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호")
+        textField.isSecureTextEntry = true
+        textField.rightView = self.visiblePasswordButton
+        textField.rightViewMode = .always
+        return textField
+    }()
+
+    public lazy var visiblePasswordButton: UIButton = {
+        let button = UIButton()
+        button.setImage(.image.visible.image, for: .normal)
+        button.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        button.isEnabled = true
+        return button
+    }()
     
     private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인").then {
         $0.isSecureTextEntry = true
@@ -144,7 +149,9 @@ public final class NewPasswordViewController: BaseViewController {
     
     @objc func visiblePasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()
+        checkPasswordTextField.isSecureTextEntry.toggle()
         passwordTextField.isSelected.toggle()
+        checkPasswordTextField.isSelected.toggle()
         
         if passwordTextField.isSelected {
             visiblePasswordButton.setImage(.image.invisible.image, for: .normal)
@@ -264,6 +271,7 @@ public final class NewPasswordViewController: BaseViewController {
             $0.leading.equalTo(bounds.width * 0.07)
         }
         
+        
         textFieldStackView.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
@@ -271,10 +279,9 @@ public final class NewPasswordViewController: BaseViewController {
         }
         
         visiblePasswordButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
-            $0.centerY.equalToSuperview()
-            $0.width.height.equalTo(24)
-        }
+            $0.trailing.equalTo(passwordTextField).inset(16)
+            $0.centerY.equalTo(passwordTextField)
+            $0.width.height.equalTo(24)        }
         
         conditionsLabel.snp.makeConstraints {
             $0.height.equalTo(48)
