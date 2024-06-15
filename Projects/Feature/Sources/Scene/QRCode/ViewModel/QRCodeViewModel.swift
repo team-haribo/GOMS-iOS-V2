@@ -12,7 +12,7 @@ public final class QRCodeViewModel: BaseViewModel {
     public var outingUUID: UUID = UUID()
     private var isRequesting: Bool = false
 
-    func outing(completion: @escaping (Int) -> Void) {
+    func outing(completion: @escaping (String) -> Void) {
         guard !isRequesting else {
             print("이미 외출 요청이 진행 중입니다.")
             return
@@ -25,22 +25,29 @@ public final class QRCodeViewModel: BaseViewModel {
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 204:
-                    print("Created")
-                    completion(statusCode)
-                case 400:
-                    print("나갈려는 학생이 블랙리스트인 경우")
-                    print("검증 안된 outingUUID인 경우")
-                    print("outingUUID를 보내지 않은 경우")
                     self.profileViewModel.loadProfileInfo { success in
                         if success {
                             if let profileInfo = self.profileViewModel.profileInfo {
-                                print("Profile name: \(profileInfo.name)")
-                                print("Profile blackList: \(profileInfo.isBlackList)")
+                                if profileInfo.isOuting == true {
+                                    completion("outing")
+                                } else if profileInfo.isOuting == false {
+                                    completion("comeback")
+                                }
+                            } else {
+                                print("Profile info is nil")
+                            }
+                        } else {
+                            print("Failed to load profile info")
+                        }
+                    }
+                case 400:
+                    self.profileViewModel.loadProfileInfo { success in
+                        if success {
+                            if let profileInfo = self.profileViewModel.profileInfo {
                                 if profileInfo.isBlackList == true {
-                                    completion(400)
-                                    print("4000000")
+                                    completion("blackList")
                                 } else {
-                                    completion(405)
+                                    completion("uuidError")
                                  }
                             } else {
                                 print("Profile info is nil")

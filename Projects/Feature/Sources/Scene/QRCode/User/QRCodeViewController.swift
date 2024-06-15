@@ -70,27 +70,26 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             $0.centerY.centerX.equalToSuperview()
         }
     }
-    
-    func qrScanSuccess() {
-        let alert = UIAlertController(title: "외출 복귀", message: "외출 복귀 처리되었습니다.", preferredStyle: .alert)
-        let action = UIAlertAction(title: "확인", style: .default) { _ in
-            let mainVC = MainViewController()
-            self.navigationController?.pushViewController(mainVC, animated: true)
-        }
-        alert.addAction(action)
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    func qrScanfailed(statusCode: Int) {
+
+    func qrScanResult(result: String) {
+        var title = ""
         var message = ""
         
-        if statusCode == 400 {
+        if result == "comeback" {
+            title = "QR코드 스캔 성공"
+            message = "제 시간에 복귀에 성공했어요!\n다음 외출제에 또 만나요!"
+        } else if result == "outing" {
+            title = "QR코드 스캔 성공"
+            message = "외출을 시작합니다.\n7시 30분까지 복귀해 주세요."
+        } else if result == "blackList" {
+            title = "QR코드 스캔 실패"
             message = "외출 금지 상태에서는\nQR 스캔을 할 수 없습니다."
-        } else {
+        } else if result == "uuidError" {
+            title = "QR코드 스캔 실패"
             message = "예기치 못한 오류가 발생했습니다.\n다시 시도해 주세요."
         }
-    
-        let alert = UIAlertController(title: "QR코드 스캔 실패", message: message, preferredStyle: .alert)
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "확인", style: .default) { _ in
             let mainVC = MainViewController()
             self.navigationController?.pushViewController(mainVC, animated: true)
@@ -156,15 +155,8 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
                             
                             print("QR 인식 후 UUID : \(self.viewModel.outingUUID)")
                             self.viewModel.outingUUID = UUID(uuidString: payload) ?? UUID()
-                            self.viewModel.outing { statusCode in
-                                switch statusCode {
-                                case 204:
-                                    self.qrScanSuccess()
-                                case 400:
-                                    self.qrScanfailed(statusCode: statusCode)
-                                default:
-                                    self.qrScanfailed(statusCode: statusCode)
-                                }
+                            self.viewModel.outing { result in
+                                self.qrScanResult(result: result)
                             }
                             self.captureSession.stopRunning()
                         }
