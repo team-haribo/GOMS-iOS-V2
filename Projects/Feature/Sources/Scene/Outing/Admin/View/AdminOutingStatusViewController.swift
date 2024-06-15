@@ -113,6 +113,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     }
 
     @objc private func handleRefreshControl() {
+        viewModel.gomsRefreshToken.tokenReissuance()
         viewModel.getOutingList {
             self.outingList = self.viewModel.outingListDatas
             DispatchQueue.main.async {
@@ -121,7 +122,6 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
             }
         }
     }
-
 
     private func setupCollectionView() {
         self.outingListCollectionView.dataSource = self
@@ -172,7 +172,6 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
             $0.top.equalTo(coffeeIcon.snp.bottom).offset(8)
         }
     }
-
 }
 
 // MARK: - Extension

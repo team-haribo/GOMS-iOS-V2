@@ -14,10 +14,10 @@ public final class OutingViewController: BaseViewController {
     private let viewModel = OutingViewModel()
     
     var outingList: [OutingListData] = [] {
-         didSet {
-             outingListCollectionView.reloadData()
-         }
-     }
+        didSet {
+            outingListCollectionView.reloadData()
+        }
+    }
     
     let refreshControl = UIRefreshControl()
     
@@ -120,13 +120,15 @@ public final class OutingViewController: BaseViewController {
         addView()
         configureRefreshControl()
     }
-        // MARK: - Refresh Control Setup
+    
+    // MARK: - Refresh Control Setup
     private func configureRefreshControl() {
         outingListCollectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
     }
 
     @objc private func handleRefreshControl() {
+        viewModel.gomsRefreshToken.tokenReissuance()
         viewModel.getOutingList {
             self.outingList = self.viewModel.outingListDatas
             DispatchQueue.main.async {
