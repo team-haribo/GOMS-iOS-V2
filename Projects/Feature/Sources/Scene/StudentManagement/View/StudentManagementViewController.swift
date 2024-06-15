@@ -81,6 +81,7 @@ public final class StudentManagementViewController: BaseViewController {
     }
 
     @objc private func handleRefreshControl() {
+        viewModel.gomsRefreshToken.tokenReissuance()
         viewModel.getUserList {
             self.userList = self.viewModel.userListDatas
             DispatchQueue.main.async {

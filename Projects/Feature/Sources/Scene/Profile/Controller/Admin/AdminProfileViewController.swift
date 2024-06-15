@@ -11,7 +11,6 @@ import Combine
 import Moya
 import Service
 
-
 public class AdminProfileViewController: BaseViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let imagePickerController = UIImagePickerController()
@@ -62,7 +61,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
-    
     
     let perceptionNum = UILabel().then {
         $0.text = "0"
@@ -390,6 +388,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     @objc func handleRefreshControl() {
+        viewModel.gomsRefreshToken.tokenReissuance()
         viewModel.loadProfileInfo { success in
                 if success {
                     print("성공")
