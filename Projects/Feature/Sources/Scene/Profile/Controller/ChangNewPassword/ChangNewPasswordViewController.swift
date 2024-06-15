@@ -20,10 +20,6 @@ public final class ChangNewPasswordViewController: BaseViewController {
         $0.alignment = .fill
     }
     
-    public let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
-        $0.isSecureTextEntry = true
-    }
-    
     let passwordErrorLabel = UILabel().then {
         $0.text = "비밀번호가 일치하지 않습니다."
         $0.textColor = .color.gomsNegative.color
@@ -45,10 +41,21 @@ public final class ChangNewPasswordViewController: BaseViewController {
         $0.isHidden = true
     }
     
-    lazy var visiblePasswordButton = UIButton().then {
-        $0.setImage(.image.visible.image, for: .normal)
-        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
-    }
+    private lazy var passwordTextField: GOMSTextField = {
+        let textField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호")
+        textField.isSecureTextEntry = true
+        textField.rightView = self.visiblePasswordButton
+        textField.rightViewMode = .always
+        return textField
+    }()
+
+    private lazy var visiblePasswordButton: UIButton = {
+        let button = UIButton()
+        button.setImage(.image.visible.image, for: .normal)
+        button.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        button.isEnabled = true
+        return button
+    }()
     
     private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인").then {
         $0.isSecureTextEntry = true
@@ -183,9 +190,9 @@ public final class ChangNewPasswordViewController: BaseViewController {
     
     @objc func visiblePasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()
-        passwordTextField.isSelected.toggle()
+        visiblePasswordButton.isSelected.toggle()
         
-        if passwordTextField.isSelected {
+        if visiblePasswordButton.isSelected {
             visiblePasswordButton.setImage(.image.invisible.image, for: .normal)
         } else {
             visiblePasswordButton.setImage(.image.visible.image, for: .normal)
@@ -228,7 +235,7 @@ public final class ChangNewPasswordViewController: BaseViewController {
     override func addView() {
         passwordTextField.addSubview(visiblePasswordButton)
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
-        [textFieldStackView, conditionsLabel, doneButton,passwordErrorLabel,passwordOverlapErrorLabel,passwordWrongRegularExpression].forEach { view.addSubview($0) }
+        [textFieldStackView, conditionsLabel, doneButton,passwordErrorLabel,passwordOverlapErrorLabel,passwordWrongRegularExpression,visiblePasswordButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
