@@ -71,6 +71,33 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         }
     }
     
+    func qrScanResult(result: String) {
+        var title = ""
+        var message = ""
+        
+        if result == "comeback" {
+            title = "QR코드 스캔 성공"
+            message = "제 시간에 복귀에 성공했어요!\n다음 외출제에 또 만나요!"
+        } else if result == "outing" {
+            title = "QR코드 스캔 성공"
+            message = "외출을 시작합니다.\n7시 30분까지 복귀해 주세요."
+        } else if result == "blackList" {
+            title = "QR코드 스캔 실패"
+            message = "외출 금지 상태에서는\nQR 스캔을 할 수 없습니다."
+        } else if result == "uuidError" {
+            title = "QR코드 스캔 실패"
+            message = "예기치 못한 오류가 발생했습니다.\n다시 시도해 주세요."
+        }
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "확인", style: .default) { _ in
+            let mainVC = MainViewController()
+            self.navigationController?.pushViewController(mainVC, animated: true)
+        }
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     public func setupCamera() {
         guard let camera = AVCaptureDevice.default(for: .video) else { return }
         
@@ -91,8 +118,8 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         view.layer.addSublayer(previewLayer)
         [gomsLogo, closeButton, qrFrame].forEach { self.view.addSubview($0) }
         
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.captureSession.startRunning()
+        DispatchQueue.global().async {
+            self.captureSession.startRunning()
         }
     }
     
@@ -112,40 +139,34 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             
             for barcode in barcodes {
                 if let payload = barcode.payloadStringValue {
-                    let qrCodeBoundingBox = barcode.boundingBox
-                    
                     DispatchQueue.main.async {
-                        let qrFrameRect = CGRect(x: self.qrFrame.frame.origin.x,
-                                                 y: self.qrFrame.frame.origin.y,
-                                                 width: self.qrFrame.frame.width * self.view.bounds.width,
-                                                 height: self.qrFrame.frame.height * self.view.bounds.height
-                        )
+                        let qrFrameRect = self.qrFrame.convert(self.qrFrame.bounds, to: self.view)
                         
-                        if qrFrameRect.contains(CGPoint(x: qrCodeBoundingBox.midX * self.view.bounds.width,
-                                                        y: qrCodeBoundingBox.midY * self.view.bounds.height)) {
+                        let qrFrameTopLeft = qrFrameRect.origin
+                        let qrFrameTopRight = CGPoint(x: qrFrameRect.maxX, y: qrFrameRect.minY)
+                        let qrFrameBottomLeft = CGPoint(x: qrFrameRect.minX, y: qrFrameRect.maxY)
+                        let qrFrameBottomRight = CGPoint(x: qrFrameRect.maxX, y: qrFrameRect.maxY)
+                        
+                        let boundingBox = barcode.boundingBox
+                        let barcodeTopLeft = CGPoint(x: boundingBox.minX * self.view.bounds.width, y: boundingBox.minY * self.view.bounds.height)
+                        let barcodeTopRight = CGPoint(x: boundingBox.maxX * self.view.bounds.width, y: boundingBox.minY * self.view.bounds.height)
+                        let barcodeBottomLeft = CGPoint(x: boundingBox.minX * self.view.bounds.width, y: boundingBox.maxY * self.view.bounds.height)
+                        let barcodeBottomRight = CGPoint(x: boundingBox.maxX * self.view.bounds.width, y: boundingBox.maxY * self.view.bounds.height)
+                        
+                        if qrFrameRect.contains(barcodeTopLeft)
+                            && qrFrameRect.contains(barcodeTopRight)
+                            && qrFrameRect.contains(barcodeBottomLeft)
+                            && qrFrameRect.contains(barcodeBottomRight) {
                             
                             isScanningEnabled = false
                             
-                            print("QR 인식 후 UUID : \(self.viewModel.outingUUID)")
                             self.viewModel.outingUUID = UUID(uuidString: payload) ?? UUID()
-                            self.viewModel.outing { success in
-                                if success {
-                                    let alert = UIAlertController(title: "외출 복귀", message: "외출 복귀 처리되었습니다.", preferredStyle: .alert)
-                                    let action = UIAlertAction(title: "확인", style: .default) { _ in
-                                        let mainVC = MainViewController()
-                                        self.navigationController?.pushViewController(mainVC, animated: true)
-                                    }
-                                    alert.addAction(action)
-                                    self.present(alert, animated: true, completion: nil)
-                                } else {
-                                    let alert = UIAlertController(title: "오류", message: "외출 처리 중 오류가 발생하였습니다.", preferredStyle: .alert)
-                                    let action = UIAlertAction(title: "확인", style: .default, handler: nil)
-                                    alert.addAction(action)
-                                    self.present(alert, animated: true, completion: nil)
-                                }
+                            self.viewModel.outing { result in
+                                self.qrScanResult(result: result)
                             }
                             self.captureSession.stopRunning()
                         }
+                        
                     }
                 }
             }
