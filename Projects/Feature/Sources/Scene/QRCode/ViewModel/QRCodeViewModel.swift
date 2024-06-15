@@ -10,8 +10,15 @@ public final class QRCodeViewModel: BaseViewModel {
     private let profileViewModel = ProfileViewModel()
     
     public var outingUUID: UUID = UUID()
+    private var isRequesting: Bool = false
 
     func outing(completion: @escaping (Int) -> Void) {
+        guard !isRequesting else {
+            print("이미 외출 요청이 진행 중입니다.")
+            return
+        }
+        
+        isRequesting = true
         outingProvider.request(.outing(outingUUID: outingUUID, authorization: accessToken)) { response in
             switch response {
             case .success(let result):
@@ -34,8 +41,7 @@ public final class QRCodeViewModel: BaseViewModel {
                                     print("4000000")
                                 } else {
                                     completion(405)
-                                    print("45555555")
-                                }
+                                 }
                             } else {
                                 print("Profile info is nil")
                             }
