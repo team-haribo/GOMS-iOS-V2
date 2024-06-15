@@ -320,12 +320,12 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         super.viewDidLoad()
         applySavedTheme()
         viewModel.loadProfileInfo { success in
-                if success {
-                    print("성공")
-                } else {
-                    print("Failed to load profile information.")
-                }
+            if success {
+                print("성공")
+            } else {
+                print("Failed to load profile information.")
             }
+        }
         
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchMakeOn")
         qrmakeontoggleButton.isOn = isSwitchOn

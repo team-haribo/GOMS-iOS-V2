@@ -7,25 +7,57 @@ import CoreImage.CIFilterBuiltins
 public final class QRCodeViewModel: BaseViewModel {
     private let studentCouncilProvider = MoyaProvider<StudentCouncilServices>()
     private let outingProvider = MoyaProvider<OutingServices>()
+    private let profileViewModel = ProfileViewModel()
     
     public var outingUUID: UUID = UUID()
+    private var isRequesting: Bool = false
 
-    func outing(completion: @escaping (Bool) -> Void) {
+    func outing(completion: @escaping (String) -> Void) {
+        guard !isRequesting else {
+            print("이미 외출 요청이 진행 중입니다.")
+            return
+        }
+        
+        isRequesting = true
         outingProvider.request(.outing(outingUUID: outingUUID, authorization: accessToken)) { response in
-            print("상태 변경 요청 시  : \(self.outingUUID)")
             switch response {
             case .success(let result):
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 204:
-                    print("Created")
-                    completion(true)
+                    self.profileViewModel.loadProfileInfo { success in
+                        if success {
+                            if let profileInfo = self.profileViewModel.profileInfo {
+                                if profileInfo.isOuting == true {
+                                    completion("outing")
+                                } else if profileInfo.isOuting == false {
+                                    completion("comeback")
+                                }
+                            } else {
+                                print("Profile info is nil")
+                            }
+                        } else {
+                            print("Failed to load profile info")
+                        }
+                    }
+                case 400:
+                    self.profileViewModel.loadProfileInfo { success in
+                        if success {
+                            if let profileInfo = self.profileViewModel.profileInfo {
+                                if profileInfo.isBlackList == true {
+                                    completion("blackList")
+                                } else {
+                                    completion("uuidError")
+                                 }
+                            } else {
+                                print("Profile info is nil")
+                            }
+                        } else {
+                            print("Failed to load profile info")
+                        }
+                    }
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
-                case 403:
-                    print("학생회 계정이 아닌데 요청할 경우")
-                case 404:
-                    print("계정을 찾을 수 없을 경우")
                 case 500:
                     print("SERVER ERROR")
                 default:
@@ -49,7 +81,6 @@ public final class QRCodeViewModel: BaseViewModel {
                         if let outingUUIDString = responseJSON?["outingUUID"] as? String,
                            let outingUUID = UUID(uuidString: outingUUIDString) {
                             self.outingUUID = outingUUID
-                            print("서버에서 받아온 UUID : \(self.outingUUID)")
                             completion(true)
                         } else {
                             print("outingUUID를 가져올 수 없습니다.")
