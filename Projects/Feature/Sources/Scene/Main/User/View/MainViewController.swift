@@ -17,9 +17,9 @@ public final class MainViewController: BaseViewController {
     private let profileViewModel = ProfileViewModel()
     private let profileView = MainProfileView()
     private let basicsProfileView = ProfileCardView()
+    
     let refreshControl = UIRefreshControl()
     
-        
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -29,10 +29,10 @@ public final class MainViewController: BaseViewController {
     }
     
     var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
-            didSet {
-                updateLayout()
-            }
+        didSet {
+            updateLayout()
         }
+    }
     
     let content = UIView()
     
@@ -144,32 +144,33 @@ public final class MainViewController: BaseViewController {
     
     @objc func handleRefreshControl() {
         mainViewModel.getLateList { [weak self] in
-                guard let self = self else { return }
+            guard let self = self else { return }
             
-                self.mainViewModel.getProfile {
-                    self.setupProfileView()
-                    self.view.layoutIfNeeded()
+            self.mainViewModel.gomsRefreshToken.tokenReissuance()
+            
+            self.mainViewModel.getProfile {
+                self.setupProfileView()
+                self.view.layoutIfNeeded()
                 
-                    self.mainViewModel.getOutingList {
-                        self.setup()
-                        self.view.layoutIfNeeded()
-                        
-                        self.setupCountLable()
-                        self.setCollectionView()
-                        self.setup()
-                        self.setupProfileView()
-                        self.latecomerCollectionView.reloadData()
-                        self.outingStatusCollectionView.reloadData()
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            self.refreshControl.endRefreshing()
-                            self.view.frame.origin.y = 0
-                        }
+                self.mainViewModel.getOutingList {
+                    self.setup()
+                    self.view.layoutIfNeeded()
+                    
+                    self.setupCountLable()
+                    self.setCollectionView()
+                    self.setup()
+                    self.setupProfileView()
+                    self.latecomerCollectionView.reloadData()
+                    self.outingStatusCollectionView.reloadData()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        self.refreshControl.endRefreshing()
+                        self.view.frame.origin.y = 0
                     }
                 }
             }
         }
-    
+    }
     
     func setupScrollView() {
         view.addSubview(scrollView)
@@ -239,8 +240,6 @@ public final class MainViewController: BaseViewController {
                 basicsProfileView.myOutingStatusLabel.textColor = .color.gomsSecondary.color
             }
         }
-        
-        
     }
     
     private func setCollectionView() {
@@ -301,8 +300,6 @@ public final class MainViewController: BaseViewController {
         
         updateLayout()
 
-        
-        
         lateNilView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(40)
@@ -409,34 +406,34 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func updateLayout() {
-            profileView.snp.remakeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.height.equalTo(84)
-                $0.centerX.equalToSuperview()
-                $0.top.equalToSuperview()
-            }
-            
-            latecomerLabel.snp.remakeConstraints {
-                $0.top.equalTo(profileView.snp.bottom).offset(24)
-                $0.leading.equalToSuperview()
-                $0.height.equalTo(32)
-            }
-            
-            basicsProfileView.snp.remakeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.height.equalTo(84)
-                $0.centerX.equalToSuperview()
-                $0.top.equalToSuperview()
-            }
-            
-            if isClockOn {
-                profileView.isHidden = false
-                basicsProfileView.isHidden = true
-            } else {
-                profileView.isHidden = true
-                basicsProfileView.isHidden = false
-            }
-            
-            view.layoutIfNeeded()
+        profileView.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(84)
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview()
         }
+        
+        latecomerLabel.snp.remakeConstraints {
+            $0.top.equalTo(profileView.snp.bottom).offset(24)
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(32)
+        }
+        
+        basicsProfileView.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(84)
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview()
+        }
+        
+        if isClockOn {
+            profileView.isHidden = false
+            basicsProfileView.isHidden = true
+        } else {
+            profileView.isHidden = true
+            basicsProfileView.isHidden = false
+        }
+        
+        view.layoutIfNeeded()
+    }
 }

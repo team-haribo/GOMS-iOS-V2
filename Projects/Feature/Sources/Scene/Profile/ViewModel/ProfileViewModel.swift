@@ -50,8 +50,7 @@ public final class ProfileViewModel: ObservableObject {
             }
         }
     }
-
-
+    
     func submitProfileImage(imageData: Data) -> Future<Void, Error> {
         Future { promise in
             self.provider.request(.submit(authorization: self.accessToken, imageData: imageData)) { result in
