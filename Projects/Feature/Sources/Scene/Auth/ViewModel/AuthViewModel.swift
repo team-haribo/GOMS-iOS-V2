@@ -31,6 +31,7 @@ public final class AuthViewModel: BaseViewModel {
     private var password: String = ""
     private var authCode: String = ""
     private var newPassword: String = ""
+    private var newServePassword: String = ""
     private var name: String = ""
     private var gender: String = ""
     private var major: String = ""
@@ -52,6 +53,11 @@ public final class AuthViewModel: BaseViewModel {
     func setupNewPassword(newPassword: String, checkPassword: String) {
         guard newPassword == checkPassword else { return }
         self.newPassword = newPassword
+    }
+    
+    func setupNewServePassword(newPassword: String, checkPassword: String) {
+        guard newPassword == checkPassword else { return }
+        self.newServePassword = newPassword
     }
     
     func setupName(name: String) {
@@ -78,11 +84,6 @@ public final class AuthViewModel: BaseViewModel {
                     switch statusCode {
                     case 200:
                         print("success")
-                        //self.profileModel.loadProfileInfo()
-                        //UserDefaults.standard.set(self.profileModel.profileInfo?.authority, forKey: "권한")
-//                        let defaults = UserDefaults.standard
-//                        let authority = defaults.string(forKey: "권한")
-//                        print(authority)
                         let signInResponse = try result.map(SignInResponse.self)
                         self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
                         self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
@@ -113,7 +114,7 @@ public final class AuthViewModel: BaseViewModel {
     }
     
     // MARK: - Send Auth Code
-    func sendAuthCode(completion: @escaping (Bool) -> Void) {
+    func sendAuthCode(completion: @escaping (Bool, Int) -> Void) {
         let param  = SendAuthCodeRequest(email: email)
         authProvider.request(.sendAuthCode(param: param)) { response in
             switch response {
@@ -123,18 +124,18 @@ public final class AuthViewModel: BaseViewModel {
                     switch statusCode {
                     case 204:
                         print("success")
-                        completion(true)
+                        completion(true, statusCode)
                     case 429:
                         print("이메일 요청이 5번을 초과할 경우")
-                        completion(false)
+                        completion(false, statusCode)
                     default:
                         print(result)
-                        completion(false)
+                        completion(false, statusCode)
                     }
                 }
             case .failure(let err):
                 print(err.localizedDescription)
-                completion(false)
+                completion(false, 0)
             }
         }
     }
@@ -172,8 +173,8 @@ public final class AuthViewModel: BaseViewModel {
     }
     
     // MARK: - New Password
-    func newPassword(completion: @escaping (Bool) -> Void) {
-        let param = NewPasswordRequest.init(email: email, newPassword: newPassword)
+    func newPassword(completion: @escaping (Bool, Int) -> Void) {
+        let param = NewPasswordRequest.init(email: email, newPassword: newServePassword)
         accountProvider.request(.newPassword(param: param)) { response in
             switch response {
             case .success(let result):
@@ -181,18 +182,28 @@ public final class AuthViewModel: BaseViewModel {
                 switch statusCode {
                 case 204:
                     print("NO CONTENT")
-                    completion(true)
+                    print(statusCode)
+                    completion(true, statusCode)
+                    print("금방찍음")
                 case 404:
                     print("존재하지 않는 사용자일때")
-                    completion(false)
+                    completion(false, statusCode)
+                    print(statusCode)
+                    print("금방찍음")
                 case 400:
                     print("변경하려는 비밀번호가 이전 비밀번호와 같을 때")
-                    completion(false)
+                    completion(false, statusCode)
+                    print(statusCode)
+                    print("금방찍음")
                 case 500:
                     print("SERVER ERROR")
+                    print(statusCode)
+                    completion(false, statusCode)
+                    print("금방찍음")
                 default:
                     print(result)
-                    completion(false)
+                    completion(false, statusCode)
+                    print(statusCode)
                 }
             case .failure(let err):
                 print(err.localizedDescription)

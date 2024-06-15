@@ -50,7 +50,7 @@ public final class FindPasswordViewController: BaseViewController {
     // MARK: - Selectors
     @objc func authCodeButtonTapped() {
         viewModel.setupEmail(email: self.emailTextField.text ?? "")
-        viewModel.sendAuthCode { success in
+        viewModel.sendAuthCode { success, statusCode in
             if success {
                 let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
                 self.navigationController?.pushViewController(authCodeVC, animated: true)

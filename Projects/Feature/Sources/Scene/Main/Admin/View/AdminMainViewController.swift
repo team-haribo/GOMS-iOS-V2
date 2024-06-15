@@ -134,7 +134,7 @@ public class AdminMainViewController: BaseViewController {
                         self.latecomerCollectionView.reloadData()
                         self.outingStatusCollectionView.reloadData()
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             self.refreshControl.endRefreshing()
                             self.view.frame.origin.y = 0
                         }

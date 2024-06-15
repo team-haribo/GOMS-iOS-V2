@@ -401,7 +401,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         let offset = CGPoint(x: 0, y: 0)
         self.view.frame.origin.y += offset.y
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.refreshControl.endRefreshing()
             self.view.frame.origin.y = 0
         }
