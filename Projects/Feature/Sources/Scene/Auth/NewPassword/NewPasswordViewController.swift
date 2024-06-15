@@ -271,6 +271,7 @@ public final class NewPasswordViewController: BaseViewController {
             $0.leading.equalTo(bounds.width * 0.07)
         }
         
+        
         textFieldStackView.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
