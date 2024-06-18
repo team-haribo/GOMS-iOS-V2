@@ -24,12 +24,12 @@ public final class LetecomerViewModel: BaseViewModel {
     
     var date: String = {
         let currentDate = Date()
-        let recentWednesday = currentDate.recentWednesday()
+        let lastWednesday = currentDate.lastWednesday()
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         
-        return formatter.string(from: recentWednesday)
+        return formatter.string(from: lastWednesday)
     }()
     
     var latecomerList: [LatecomerListResponse] = []

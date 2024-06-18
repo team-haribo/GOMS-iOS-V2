@@ -54,10 +54,9 @@ public final class LatecomerListViewController: BaseViewController {
     // MARK: - Life Cycel
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        let calendarBottomSheetVC = CalendarBottomSheetVC(latecomerListVC: self)
-        calendarBottomSheetVC.viewModel.getLatecomerList(completion: { latecomerList in
+        viewModel.getLatecomerList { latecomerList in
             self.latecomerList = latecomerList
-        })
+        }
     }
     
     public override func viewDidLoad() {
