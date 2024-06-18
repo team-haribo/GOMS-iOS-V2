@@ -19,12 +19,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let refreshControl = UIRefreshControl()
     
     let scrollView = UIScrollView().then {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-        
-    let contentView = UIView().then {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isUserInteractionEnabled = true
+    }
     
     let userProfile = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
@@ -76,7 +73,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let line2View = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
-        
+    
     let themeChangText = UILabel().then {
         $0.text = "앱 테마 설정"
         $0.textColor = .color.gomsTextDefault.color
@@ -179,7 +176,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let borderView = UIView().then() {
         $0.backgroundColor = .color.gomsDivider.color
     }
-
+    
     @objc func withdrawalButtonTapped() {
         let alert = UIAlertController(title: "회원 탈퇴", message: "정말로 회원을 탈퇴하시겠습니까?", preferredStyle: .alert)
         
@@ -212,8 +209,8 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         let isClockOn = defaults.bool(forKey: "isClockOn")
         
         if let mainViewController = navigationController?.viewControllers.first(where: { $0 is MainViewController }) as? MainViewController {
-                mainViewController.isClockOn = sender.isOn
-            }
+            mainViewController.isClockOn = sender.isOn
+        }
     }
     
     @IBAction private func ShowActionSheetClick(_ sender: UIButton) {
@@ -267,7 +264,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             UserDefaults.standard.set(themeText, forKey: "themeText")
         }
     }
-
+    
     public func updateThemeText() {
         self.themesettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
     }
@@ -400,15 +397,15 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     public override func viewDidLoad() {
         super.viewDidLoad()
         applySavedTheme()
-        
+        self.navigationController?.navigationBar.prefersLargeTitles = false
         viewModel.loadProfileInfo { success in
-                if success {
-                    print("완료")
-                } else {
-                    // 프로필 정보를 가져오지 못했을 때의 처리
-                    print("Failed to load profile information.")
-                }
+            if success {
+                print("완료")
+            } else {
+                // 프로필 정보를 가져오지 못했을 때의 처리
+                print("Failed to load profile information.")
             }
+        }
         
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
         cameranowontoggleButton.isOn = isSwitchOn
@@ -464,51 +461,35 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         imagePickerController.delegate = self
         
         configureRefreshControl()
-        setupScrollView()
     }
     
     func configureRefreshControl () {
-                scrollView.refreshControl = refreshControl
-                refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
-            }
-            
-        @objc func handleRefreshControl() {
-            viewModel.loadProfileInfo { success in
-                    if success {
-                        print("완료")
-                    } else {
-                        // 프로필 정보를 가져오지 못했을 때의 처리
-                        print("Failed to load profile information.")
-                    }
-                }
-            
-            let offset = CGPoint(x: 0, y: 0)
-            self.view.frame.origin.y += offset.y
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.refreshControl.endRefreshing()
-                self.view.frame.origin.y = 0
+        scrollView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+    }
+    
+    @objc func handleRefreshControl() {
+        viewModel.loadProfileInfo { success in
+            if success {
+                print("완료")
+            } else {
+                // 프로필 정보를 가져오지 못했을 때의 처리
+                print("Failed to load profile information.")
             }
         }
-
-            
-            func setupScrollView() {
-                view.addSubview(scrollView)
-                scrollView.addSubview(contentView)
-                
-                scrollView.snp.makeConstraints { make in
-                    make.edges.equalToSuperview()
-                }
-                
-                contentView.snp.makeConstraints { make in
-                    make.edges.equalTo(scrollView)
-                    make.width.equalTo(scrollView)
-                }
-                
-                addView()
-            }
+        
+        let offset = CGPoint(x: 0, y: 0)
+        self.view.frame.origin.y += offset.y
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.refreshControl.endRefreshing()
+            self.view.frame.origin.y = 0
+        }
+    }
     
     override func addView() {
+        view.addSubview(scrollView)
+        
         [
             userProfile,
             userName,
@@ -535,16 +516,20 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             logoutButton,
             withdrawalButton
         ].forEach {
-            view.addSubview($0)
+            self.scrollView.addSubview($0)
         }
     }
     
     override func setLayout() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
         userProfile.snp.makeConstraints {
             $0.width.equalTo(64)
             $0.height.equalTo(64)
             $0.leading.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().inset(136)
+            $0.top.equalToSuperview().inset(16)
         }
         
         userProfilepencil.snp.makeConstraints {
@@ -626,7 +611,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(themeChangRec.snp.top).offset(20)
             $0.trailing.equalToSuperview().inset(32)
         }
-                
+        
         clockText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)

@@ -18,12 +18,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     var cancellables = Set<AnyCancellable>()
     let refreshControl = UIRefreshControl()
     
-    let scrollView = UIScrollView().then {
+    lazy var scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    let contentView = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isUserInteractionEnabled = true
     }
     
     let userProfile = UIImageView().then {
@@ -317,6 +314,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     public override func viewDidLoad() {
         super.viewDidLoad()
         applySavedTheme()
+        self.navigationController?.navigationBar.prefersLargeTitles = false
         viewModel.loadProfileInfo { success in
             if success {
                 print("성공")
@@ -379,7 +377,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         imagePickerController.delegate = self
         
         configureRefreshControl()
-        setupScrollView()
     }
     
     func configureRefreshControl () {
@@ -388,14 +385,13 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     @objc func handleRefreshControl() {
-      //  viewModel.gomsRefreshToken.tokenReissuance()
         viewModel.loadProfileInfo { success in
-                if success {
-                    print("성공")
-                } else {
-                    print("Failed to load profile information.")
-                }
+            if success {
+                print("성공")
+            } else {
+                print("Failed to load profile information.")
             }
+        }
         
         let offset = CGPoint(x: 0, y: 0)
         self.view.frame.origin.y += offset.y
@@ -404,23 +400,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             self.refreshControl.endRefreshing()
             self.view.frame.origin.y = 0
         }
-    }
-    
-    
-    func setupScrollView() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        contentView.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView)
-            make.width.equalTo(scrollView)
-        }
-        
-        addView()
     }
     
     @objc func passwordResetPage() {
@@ -488,6 +467,8 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     override func addView() {
+        view.addSubview(scrollView)
+        
         [
             userProfile,
             userName,
@@ -516,16 +497,20 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             passwordResetButton
             
         ].forEach {
-            view.addSubview($0)
+            self.scrollView.addSubview($0)
         }
     }
     
     override func setLayout() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
         userProfile.snp.makeConstraints {
             $0.width.equalTo(64)
             $0.height.equalTo(64)
             $0.leading.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().inset(136)
+            $0.top.equalToSuperview().inset(16)
         }
         
         userProfilepencil.snp.makeConstraints {
