@@ -29,8 +29,10 @@ public final class PasswordSettingViewController: BaseViewController {
         $0.alignment = .fill
     }
     
-    private let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
+    lazy var passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
         $0.isSecureTextEntry = true
+        $0.rightView = visiblePasswordButton
+        $0.rightViewMode = .always
     }
     
     lazy var visiblePasswordButton = UIButton().then {
@@ -110,7 +112,6 @@ public final class PasswordSettingViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        passwordTextField.addSubview(visiblePasswordButton)
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
         [textFieldStackView, conditionsLabel, signUpButton].forEach { view.addSubview($0) }
     }
@@ -119,12 +120,6 @@ public final class PasswordSettingViewController: BaseViewController {
     override func setLayout() {
         passwordTextField.snp.makeConstraints {
             $0.height.equalTo(56)
-        }
-        
-        visiblePasswordButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
-            $0.centerY.equalToSuperview()
-            $0.width.height.equalTo(24)
         }
         
         checkPasswordTextField.snp.makeConstraints {

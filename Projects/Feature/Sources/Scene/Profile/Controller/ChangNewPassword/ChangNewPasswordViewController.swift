@@ -41,21 +41,17 @@ public final class ChangNewPasswordViewController: BaseViewController {
         $0.isHidden = true
     }
     
-    private lazy var passwordTextField: GOMSTextField = {
-        let textField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호")
-        textField.isSecureTextEntry = true
-        textField.rightView = self.visiblePasswordButton
-        textField.rightViewMode = .always
-        return textField
-    }()
-
-    private lazy var visiblePasswordButton: UIButton = {
-        let button = UIButton()
-        button.setImage(.image.visible.image, for: .normal)
-        button.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
-        button.isEnabled = true
-        return button
-    }()
+    lazy var passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
+        $0.isSecureTextEntry = true
+        $0.rightView = visiblePasswordButton
+        $0.rightViewMode = .always
+    }
+    
+    lazy var visiblePasswordButton = UIButton().then {
+        $0.setImage(.image.visible.image, for: .normal)
+        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        $0.isEnabled = true
+    }
     
     private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인").then {
         $0.isSecureTextEntry = true
@@ -138,19 +134,19 @@ public final class ChangNewPasswordViewController: BaseViewController {
     }
 
     @objc private func validatePassword() -> Bool {
-            guard let password = passwordTextField.text else { return false }
-            
-            let regexPattern = "^(?=.*[a-z])(?=.*\\d)(?=.*[\\W_])[A-Za-z\\d\\W_]{6,16}$"
-            let passwordTest = NSPredicate(format: "SELF MATCHES %@", regexPattern)
-            let isValid = passwordTest.evaluate(with: password)
-            
-            if isValid {
-                print("정규식에 알맞는 비밀번호입니다.")
-            } else {
-                print("정규식에 맞지 않는 비밀번호입니다.")
-            }
-            return isValid
+        guard let password = passwordTextField.text else { return false }
+        
+        let regexPattern = "^(?=.*[a-z])(?=.*\\d)(?=.*[\\W_])[A-Za-z\\d\\W_]{6,16}$"
+        let passwordTest = NSPredicate(format: "SELF MATCHES %@", regexPattern)
+        let isValid = passwordTest.evaluate(with: password)
+        
+        if isValid {
+            print("정규식에 알맞는 비밀번호입니다.")
+        } else {
+            print("정규식에 맞지 않는 비밀번호입니다.")
         }
+        return isValid
+    }
     
     func passwordErrorUI() {
         checkPasswordTextField.setPlaceholderColor(.color.gomsNegative.color)
@@ -199,7 +195,6 @@ public final class ChangNewPasswordViewController: BaseViewController {
         }
     }
     
-    
     @objc override func keyboardWillShow(_ sender: Notification) {
         doneButton.snp.remakeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
@@ -233,7 +228,6 @@ public final class ChangNewPasswordViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        passwordTextField.addSubview(visiblePasswordButton)
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
         [textFieldStackView, conditionsLabel, doneButton,passwordErrorLabel,passwordOverlapErrorLabel,passwordWrongRegularExpression,visiblePasswordButton].forEach { view.addSubview($0) }
     }
@@ -271,12 +265,6 @@ public final class ChangNewPasswordViewController: BaseViewController {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.top.equalTo(bounds.height * 0.21)
-        }
-        
-        visiblePasswordButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
-            $0.centerY.equalToSuperview()
-            $0.width.height.equalTo(24)
         }
         
         conditionsLabel.snp.makeConstraints {

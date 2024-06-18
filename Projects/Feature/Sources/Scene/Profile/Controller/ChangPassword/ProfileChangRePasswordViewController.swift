@@ -22,10 +22,6 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         $0.font = .pretendard(size: 29, weight: .bold)
     }
     
-    let passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "현재 비밀번호").then {
-        $0.isSecureTextEntry = true
-    }
-    
     let passwordErrorLabel = UILabel().then {
         $0.text = "잘못된 비밀번호입니다."
         $0.textColor = .color.gomsNegative.color
@@ -33,9 +29,16 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         $0.isHidden = true
     }
     
+    lazy var passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
+        $0.isSecureTextEntry = true
+        $0.rightView = visiblePasswordButton
+        $0.rightViewMode = .always
+    }
+    
     lazy var visiblePasswordButton = UIButton().then {
         $0.setImage(.image.visible.image, for: .normal)
         $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        $0.isEnabled = true
     }
     
     private lazy var doneButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "다음으로").then {
@@ -83,8 +86,6 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
     }
     
     override func addView() {
-        passwordTextField.addSubview(visiblePasswordButton)
-        
         [
             navigationTitle,
             passwordTextField,
@@ -115,11 +116,6 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
             $0.height.equalTo(48)
             $0.top.equalTo(passwordTextField.snp.bottom)
             $0.leading.equalTo(bounds.width * 0.07)
-        }
-        
-        visiblePasswordButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
-            $0.centerY.equalToSuperview()
         }
         
         doneButton.snp.makeConstraints {
