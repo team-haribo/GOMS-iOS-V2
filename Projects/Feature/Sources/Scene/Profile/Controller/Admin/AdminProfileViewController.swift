@@ -18,11 +18,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     var cancellables = Set<AnyCancellable>()
     let refreshControl = UIRefreshControl()
     
-    let scrollView = UIScrollView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    let contentView = UIView().then {
+    lazy var scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isUserInteractionEnabled = true
     }
@@ -472,7 +468,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     override func addView() {
         view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
         
         [
             userProfile,
@@ -502,7 +497,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             passwordResetButton
             
         ].forEach {
-            self.contentView.addSubview($0)
+            self.scrollView.addSubview($0)
         }
     }
     
@@ -510,12 +505,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
-        contentView.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView)
-            make.width.equalTo(scrollView)
-        }
-        
+
         userProfile.snp.makeConstraints {
             $0.width.equalTo(64)
             $0.height.equalTo(64)

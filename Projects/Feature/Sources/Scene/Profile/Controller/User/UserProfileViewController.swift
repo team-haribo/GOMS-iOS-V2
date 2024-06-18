@@ -20,10 +20,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    let contentView = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isUserInteractionEnabled = true
     }
     
     let userProfile = UIImageView().then {
@@ -492,7 +489,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     
     override func addView() {
         view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
         
         [
             userProfile,
@@ -520,18 +516,13 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             logoutButton,
             withdrawalButton
         ].forEach {
-            self.contentView.addSubview($0)
+            self.scrollView.addSubview($0)
         }
     }
     
     override func setLayout() {
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-        }
-        
-        contentView.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView)
-            make.width.equalTo(scrollView)
         }
         
         userProfile.snp.makeConstraints {
