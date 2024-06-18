@@ -22,8 +22,6 @@ public class AdminQRCodeViewController: BaseViewController {
         $0.addTarget(self, action: #selector(qrExitButtonTapped), for: .touchUpInside)
     }
     
-    
-    
     @objc func qrExitButtonTapped() {
         let adminMainVC = AdminMainViewController()
         self.navigationController?.pushViewController(adminMainVC, animated: true)
