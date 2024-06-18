@@ -67,45 +67,41 @@ public final class AuthViewModel: BaseViewModel {
     
     // MARK: - Sign In
     func signIn(completion: @escaping (Int) -> Void) {
-        let param = SignInRequest.init(email: email, password: password)
-        authProvider.request(.signIn(param: param)) { response in
-            print("SignIn Param: \(param)")
-            switch response {
-            case .success(let result):
-                let statusCode = result.statusCode
-                do {
-                    switch statusCode {
-                    case 200:
-                        print("success")
-                        let signInResponse = try result.map(SignInResponse.self)
-                        self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
-                        self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
-                        self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
-                        completion(statusCode)
-                    case 400:
-                        print("비밀번호가 일치하지 않음")
-                        completion(statusCode)
-                    case 404:
-                        print("존재하지 않는 이메일")
-                        completion(statusCode)
-                    case 500:
-                        print("SERVER ERROR")
-                        completion(statusCode)
-                    default:
-                        print(result)
+        let param = SignInRequest(email: email, password: password)
+        authProvider.request(.signIn(param: param)) { [weak self] response in
+            guard let self = self else { return }
+            
+            DispatchQueue.global().async {
+                switch response {
+                case .success(let result):
+                    let statusCode = result.statusCode
+                    do {
+                        switch statusCode {
+                        case 200:
+                            let signInResponse = try result.map(SignInResponse.self)
+                            self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
+                            self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
+                            self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
+                        default:
+                            break
+                        }
+                    } catch {
+                        print("Error parsing SignInResponse: \(error)")
+                    }
+                    DispatchQueue.main.async {
                         completion(statusCode)
                     }
-                } catch {
-                    print("error")
-                    completion(statusCode)
+                    
+                case .failure(let err):
+                    print("Network error: \(err.localizedDescription)")
+                    DispatchQueue.main.async {
+                        completion(0)
+                    }
                 }
-            case .failure(let err):
-                print(err.localizedDescription)
-                completion(0)
             }
         }
     }
-    
+
     // MARK: - Send Auth Code
     func sendAuthCode(completion: @escaping (Bool, Int) -> Void) {
         let param  = SendAuthCodeRequest(email: email)
@@ -234,8 +230,6 @@ public final class AuthViewModel: BaseViewModel {
             }
         }
     }
-
-    
     
     // MARK: - Sign Up
     func signUp(completion: @escaping (Bool) -> Void) {

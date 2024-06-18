@@ -108,41 +108,49 @@ public final class SignInViewController: BaseViewController {
     @objc func signInButtonTapped() {
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupPassword(password: passwordTextField.text ?? "")
-        viewModel.signIn { [self] statusCode in
+        
+        viewModel.signIn { [weak self] statusCode in
+            guard let self = self else { return }
+            
             switch statusCode {
             case 200:
                 self.signInSuccessUI()
                 let defaults = UserDefaults.standard
                 UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
-                self.profileModel.loadProfileInfo { success in
+                
+                self.profileModel.loadProfileInfo { [weak self] success in
+                    guard let self = self else { return }
+                    
                     if success {
-                        let authority = self.profileModel.profileInfo?.authority
-                        DispatchQueue.main.async {
-                            if authority == "ROLE_STUDENT_COUNCIL" {
-                                let mainVC = AdminMainViewController()
-                                // 권한저장
-                                self.navigationController?.pushViewController(mainVC, animated: true)
-                            } else if authority == "ROLE_STUDENT" {
-                                let mainVC = MainViewController()
-                                self.navigationController?.pushViewController(mainVC, animated: true)
-                            } else {
-                                print("권한이 없습니다.")
+                        if let authority = self.profileModel.profileInfo?.authority {
+                            DispatchQueue.main.async {
+                                if authority == "ROLE_STUDENT_COUNCIL" {
+                                    let mainVC = AdminMainViewController()
+                                    self.navigationController?.pushViewController(mainVC, animated: true)
+                                } else if authority == "ROLE_STUDENT" {
+                                    let mainVC = MainViewController()
+                                    self.navigationController?.pushViewController(mainVC, animated: true)
+                                } else {
+                                    print("권한이 없습니다.")
+                                }
                             }
                         }
                     } else {
-                        print("Failed to load profile info")
+                        print("프로필 정보를 불러오는데 실패했습니다.")
                     }
                 }
             case 400:
                 self.passwordErrorUI()
+                
             case 404:
                 self.emailErrorUI()
+                
             default:
-                print("Error")
+                print("에러 발생")
             }
         }
     }
-    
+
     @objc func visiblePasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()
         visiblePasswordButton.isSelected.toggle()

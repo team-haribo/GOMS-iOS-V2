@@ -9,14 +9,30 @@
 import Foundation
 
 extension Date {
-    func recentWednesday() -> Date {
+    func lastWednesday() -> Date {
         let calendar = Calendar.current
-        var components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear, .weekday], from: self)
-        components.weekday = 4
+        let weekday = calendar.component(.weekday, from: self)
+        var daysToSubtract = 0
         
-        guard let recentWednesday = calendar.nextDate(after: self, matching: components, matchingPolicy: .nextTime, repeatedTimePolicy: .first, direction: .backward) else {
-            return self
+        switch weekday {
+        case 1:
+            daysToSubtract = 4
+        case 2:
+            daysToSubtract = 5
+        case 3:
+            daysToSubtract = 6
+        case 4:
+            daysToSubtract = 7
+        case 5:
+            daysToSubtract = 1
+        case 6:
+            daysToSubtract = 2
+        case 7:
+            daysToSubtract = 3
+        default:
+            break
         }
-        return recentWednesday
+        
+        return calendar.date(byAdding: .day, value: -daysToSubtract, to: self)!
     }
 }
