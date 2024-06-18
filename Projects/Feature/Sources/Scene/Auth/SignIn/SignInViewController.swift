@@ -10,7 +10,7 @@ import UIKit
 import Service
 
 public final class SignInViewController: BaseViewController {
-
+    
     // MARK: - Properties
     private var viewModel = AuthViewModel()
     
@@ -27,7 +27,6 @@ public final class SignInViewController: BaseViewController {
     }
     
     private var profileModel = ProfileViewModel()
-
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -48,28 +47,24 @@ public final class SignInViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
-    let emailErrorLabel = UILabel().then {
+    private let emailErrorLabel = UILabel().then {
         $0.text = "존재하지 않는 이메일입니다."
         $0.textColor = .color.gomsNegative.color
         $0.font = .pretendard(size: 16, weight: .medium)
         $0.isHidden = true
     }
     
-    lazy var passwordTextField: GOMSTextField = {
-        let textField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호")
-        textField.isSecureTextEntry = true
-        textField.rightView = visiblePasswordButton
-        textField.rightViewMode = .always
-        return textField
-    }()
-
-    lazy var visiblePasswordButton: UIButton = {
-        let button = UIButton()
-        button.setImage(.image.visible.image, for: .normal)
-        button.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
-        button.isEnabled = true
-        return button
-    }()
+    lazy var passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
+        $0.isSecureTextEntry = true
+        $0.rightView = visiblePasswordButton
+        $0.rightViewMode = .always
+    }
+    
+    lazy var visiblePasswordButton = UIButton().then {
+        $0.setImage(.image.visible.image, for: .normal)
+        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        $0.isEnabled = true
+    }
     
     private let findPasswordLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 48)).then {
         $0.text = "비밀번호를 잊으셨나요?"
@@ -85,7 +80,7 @@ public final class SignInViewController: BaseViewController {
         $0.addTarget(self, action: #selector(findPasswordButtonTapped), for: .touchUpInside)
     }
     
-    let passwordErrorLabel = UILabel().then {
+    private let passwordErrorLabel = UILabel().then {
         $0.text = "잘못된 비밀번호입니다."
         $0.textColor = .color.gomsNegative.color
         $0.font = .pretendard(size: 16, weight: .medium)
@@ -147,12 +142,11 @@ public final class SignInViewController: BaseViewController {
             }
         }
     }
-
     
     @objc func visiblePasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()
         visiblePasswordButton.isSelected.toggle()
-
+        
         if visiblePasswordButton.isSelected {
             visiblePasswordButton.setImage(.image.invisible.image, for: .normal)
         } else {
@@ -174,18 +168,13 @@ public final class SignInViewController: BaseViewController {
     @objc override func keyboardWillHide(_ sender: Notification) {
         self.visiblePasswordButton.isEnabled = true
         self.signInButton.isEnabled = true
+        
         signInButton.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.bottom.equalTo(-bounds.height * 0.16)
         }
-        
-        visiblePasswordButton.snp.remakeConstraints {
-               $0.trailing.equalTo(passwordTextField).inset(16)
-               $0.centerY.equalTo(passwordTextField)
-               $0.width.height.equalTo(24)
-           }
     }
     
     func signInSuccessUI() {
@@ -205,13 +194,6 @@ public final class SignInViewController: BaseViewController {
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.top.equalTo(emailTextField.snp.bottom).offset(24)
         }
-        
-        visiblePasswordButton.snp.remakeConstraints {
-               $0.trailing.equalTo(passwordTextField).inset(16)
-               $0.centerY.equalTo(passwordTextField)
-               $0.width.height.equalTo(24)
-           }
-        
     }
     
     func emailErrorUI() {
@@ -263,69 +245,63 @@ public final class SignInViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         emailTextField.addSubview(defaultDomain)
-        passwordTextField.addSubview(visiblePasswordButton)
         [emailTextField, emailErrorLabel, passwordTextField, passwordErrorLabel, findPasswordLabel, findPasswordButton, signInButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
     override func setLayout() {
-            defaultDomain.snp.makeConstraints {
-                $0.trailing.equalToSuperview().inset(16)
-                $0.height.equalTo(28)
-                $0.centerY.equalToSuperview()
-            }
-            
-            emailTextField.snp.makeConstraints {
-                $0.leading.equalTo(bounds.width * 0.05)
-                $0.trailing.equalTo(-bounds.width * 0.05)
-                $0.top.equalTo(bounds.height * 0.2)
-                $0.height.equalTo(56)
-            }
-            
-            emailErrorLabel.snp.makeConstraints {
-                $0.leading.equalTo(emailTextField.snp.leading)
-                $0.height.equalTo(48)
-                $0.top.equalTo(emailTextField.snp.bottom)
-            }
-            
-            passwordTextField.snp.makeConstraints {
-                $0.height.equalTo(56)
-                $0.leading.equalTo(bounds.width * 0.05)
-                $0.trailing.equalTo(-bounds.width * 0.05)
-                $0.top.equalTo(emailTextField.snp.bottom).offset(24)
-            }
-            
-            visiblePasswordButton.snp.makeConstraints {
-                $0.trailing.equalToSuperview().inset(16)
-                $0.centerY.equalToSuperview()
-            }
-            
-            findPasswordLabel.snp.makeConstraints {
-                $0.height.equalTo(48)
-                $0.top.equalTo(passwordTextField.snp.bottom)
-                $0.leading.equalTo(bounds.width * 0.07)
-            }
-            
-            passwordErrorLabel.snp.makeConstraints {
-                $0.height.equalTo(48)
-                $0.top.equalTo(passwordTextField.snp.bottom)
-                $0.leading.equalTo(bounds.width * 0.07)
-            }
-            
-            findPasswordButton.snp.makeConstraints {
-                $0.height.equalTo(48)
-                $0.trailing.equalTo(-bounds.width * 0.07)
-                $0.top.equalTo(passwordTextField.snp.bottom)
-            }
-            
-            signInButton.snp.makeConstraints {
-                $0.height.equalTo(48)
-                $0.leading.equalTo(bounds.width * 0.05)
-                $0.trailing.equalTo(-bounds.width * 0.05)
-                $0.bottom.equalTo(-bounds.height * 0.16)
-            }
+        defaultDomain.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(28)
+            $0.centerY.equalToSuperview()
+        }
+        
+        emailTextField.snp.makeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(bounds.height * 0.2)
+            $0.height.equalTo(56)
+        }
+        
+        emailErrorLabel.snp.makeConstraints {
+            $0.leading.equalTo(emailTextField.snp.leading)
+            $0.height.equalTo(48)
+            $0.top.equalTo(emailTextField.snp.bottom)
+        }
+        
+        passwordTextField.snp.makeConstraints {
+            $0.height.equalTo(56)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(emailTextField.snp.bottom).offset(24)
+        }
+        
+        findPasswordLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(passwordTextField.snp.bottom)
+            $0.leading.equalTo(bounds.width * 0.07)
+        }
+        
+        passwordErrorLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(passwordTextField.snp.bottom)
+            $0.leading.equalTo(bounds.width * 0.07)
+        }
+        
+        findPasswordButton.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.trailing.equalTo(-bounds.width * 0.07)
+            $0.top.equalTo(passwordTextField.snp.bottom)
+        }
+        
+        signInButton.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.bottom.equalTo(-bounds.height * 0.16)
         }
     }
+}
 
 // MARK: - Extension
 extension SignInViewController: UITextFieldDelegate {
@@ -338,14 +314,14 @@ extension SignInViewController: UITextFieldDelegate {
     }
     
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            if textField == emailTextField {
-                let currentText = textField.text ?? ""
-                guard let stringRange = Range(range, in: currentText) else { return false }
-                let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-                return updatedText.count <= 6
-            }
-            return true
+        if textField == emailTextField {
+            let currentText = textField.text ?? ""
+            guard let stringRange = Range(range, in: currentText) else { return false }
+            let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+            return updatedText.count <= 6
         }
+        return true
+    }
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if emailTextField.text != "", passwordTextField.text != "" {

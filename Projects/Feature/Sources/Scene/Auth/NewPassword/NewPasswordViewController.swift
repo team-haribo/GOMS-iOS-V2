@@ -52,21 +52,17 @@ public final class NewPasswordViewController: BaseViewController {
         $0.isHidden = true
     }
     
-    public lazy var passwordTextField: GOMSTextField = {
-        let textField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호")
-        textField.isSecureTextEntry = true
-        textField.rightView = self.visiblePasswordButton
-        textField.rightViewMode = .always
-        return textField
-    }()
-
-    public lazy var visiblePasswordButton: UIButton = {
-        let button = UIButton()
-        button.setImage(.image.visible.image, for: .normal)
-        button.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
-        button.isEnabled = true
-        return button
-    }()
+    lazy var passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
+        $0.isSecureTextEntry = true
+        $0.rightView = visiblePasswordButton
+        $0.rightViewMode = .always
+    }
+    
+    lazy var visiblePasswordButton = UIButton().then {
+        $0.setImage(.image.visible.image, for: .normal)
+        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        $0.isEnabled = true
+    }
     
     private let checkPasswordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호 확인").then {
         $0.isSecureTextEntry = true
@@ -96,7 +92,6 @@ public final class NewPasswordViewController: BaseViewController {
         self.validatePassword()
         let isValidPassword = self.validatePassword()
             
-        print("New Password Setting Done")
         viewModel.setupEmail(email: self.email)
         viewModel.setupNewServePassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         viewModel.setupPassword(password: localPassword ?? "")
@@ -144,8 +139,6 @@ public final class NewPasswordViewController: BaseViewController {
             }
         }
     }
-
-
     
     @objc func visiblePasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()
@@ -238,7 +231,6 @@ public final class NewPasswordViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        passwordTextField.addSubview(visiblePasswordButton)
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
         [textFieldStackView, conditionsLabel, doneButton,passwordErrorLabel,passwordOverlapErrorLabel, passwordWrongRegularExpression].forEach { view.addSubview($0) }
     }
@@ -277,11 +269,6 @@ public final class NewPasswordViewController: BaseViewController {
             $0.trailing.equalTo(-bounds.width * 0.05)
             $0.top.equalTo(bounds.height * 0.21)
         }
-        
-        visiblePasswordButton.snp.makeConstraints {
-            $0.trailing.equalTo(passwordTextField).inset(16)
-            $0.centerY.equalTo(passwordTextField)
-            $0.width.height.equalTo(24)        }
         
         conditionsLabel.snp.makeConstraints {
             $0.height.equalTo(48)

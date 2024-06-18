@@ -46,4 +46,10 @@ public class GOMSTextField: UITextField {
             self.setPlaceholderColor(.color.gomsTertiary.color)
         }
     }
+    
+    public override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        var rect = super.rightViewRect(forBounds: bounds)
+        rect.origin.x -= 16
+        return rect
+    }
 }
