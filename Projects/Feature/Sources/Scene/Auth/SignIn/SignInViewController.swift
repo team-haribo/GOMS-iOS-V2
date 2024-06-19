@@ -14,6 +14,8 @@ public final class SignInViewController: BaseViewController {
     // MARK: - Properties
     private var viewModel = AuthViewModel()
     
+    
+    
     init(viewModel: AuthViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -111,13 +113,19 @@ public final class SignInViewController: BaseViewController {
         
         viewModel.signIn { [weak self] statusCode in
             guard let self = self else { return }
-            
+        
             switch statusCode {
             case 200:
+                
+                self.present(loader, animated: true)
+                DispatchQueue.main.asyncAfter(deadline: .now()+2.0, execute: {
+                    self.loader.dismiss(animated: true)
+                })
+                
                 self.signInSuccessUI()
                 let defaults = UserDefaults.standard
                 UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
-                
+        
                 self.profileModel.loadProfileInfo { [weak self] success in
                     guard let self = self else { return }
                     
