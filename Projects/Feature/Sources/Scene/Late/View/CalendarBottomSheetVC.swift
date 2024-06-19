@@ -129,9 +129,6 @@ extension CalendarBottomSheetVC: UICalendarSelectionSingleDateDelegate {
         self.latecomerListVC.latecomerList = newList
         DispatchQueue.main.async {
             self.latecomerListVC.lateListCollectionView.reloadData()
-            print("=============")
-            print("지각자 데이터 업데이트: \(newList)")
-            print("=============") 
         }
     }
     

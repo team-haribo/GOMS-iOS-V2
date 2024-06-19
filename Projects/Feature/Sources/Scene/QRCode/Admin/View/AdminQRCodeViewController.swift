@@ -16,7 +16,6 @@ public class AdminQRCodeViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 29, weight: .bold)
     }
 
-    
     private lazy var closeButton = UIButton().then {
         $0.setImage(.image.gomsCloseButton.image, for: .normal)
         $0.addTarget(self, action: #selector(qrExitButtonTapped), for: .touchUpInside)

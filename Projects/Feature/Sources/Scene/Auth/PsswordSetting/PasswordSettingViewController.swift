@@ -51,6 +51,13 @@ public final class PasswordSettingViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
     }
     
+    private let passwordError = UILabel().then {
+        $0.text = "비밀번호가 일치하지 않습니다."
+        $0.textColor = .color.gomsNegative.color
+        $0.font = .pretendard(size: 16, weight: .medium)
+        $0.isHidden = true
+    }
+    
     private lazy var signUpButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "회원가입").then {
         $0.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
@@ -68,10 +75,29 @@ public final class PasswordSettingViewController: BaseViewController {
         viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
         viewModel.signUp { success in
             if success {
+                self.signUpSuccessUI()
                 let signInVC = SignInViewController(viewModel: self.viewModel)
                 self.navigationController?.pushViewController(signInVC, animated: true)
+            } else {
+                self.passwordErrorUI()
             }
         }
+    }
+    
+    func signUpSuccessUI() {
+        checkPasswordTextField.setPlaceholderColor(.color.gomsTertiary.color)
+        passwordError.isHidden = true
+        checkPasswordTextField.layer.borderColor = UIColor.clear.cgColor
+        checkPasswordTextField.layer.borderWidth = 0
+        conditionsLabel.isHidden = false
+    }
+    
+    func passwordErrorUI() {
+        checkPasswordTextField.setPlaceholderColor(.color.gomsNegative.color)
+        passwordError.isHidden = false
+        checkPasswordTextField.layer.borderColor = UIColor.systemRed.cgColor
+        checkPasswordTextField.layer.borderWidth = 1
+        conditionsLabel.isHidden = true
     }
     
     @objc func visiblePasswordButtonTapped() {
@@ -113,7 +139,7 @@ public final class PasswordSettingViewController: BaseViewController {
     // MARK: - Add View
     override func addView() {
         [passwordTextField, checkPasswordTextField].forEach { textFieldStackView.addArrangedSubview($0) }
-        [textFieldStackView, conditionsLabel, signUpButton].forEach { view.addSubview($0) }
+        [textFieldStackView, conditionsLabel, passwordError, signUpButton].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
@@ -133,6 +159,12 @@ public final class PasswordSettingViewController: BaseViewController {
         }
         
         conditionsLabel.snp.makeConstraints {
+            $0.height.equalTo(48)
+            $0.top.equalTo(textFieldStackView.snp.bottom)
+            $0.leading.equalTo(bounds.width * 0.07)
+        }
+        
+        passwordError.snp.makeConstraints {
             $0.height.equalTo(48)
             $0.top.equalTo(textFieldStackView.snp.bottom)
             $0.leading.equalTo(bounds.width * 0.07)

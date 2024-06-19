@@ -62,15 +62,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.makeKeyAndVisible()
     }
     
-
-//        if isSwitchOn == true {
-//            self.window?.rootViewController =  UINavigationController(rootViewController: QRCodeViewController())
-//        } else if adminIsSwitchOn == true {
-//            self.window?.rootViewController =  UINavigationController(rootViewController: AdminQRCodeViewController())
-//        } else {
-//            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-//        }
-
     private func applySavedTheme() {
         let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
         let savedTheme = UIUserInterfaceStyle(rawValue: savedThemeValue) ?? .unspecified
