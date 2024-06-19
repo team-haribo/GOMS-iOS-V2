@@ -234,7 +234,6 @@ public final class AuthViewModel: BaseViewModel {
     // MARK: - Sign Up
     func signUp(completion: @escaping (Bool) -> Void) {
         let param = SignUpRequest.init(email: email, password: newPassword, name: name, gender: gender, major: major)
-        print("Sending SignUpRequest: \(param)")
         authProvider.request(.signUp(param: param)) { response in
             switch response {
             case .success(let result):
