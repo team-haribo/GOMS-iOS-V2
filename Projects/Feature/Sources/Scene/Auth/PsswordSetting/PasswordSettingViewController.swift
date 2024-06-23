@@ -87,6 +87,7 @@ public final class PasswordSettingViewController: BaseViewController {
                         let signInVC = SignInViewController(viewModel: self.viewModel)
                         self.navigationController?.pushViewController(signInVC, animated: true)
                     }
+                }
             } else {
                 self.passwordErrorUI()
             }
