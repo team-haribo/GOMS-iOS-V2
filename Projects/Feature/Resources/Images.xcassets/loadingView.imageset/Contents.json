@@ -1,8 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "loadingView.pdf",
-      "idiom" : "universal"
+      "filename" : "loadingView@1x.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "loadingView@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "loadingView@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

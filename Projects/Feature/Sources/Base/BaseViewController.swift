@@ -15,8 +15,6 @@ public class BaseViewController: UIViewController {
     // MARK: - Properties
     let bounds = UIScreen.main.bounds
     
-    let loader = LoaderViewController()
-    
     // MARK: - Life Cycel
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
