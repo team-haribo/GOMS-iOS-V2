@@ -41,7 +41,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     func setupGender(gender: String?) {
         self.gender = gender!
     }
-
+    
     func setupIsBlackList(isBlackList: Bool?) {
         self.isBlackList = isBlackList!
     }
@@ -92,20 +92,19 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Change Student Council Authority
-    func changeAuthority(index: Int, completion: @escaping ([UserData]) -> Void) {
+    func changeAuthority(user: UserData, completion: @escaping ([UserData]) -> Void) {
         self.getUserList {
-            let selectedUser = self.userList[index]
-            let accountIdx = selectedUser.accountIdx
-            let authority = selectedUser.authority
-            var authorityString: String = ""
+            let accountIdx = user.id
+            let currentAuthority = user.authority
+            var newAuthority: String = ""
             
-            if authority == "ROLE_STUDENT" {
-                authorityString = "ROLE_STUDENT_COUNCIL"
+            if currentAuthority == "ROLE_STUDENT" {
+                newAuthority = "ROLE_STUDENT_COUNCIL"
             } else {
-                authorityString = "ROLE_STUDENT"
+                newAuthority = "ROLE_STUDENT"
             }
             
-            let param = AuthorityRequest.init(accountIdx: accountIdx, authority: authorityString)
+            let param = AuthorityRequest(accountIdx: accountIdx, authority: newAuthority)
             
             self.studentCouncilProvider.request(.editAuthority(authorization: self.accessToken, param: param)) { response in
                 switch response {
@@ -114,9 +113,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     switch statusCode {
                     case 205:
                         print(result)
-                        self.getUserList {
-                            completion(self.userListDatas)
-                        }
+                        completion(self.userListDatas)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
                     case 403:
@@ -135,10 +132,9 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Black List
-    func blackList(index: Int, completion: @escaping ([UserData]) -> Void) {
+    func blackList(user: UserData, completion: @escaping ([UserData]) -> Void) {
         self.getUserList {
-            let selectedUser = self.userList[index]
-            let accountIdx = selectedUser.accountIdx
+            let accountIdx = user.id
             
             self.studentCouncilProvider.request(.changeBlackList(authorization: self.accessToken, accountIdx: accountIdx)) { response in
                 switch response {
@@ -146,8 +142,6 @@ public final class StudentManagementViewModel: BaseViewModel {
                     let statusCode = result.statusCode
                     switch statusCode {
                     case 201:
-                        print("Created")
-                        print("BlackList : \(selectedUser)")
                         completion(self.userListDatas)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()
@@ -166,10 +160,9 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
     
     // MARK: - Delete Black List
-    func cancelBlackList(index: Int, completion: @escaping ([UserData]) -> Void) {
+    func cancelBlackList(user: UserData, completion: @escaping ([UserData]) -> Void) {
         self.getUserList {
-            let selectedUser = self.userList[index]
-            let accountIdx = selectedUser.accountIdx
+            let accountIdx = user.id
             self.studentCouncilProvider.request(.cancelBlackList(authorization: self.accessToken, accountIdx: accountIdx)) { response in
                 switch response {
                 case .success(let result):
@@ -201,7 +194,7 @@ public final class StudentManagementViewModel: BaseViewModel {
         let isBlackList = self.isBlackList
         let authority = self.authority
         let major = self.major
-            
+        
         let parm = SearchStudentRequest(grade: gradeToSend, gender: gender, name: searchString, isBlackList: isBlackList, authority: authority, major: major)
         
         studentCouncilProvider.request(.searchStudent(authorization: self.accessToken, parm: parm)) { response in
@@ -211,7 +204,6 @@ public final class StudentManagementViewModel: BaseViewModel {
                 do {
                     self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
                     self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
-                    print("User Search: \(self.userList)")
                     completion(self.userListDatas)
                 } catch(let err) {
                     print(String(describing: err))

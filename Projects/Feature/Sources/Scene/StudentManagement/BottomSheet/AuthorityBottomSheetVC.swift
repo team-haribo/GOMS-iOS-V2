@@ -129,30 +129,24 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     }
     
     @objc func blackListSwitchValueChanged(_ sender: UISwitch) {
-        guard let userData = userData, let index = userDataIndex else { return }
-        
-        if sender.isOn {
-            viewModel.blackList(index: index) { newList in
-                self.updateUserList(newList)
+        guard let userData = userData else { return }
+            
+            if sender.isOn {
+                viewModel.blackList(user: userData) { newList in
+                    self.updateUserList(newList)
+                }
+            } else {
+                viewModel.cancelBlackList(user: userData) { newList in
+                    self.updateUserList(newList)
+                }
             }
-        } else {
-            viewModel.cancelBlackList(index: index) { newList in
-                self.updateUserList(newList)
-            }
-        }
     }
   
     @objc func authoritySwitchValueChanged(_ sender: UISwitch) {
-        guard let userData = userData, let index = userDataIndex else { return }
-        
-        if sender.isOn {
-            viewModel.changeAuthority(index: index) { newList in 
-                self.updateUserList(newList)
-            }
-        } else {
-            viewModel.changeAuthority(index: index) { newList in
-                self.updateUserList(newList)
-            }
+        guard let userData = userData else { return }
+            
+        viewModel.changeAuthority(user: userData) { newList in
+            self.updateUserList(newList)
         }
     }
     
