@@ -11,14 +11,18 @@ import SnapKit
 import Then
 
 public class BaseViewController: UIViewController {
-
+    
+    // MARK: - Properties
     let bounds = UIScreen.main.bounds
-
+    
+    // MARK: - Life Cycel
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        view.setDynamicBackgroundColor(darkModeColor: .color.gomsBackground.color, lightModeColor: .color.gomsLightBackground.color)
-        
+        view.setDynamicBackgroundColor(
+            darkModeColor: .color.gomsBackground.color,
+            lightModeColor: .color.gomsLightBackground.color
+        )
         configNavigation()
     }
 
@@ -31,6 +35,7 @@ public class BaseViewController: UIViewController {
         setLayout()
     }
     
+    // MARK: - Keyboard
     @objc func keyboardWillShow(_ sender: Notification) { }
     
     @objc func keyboardWillHide(_ sender: Notification) { }
@@ -39,6 +44,18 @@ public class BaseViewController: UIViewController {
         view.endEditing(true)
     }
     
+    func setupKeyboardEvent() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+    }
+    
+    // MARK: - Configure Navigaiton
     func configNavigation() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -58,17 +75,7 @@ public class BaseViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = false
     }
     
-    func setupKeyboardEvent() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow),
-                                               name: UIResponder.keyboardWillShowNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillHide),
-                                               name: UIResponder.keyboardWillHideNotification,
-                                               object: nil)
-    }
-    
+    // MARK: - Layout
     func configureUI() {}
     func addView() {}
     func setLayout() {}

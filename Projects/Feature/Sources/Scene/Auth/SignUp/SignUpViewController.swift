@@ -107,6 +107,7 @@ public final class SignUpViewController: BaseViewController {
     @objc func authCodeButtonTapped() {
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupName(name: nameTextField.text ?? "")
+        
         viewModel.sendAuthCode { success, statusCode in
             if success {
                 let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
@@ -126,9 +127,6 @@ public final class SignUpViewController: BaseViewController {
                     let check = UIAlertAction(title: "확인", style: .cancel)
                     alert.addAction(check)
                     self.present(alert, animated: true)
-                    
-                    print("재발송 실패")
-                    print("Error: \(statusCode)")
                 }
             }
         }

@@ -21,25 +21,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
             self.profileModel.loadProfileInfo { success in
                 if success {
-                    print("카메라켜기 \(isSwitchOn)")
-                    print("QR켜기 \(adminIsSwitchOn)")
                     let authority = self.profileModel.profileInfo?.authority
                     DispatchQueue.main.async {
                         if authority == "ROLE_STUDENT_COUNCIL" {
                             if adminIsSwitchOn == true {
-                                self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
-                                print("qr생성켜짐")
+                                self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController()
                             } else {
                                 self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
-                                print("그냥 어드민뷰")
                             }
                         } else if authority == "ROLE_STUDENT" {
                             if isSwitchOn {
-                                self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
-                                print("카메라켜짐")
+                                self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController()
                             } else {
-                                self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
-                                print("그냥 메인뷰")
+                                self.window?.rootViewController = UINavigationController(rootViewController: MainViewController()
                             }
                         } else {
                             self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())

@@ -12,6 +12,7 @@ public final class PasswordSettingViewController: BaseViewController {
 
     // MARK: - Properties
     private var viewModel = AuthViewModel()
+    private let loader = LoaderViewController()
     
     init(viewModel: AuthViewModel) {
         self.viewModel = viewModel
@@ -73,11 +74,20 @@ public final class PasswordSettingViewController: BaseViewController {
     // MARK: - Seletors
     @objc func signUpButtonTapped() {
         viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
+        
+        DispatchQueue.main.async {
+            self.present(self.loader, animated: true)
+        }
+        
         viewModel.signUp { success in
             if success {
-                self.signUpSuccessUI()
-                let signInVC = SignInViewController(viewModel: self.viewModel)
-                self.navigationController?.pushViewController(signInVC, animated: true)
+                DispatchQueue.main.async {
+                    self.loader.dismiss(animated: true) {
+                        self.signUpSuccessUI()
+                        let signInVC = SignInViewController(viewModel: self.viewModel)
+                        self.navigationController?.pushViewController(signInVC, animated: true)
+                    }
+                }
             } else {
                 self.passwordErrorUI()
             }

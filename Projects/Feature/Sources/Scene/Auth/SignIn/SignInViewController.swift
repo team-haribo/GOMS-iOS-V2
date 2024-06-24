@@ -13,20 +13,20 @@ public final class SignInViewController: BaseViewController {
     
     // MARK: - Properties
     private var viewModel = AuthViewModel()
+    private var listModel : StudentListModel?
+    private var profileModel = ProfileViewModel()
+    
+    private let loader = LoaderViewController()
     
     init(viewModel: AuthViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
-    private var listModel : StudentListModel?
-    
     init(listModel: StudentListModel) {
         self.listModel = listModel
         super.init(nibName: nil, bundle: nil)
     }
-    
-    private var profileModel = ProfileViewModel()
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -53,16 +53,16 @@ public final class SignInViewController: BaseViewController {
         $0.font = .pretendard(size: 16, weight: .medium)
         $0.isHidden = true
     }
-    
+
     lazy var passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
         $0.isSecureTextEntry = true
-        $0.rightView = visiblePasswordButton
+        $0.rightView = showPasswordButton
         $0.rightViewMode = .always
     }
     
-    lazy var visiblePasswordButton = UIButton().then {
+    lazy var showPasswordButton = UIButton().then {
         $0.setImage(.image.visible.image, for: .normal)
-        $0.addTarget(self, action: #selector(visiblePasswordButtonTapped), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(showPasswordButtonTapped), for: .touchUpInside)
         $0.isEnabled = true
     }
     
@@ -108,62 +108,64 @@ public final class SignInViewController: BaseViewController {
     @objc func signInButtonTapped() {
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupPassword(password: passwordTextField.text ?? "")
+    
+        DispatchQueue.main.async {
+            self.present(self.loader, animated: true)
+        }
         
         viewModel.signIn { [weak self] statusCode in
             guard let self = self else { return }
             
-            switch statusCode {
-            case 200:
-                self.signInSuccessUI()
-                let defaults = UserDefaults.standard
-                UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
-                
-                self.profileModel.loadProfileInfo { [weak self] success in
-                    guard let self = self else { return }
-                    
-                    if success {
-                        if let authority = self.profileModel.profileInfo?.authority {
-                            DispatchQueue.main.async {
-                                if authority == "ROLE_STUDENT_COUNCIL" {
-                                    let mainVC = AdminMainViewController()
-                                    self.navigationController?.pushViewController(mainVC, animated: true)
-                                } else if authority == "ROLE_STUDENT" {
-                                    let mainVC = MainViewController()
-                                    self.navigationController?.pushViewController(mainVC, animated: true)
-                                } else {
-                                    print("권한이 없습니다.")
+            DispatchQueue.main.async {
+                self.loader.dismiss(animated: true) {
+                    switch statusCode {
+                    case 200:
+                        self.signInSuccessUI()
+                        UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
+                        
+                        self.profileModel.loadProfileInfo { [weak self] success in
+                            guard let self = self else { return }
+                            
+                            if success {
+                                if let authority = self.profileModel.profileInfo?.authority {
+                                    if authority == "ROLE_STUDENT_COUNCIL" {
+                                        let mainVC = AdminMainViewController()
+                                        self.navigationController?.setViewControllers([mainVC], animated: true)
+                                    } else if authority == "ROLE_STUDENT" {
+                                        let mainVC = MainViewController()
+                                        self.navigationController?.setViewControllers([mainVC], animated: true)
+                                    } else {
+                                        print("권한이 없습니다.")
+                                    }
                                 }
+                            } else {
+                                print("프로필 정보를 불러오는데 실패했습니다.")
                             }
                         }
-                    } else {
-                        print("프로필 정보를 불러오는데 실패했습니다.")
+                    case 400:
+                        self.passwordErrorUI()
+                    case 404:
+                        self.emailErrorUI()
+                    default:
+                        print("error")
                     }
                 }
-            case 400:
-                self.passwordErrorUI()
-                
-            case 404:
-                self.emailErrorUI()
-                
-            default:
-                print("에러 발생")
             }
         }
     }
 
-    @objc func visiblePasswordButtonTapped() {
+    @objc func showPasswordButtonTapped() {
         passwordTextField.isSecureTextEntry.toggle()
-        visiblePasswordButton.isSelected.toggle()
+        showPasswordButton.isSelected.toggle()
         
-        if visiblePasswordButton.isSelected {
-            visiblePasswordButton.setImage(.image.invisible.image, for: .normal)
+        if showPasswordButton.isSelected {
+            showPasswordButton.setImage(.image.invisible.image, for: .normal)
         } else {
-            visiblePasswordButton.setImage(.image.visible.image, for: .normal)
+            showPasswordButton.setImage(.image.visible.image, for: .normal)
         }
     }
     
     @objc override func keyboardWillShow(_ sender: Notification) {
-        self.visiblePasswordButton.isEnabled = true
         self.signInButton.isEnabled = true
         signInButton.snp.remakeConstraints {
             $0.height.equalTo(48)
@@ -174,7 +176,6 @@ public final class SignInViewController: BaseViewController {
     }
     
     @objc override func keyboardWillHide(_ sender: Notification) {
-        self.visiblePasswordButton.isEnabled = true
         self.signInButton.isEnabled = true
         
         signInButton.snp.makeConstraints {
