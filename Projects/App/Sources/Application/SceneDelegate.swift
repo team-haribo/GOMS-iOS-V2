@@ -4,58 +4,43 @@ import Feature
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    
     private var profileModel = ProfileViewModel()
+    private let refreshTokenManager = GOMSRefreshToken.shared
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
         let defaults = UserDefaults.standard
-        
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
         let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
         
         applySavedTheme()
         
         if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
-            self.profileModel.loadProfileInfo { success in
+            self.profileModel.loadProfileInfo { [weak self] success in
+                guard let self = self else { return }
+                
                 if success {
                     let authority = self.profileModel.profileInfo?.authority
                     DispatchQueue.main.async {
-                        if authority == "ROLE_STUDENT_COUNCIL" {
-                            if adminIsSwitchOn == true {
-                                self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController()
-                            } else {
-                                self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
-                            }
-                        } else if authority == "ROLE_STUDENT" {
-                            if isSwitchOn {
-                                self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController()
-                            } else {
-                                self.window?.rootViewController = UINavigationController(rootViewController: MainViewController()
-                            }
-                        } else {
-                            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-                        }
+                        self.handleUserAuthority(authority, adminIsSwitchOn, isSwitchOn)
                     }
                 } else {
-                    self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+                    self.handleNoAccessToken()
                 }
             }
         } else {
-            window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+            handleNoAccessToken()
         }
         
         self.window?.makeKeyAndVisible()
         
-        // 네트워크 요청 지연 처리
         DispatchQueue.global().async {
             self.checkForUpdates { [weak self] isUpdateAvailable in
                 if isUpdateAvailable {
                     DispatchQueue.main.async {
                         self?.showUpdatePopup()
-                        print("업데이트 필요")
                     }
                 }
             }
@@ -119,10 +104,55 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         alertController.addAction(updateAction)
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.window?.rootViewController?.present(alertController, animated: true) {
                 print("업데이트 팝업 표시됨")
+            }
+        }
+    }
+    
+    private func handleUserAuthority(_ authority: String?, _ adminIsSwitchOn: Bool, _ isSwitchOn: Bool) {
+        guard let authority = authority else {
+            handleNoAccessToken()
+            return
+        }
+        
+        if authority == "ROLE_STUDENT_COUNCIL" {
+            if adminIsSwitchOn {
+                self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
+            } else {
+                self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
+            }
+        } else if authority == "ROLE_STUDENT" {
+            if isSwitchOn {
+                self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
+            } else {
+                self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
+            }
+        } else {
+            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+        }
+    }
+    
+    private func handleNoAccessToken() {
+        refreshTokenManager.tokenReissuance()
+        DispatchQueue.main.async {
+            if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
+                self.profileModel.loadProfileInfo { [weak self] success in
+                    guard let self = self else { return }
+                    
+                    if success {
+                        let authority = self.profileModel.profileInfo?.authority
+                        DispatchQueue.main.async {
+                            self.handleUserAuthority(authority, false, false)
+                        }
+                    } else {
+                        self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+                    }
+                }
+            } else {
+                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
             }
         }
     }

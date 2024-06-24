@@ -10,7 +10,7 @@ import Moya
 import Service
 
 public class GOMSRefreshToken {
-    static let shared = GOMSRefreshToken()
+    public static let shared = GOMSRefreshToken()
     private let authProvider = MoyaProvider<AuthServices>()
     private let keychain = KeyChain()
     var statusCode: Int = 0
@@ -18,7 +18,7 @@ public class GOMSRefreshToken {
     private lazy var refreshToken = "Bearer " + (keychain.read(key: Const.KeyChainKey.refreshToken) ?? "")
 
     // 토큰 재발급
-    func tokenReissuance() {
+    public func tokenReissuance() {
         authProvider.request(.refreshToken(refreshToken: refreshToken)) { response in
             switch response {
             case .success(let result):
