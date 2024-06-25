@@ -30,6 +30,9 @@ public class LoaderViewController: BaseViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.isOpaque = false
+        view.backgroundColor = .clear
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
