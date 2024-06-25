@@ -115,7 +115,7 @@ public final class SignUpViewController: BaseViewController {
             } else {
                 switch statusCode {
                 case 429:
-                    let alert = UIAlertController(title: "이메일 요청 초과", message: "이메일 요청 한도인 5번을 초과했습니다.\n다음에 다시 시도해 주세요.", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "이메일 요청 초과", message: "이메일 요청 한도인 5번을 초과했습니다.\n5분 후에 재시도해 주세요.", preferredStyle: .alert)
                     
                     let check = UIAlertAction(title: "확인", style: .cancel)
                     alert.addAction(check)
