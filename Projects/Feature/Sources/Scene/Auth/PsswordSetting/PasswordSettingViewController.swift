@@ -81,15 +81,13 @@ public final class PasswordSettingViewController: BaseViewController {
         
         viewModel.signUp { success in
             if success {
-                DispatchQueue.main.async {
-                    self.loader.dismiss(animated: true) {
-                        self.signUpSuccessUI()
-                        let signInVC = SignInViewController(viewModel: self.viewModel)
-                        self.navigationController?.pushViewController(signInVC, animated: true)
-                    }
-                }
+                self.signUpSuccessUI()
+                let signInVC = SignInViewController(viewModel: self.viewModel)
+                self.navigationController?.pushViewController(signInVC, animated: true)
+                self.loader.dismiss(animated: true)
             } else {
                 self.passwordErrorUI()
+                self.loader.dismiss(animated: true)
             }
         }
     }
