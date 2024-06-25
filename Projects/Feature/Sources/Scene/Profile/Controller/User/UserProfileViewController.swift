@@ -220,14 +220,17 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         
         actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] _ in
             self?.setTheme(.dark, themeText: "다크(기본)")
+            self?.updateImage(isActionSheetShowing: false)
         }))
         
         actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] _ in
             self?.setTheme(.light, themeText: "라이트")
+            self?.updateImage(isActionSheetShowing: false)
         }))
         
         actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] _ in
             self?.setTheme(.unspecified, themeText: "시스템 테마 설정")
+            self?.updateImage(isActionSheetShowing: false)
         }))
         
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
