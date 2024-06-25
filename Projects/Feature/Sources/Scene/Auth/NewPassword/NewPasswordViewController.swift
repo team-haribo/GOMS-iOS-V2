@@ -69,7 +69,7 @@ public final class NewPasswordViewController: BaseViewController {
     }
     
     private let conditionsLabel = UILabel().then {
-        $0.text = "대/소문자, 특수문자 포함 6~15자"
+        $0.text = "대/소문자, 숫자, 특수문자 포함 6자 이상"
         $0.font = .pretendard(size: 16, weight: .regular)
         $0.textColor = .color.gomsTertiary.color
     }
