@@ -327,11 +327,15 @@ extension SignInViewController: UITextFieldDelegate {
     }
     
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = (textField.text ?? "") as NSString
+        let updatedText = currentText.replacingCharacters(in: range, with: string)
+    
         if textField == emailTextField {
-            let currentText = textField.text ?? ""
-            guard let stringRange = Range(range, in: currentText) else { return false }
-            let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-            return updatedText.count <= 6
+            return updatedText.count <= 6 && updatedText.rangeOfCharacter(from: .whitespaces) == nil
+        }
+      
+        if textField == passwordTextField {
+            return updatedText.rangeOfCharacter(from: .whitespaces) == nil
         }
         
         return true
