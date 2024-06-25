@@ -192,9 +192,23 @@ public final class MainViewController: BaseViewController {
     func setup() {
         if self.mainViewModel.lateListDatas.count >= 1 {
             lateNilView.isHidden = true
+            
+            outingView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+                $0.bottom.equalToSuperview()
+            }
+            
         } else {
             lateNilView.isHidden = false
+            
+            outingView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.top.equalTo(lateNilView.snp.bottom).offset(32)
+                $0.bottom.equalToSuperview()
+            }
         }
+        
         self.setCollectionView()
         self.setupCountLable()
     }
@@ -331,7 +345,7 @@ public final class MainViewController: BaseViewController {
         }
         
         moreOutingStatusButton.snp.makeConstraints {
-            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(28)
+            $0.top.equalToSuperview().inset(4)
             $0.trailing.equalToSuperview()
             $0.width.equalTo(48)
             $0.height.equalTo(24)

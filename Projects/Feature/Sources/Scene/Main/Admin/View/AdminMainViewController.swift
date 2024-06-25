@@ -49,6 +49,8 @@ public class AdminMainViewController: BaseViewController {
         $0.backgroundColor = .clear
     }
     
+    private let outingView = UIView()
+    
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출현황"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
@@ -165,8 +167,21 @@ public class AdminMainViewController: BaseViewController {
     func setup() {
         if self.viewModel.lateListDatas.count >= 1 {
             lateNilView.isHidden = true
+            
+            outingView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+                $0.bottom.equalToSuperview()
+            }
+            
         } else {
             lateNilView.isHidden = false
+            
+            outingView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.top.equalTo(lateNilView.snp.bottom).offset(32)
+                $0.bottom.equalToSuperview()
+            }
         }
         
         self.setCollectionView()
@@ -243,7 +258,8 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
+        [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
+        [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.content.addSubview($0) }
         [logo, adminMenuButton, content].forEach { view.addSubview($0) }
     }
     
@@ -284,20 +300,26 @@ public class AdminMainViewController: BaseViewController {
             $0.height.equalTo(136)
         }
         
+        outingView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+            $0.bottom.equalToSuperview()
+        }
+        
         outingStatusLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
             $0.height.equalTo(32)
-            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+            $0.top.equalToSuperview()
         }
         
         outingCountLabel.snp.makeConstraints {
-            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
+            $0.top.equalToSuperview()
             $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
             $0.height.equalTo(32)
         }
         
         moreOutingStatusButton.snp.makeConstraints {
-            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(28)
+            $0.top.equalToSuperview().inset(4)
             $0.trailing.equalToSuperview()
             $0.width.equalTo(48)
             $0.height.equalTo(24)
