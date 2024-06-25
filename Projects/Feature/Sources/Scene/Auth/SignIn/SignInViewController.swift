@@ -333,6 +333,7 @@ extension SignInViewController: UITextFieldDelegate {
             let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
             return updatedText.count <= 6
         }
+        
         return true
     }
     
