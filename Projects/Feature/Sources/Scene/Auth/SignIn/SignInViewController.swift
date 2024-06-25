@@ -109,6 +109,7 @@ public final class SignInViewController: BaseViewController {
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupPassword(password: passwordTextField.text ?? "")
     
+        
         DispatchQueue.main.async {
             self.present(self.loader, animated: true)
         }
@@ -117,38 +118,41 @@ public final class SignInViewController: BaseViewController {
             guard let self = self else { return }
             
             DispatchQueue.main.async {
-                self.loader.dismiss(animated: true) {
-                    switch statusCode {
-                    case 200:
-                        self.signInSuccessUI()
-                        UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
+                switch statusCode {
+                case 200:
+                    self.signInSuccessUI()
+                    UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
+                    
+                    self.profileModel.loadProfileInfo { [weak self] success in
+                        guard let self = self else { return }
                         
-                        self.profileModel.loadProfileInfo { [weak self] success in
-                            guard let self = self else { return }
-                            
-                            if success {
-                                if let authority = self.profileModel.profileInfo?.authority {
-                                    if authority == "ROLE_STUDENT_COUNCIL" {
-                                        let mainVC = AdminMainViewController()
-                                        self.navigationController?.setViewControllers([mainVC], animated: true)
-                                    } else if authority == "ROLE_STUDENT" {
-                                        let mainVC = MainViewController()
-                                        self.navigationController?.setViewControllers([mainVC], animated: true)
-                                    } else {
-                                        print("권한이 없습니다.")
-                                    }
+                        if success {
+                            if let authority = self.profileModel.profileInfo?.authority {
+                                if authority == "ROLE_STUDENT_COUNCIL" {
+                                    let mainVC = AdminMainViewController()
+                                    self.navigationController?.setViewControllers([mainVC], animated: true)
+                                } else if authority == "ROLE_STUDENT" {
+                                    let mainVC = MainViewController()
+                                    self.navigationController?.setViewControllers([mainVC], animated: true)
+                                } else {
+                                    print("권한이 없습니다.")
                                 }
-                            } else {
-                                print("프로필 정보를 불러오는데 실패했습니다.")
                             }
+                        } else {
+                            print("프로필 정보를 불러오는데 실패했습니다.")
                         }
-                    case 400:
-                        self.passwordErrorUI()
-                    case 404:
-                        self.emailErrorUI()
-                    default:
-                        print("error")
+                        self.loader.dismiss(animated: true)
                     }
+                case 400:
+                    self.passwordErrorUI()
+                    self.loader.dismiss(animated: true)
+                case 404:
+                    self.emailErrorUI()
+                    self.loader.dismiss(animated: true)
+                    
+                default:
+                    print("error")
+                    self.loader.dismiss(animated: true)
                 }
             }
         }
