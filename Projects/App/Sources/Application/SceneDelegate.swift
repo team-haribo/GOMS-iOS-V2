@@ -18,6 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         applySavedTheme()
         
         if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
+            refreshTokenManager.tokenReissuance()
             self.profileModel.loadProfileInfo { [weak self] success in
                 guard let self = self else { return }
                 
