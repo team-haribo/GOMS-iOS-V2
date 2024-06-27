@@ -173,13 +173,14 @@ public final class MainViewController: BaseViewController {
     }
     
     func setupScrollView() {
+
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        
+
         scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.left.right.equalToSuperview()
         }
-        
+
         contentView.snp.makeConstraints { make in
             make.edges.equalTo(scrollView)
             make.width.equalTo(scrollView)
@@ -285,9 +286,10 @@ public final class MainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
+        [logo, settingButton, content].forEach { contentView.addSubview($0) }
         [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.content.addSubview($0) }
-        [logo, settingButton, content].forEach { view.addSubview($0) }
+        [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
+        
     }
     
     // MARK: - Layout
