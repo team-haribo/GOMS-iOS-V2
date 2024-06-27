@@ -29,7 +29,7 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         $0.isHidden = true
     }
     
-    lazy var passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "비밀번호").then {
+    lazy var passwordTextField = GOMSTextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0), placeholder: "현재 비밀번호").then {
         $0.isSecureTextEntry = true
         $0.rightView = visiblePasswordButton
         $0.rightViewMode = .always
