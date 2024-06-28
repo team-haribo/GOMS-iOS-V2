@@ -361,7 +361,7 @@ public final class MainViewController: BaseViewController {
         
         qrButton.snp.makeConstraints {
             $0.trailing.equalToSuperview()
-            $0.bottom.equalTo(bounds.height * 0.38)
+            $0.bottom.equalTo(bounds.height * 0.35)
             $0.height.width.equalTo(64)
         }
     }

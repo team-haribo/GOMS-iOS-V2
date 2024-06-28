@@ -597,8 +597,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.width.equalTo(335)
             $0.height.equalTo(64)
             $0.top.equalTo(themeChangText.snp.bottom).offset(8)
-//            $0.leading.equalToSuperview().offset(20)
-//            $0.trailing.equalToSuperview().inset(20)
             $0.leading.trailing.equalToSuperview().inset(20)
         }
         

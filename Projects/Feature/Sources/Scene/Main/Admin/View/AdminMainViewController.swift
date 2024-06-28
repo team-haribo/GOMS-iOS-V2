@@ -150,11 +150,11 @@ public class AdminMainViewController: BaseViewController {
     func setupScrollView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        
+
         scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.left.right.equalToSuperview()
         }
-        
+
         contentView.snp.makeConstraints { make in
             make.edges.equalTo(scrollView)
             make.width.equalTo(scrollView)
@@ -258,23 +258,24 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
+        [logo, adminMenuButton, content].forEach { contentView.addSubview($0) }
         [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.content.addSubview($0) }
-        [logo, adminMenuButton, content].forEach { view.addSubview($0) }
+        [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
+        
     }
     
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalTo(bounds.height * 0.07)
+            $0.top.equalTo(bounds.height * 0.013)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(24)
             $0.width.equalTo(87)
         }
         
         adminMenuButton.snp.makeConstraints {
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.07)
+            $0.top.equalTo(bounds.height * 0.013)
+            $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.height.equalTo(18)
             $0.width.equalTo(20)
         }
@@ -333,7 +334,7 @@ public class AdminMainViewController: BaseViewController {
         
         qrButton.snp.makeConstraints {
             $0.trailing.equalToSuperview()
-            $0.bottom.equalTo(-(bounds.height * 0.06))
+            $0.bottom.equalTo(bounds.height * 0.35)
             $0.height.width.equalTo(64)
         }
     }
