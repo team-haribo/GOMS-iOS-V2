@@ -21,7 +21,7 @@ public final class StudentManagementViewController: BaseViewController {
     
     let refreshControl = UIRefreshControl()
     
-    private let searchController = UISearchController(searchResultsController: nil)
+    let searchController = UISearchController(searchResultsController: nil)
     
     private let titleLabel = UILabel().then {
         $0.text = "검색 결과"
