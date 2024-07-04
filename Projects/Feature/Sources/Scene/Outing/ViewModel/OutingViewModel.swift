@@ -85,18 +85,15 @@ public final class OutingViewModel: BaseViewModel {
         }
     }
     
-    func deleteOutingStudent(index: Int, completion: @escaping () -> Void) {
-        let deleteStudent = outingList[index]
-        let accountIdx = deleteStudent.accountIdx
+    func deleteOutingStudent(user: OutingListData, completion: @escaping () -> Void) {
+        let deleteStudent = user.id
 
-        studentCouncilProvider.request(.deleteOuting(authorization: accessToken, accountIdx: accountIdx)) { response in
+        studentCouncilProvider.request(.deleteOuting(authorization: accessToken, accountIdx: deleteStudent)) { response in
             switch response {
             case .success(let result):
                 let statusCode = result.statusCode
-                let responseData = result.data
                 switch statusCode {
                 case 205:
-                    self.outingListDatas.remove(at: index)
                     completion()
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
