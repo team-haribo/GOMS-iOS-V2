@@ -134,10 +134,12 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             if sender.isOn {
                 viewModel.blackList(user: userData) { newList in
                     self.updateUserList(newList)
+                    self.studentManagementVC.searchController.searchBar.text = ""
                 }
             } else {
                 viewModel.cancelBlackList(user: userData) { newList in
                     self.updateUserList(newList)
+                    self.studentManagementVC.searchController.searchBar.text = ""
                 }
             }
     }
@@ -147,6 +149,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             
         viewModel.changeAuthority(user: userData) { newList in
             self.updateUserList(newList)
+            self.studentManagementVC.searchController.searchBar.text = ""
         }
     }
     
