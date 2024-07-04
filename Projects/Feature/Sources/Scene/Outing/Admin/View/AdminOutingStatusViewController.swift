@@ -180,7 +180,7 @@ extension AdminOutingViewController: UICollectionViewDelegate {
         let alertController = UIAlertController(title: "외출 강제 복귀", message: "외출자를 강제로 복귀시키시겠습니까?", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
         alertController.addAction(UIAlertAction(title: "복귀", style: .destructive, handler: { _ in
-            self.viewModel.deleteOutingStudent(index: index) {
+            self.viewModel.deleteOutingStudent(user: self.outingList[index]) {
                 self.outingList = self.viewModel.outingListDatas
                 DispatchQueue.main.async {
                     self.outingListCollectionView.reloadData()
