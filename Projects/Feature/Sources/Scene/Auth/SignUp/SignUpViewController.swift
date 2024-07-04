@@ -9,7 +9,7 @@
 import UIKit
 
 public final class SignUpViewController: BaseViewController {
-
+    
     // MARK: - Properties
     private let viewModel = AuthViewModel()
     
@@ -47,9 +47,10 @@ public final class SignUpViewController: BaseViewController {
     
     private lazy var authCodeButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "인증번호 받기").then {
         $0.addTarget(self, action: #selector(authCodeButtonTapped), for: .touchUpInside)
+        $0.isEnabled = false
     }
     
-    // MARK: - Life Cycel
+    // MARK: - Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -58,6 +59,8 @@ public final class SignUpViewController: BaseViewController {
         
         nameTextField.delegate = self
         emailTextField.delegate = self
+   
+        authCodeButton.isEnabled = shouldEnableAuthCodeButton()
     }
     
     // MARK: - Selectors
@@ -69,11 +72,13 @@ public final class SignUpViewController: BaseViewController {
             self.genderTextField.setTitle("남성", for: .normal)
             self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
             self.viewModel.setupGender(gender: "MAN")
+            self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         let womanAction = UIAlertAction(title: "여성", style: .default) { _ in
             self.genderTextField.setTitle("여성", for: .normal)
             self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
             self.viewModel.setupGender(gender: "WOMAN")
+            self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         
         [ menAction, womanAction ].forEach { alert.addAction($0) }
@@ -88,16 +93,19 @@ public final class SignUpViewController: BaseViewController {
             self.majorTextField.setTitle("SW개발과", for: .normal)
             self.majorTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
             self.viewModel.setupMajor(major: "SW_DEVELOP")
+            self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         let iotAction = UIAlertAction(title: "스마트IoT과", style: .default) { _ in
             self.majorTextField.setTitle("스마트IoT과", for: .normal)
             self.majorTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
             self.viewModel.setupMajor(major: "SMART_IOT")
+            self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         let aiAction = UIAlertAction(title: "AI개발과", style: .default) { _ in
             self.majorTextField.setTitle("AI개발과", for: .normal)
             self.majorTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
             self.viewModel.setupMajor(major: "AI")
+            self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         
         [ swAction, iotAction, aiAction ].forEach { alert.addAction($0) }
@@ -147,7 +155,7 @@ public final class SignUpViewController: BaseViewController {
         }
         [textFieldStackView, authCodeButton].forEach { view.addSubview($0) }
     }
-
+    
     // MARK: - Layout
     override func setLayout() {
         nameTextField.snp.makeConstraints {
@@ -195,17 +203,28 @@ extension SignUpViewController: UITextFieldDelegate {
         } else if textField == emailTextField {
             viewModel.setupEmail(email: self.emailTextField.text ?? "")
         }
+    
+        authCodeButton.isEnabled = shouldEnableAuthCodeButton()
     }
     
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            if textField == emailTextField {
-                let currentText = textField.text ?? ""
-                guard let stringRange = Range(range, in: currentText) else { return false }
-                let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-                return updatedText.count <= 6
-            }
-            return true
+        if textField == emailTextField {
+            let currentText = textField.text ?? ""
+            guard let stringRange = Range(range, in: currentText) else { return false }
+            let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+            return updatedText.count <= 6
         }
+        return true
+    }
+    
+    private func shouldEnableAuthCodeButton() -> Bool {
+        let nameValid = !(nameTextField.text ?? "").isEmpty
+        let emailValid = (emailTextField.text ?? "").count == 6
+        let majorValid = ["SW개발과", "스마트IoT과", "AI개발과"].contains(majorTextField.title(for: .normal) ?? "")
+        let genderValid = ["남성", "여성"].contains(genderTextField.title(for: .normal) ?? "")
+        
+        return nameValid && emailValid && majorValid && genderValid
+    }
 }
 
 extension SignUpViewController {
@@ -213,3 +232,7 @@ extension SignUpViewController {
         view.endEditing(true)
     }
 }
+
+
+
+
