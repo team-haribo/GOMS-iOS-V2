@@ -49,16 +49,32 @@ public final class FindPasswordViewController: BaseViewController {
     
     // MARK: - Selectors
     @objc func authCodeButtonTapped() {
-        viewModel.setupEmail(email: self.emailTextField.text ?? "")
-        viewModel.sendAuthCode { success, statusCode in
-            if success {
-                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
-                self.navigationController?.pushViewController(authCodeVC, animated: true)
+        if emailTextField.text?.count != 6 {
+            emailBlankValue()
+        } else {
+            viewModel.setupEmail(email: self.emailTextField.text ?? "")
+            viewModel.sendAuthCode { success, statusCode in
+                if success {
+                    self.successUI()
+                    let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
+                    self.navigationController?.pushViewController(authCodeVC, animated: true)
+                } else {
+                    self.emailErrorUI()
+                }
             }
         }
     }
     
-    func signInSuccessUI() {
+    func emailBlankValue() {
+        emailTextField.setPlaceholderColor(.color.gomsNegative.color)
+        defaultDomain.textColor = .color.gomsNegative.color
+        emailErrorLabel.text = "유효한 이메일을 입력해주세요."
+        emailErrorLabel.isHidden = false
+        emailTextField.layer.borderColor = UIColor.systemRed.cgColor
+        emailTextField.layer.borderWidth = 1
+    }
+    
+    func successUI() {
         emailTextField.setPlaceholderColor(.color.gomsTertiary.color)
         defaultDomain.textColor = .color.gomsTertiary.color
         emailErrorLabel.isHidden = true
