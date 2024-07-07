@@ -114,7 +114,7 @@ public final class SignInViewController: BaseViewController {
             self.present(self.loader, animated: true)
         }
         
-        viewModel.signIn { [weak self] statusCode in
+        viewModel.signIn { [weak self] statusCode, _ in
             guard let self = self else { return }
             
             DispatchQueue.main.async {

@@ -110,7 +110,7 @@ public final class MainViewModel: BaseViewModel {
         }
     }
     
-    func getProfile(completion: @escaping () -> Void) {
+    func getProfile(completion: @escaping (String?) -> Void) {
         profileProvider.request(.getProfile(authorization: accessToken)) { response in
             switch response {
             case .success(let result):
@@ -121,24 +121,28 @@ public final class MainViewModel: BaseViewModel {
                     print("ok")
                     do {
                         self.profile = try JSONDecoder().decode(ProfileResponse.self, from: responseData)
-                        self.profileData = ProfileData(profileUrl: self.profile?.profileUrl, 
+                        self.profileData = ProfileData(profileUrl: self.profile?.profileUrl,
                                                        name: self.profile?.name ?? "",
                                                        grade: self.profile?.grade ?? 0,
                                                        major: self.profile?.major ?? "",
                                                        authority: self.profile?.authority ?? "",
                                                        isOuting: self.profile?.isOuting ?? false,
                                                        isBlackList: self.profile?.isBlackList ?? false)
-                        completion()
+                        completion(self.profileData?.authority)
                     } catch {
                         print(error.localizedDescription)
+                        completion(nil)
                     }
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
+                    completion(nil)
                 default:
                     print(result)
+                    completion(nil)
                 }
             case .failure(let err):
                 print(err.localizedDescription)
+                completion(nil)
             }
         }
     }

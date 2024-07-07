@@ -66,12 +66,13 @@ public final class AuthViewModel: BaseViewModel {
     }
     
     // MARK: - Sign In
-    func signIn(completion: @escaping (Int) -> Void) {
+    func signIn(completion: @escaping (Int, String?) -> Void) {
         let param = SignInRequest(email: email, password: password)
         authProvider.request(.signIn(param: param)) { [weak self] response in
             guard let self = self else { return }
             
             DispatchQueue.global().async {
+                var authority: String? = nil
                 switch response {
                 case .success(let result):
                     let statusCode = result.statusCode
@@ -82,6 +83,9 @@ public final class AuthViewModel: BaseViewModel {
                             self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
                             self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
                             self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
+                            authority = signInResponse.authority
+                            
+                            completion(statusCode, authority)
                         default:
                             break
                         }
@@ -89,18 +93,19 @@ public final class AuthViewModel: BaseViewModel {
                         print("Error parsing SignInResponse: \(error)")
                     }
                     DispatchQueue.main.async {
-                        completion(statusCode)
+                        completion(statusCode, authority)
                     }
                     
                 case .failure(let err):
                     print("Network error: \(err.localizedDescription)")
                     DispatchQueue.main.async {
-                        completion(0)
+                        completion(0, nil)
                     }
                 }
             }
         }
     }
+
 
     // MARK: - Send Auth Code
     func sendAuthCode(completion: @escaping (Bool, Int) -> Void) {
