@@ -5,7 +5,6 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Properties
     private let viewModel = MainViewModel()
     private let basicsProfileView = ProfileCardView()
-    
     let refreshControl = UIRefreshControl()
         
     let scrollView = UIScrollView().then {
@@ -17,10 +16,11 @@ public class AdminMainViewController: BaseViewController {
     }
     
     var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
-        didSet {
-            updateLayout()
+            didSet {
+                updateLayout()
+            }
         }
-    }
+    
     
     let content = UIView()
     
@@ -48,8 +48,6 @@ public class AdminMainViewController: BaseViewController {
         $0.showsVerticalScrollIndicator = true
         $0.backgroundColor = .clear
     }
-    
-    private let outingView = UIView()
     
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출현황"
@@ -80,14 +78,14 @@ public class AdminMainViewController: BaseViewController {
         $0.backgroundColor = .clear
     }
     
-    private lazy var qrButton = AdminQRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsAdmin.color).then {
+    private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsAdmin.color).then {
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
 
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.getProfile {
+        viewModel.getProfile {_ in 
             self.setupProfileView()
         }
         
@@ -118,43 +116,42 @@ public class AdminMainViewController: BaseViewController {
     }
     
     @objc func handleRefreshControl() {
-        viewModel.getLateList { [weak self] in
-            guard let self = self else { return }
-            
-            self.viewModel.gomsRefreshToken.tokenReissuance()
-            
-            self.viewModel.getProfile {
-                self.setupProfileView()
-                self.view.layoutIfNeeded()
+            viewModel.getLateList { [weak self] in
+                guard let self = self else { return }
                 
-                self.viewModel.getOutingList {
-                    self.setup()
+                self.viewModel.getProfile {_ in 
+                    self.setupProfileView()
                     self.view.layoutIfNeeded()
                     
-                    self.setupCountLable()
-                    self.setCollectionView()
-                    self.setup()
-                    self.setupProfileView()
-                    self.latecomerCollectionView.reloadData()
-                    self.outingStatusCollectionView.reloadData()
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        self.refreshControl.endRefreshing()
-                        self.view.frame.origin.y = 0
+                    self.viewModel.getOutingList {
+                        self.setup()
+                        self.view.layoutIfNeeded()
+                        
+                        self.setupCountLable()
+                        self.setCollectionView()
+                        self.setup()
+                        self.setupProfileView()
+                        self.latecomerCollectionView.reloadData()
+                        self.outingStatusCollectionView.reloadData()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            self.refreshControl.endRefreshing()
+                            self.view.frame.origin.y = 0
+                        }
                     }
                 }
             }
         }
-    }
+    
     
     func setupScrollView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-
+        
         scrollView.snp.makeConstraints { make in
-            make.top.bottom.left.right.equalToSuperview()
+            make.edges.equalToSuperview()
         }
-
+        
         contentView.snp.makeConstraints { make in
             make.edges.equalTo(scrollView)
             make.width.equalTo(scrollView)
@@ -167,21 +164,8 @@ public class AdminMainViewController: BaseViewController {
     func setup() {
         if self.viewModel.lateListDatas.count >= 1 {
             lateNilView.isHidden = true
-            
-            outingView.snp.remakeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
-                $0.bottom.equalToSuperview()
-            }
-            
         } else {
             lateNilView.isHidden = false
-            
-            outingView.snp.remakeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.top.equalTo(lateNilView.snp.bottom).offset(32)
-                $0.bottom.equalToSuperview()
-            }
         }
         
         self.setCollectionView()
@@ -258,24 +242,22 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [logo, adminMenuButton, content].forEach { contentView.addSubview($0) }
-        [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.content.addSubview($0) }
-        [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
-        
+        [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
+        [logo, adminMenuButton, content].forEach { view.addSubview($0) }
     }
     
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalTo(bounds.height * 0.013)
+            $0.top.equalTo(bounds.height * 0.07)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(24)
             $0.width.equalTo(87)
         }
         
         adminMenuButton.snp.makeConstraints {
-            $0.top.equalTo(bounds.height * 0.013)
-            $0.trailing.equalTo(-(bounds.width * 0.05))
+            $0.trailing.equalTo(-bounds.width * 0.05)
+            $0.top.equalTo(bounds.height * 0.07)
             $0.height.equalTo(18)
             $0.width.equalTo(20)
         }
@@ -301,26 +283,20 @@ public class AdminMainViewController: BaseViewController {
             $0.height.equalTo(136)
         }
         
-        outingView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
-            $0.bottom.equalToSuperview()
-        }
-        
         outingStatusLabel.snp.makeConstraints {
             $0.leading.equalToSuperview()
             $0.height.equalTo(32)
-            $0.top.equalToSuperview()
+            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
         }
         
         outingCountLabel.snp.makeConstraints {
-            $0.top.equalToSuperview()
+            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
             $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
             $0.height.equalTo(32)
         }
         
         moreOutingStatusButton.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(4)
+            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(28)
             $0.trailing.equalToSuperview()
             $0.width.equalTo(48)
             $0.height.equalTo(24)
@@ -334,7 +310,7 @@ public class AdminMainViewController: BaseViewController {
         
         qrButton.snp.makeConstraints {
             $0.trailing.equalToSuperview()
-            $0.bottom.equalTo(bounds.height * 0.35)
+            $0.bottom.equalTo(-(bounds.height * 0.06))
             $0.height.width.equalTo(64)
         }
     }
@@ -395,34 +371,34 @@ extension AdminMainViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func updateLayout() {
-        profileView.snp.remakeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(84)
-            $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview()
+            profileView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.height.equalTo(84)
+                $0.centerX.equalToSuperview()
+                $0.top.equalToSuperview()
+            }
+            
+            latecomerLabel.snp.remakeConstraints {
+                $0.top.equalTo(profileView.snp.bottom).offset(24)
+                $0.leading.equalToSuperview()
+                $0.height.equalTo(32)
+            }
+            
+            basicsProfileView.snp.remakeConstraints {
+                $0.leading.trailing.equalToSuperview()
+                $0.height.equalTo(84)
+                $0.centerX.equalToSuperview()
+                $0.top.equalToSuperview()
+            }
+            
+            if isClockOn {
+                profileView.isHidden = false
+                basicsProfileView.isHidden = true
+            } else {
+                profileView.isHidden = true
+                basicsProfileView.isHidden = false
+            }
+            
+            view.layoutIfNeeded()
         }
-        
-        latecomerLabel.snp.remakeConstraints {
-            $0.top.equalTo(profileView.snp.bottom).offset(24)
-            $0.leading.equalToSuperview()
-            $0.height.equalTo(32)
-        }
-        
-        basicsProfileView.snp.remakeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(84)
-            $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview()
-        }
-        
-        if isClockOn {
-            profileView.isHidden = false
-            basicsProfileView.isHidden = true
-        } else {
-            profileView.isHidden = true
-            basicsProfileView.isHidden = false
-        }
-        
-        view.layoutIfNeeded()
-    }
 }
