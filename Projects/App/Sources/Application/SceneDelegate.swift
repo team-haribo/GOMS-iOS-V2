@@ -164,7 +164,41 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneWillResignActive(_ scene: UIScene) {}
     
-    func sceneWillEnterForeground(_ scene: UIScene) {}
     
-    func sceneDidEnterBackground(_ scene: UIScene) {}
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        guard let isLoggedIn = UserDefaults.standard.object(forKey: "isLoggedIn") as? Bool else {
+            window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+            return
+        }
+        
+        if isLoggedIn {
+            if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
+                refreshTokenManager.tokenReissuance()
+                self.profileModel.loadProfileInfo { [weak self] success in
+                    guard let self = self else { return }
+                    
+                    if success {
+                        let authority = self.profileModel.profileInfo?.authority
+                        let defaults = UserDefaults.standard
+                        let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+                        let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
+                        DispatchQueue.main.async {
+                            self.handleUserAuthority(authority, adminIsSwitchOn, isSwitchOn)
+                        }
+                    } else {
+                        self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+                    }
+                }
+            } else {
+                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+            }
+        } else {
+            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+        }
+    }
+    
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        refreshTokenManager.tokenReissuance()
+        UserDefaults.standard.set(true, forKey: "isLoggedIn")
+    }
 }
