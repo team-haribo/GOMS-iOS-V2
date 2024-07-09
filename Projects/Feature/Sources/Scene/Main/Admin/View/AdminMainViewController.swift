@@ -6,7 +6,7 @@ public class AdminMainViewController: BaseViewController {
     private let viewModel = MainViewModel()
     private let basicsProfileView = ProfileCardView()
     let refreshControl = UIRefreshControl()
-        
+    
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -16,11 +16,10 @@ public class AdminMainViewController: BaseViewController {
     }
     
     var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
-            didSet {
-                updateLayout()
-            }
+        didSet {
+            updateLayout()
         }
-    
+    }
     
     let content = UIView()
     
@@ -41,7 +40,7 @@ public class AdminMainViewController: BaseViewController {
     }
     
     let lateNilView = LateNilView()
-
+    
     lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
@@ -69,7 +68,7 @@ public class AdminMainViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
-
+    
     lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = true
         $0.showsHorizontalScrollIndicator = false
@@ -78,14 +77,14 @@ public class AdminMainViewController: BaseViewController {
         $0.backgroundColor = .clear
     }
     
-    private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsAdmin.color).then {
+    private lazy var qrButton = AdminQRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsAdmin.color).then {
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
-
+    
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.getProfile {_ in 
+        viewModel.getProfile {_ in
             self.setupProfileView()
         }
         
@@ -116,32 +115,32 @@ public class AdminMainViewController: BaseViewController {
     }
     
     @objc func handleRefreshControl() {
-            viewModel.getLateList { [weak self] in
-                guard let self = self else { return }
+        viewModel.getLateList { [weak self] in
+            guard let self = self else { return }
+            
+            self.viewModel.getProfile {_ in
+                self.setupProfileView()
+                self.view.layoutIfNeeded()
                 
-                self.viewModel.getProfile {_ in 
-                    self.setupProfileView()
+                self.viewModel.getOutingList {
+                    self.setup()
                     self.view.layoutIfNeeded()
                     
-                    self.viewModel.getOutingList {
-                        self.setup()
-                        self.view.layoutIfNeeded()
-                        
-                        self.setupCountLable()
-                        self.setCollectionView()
-                        self.setup()
-                        self.setupProfileView()
-                        self.latecomerCollectionView.reloadData()
-                        self.outingStatusCollectionView.reloadData()
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            self.refreshControl.endRefreshing()
-                            self.view.frame.origin.y = 0
-                        }
+                    self.setupCountLable()
+                    self.setCollectionView()
+                    self.setup()
+                    self.setupProfileView()
+                    self.latecomerCollectionView.reloadData()
+                    self.outingStatusCollectionView.reloadData()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.refreshControl.endRefreshing()
+                        self.view.frame.origin.y = 0
                     }
                 }
             }
         }
+    }
     
     
     func setupScrollView() {
@@ -187,10 +186,10 @@ public class AdminMainViewController: BaseViewController {
     func setupCountLable() {
         let attributedString = NSMutableAttributedString(string: "\(self.viewModel.outingListDatas.count)명이 외출 중")
         let range = (attributedString.string as NSString).range(of: "\(self.viewModel.outingListDatas.count)")
-
+        
         attributedString.addAttribute(.foregroundColor, value: UIColor.color.gomsAdmin.color, range: range)
         attributedString.addAttribute(.font, value: UIFont.pretendard(size: 12, weight: .semibold), range: range)
-
+        
         self.outingCountLabel.attributedText = attributedString
     }
     
@@ -233,7 +232,7 @@ public class AdminMainViewController: BaseViewController {
         let adminMenuVC = AdminMenuViewController()
         self.navigationController?.pushViewController(adminMenuVC, animated: true)
     }
-
+    
     // MARK: - Configure UI
     override func configureUI() {
         qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
