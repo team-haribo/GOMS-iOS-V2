@@ -72,30 +72,19 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
     }
     
     func qrScanResult(result: String) {
-        var title = ""
-        var message = ""
-        
         if result == "comeback" {
-            title = "QR코드 스캔 성공"
-            message = "제 시간에 복귀에 성공했어요!\n다음 외출제에 또 만나요!"
+            let vc = CombackScuccessVC()
+            self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "outing" {
-            title = "QR코드 스캔 성공"
-            message = "외출을 시작합니다.\n7시 25분까지 복귀해 주세요."
+            let vc = OutingSuccessVC()
+            self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "blackList" {
-            title = "QR코드 스캔 실패"
-            message = "외출 금지 상태에서는\nQR 스캔을 할 수 없습니다."
+            let vc = BlackListVC()
+            self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "uuidError" {
-            title = "QR코드 스캔 실패"
-            message = "예기치 못한 오류가 발생했습니다.\n다시 시도해 주세요."
+            let vc = QRErrorVC()
+            self.navigationController?.pushViewController(vc, animated: true)
         }
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "확인", style: .default) { _ in
-            let mainVC = MainViewController()
-            self.navigationController?.pushViewController(mainVC, animated: true)
-        }
-        alert.addAction(action)
-        self.present(alert, animated: true, completion: nil)
     }
     
     public func setupCamera() {
