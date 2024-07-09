@@ -76,8 +76,8 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
         var message = ""
         
         if result == "comeback" {
-            title = "QR코드 스캔 성공"
-            message = "제 시간에 복귀에 성공했어요!\n다음 외출제에 또 만나요!"
+            let vc = CombackScuccessVC()
+            self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "outing" {
             let vc = OutingSuccessVC()
             self.navigationController?.pushViewController(vc, animated: true)
