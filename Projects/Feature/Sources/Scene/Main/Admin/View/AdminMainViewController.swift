@@ -6,7 +6,7 @@ public class AdminMainViewController: BaseViewController {
     private let viewModel = MainViewModel()
     private let basicsProfileView = ProfileCardView()
     let refreshControl = UIRefreshControl()
-        
+    
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -16,11 +16,10 @@ public class AdminMainViewController: BaseViewController {
     }
     
     var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
-            didSet {
-                updateLayout()
-            }
+        didSet {
+            updateLayout()
         }
-    
+    }
     
     let content = UIView()
     
@@ -40,8 +39,18 @@ public class AdminMainViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
+    private lazy var moreLateButton = UIButton().then {
+        $0.backgroundColor = .color.gomsTextDefault.color.withAlphaComponent(0.1)
+        $0.setTitle("더보기", for: .normal)
+        $0.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        $0.titleLabel?.font = .pretendard(size: 12, weight: .regular)
+        $0.layer.cornerRadius = 8
+        $0.layer.masksToBounds = true
+        $0.addTarget(self, action: #selector(moreLateButtonTapped), for: .touchUpInside)
+    }
+    
     let lateNilView = LateNilView()
-
+    
     lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
@@ -69,7 +78,7 @@ public class AdminMainViewController: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
-
+    
     lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = true
         $0.showsHorizontalScrollIndicator = false
@@ -78,14 +87,14 @@ public class AdminMainViewController: BaseViewController {
         $0.backgroundColor = .clear
     }
     
-    private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsAdmin.color).then {
+    private lazy var qrButton = AdminQRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsAdmin.color).then {
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
-
+    
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.getProfile {_ in 
+        viewModel.getProfile {_ in
             self.setupProfileView()
         }
         
@@ -116,32 +125,32 @@ public class AdminMainViewController: BaseViewController {
     }
     
     @objc func handleRefreshControl() {
-            viewModel.getLateList { [weak self] in
-                guard let self = self else { return }
+        viewModel.getLateList { [weak self] in
+            guard let self = self else { return }
+            
+            self.viewModel.getProfile {_ in
+                self.setupProfileView()
+                self.view.layoutIfNeeded()
                 
-                self.viewModel.getProfile {_ in 
-                    self.setupProfileView()
+                self.viewModel.getOutingList {
+                    self.setup()
                     self.view.layoutIfNeeded()
                     
-                    self.viewModel.getOutingList {
-                        self.setup()
-                        self.view.layoutIfNeeded()
-                        
-                        self.setupCountLable()
-                        self.setCollectionView()
-                        self.setup()
-                        self.setupProfileView()
-                        self.latecomerCollectionView.reloadData()
-                        self.outingStatusCollectionView.reloadData()
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            self.refreshControl.endRefreshing()
-                            self.view.frame.origin.y = 0
-                        }
+                    self.setupCountLable()
+                    self.setCollectionView()
+                    self.setup()
+                    self.setupProfileView()
+                    self.latecomerCollectionView.reloadData()
+                    self.outingStatusCollectionView.reloadData()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.refreshControl.endRefreshing()
+                        self.view.frame.origin.y = 0
                     }
                 }
             }
         }
+    }
     
     
     func setupScrollView() {
@@ -187,10 +196,10 @@ public class AdminMainViewController: BaseViewController {
     func setupCountLable() {
         let attributedString = NSMutableAttributedString(string: "\(self.viewModel.outingListDatas.count)명이 외출 중")
         let range = (attributedString.string as NSString).range(of: "\(self.viewModel.outingListDatas.count)")
-
+        
         attributedString.addAttribute(.foregroundColor, value: UIColor.color.gomsAdmin.color, range: range)
         attributedString.addAttribute(.font, value: UIFont.pretendard(size: 12, weight: .semibold), range: range)
-
+        
         self.outingCountLabel.attributedText = attributedString
     }
     
@@ -233,7 +242,12 @@ public class AdminMainViewController: BaseViewController {
         let adminMenuVC = AdminMenuViewController()
         self.navigationController?.pushViewController(adminMenuVC, animated: true)
     }
-
+    
+    @objc func moreLateButtonTapped() {
+        let lateVC = LatecomerListViewController()
+        navigationController?.pushViewController(lateVC, animated: true)
+    }
+    
     // MARK: - Configure UI
     override func configureUI() {
         qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
@@ -242,7 +256,7 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
+        [profileView, basicsProfileView, latecomerLabel, moreLateButton, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
         [logo, adminMenuButton, content].forEach { view.addSubview($0) }
     }
     
@@ -371,34 +385,41 @@ extension AdminMainViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func updateLayout() {
-            profileView.snp.remakeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.height.equalTo(84)
-                $0.centerX.equalToSuperview()
-                $0.top.equalToSuperview()
-            }
-            
-            latecomerLabel.snp.remakeConstraints {
-                $0.top.equalTo(profileView.snp.bottom).offset(24)
-                $0.leading.equalToSuperview()
-                $0.height.equalTo(32)
-            }
-            
-            basicsProfileView.snp.remakeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.height.equalTo(84)
-                $0.centerX.equalToSuperview()
-                $0.top.equalToSuperview()
-            }
-            
-            if isClockOn {
-                profileView.isHidden = false
-                basicsProfileView.isHidden = true
-            } else {
-                profileView.isHidden = true
-                basicsProfileView.isHidden = false
-            }
-            
-            view.layoutIfNeeded()
+        profileView.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(84)
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview()
         }
+        
+        latecomerLabel.snp.remakeConstraints {
+            $0.top.equalTo(profileView.snp.bottom).offset(24)
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(32)
+        }
+        
+        moreLateButton.snp.makeConstraints {
+            $0.top.equalTo(profileView.snp.bottom).offset(24)
+            $0.trailing.equalToSuperview()
+            $0.width.equalTo(48)
+            $0.height.equalTo(24)
+        }
+        
+        basicsProfileView.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(84)
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview()
+        }
+        
+        if isClockOn {
+            profileView.isHidden = false
+            basicsProfileView.isHidden = true
+        } else {
+            profileView.isHidden = true
+            basicsProfileView.isHidden = false
+        }
+        
+        view.layoutIfNeeded()
+    }
 }
