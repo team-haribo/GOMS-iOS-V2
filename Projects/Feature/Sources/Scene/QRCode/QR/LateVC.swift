@@ -17,13 +17,13 @@ final class LateVC: BaseViewController {
     private let titleLabel = UILabel().then {
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 24, weight: .bold)
-        $0.text = "복귀에 성공했어요!"
+        $0.text = "지각하셨네요.."
     }
     
     private let mainLabel = UILabel().then {
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
-        $0.text = "제 때 복귀하셨군요!\n다음 외출제 때 또 만나요!"
+        $0.text = "앞으로 1주간 외출을 하실 수 없어요.\n다음엔 늦지 마세요!"
         $0.setLineSpacing(spacing: 3)
         $0.numberOfLines = 2
         $0.textAlignment = .center
