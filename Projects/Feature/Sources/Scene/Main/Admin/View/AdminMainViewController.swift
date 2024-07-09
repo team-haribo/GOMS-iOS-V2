@@ -39,6 +39,16 @@ public class AdminMainViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
     
+    private lazy var moreLateButton = UIButton().then {
+        $0.backgroundColor = .color.gomsTextDefault.color.withAlphaComponent(0.1)
+        $0.setTitle("더보기", for: .normal)
+        $0.setTitleColor(.color.gomsSecondary.color, for: .normal)
+        $0.titleLabel?.font = .pretendard(size: 12, weight: .regular)
+        $0.layer.cornerRadius = 8
+        $0.layer.masksToBounds = true
+        $0.addTarget(self, action: #selector(moreLateButtonTapped), for: .touchUpInside)
+    }
+    
     let lateNilView = LateNilView()
     
     lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
@@ -233,6 +243,11 @@ public class AdminMainViewController: BaseViewController {
         self.navigationController?.pushViewController(adminMenuVC, animated: true)
     }
     
+    @objc func moreLateButtonTapped() {
+        let lateVC = LatecomerListViewController()
+        navigationController?.pushViewController(lateVC, animated: true)
+    }
+    
     // MARK: - Configure UI
     override func configureUI() {
         qrButton.layer.cornerRadius = qrButton.frame.size.width / 2
@@ -241,7 +256,7 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
+        [profileView, basicsProfileView, latecomerLabel, moreLateButton, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
         [logo, adminMenuButton, content].forEach { view.addSubview($0) }
     }
     
@@ -370,34 +385,41 @@ extension AdminMainViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func updateLayout() {
-            profileView.snp.remakeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.height.equalTo(84)
-                $0.centerX.equalToSuperview()
-                $0.top.equalToSuperview()
-            }
-            
-            latecomerLabel.snp.remakeConstraints {
-                $0.top.equalTo(profileView.snp.bottom).offset(24)
-                $0.leading.equalToSuperview()
-                $0.height.equalTo(32)
-            }
-            
-            basicsProfileView.snp.remakeConstraints {
-                $0.leading.trailing.equalToSuperview()
-                $0.height.equalTo(84)
-                $0.centerX.equalToSuperview()
-                $0.top.equalToSuperview()
-            }
-            
-            if isClockOn {
-                profileView.isHidden = false
-                basicsProfileView.isHidden = true
-            } else {
-                profileView.isHidden = true
-                basicsProfileView.isHidden = false
-            }
-            
-            view.layoutIfNeeded()
+        profileView.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(84)
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview()
         }
+        
+        latecomerLabel.snp.remakeConstraints {
+            $0.top.equalTo(profileView.snp.bottom).offset(24)
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(32)
+        }
+        
+        moreLateButton.snp.makeConstraints {
+            $0.top.equalTo(profileView.snp.bottom).offset(24)
+            $0.trailing.equalToSuperview()
+            $0.width.equalTo(48)
+            $0.height.equalTo(24)
+        }
+        
+        basicsProfileView.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(84)
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview()
+        }
+        
+        if isClockOn {
+            profileView.isHidden = false
+            basicsProfileView.isHidden = true
+        } else {
+            profileView.isHidden = true
+            basicsProfileView.isHidden = false
+        }
+        
+        view.layoutIfNeeded()
+    }
 }
