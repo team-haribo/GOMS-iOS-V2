@@ -1,5 +1,5 @@
 //
-//  CombackScuccessVC.swift
+//  QRErrorVC.swift
 //  Feature
 //
 //  Created by 새미 on 7/9/24.
@@ -8,28 +8,28 @@
 
 import UIKit
 
-final class CombackScuccessVC: BaseViewController {
+final class QRErrorVC: BaseViewController {
 
     private let image = UIImageView().then {
-        $0.image = .image.outingCheck.image
+        $0.image = .image.outingFailed.image
     }
     
     private let titleLabel = UILabel().then {
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 24, weight: .bold)
-        $0.text = "복귀에 성공했어요!"
+        $0.text = "외출에 실패했어요.."
     }
     
     private let mainLabel = UILabel().then {
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
-        $0.text = "제 때 복귀하셨군요!\n다음 외출제 때 또 만나요!"
+        $0.text = "예기치 못한 오류가 발생했어요.\n다시 시도해 주세요!"
         $0.setLineSpacing(spacing: 3)
         $0.numberOfLines = 2
         $0.textAlignment = .center
     }
     
-    private lazy var checkButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "확인").then {
+    private lazy var checkButton = GOMSButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0), title: "카메라로 돌아가기").then {
         $0.addTarget(self, action: #selector(checkButtonTapped), for: .touchUpInside)
     }
 
@@ -40,7 +40,7 @@ final class CombackScuccessVC: BaseViewController {
     
     // MARK: - Selector
     @objc func checkButtonTapped() {
-        self.navigationController?.popToRootViewController(animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Configure Navigation

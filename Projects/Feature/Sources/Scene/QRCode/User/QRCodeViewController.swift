@@ -85,8 +85,8 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
             title = "QR코드 스캔 실패"
             message = "외출 금지 상태에서는\nQR 스캔을 할 수 없습니다."
         } else if result == "uuidError" {
-            title = "QR코드 스캔 실패"
-            message = "예기치 못한 오류가 발생했습니다.\n다시 시도해 주세요."
+            let vc = QRErrorVC()
+            self.navigationController?.pushViewController(vc, animated: true)
         }
         
 //        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
