@@ -79,7 +79,7 @@ public class KeyChain {
 public struct Const {
     public struct KeyChainKey {
         public static let accessToken = "accessToken"
-        static let refreshToken = "refreshToken"
-        static let authority = "authority"
+        public static let refreshToken = "refreshToken"
+        public static let authority = "authority"
     }
 }
