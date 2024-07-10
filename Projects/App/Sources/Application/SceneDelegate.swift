@@ -2,7 +2,7 @@ import UIKit
 import Feature
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    
+
     var window: UIWindow?
     private var profileModel = ProfileViewModel()
     private let refreshTokenManager = GOMSRefreshToken.shared
@@ -11,30 +11,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let defaults = UserDefaults.standard
-        let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-        let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
-        
         applySavedTheme()
-        
-        if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
-            refreshTokenManager.tokenReissuance()
-            self.profileModel.loadProfileInfo { [weak self] success in
-                guard let self = self else { return }
-                
-                if success {
-                    let authority = self.profileModel.profileInfo?.authority
-                    DispatchQueue.main.async {
-                        self.handleUserAuthority(authority, adminIsSwitchOn, isSwitchOn)
-                    }
-                } else {
-                    self.handleNoAccessToken()
-                }
-            }
-        } else {
-            handleNoAccessToken()
-        }
-        
+        setupRootViewController()
         self.window?.makeKeyAndVisible()
         
         DispatchQueue.global().async {
@@ -45,6 +23,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     }
                 }
             }
+        }
+    }
+    
+    private func setupRootViewController() {
+        let defaults = UserDefaults.standard
+        let isLoggedIn = defaults.object(forKey: "isLoggedIn") as? Bool ?? false
+        let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+        let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
+        
+        if isLoggedIn {
+            if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
+                refreshTokenManager.tokenReissuance()
+                let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
+                
+                let rootViewController = determineRootViewController(isLoggedIn: true, isSwitchOn: isSwitchOn, adminIsSwitchOn: adminIsSwitchOn, accessToken: accessToken, authority: authority)
+                self.window?.rootViewController = UINavigationController(rootViewController: rootViewController)
+            } else {
+                handleNoAccessToken()
+            }
+        } else {
+            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+        }
+    }
+    
+    private func determineRootViewController(isLoggedIn: Bool, isSwitchOn: Bool, adminIsSwitchOn: Bool, accessToken: String?, authority: String?) -> UIViewController {
+        guard let authority = authority else {
+            return IntroViewController()
+        }
+        
+        switch authority {
+        case "ROLE_STUDENT_COUNCIL":
+            return adminIsSwitchOn ? AdminQRCodeViewController() : AdminMainViewController()
+        case "ROLE_STUDENT":
+            return isSwitchOn ? QRCodeViewController() : MainViewController()
+        default:
+            return IntroViewController()
         }
     }
     
@@ -113,49 +127,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    private func handleUserAuthority(_ authority: String?, _ adminIsSwitchOn: Bool, _ isSwitchOn: Bool) {
-        guard let authority = authority else {
-            handleNoAccessToken()
-            return
-        }
-        
-        if authority == "ROLE_STUDENT_COUNCIL" {
-            if adminIsSwitchOn {
-                self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
-            } else {
-                self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
-            }
-        } else if authority == "ROLE_STUDENT" {
-            if isSwitchOn {
-                self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
-            } else {
-                self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
-            }
-        } else {
-            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-        }
-    }
-    
     private func handleNoAccessToken() {
+        let defaults = UserDefaults.standard
+        let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
+        let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
+        
         refreshTokenManager.tokenReissuance()
-        DispatchQueue.main.async {
-            if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
-                self.profileModel.loadProfileInfo { [weak self] success in
-                    guard let self = self else { return }
-                    
-                    if success {
-                        let authority = self.profileModel.profileInfo?.authority
-                        DispatchQueue.main.async {
-                            self.handleUserAuthority(authority, false, false)
-                        }
-                    } else {
-                        self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-                    }
-                }
-            } else {
-                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-            }
-        }
+        let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
+        
+        let rootViewController = determineRootViewController(isLoggedIn: false, isSwitchOn: isSwitchOn, adminIsSwitchOn: adminIsSwitchOn, accessToken: nil, authority: authority)
+        self.window?.rootViewController = UINavigationController(rootViewController: rootViewController)
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {}
@@ -164,37 +145,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneWillResignActive(_ scene: UIScene) {}
     
-    
     func sceneWillEnterForeground(_ scene: UIScene) {
-        guard let isLoggedIn = UserDefaults.standard.object(forKey: "isLoggedIn") as? Bool else {
-            window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-            return
-        }
-        
-        if isLoggedIn {
-            if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
-                refreshTokenManager.tokenReissuance()
-                self.profileModel.loadProfileInfo { [weak self] success in
-                    guard let self = self else { return }
-                    
-                    if success {
-                        let authority = self.profileModel.profileInfo?.authority
-                        let defaults = UserDefaults.standard
-                        let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-                        let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
-                        DispatchQueue.main.async {
-                            self.handleUserAuthority(authority, adminIsSwitchOn, isSwitchOn)
-                        }
-                    } else {
-                        self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-                    }
-                }
-            } else {
-                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-            }
-        } else {
-            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
-        }
+        setupRootViewController()
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
