@@ -14,14 +14,14 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     private let viewModel = OutingViewModel()
     
     var outingList: [OutingListData] = [] {
-         didSet {
-             outingListCollectionView.reloadData()
-         }
-     }
+        didSet {
+            outingListCollectionView.reloadData()
+        }
+    }
     
     let refreshControl = UIRefreshControl()
     
-    private let searchController = UISearchController(searchResultsController: nil)
+    let searchController = UISearchController(searchResultsController: nil)
     
     private let searchTitle = UILabel().then {
         $0.text = "검색 결과"
@@ -182,8 +182,12 @@ extension AdminOutingViewController: UICollectionViewDelegate {
         alertController.addAction(UIAlertAction(title: "복귀", style: .destructive, handler: { _ in
             self.viewModel.deleteOutingStudent(user: self.outingList[index]) {
                 self.outingList = self.viewModel.outingListDatas
-                DispatchQueue.main.async {
-                    self.outingListCollectionView.reloadData()
+                self.viewModel.getOutingList {
+                    self.outingList = self.viewModel.outingListDatas
+                    DispatchQueue.main.async {
+                        self.outingListCollectionView.reloadData()
+                        self.searchController.searchBar.text = ""
+                    }
                 }
             }
         }))
