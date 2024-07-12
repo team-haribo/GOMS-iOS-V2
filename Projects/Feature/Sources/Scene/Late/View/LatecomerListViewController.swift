@@ -107,6 +107,7 @@ public final class LatecomerListViewController: BaseViewController {
     
     override func configNavigation() {
         super.configNavigation()
+        navigationController?.navigationBar.tintColor = .color.gomsAdmin.color
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "지각자 명단"
     }
