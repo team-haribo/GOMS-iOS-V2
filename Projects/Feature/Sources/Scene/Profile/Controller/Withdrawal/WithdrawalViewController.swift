@@ -145,5 +145,14 @@ extension WithdrawalViewController: UITextFieldDelegate {
             viewModel.setupPassword(password: textField.text ?? "")
         }
     }
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = (textField.text ?? "") as NSString
+        let updatedText = currentText.replacingCharacters(in: range, with: string)
+        
+        if updatedText.rangeOfCharacter(from: .whitespaces) != nil { return false }
+        
+        return true
+    }
 }
 
