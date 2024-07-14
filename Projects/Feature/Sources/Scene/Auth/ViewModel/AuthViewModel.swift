@@ -28,8 +28,13 @@ public final class AuthViewModel: BaseViewModel {
     private var name: String = ""
     private var gender: String = ""
     private var major: String = ""
+    private var emailStatus: String = ""
     
     private var passwordServe: String = ""
+    
+    func setupEmailStatus(emailStatus: String) {
+        self.emailStatus = emailStatus
+    }
     
     func setupEmail(email: String) {
         self.email = "\(email)@gsm.hs.kr"
@@ -106,10 +111,9 @@ public final class AuthViewModel: BaseViewModel {
         }
     }
 
-
     // MARK: - Send Auth Code
     func sendAuthCode(completion: @escaping (Bool, Int) -> Void) {
-        let param  = SendAuthCodeRequest(email: email)
+        let param  = SendAuthCodeRequest(email: email, emailStatus: emailStatus)
         authProvider.request(.sendAuthCode(param: param)) { response in
             switch response {
             case .success(let result):
@@ -119,6 +123,9 @@ public final class AuthViewModel: BaseViewModel {
                     case 204:
                         print("success")
                         completion(true, statusCode)
+                    case 404:
+                        print("존재하지 않는 사용자일때")
+                        completion(false, statusCode)
                     case 429:
                         print("이메일 요청이 5번을 초과할 경우")
                         completion(false, statusCode)
