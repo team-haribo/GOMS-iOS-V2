@@ -382,6 +382,11 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         configureRefreshControl()
     }
     
+    // MARK: - Configure Navigation
+    override func configNavigation() {
+        self.navigationController?.navigationBar.tintColor = .color.gomsAdmin.color
+    }
+    
     func configureRefreshControl () {
         scrollView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)

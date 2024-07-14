@@ -19,20 +19,30 @@ public final class LatecomerListViewController: BaseViewController {
         }
     }
     
-    private let viewModel = LetecomerViewModel()
+    var date: String = {
+        let currentDate = Date()
+        let lastWednesday = currentDate.lastWednesday()
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko")
+        formatter.dateFormat = "yyyy년 M월 d일 (E)"
+        
+        return formatter.string(from: lastWednesday)
+    }()
     
-    let scrollView = UIScrollView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    let contentView1 = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private let titleLabel = UILabel().then {
-        $0.text = "검색 결과"
+    private var dateLabel = UILabel().then {
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 18, weight: .semibold)
+    }
+    
+    private let viewModel = LetecomerViewModel()
+    
+    private let scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private let contentView1 = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private lazy var  filterButton = UIButton().then {
@@ -55,6 +65,7 @@ public final class LatecomerListViewController: BaseViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         viewModel.getLatecomerList { latecomerList in
+            self.dateLabel.text = self.date
             self.latecomerList = latecomerList
         }
     }
@@ -68,6 +79,10 @@ public final class LatecomerListViewController: BaseViewController {
         setupCollectionView()
         configNavigation()
         setupScrollView()
+    }
+    
+    func setDateString(date: String) {
+        dateLabel.text = date
     }
     
     private func setupScrollView() {
@@ -92,6 +107,7 @@ public final class LatecomerListViewController: BaseViewController {
     
     override func configNavigation() {
         super.configNavigation()
+        navigationController?.navigationBar.tintColor = .color.gomsAdmin.color
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "지각자 명단"
     }
@@ -103,11 +119,11 @@ public final class LatecomerListViewController: BaseViewController {
     }
     
     override func addView() {
-        [titleLabel, filterButton, lateListCollectionView].forEach { view.addSubview($0) }
+        [dateLabel, filterButton, lateListCollectionView].forEach { view.addSubview($0) }
     }
     
     override func setLayout() {
-        titleLabel.snp.makeConstraints {
+        dateLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(32)
@@ -120,7 +136,7 @@ public final class LatecomerListViewController: BaseViewController {
         }
         
         lateListCollectionView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(8)
+            $0.top.equalTo(dateLabel.snp.bottom).offset(8)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-(bounds.width * 0.05))
             $0.bottom.equalToSuperview()
