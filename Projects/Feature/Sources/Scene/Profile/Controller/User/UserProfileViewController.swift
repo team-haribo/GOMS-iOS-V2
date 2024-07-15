@@ -405,7 +405,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             if success {
                 print("완료")
             } else {
-                // 프로필 정보를 가져오지 못했을 때의 처리
                 print("Failed to load profile information.")
             }
         }
@@ -431,6 +430,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                 default:
                     majorText = "AI"
                 }
+                
                 let finalText = "\(profileInfo.grade)기ㅣ\(majorText)"
                 let profileUrlString = profileInfo.profileUrl ?? ""
                 
@@ -476,7 +476,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             if success {
                 print("완료")
             } else {
-                // 프로필 정보를 가져오지 못했을 때의 처리
                 print("Failed to load profile information.")
             }
         }
