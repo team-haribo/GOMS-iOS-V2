@@ -5,6 +5,8 @@ public class AdminMainViewController: BaseViewController {
     // MARK: - Properties
     private let viewModel = MainViewModel()
     private let basicsProfileView = ProfileCardView()
+    private let authViewModel = AuthViewModel()
+    private let profileViewModel = ProfileViewModel()
     let refreshControl = UIRefreshControl()
     
     let scrollView = UIScrollView().then {
@@ -125,23 +127,71 @@ public class AdminMainViewController: BaseViewController {
     }
     
     @objc func handleRefreshControl() {
+        guard
+            let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
+            let isLocalPass = UserDefaults.standard.string(forKey: "localPass")
+        else {
+            print("localEmail 또는 localPass 값이 없습니다.")
+            self.refreshControl.endRefreshing()
+            return
+        }
+        
+        authViewModel.setupEmail(email: isLocalEmail)
+        authViewModel.setupPassword(password: isLocalPass)
+        
+        authViewModel.signIn { [weak self] statusCode, _ in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                switch statusCode {
+                case 200:
+                    self.profileViewModel.loadProfileInfo { [weak self] success in
+                        guard let self = self else { return }
+                        
+                        if success {
+                            if let authority = self.profileViewModel.profileInfo?.authority {
+                                if authority == "ROLE_STUDENT_COUNCIL" {
+                                    let mainVC = AdminMainViewController()
+                                    self.navigationController?.setViewControllers([mainVC], animated: false)
+                                } else if authority == "ROLE_STUDENT" {
+                                    let mainVC = MainViewController()
+                                    self.navigationController?.setViewControllers([mainVC], animated: false)
+                                } else {
+                                    print("권한이 없습니다.")
+                                }
+                            }
+                        } else {
+                            print("프로필 정보를 불러오는데 실패했습니다.")
+                        }
+
+                    }
+                case 400:
+                   print("400")
+                case 404:
+                   print("404")
+                    
+                default:
+                    print("error")
+                }
+            }
+        }
+
+    }
+
+    private func fetchData() {
         viewModel.getLateList { [weak self] in
             guard let self = self else { return }
             
-            self.viewModel.getProfile {_ in
+            self.viewModel.getProfile { [weak self] _ in
+                guard let self = self else { return }
+                
                 self.setupProfileView()
                 self.view.layoutIfNeeded()
                 
-                self.viewModel.getOutingList {
-                    self.setup()
-                    self.view.layoutIfNeeded()
+                self.viewModel.getOutingList { [weak self] in
+                    guard let self = self else { return }
                     
-                    self.setupCountLable()
-                    self.setCollectionView()
-                    self.setup()
-                    self.setupProfileView()
-                    self.latecomerCollectionView.reloadData()
-                    self.outingStatusCollectionView.reloadData()
+                    self.setupViewComponents()
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         self.refreshControl.endRefreshing()
@@ -150,6 +200,17 @@ public class AdminMainViewController: BaseViewController {
                 }
             }
         }
+    }
+
+    private func setupViewComponents() {
+        self.setup()
+        self.view.layoutIfNeeded()
+        self.setupCountLable()
+        self.setCollectionView()
+        self.setup()
+        self.setupProfileView()
+        self.latecomerCollectionView.reloadData()
+        self.outingStatusCollectionView.reloadData()
     }
     
     

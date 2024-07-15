@@ -162,8 +162,6 @@ public final class MainViewController: BaseViewController {
             DispatchQueue.main.async {
                 switch statusCode {
                 case 200:
-
-
                     self.profileViewModel.loadProfileInfo { [weak self] success in
                         guard let self = self else { return }
                         
@@ -235,7 +233,6 @@ public final class MainViewController: BaseViewController {
 
 
     private func showError(_ message: String) {
-        // 에러 메시지를 사용자에게 표시하는 로직을 추가합니다.
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
