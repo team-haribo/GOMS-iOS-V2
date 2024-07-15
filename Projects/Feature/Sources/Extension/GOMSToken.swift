@@ -47,16 +47,16 @@ public class KeyChain {
         }
     }
     
-    func update(token: Any, key: Any) -> Bool {
+    func updateItem(token: Any, key: Any) -> Bool {
         let prevQuery: [CFString: Any] = [kSecClass: kSecClassGenericPassword,
-                                    kSecAttrAccount: key]
+                                              kSecAttrAccount: key]
         let updateQuery: [CFString: Any] = [kSecValueData: (token as AnyObject).data(using: String.Encoding.utf8.rawValue) as Any]
         
         let result: Bool = {
             let status = SecItemUpdate(prevQuery as CFDictionary, updateQuery as CFDictionary)
             if status == errSecSuccess { return true }
             
-            print(status.description)
+            print("updateItem Error : \(status.description)")
             return false
         }()
         
