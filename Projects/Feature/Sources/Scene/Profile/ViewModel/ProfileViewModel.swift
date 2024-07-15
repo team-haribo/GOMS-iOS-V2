@@ -12,7 +12,7 @@ public final class ProfileViewModel: ObservableObject {
     public init() {}
 
     public let providerProfile = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
-    let providerserve = MoyaProvider<AccountServices>(plugins: [NetworkLoggerPlugin()])
+    let providerAuccount = MoyaProvider<AccountServices>(plugins: [NetworkLoggerPlugin()])
     let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
     public lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
@@ -106,7 +106,7 @@ public final class ProfileViewModel: ObservableObject {
     }
     
     func withdraw(completion: @escaping (Bool) -> Void) {
-        providerserve.request(.withdraw(password: self.password, authorization: accessToken)) { response in
+        providerAuccount.request(.withdraw(password: self.password, authorization: accessToken)) { response in
             switch response {
             case .success(let result):
                 let statusCode = result.statusCode
