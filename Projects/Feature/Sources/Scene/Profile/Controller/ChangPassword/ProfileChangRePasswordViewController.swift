@@ -85,6 +85,10 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    override func configNavigation() {
+        navigationController?.navigationBar.tintColor = .color.gomsAdmin.color
+    }
+    
     override func addView() {
         [
             navigationTitle,
