@@ -122,6 +122,7 @@ public final class SignInViewController: BaseViewController {
                 case 200:
                     self.signInSuccessUI()
                     UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
+                    UserDefaults.standard.set(self.emailTextField.text, forKey: "localEmail")
                     
                     self.profileModel.loadProfileInfo { [weak self] success in
                         guard let self = self else { return }

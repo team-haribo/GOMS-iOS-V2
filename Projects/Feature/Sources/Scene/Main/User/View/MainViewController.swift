@@ -17,6 +17,7 @@ public final class MainViewController: BaseViewController {
     private let profileViewModel = ProfileViewModel()
     private let profileView = MainProfileView()
     private let basicsProfileView = ProfileCardView()
+    private let authViewModel = AuthViewModel()
     let refreshControl = UIRefreshControl()
     
         
@@ -143,32 +144,104 @@ public final class MainViewController: BaseViewController {
     }
     
     @objc func handleRefreshControl() {
-        mainViewModel.getLateList { [weak self] in
-                guard let self = self else { return }
+        guard
+            let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
+            let isLocalPass = UserDefaults.standard.string(forKey: "localPass")
+        else {
+            print("localEmail 또는 localPass 값이 없습니다.")
+            self.refreshControl.endRefreshing()
+            return
+        }
+        
+        authViewModel.setupEmail(email: isLocalEmail)
+        authViewModel.setupPassword(password: isLocalPass)
+        
+        authViewModel.signIn { [weak self] statusCode, _ in
+            guard let self = self else { return }
             
-            self.mainViewModel.getProfile {_ in 
-                    self.setupProfileView()
-                    self.view.layoutIfNeeded()
-                
-                    self.mainViewModel.getOutingList {
-                        self.setup()
-                        self.view.layoutIfNeeded()
+            DispatchQueue.main.async {
+                switch statusCode {
+                case 200:
+
+
+                    self.profileViewModel.loadProfileInfo { [weak self] success in
+                        guard let self = self else { return }
                         
-                        self.setupCountLable()
-                        self.setCollectionView()
-                        self.setup()
-                        self.setupProfileView()
-                        self.latecomerCollectionView.reloadData()
-                        self.outingStatusCollectionView.reloadData()
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            self.refreshControl.endRefreshing()
-                            self.view.frame.origin.y = 0
+                        if success {
+                            if let authority = self.profileViewModel.profileInfo?.authority {
+                                if authority == "ROLE_STUDENT_COUNCIL" {
+                                    let mainVC = AdminMainViewController()
+                                    self.navigationController?.setViewControllers([mainVC], animated: false)
+                                } else if authority == "ROLE_STUDENT" {
+                                    let mainVC = MainViewController()
+                                    self.navigationController?.setViewControllers([mainVC], animated: false)
+                                } else {
+                                    print("권한이 없습니다.")
+                                }
+                            }
+                        } else {
+                            print("프로필 정보를 불러오는데 실패했습니다.")
                         }
+
+                    }
+                case 400:
+                   print("400")
+                case 404:
+                   print("404")
+                    
+                default:
+                    print("error")
+                }
+            }
+        }
+
+    }
+
+    private func fetchData() {
+        mainViewModel.getLateList { [weak self] in
+            guard let self = self else { return }
+            
+            self.mainViewModel.getProfile { [weak self] _ in
+                guard let self = self else { return }
+                
+                self.setupProfileView()
+                self.view.layoutIfNeeded()
+                
+                self.mainViewModel.getOutingList { [weak self] in
+                    guard let self = self else { return }
+                    
+                    self.setupViewComponents()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.refreshControl.endRefreshing()
+                        self.view.frame.origin.y = 0
                     }
                 }
             }
         }
+    }
+
+    private func setupViewComponents() {
+        self.setup()
+        self.view.layoutIfNeeded()
+        self.setupCountLable()
+        self.setCollectionView()
+        self.setup()
+        self.setupProfileView()
+        self.latecomerCollectionView.reloadData()
+        self.outingStatusCollectionView.reloadData()
+    }
+
+
+
+    private func showError(_ message: String) {
+        // 에러 메시지를 사용자에게 표시하는 로직을 추가합니다.
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+
+
     
     
     func setupScrollView() {

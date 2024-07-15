@@ -79,6 +79,7 @@ public final class AuthViewModel: BaseViewModel {
                     do {
                         switch statusCode {
                         case 200:
+                            print(self.password)
                             let signInResponse = try result.map(SignInResponse.self)
                             self.keyChain.create(key: Const.KeyChainKey.accessToken, token: signInResponse.accessToken)
                             self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
