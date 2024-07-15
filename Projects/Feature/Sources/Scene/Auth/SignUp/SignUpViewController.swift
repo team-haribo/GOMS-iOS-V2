@@ -115,6 +115,7 @@ public final class SignUpViewController: BaseViewController {
     @objc func authCodeButtonTapped() {
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupName(name: nameTextField.text ?? "")
+        viewModel.setupEmailStatus(emailStatus: "BEFORE_SIGNUP")
         
         viewModel.sendAuthCode { success, statusCode in
             if success {

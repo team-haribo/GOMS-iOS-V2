@@ -95,6 +95,7 @@ public final class StudentManagementViewController: BaseViewController {
         super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "학생 관리"
+        navigationController?.navigationBar.tintColor = .color.gomsAdmin.color
         navigationItem.searchController = searchController
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.navigationController?.navigationBar.isHidden = false

@@ -47,6 +47,11 @@ public class AdminQRCodeViewController: BaseViewController {
         createQRCode()
     }
     
+    // MARK: - Configure Navigation
+    override func configNavigation() {
+        self.navigationController?.navigationBar.tintColor = .color.gomsAdmin.color
+    }
+    
     // MARK: Add View
     override func addView() {
         [titleText, qrCodeImage, lastTimeText, lastTimer, closeButton].forEach { view.addSubview($0) }

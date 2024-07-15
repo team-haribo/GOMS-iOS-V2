@@ -53,11 +53,14 @@ public final class FindPasswordViewController: BaseViewController {
             emailBlankValue()
         } else {
             viewModel.setupEmail(email: self.emailTextField.text ?? "")
+            viewModel.setupEmailStatus(emailStatus: "AFTER_SIGNUP")
             viewModel.sendAuthCode { success, statusCode in
-                if success {
+                if statusCode == 204 {
                     self.successUI()
                     let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
                     self.navigationController?.pushViewController(authCodeVC, animated: true)
+                } else if statusCode == 404 {
+                    self.nonExistentUser()
                 } else {
                     self.emailErrorUI()
                 }
@@ -69,6 +72,15 @@ public final class FindPasswordViewController: BaseViewController {
         emailTextField.setPlaceholderColor(.color.gomsNegative.color)
         defaultDomain.textColor = .color.gomsNegative.color
         emailErrorLabel.text = "유효한 이메일을 입력해주세요."
+        emailErrorLabel.isHidden = false
+        emailTextField.layer.borderColor = UIColor.systemRed.cgColor
+        emailTextField.layer.borderWidth = 1
+    }
+    
+    func nonExistentUser() {
+        emailTextField.setPlaceholderColor(.color.gomsNegative.color)
+        defaultDomain.textColor = .color.gomsNegative.color
+        emailErrorLabel.text = "존재하지 않는 사용자입니다."
         emailErrorLabel.isHidden = false
         emailTextField.layer.borderColor = UIColor.systemRed.cgColor
         emailTextField.layer.borderWidth = 1
@@ -159,12 +171,12 @@ extension FindPasswordViewController: UITextFieldDelegate {
     }
 
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            if textField == emailTextField {
-                let currentText = textField.text ?? ""
-                guard let stringRange = Range(range, in: currentText) else { return false }
-                let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-                return updatedText.count <= 6
-            }
-            return true
+        if textField == emailTextField {
+            let currentText = textField.text ?? ""
+            guard let stringRange = Range(range, in: currentText) else { return false }
+            let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+            return updatedText.count <= 6
         }
+        return true
+    }
 }

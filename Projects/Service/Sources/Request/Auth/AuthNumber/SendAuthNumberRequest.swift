@@ -10,8 +10,10 @@ import Foundation
 
 public struct SendAuthCodeRequest: Codable {
     var email: String
+    var emailStatus: String
     
-    public init(email: String) {
+    public init(email: String, emailStatus: String) {
         self.email = email
+        self.emailStatus = emailStatus
     }
 }

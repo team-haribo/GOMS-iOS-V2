@@ -141,10 +141,13 @@ extension CalendarBottomSheetVC: UICalendarSelectionSingleDateDelegate {
         
         if let selectedDate = Calendar.current.date(from: dateComponents) {
             let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "ko")
             formatter.dateFormat = "yyyy-MM-dd"
             viewModel.setupDate(date: formatter.string(from: selectedDate))
-            print("달력 날짜 : \(viewModel.date)")
-            
+        
+            formatter.dateFormat = "yyyy년 M월 d일 (E)"
+            self.latecomerListVC.setDateString(date: formatter.string(from: selectedDate))
+    
             viewModel.getLatecomerList { newList in
                 DispatchQueue.main.async {
                     self.updateLatecomerList(newList)
