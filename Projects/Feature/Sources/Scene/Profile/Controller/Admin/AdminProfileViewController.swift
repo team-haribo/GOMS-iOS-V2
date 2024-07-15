@@ -92,6 +92,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.layer.borderColor = UIColor.color.gomsCoverDivider.color.cgColor
         $0.layer.borderWidth = 1.0
     }
+    
     let themesettingText = UILabel().then {
         $0.text = ""
         $0.textColor = .color.gomsSecondary.color
@@ -209,18 +210,17 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     private func applySavedTheme() {
         let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
-        
         let savedTheme: UIUserInterfaceStyle
         switch savedThemeValue {
         case 1: savedTheme = .light
         case 2: savedTheme = .dark
         default: savedTheme = .unspecified
             
-        }
+    }
         
-        guard let window = UIApplication.shared.windows.first else {
-            return
-        }
+    guard let window = UIApplication.shared.windows.first else {
+        return
+    }
         
         window.overrideUserInterfaceStyle = savedTheme
         updateThemeText()
@@ -242,7 +242,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     @objc func withdrawalButtonTapped() {
         let alert = UIAlertController(title: "회원 탈퇴", message: "정말로 회원을 탈퇴하시겠습니까?", preferredStyle: .alert)
-        
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         let withdrawal = UIAlertAction(title: "회원 탈퇴", style: .destructive) { action in
             let withdrawalVC = WithdrawalViewController()
