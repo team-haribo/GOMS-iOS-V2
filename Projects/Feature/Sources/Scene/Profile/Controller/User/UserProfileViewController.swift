@@ -1,11 +1,3 @@
-//
-//  UserProfileViewController.swift
-//  Feature
-//
-//  Created by 서지완 on 3/4/24.
-//  Copyright © 2024 HARIBO. All rights reserved.
-//
-
 import UIKit
 import Combine
 import Moya

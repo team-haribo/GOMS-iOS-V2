@@ -1,11 +1,3 @@
-//
-//  ChangNewPasswordViewController.swift
-//  Feature
-//
-//  Created by 서지완 on 6/11/24.
-//  Copyright © 2024 HARIBO. All rights reserved.
-//
-
 import UIKit
 
 public final class ChangNewPasswordViewController: BaseViewController {

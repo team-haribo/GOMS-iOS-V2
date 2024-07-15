@@ -1,11 +1,3 @@
-//
-//  WithdrawalViewController.swift
-//  Feature
-//
-//  Created by 새미 on 5/30/24.
-//  Copyright © 2024 HARIBO. All rights reserved.
-//
-
 import UIKit
 
 public class WithdrawalViewController: BaseViewController {

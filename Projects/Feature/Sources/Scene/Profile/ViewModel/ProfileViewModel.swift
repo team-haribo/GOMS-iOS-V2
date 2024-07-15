@@ -38,15 +38,15 @@ public final class ProfileViewModel: ObservableObject {
                     let profileModel = try decoder.decode(ProfileResponse.self, from: response.data)
                     self.profileInfo = profileModel
                     self.isDataLoaded = true
-                    completion(true) // 호출 성공 시 true 반환
+                    completion(true)
                 } catch {
                     self.errorMessage = "Failed to decode JSON response"
-                    completion(false) // 호출 실패 시 false 반환
+                    completion(false)
                 }
             case let .failure(err):
                 self.errorMessage = "Network request failed: \(err.localizedDescription)"
                 print("Network request failed: \(err)")
-                completion(false) // 호출 실패 시 false 반환
+                completion(false)
             }
         }
     }
