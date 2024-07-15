@@ -13,7 +13,7 @@ public final class ProfileViewModel: ObservableObject {
 
     public let providerProfile = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
     let providerAuccount = MoyaProvider<AccountServices>(plugins: [NetworkLoggerPlugin()])
-    let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
+    let providerAuth = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
     public lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
     private lazy var refreshToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.refreshToken) ?? "")
@@ -91,7 +91,7 @@ public final class ProfileViewModel: ObservableObject {
     }
 
     func profileLogout(completion: @escaping (Bool) -> Void) {
-        providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
+        providerAuth.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
             switch result {
             case .success:
                 self?.keyChain.delete(key: Const.KeyChainKey.accessToken)
