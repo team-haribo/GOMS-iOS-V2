@@ -23,19 +23,19 @@ public class GOMSRefreshToken {
             switch response {
             case .success(let result):
                 self.statusCode = result.statusCode
-                do {
-                    self.reissuanceData = try result.map(SignInResponse.self)
-                }catch(let err) {
-                    print(String(describing: err))
-                }
                 switch self.statusCode {
-                case 200..<300:
-                    self.updateToken()
+                case 200:
+                    do {
+                        self.reissuanceData = try result.map(SignInResponse.self)
+                        self.updateKeychainToken()
+                    } catch(let err) {
+                        print(String(describing: err))
+                    }
                     print("update token")
                 case 400, 401, 404:
-                    print("error")
+                    print("token error")
                 default:
-                    print("error")
+                    print("token error")
                 }
             case .failure(let err):
                 print(String(describing: err))
@@ -43,24 +43,24 @@ public class GOMSRefreshToken {
         }
     }
     
-    func updateToken() {
-        guard let accessToken = reissuanceData?.accessToken,
-              let refreshToken = reissuanceData?.refreshToken,
-              let authority = reissuanceData?.authority else {
-            print("Failed to update token: Missing token data")
-            return
-        }
-    
-        if !keychain.update(token: accessToken, key: Const.KeyChainKey.accessToken) {
-            print("실패")
-        }
+    func updateKeychainToken() {
+        let accessTokenUpdated = self.keychain.updateItem(
+            token: self.reissuanceData?.accessToken ?? "",
+            key: Const.KeyChainKey.accessToken
+        )
+        let refreshTokenUpdated = self.keychain.updateItem(
+            token: self.reissuanceData?.refreshToken ?? "",
+            key: Const.KeyChainKey.refreshToken
+        )
+        let authorityUpdated = self.keychain.updateItem(
+            token: self.reissuanceData?.authority ?? "",
+            key: Const.KeyChainKey.authority
+        )
         
-        if !keychain.update(token: refreshToken, key: Const.KeyChainKey.refreshToken) {
-            print("실패")
-        }
-        
-        if !keychain.update(token: authority, key: Const.KeyChainKey.authority) {
-            print("실패")
+        if accessTokenUpdated && refreshTokenUpdated && authorityUpdated {
+            print("keychain update success")
+        } else {
+            print("keychain update faild")
         }
     }
 }
