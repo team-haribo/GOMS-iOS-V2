@@ -99,6 +99,7 @@ public class WithdrawalViewController: BaseViewController {
     override func configNavigation() {
         super.configNavigation()
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.tintColor = .color.gomsAdmin.color
         navigationItem.title = "회원 탈퇴"
     }
     

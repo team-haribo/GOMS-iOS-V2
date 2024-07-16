@@ -81,8 +81,14 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        passwordTextField.delegate = self
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func configNavigation() {
+        navigationController?.navigationBar.tintColor = .color.gomsAdmin.color
     }
     
     override func addView() {
@@ -154,3 +160,17 @@ public class ProfileChangRePasswordViewController: BaseViewController, UIImagePi
         }
     }
 }
+
+extension ProfileChangRePasswordViewController: UITextFieldDelegate {
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = (textField.text ?? "") as NSString
+        let updatedText = currentText.replacingCharacters(in: range, with: string)
+        
+        if updatedText.rangeOfCharacter(from: .whitespaces) != nil { return false }
+        
+        return true
+    }
+}
+
+
