@@ -4,62 +4,43 @@ import Feature
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    private var profileModel = ProfileViewModel()
     private let refreshTokenManager = GOMSRefreshToken.shared
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        applySavedTheme()
-        setupRootViewController()
-        self.window?.makeKeyAndVisible()
-        
-        DispatchQueue.global().async {
-            self.checkForUpdates { [weak self] isUpdateAvailable in
-                if isUpdateAvailable {
-                    DispatchQueue.main.async {
-                        self?.showUpdatePopup()
-                    }
-                }
-            }
-        }
-    }
-    
-    private func setupRootViewController() {
         let defaults = UserDefaults.standard
-        let isLoggedIn = defaults.object(forKey: "isLoggedIn") as? Bool ?? false
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
         let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
         
-        if isLoggedIn {
-            if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
-                refreshTokenManager.tokenReissuance()
-                let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
-                
-                let rootViewController = determineRootViewController(isLoggedIn: true, isSwitchOn: isSwitchOn, adminIsSwitchOn: adminIsSwitchOn, accessToken: accessToken, authority: authority)
-                self.window?.rootViewController = UINavigationController(rootViewController: rootViewController)
+        applySavedTheme()
+        
+        if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
+            refreshTokenManager.tokenReissuance()
+            
+            let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
+            
+            if authority == "ROLE_STUDENT_COUNCIL" {
+                if adminIsSwitchOn {
+                    self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
+                } else {
+                    self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
+                }
+            } else if authority == "ROLE_STUDENT" {
+                if isSwitchOn {
+                    self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
+                } else {
+                    self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
+                }
             } else {
-                handleNoAccessToken()
+                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
             }
         } else {
             self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
         }
-    }
-    
-    private func determineRootViewController(isLoggedIn: Bool, isSwitchOn: Bool, adminIsSwitchOn: Bool, accessToken: String?, authority: String?) -> UIViewController {
-        guard let authority = authority else {
-            return IntroViewController()
-        }
         
-        switch authority {
-        case "ROLE_STUDENT_COUNCIL":
-            return adminIsSwitchOn ? AdminQRCodeViewController() : AdminMainViewController()
-        case "ROLE_STUDENT":
-            return isSwitchOn ? QRCodeViewController() : MainViewController()
-        default:
-            return IntroViewController()
-        }
+        self.window?.makeKeyAndVisible()
     }
     
     private func applySavedTheme() {
@@ -127,30 +108,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    private func handleNoAccessToken() {
-        let defaults = UserDefaults.standard
-        let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
-        let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
-        
-        refreshTokenManager.tokenReissuance()
-        let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
-        
-        let rootViewController = determineRootViewController(isLoggedIn: false, isSwitchOn: isSwitchOn, adminIsSwitchOn: adminIsSwitchOn, accessToken: nil, authority: authority)
-        self.window?.rootViewController = UINavigationController(rootViewController: rootViewController)
-    }
-    
     func sceneDidDisconnect(_ scene: UIScene) {}
     
     func sceneDidBecomeActive(_ scene: UIScene) {}
     
     func sceneWillResignActive(_ scene: UIScene) {}
     
-    func sceneWillEnterForeground(_ scene: UIScene) {
-        setupRootViewController()
-    }
+    func sceneWillEnterForeground(_ scene: UIScene) {}
     
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        refreshTokenManager.tokenReissuance()
-        UserDefaults.standard.set(true, forKey: "isLoggedIn")
-    }
+    func sceneDidEnterBackground(_ scene: UIScene) {}
 }
