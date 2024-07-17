@@ -1,11 +1,3 @@
-//
-//  UserProfileViewController.swift
-//  Feature
-//
-//  Created by 서지완 on 3/4/24.
-//  Copyright © 2024 HARIBO. All rights reserved.
-//
-
 import UIKit
 import Combine
 import Moya
@@ -14,7 +6,7 @@ import Service
 public class UserProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let imagePickerController = UIImagePickerController()
-    let viewModel = ProfileViewModel()
+    let profileViewModel = ProfileViewModel()
     var cancellables = Set<AnyCancellable>()
     let refreshControl = UIRefreshControl()
     
@@ -293,7 +285,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         alertController.addAction(cancelAction)
         
         let confirmAction = UIAlertAction(title: "로그아웃", style: .destructive) { [weak self] _ in
-            self?.viewModel.profileLogout { [weak self] success in
+            self?.profileViewModel.profileLogout { [weak self] success in
                 if success {
                     let introVC = IntroViewController()
                     self?.navigationController?.pushViewController(introVC, animated: true)
@@ -373,7 +365,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             userProfile.image = selectedImage
             
             if let jpegData = selectedImage.jpegData(compressionQuality: 0.5) {
-                viewModel.updateProfileImage(imageData: jpegData)
+                profileViewModel.updateProfileImage(imageData: jpegData)
                     .sink { completion in
                         switch completion {
                         case .finished:
@@ -401,11 +393,10 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         super.viewDidLoad()
         applySavedTheme()
         self.navigationController?.navigationBar.prefersLargeTitles = false
-        viewModel.loadProfileInfo { success in
+        profileViewModel.loadProfileInfo { success in
             if success {
                 print("완료")
             } else {
-                // 프로필 정보를 가져오지 못했을 때의 처리
                 print("Failed to load profile information.")
             }
         }
@@ -416,7 +407,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
         clocktoggleButton.isOn = isClockOn
         
-        viewModel.$profileInfo.sink { [weak self] profileInfo in
+        profileViewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
             DispatchQueue.main.async {
                 self?.userName.text = profileInfo.name
@@ -431,6 +422,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                 default:
                     majorText = "AI"
                 }
+                
                 let finalText = "\(profileInfo.grade)기ㅣ\(majorText)"
                 let profileUrlString = profileInfo.profileUrl ?? ""
                 
@@ -472,11 +464,10 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     @objc func handleRefreshControl() {
-        viewModel.loadProfileInfo { success in
+        profileViewModel.loadProfileInfo { success in
             if success {
                 print("완료")
             } else {
-                // 프로필 정보를 가져오지 못했을 때의 처리
                 print("Failed to load profile information.")
             }
         }
