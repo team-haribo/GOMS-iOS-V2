@@ -13,6 +13,8 @@ public final class SignUpViewController: BaseViewController {
     // MARK: - Properties
     private let viewModel = AuthViewModel()
     
+    private let loader = LoaderViewController()
+    
     private lazy var textFieldStackView = UIStackView().then {
         $0.spacing = 32
         $0.axis = .vertical
@@ -113,29 +115,39 @@ public final class SignUpViewController: BaseViewController {
     }
     
     @objc func authCodeButtonTapped() {
+        DispatchQueue.main.async {
+            self.present(self.loader, animated: true)
+        }
+        
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupName(name: nameTextField.text ?? "")
         viewModel.setupEmailStatus(emailStatus: "BEFORE_SIGNUP")
         
-        viewModel.sendAuthCode { success, statusCode in
-            if success {
-                let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
-                self.navigationController?.pushViewController(authCodeVC, animated: true)
-            } else {
-                switch statusCode {
-                case 429:
-                    let alert = UIAlertController(title: "이메일 요청 초과", message: "이메일 요청 한도인 5번을 초과했습니다.\n5분 후에 재시도해 주세요.", preferredStyle: .alert)
-                    
-                    let check = UIAlertAction(title: "확인", style: .cancel)
-                    alert.addAction(check)
-                    self.present(alert, animated: true)
-                    
-                default:
-                    let alert = UIAlertController(title: "인증코드 발송 실패", message: "인증코드 발송에 실패했습니다.\n다시 시도해 주세요.", preferredStyle: .alert)
-                    
-                    let check = UIAlertAction(title: "확인", style: .cancel)
-                    alert.addAction(check)
-                    self.present(alert, animated: true)
+        viewModel.sendAuthCode { [weak self] susccess, statusCode in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                if susccess {
+                    let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
+                    self.navigationController?.pushViewController(authCodeVC, animated: true)
+                    self.loader.dismiss(animated: true)
+                } else {
+                    switch statusCode {
+                    case 429:
+                        let alert = UIAlertController(title: "이메일 요청 초과", message: "이메일 요청 한도인 5번을 초과했습니다.\n5분 후에 재시도해 주세요.", preferredStyle: .alert)
+                        
+                        let check = UIAlertAction(title: "확인", style: .cancel)
+                        alert.addAction(check)
+                        self.present(alert, animated: true)
+                        self.loader.dismiss(animated: true)
+                    default:
+                        let alert = UIAlertController(title: "인증코드 발송 실패", message: "인증코드 발송에 실패했습니다.\n다시 시도해 주세요.", preferredStyle: .alert)
+                        
+                        let check = UIAlertAction(title: "확인", style: .cancel)
+                        alert.addAction(check)
+                        self.present(alert, animated: true)
+                        self.loader.dismiss(animated: true)
+                    }
                 }
             }
         }
