@@ -15,11 +15,6 @@ public class AdminQRCodeViewController: BaseViewController {
         $0.textColor = .color.gomsTextDefault.color
         $0.font = UIFont.pretendard(size: 29, weight: .bold)
     }
-
-    private lazy var closeButton = UIButton().then {
-        $0.setImage(.image.gomsCloseButton.image, for: .normal)
-        $0.addTarget(self, action: #selector(qrExitButtonTapped), for: .touchUpInside)
-    }
     
     @objc func qrExitButtonTapped() {
         let adminMainVC = AdminMainViewController()
@@ -45,6 +40,10 @@ public class AdminQRCodeViewController: BaseViewController {
         super.viewDidLoad()
         startTimer()
         createQRCode()
+        
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.hidesBackButton = false
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     // MARK: - Configure Navigation
@@ -54,7 +53,7 @@ public class AdminQRCodeViewController: BaseViewController {
     
     // MARK: Add View
     override func addView() {
-        [titleText, qrCodeImage, lastTimeText, lastTimer, closeButton].forEach { view.addSubview($0) }
+        [titleText, qrCodeImage, lastTimeText, lastTimer].forEach { view.addSubview($0) }
     }
     
     // MARK: Layout
@@ -62,11 +61,6 @@ public class AdminQRCodeViewController: BaseViewController {
         titleText.snp.makeConstraints {
             $0.top.equalToSuperview().offset(100)
             $0.leading.equalToSuperview().offset(20)
-        }
-        
-        closeButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(100)
-            $0.trailing.equalToSuperview().inset(20)
         }
         
         qrCodeImage.snp.makeConstraints {

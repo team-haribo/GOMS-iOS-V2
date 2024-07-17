@@ -11,9 +11,9 @@ public final class ProfileViewModel: ObservableObject {
     
     public init() {}
 
-    public let provider = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
-    let providerserve = MoyaProvider<AccountServices>(plugins: [NetworkLoggerPlugin()])
-    let providerthree = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
+    public let providerProfile = MoyaProvider<ProfileServices>(plugins: [NetworkLoggerPlugin()])
+    let providerAuccount = MoyaProvider<AccountServices>(plugins: [NetworkLoggerPlugin()])
+    let providerAuth = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
     
     public lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
@@ -31,7 +31,7 @@ public final class ProfileViewModel: ObservableObject {
     }
 
     public func loadProfileInfo(completion: @escaping (Bool) -> Void) {
-        provider.request(.getProfile(authorization: accessToken)) { result in
+        providerProfile.request(.getProfile(authorization: accessToken)) { result in
             switch result {
             case let .success(response):
                 do {
@@ -54,7 +54,7 @@ public final class ProfileViewModel: ObservableObject {
     
     func submitProfileImage(imageData: Data) -> Future<Void, Error> {
         Future { promise in
-            self.provider.request(.submit(authorization: self.accessToken, imageData: imageData)) { result in
+            self.providerProfile.request(.submit(authorization: self.accessToken, imageData: imageData)) { result in
                 switch result {
                 case .success:
                     promise(.success(()))
@@ -67,7 +67,7 @@ public final class ProfileViewModel: ObservableObject {
 
     func updateProfileImage(imageData: Data) -> Future<Void, Error> {
         Future { promise in
-            self.provider.request(.update(authorization: self.accessToken, imageData: imageData)) { result in
+            self.providerProfile.request(.update(authorization: self.accessToken, imageData: imageData)) { result in
                 switch result {
                 case .success:
                     promise(.success(()))
@@ -80,7 +80,7 @@ public final class ProfileViewModel: ObservableObject {
 
     func deleteProfileImage() -> Future<Void, Error> {
         Future { promise in
-            self.provider.request(.delete(authorization: self.accessToken)) { result in
+            self.providerProfile.request(.delete(authorization: self.accessToken)) { result in
                 switch result {
                 case .success:
                     promise(.success(()))
@@ -92,7 +92,7 @@ public final class ProfileViewModel: ObservableObject {
     }
 
     func profileLogout(completion: @escaping (Bool) -> Void) {
-        providerthree.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
+        providerAuth.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
             switch result {
             case .success:
                 self?.keyChain.delete(key: Const.KeyChainKey.accessToken)
@@ -107,7 +107,7 @@ public final class ProfileViewModel: ObservableObject {
     }
     
     func withdraw(completion: @escaping (Bool) -> Void) {
-        providerserve.request(.withdraw(password: self.password, authorization: accessToken)) { response in
+        providerAuccount.request(.withdraw(password: self.password, authorization: accessToken)) { response in
             switch response {
             case .success(let result):
                 let statusCode = result.statusCode
