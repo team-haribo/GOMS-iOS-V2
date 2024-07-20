@@ -493,7 +493,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             perceptionText,
             userProfilePencil,
             passwordResetButton,
-            line1View,
+            themeTopLine,
             line2View,
             cameranowonText,
             cameranowonDescription,
@@ -564,7 +564,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
         
-        line1View.snp.makeConstraints {
+        themeTopLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.bottom.equalTo(userProfile.snp.bottom).offset(32)
             $0.leading.equalToSuperview().offset(20)
@@ -580,7 +580,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         themeChangText.snp.makeConstraints {
             $0.width.equalTo(93)
             $0.height.equalTo(28)
-            $0.top.equalTo(line1View.snp.top).offset(24)
+            $0.top.equalTo(themeTopLine.snp.top).offset(24)
             $0.leading.equalToSuperview().inset(28)
         }
         
