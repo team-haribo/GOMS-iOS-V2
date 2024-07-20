@@ -67,7 +67,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.backgroundColor = .color.gomsDivider.color
     }
     
-    let line2View = UIView().then {
+    let themeBottomLine = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
     
