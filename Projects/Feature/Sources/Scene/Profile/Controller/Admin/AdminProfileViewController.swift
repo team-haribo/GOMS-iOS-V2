@@ -481,7 +481,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             qrmakeonDescription,
             qrmakeontoggleButton,
             themeTopLine,
-            line2View,
+            themeBottomLine,
             repasswordRight,
             logoutButton,
             themeChangText,
@@ -555,7 +555,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.trailing.equalToSuperview().inset(20)
         }
         
-        line2View.snp.makeConstraints {
+        themeBottomLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(qrmakeonDescription.snp.bottom).offset(24)
@@ -631,7 +631,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         passwordResetButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(bounds.height * 0.08)
-            $0.top.equalTo(line2View.snp.bottom).offset(bounds.height * 0.01)
+            $0.top.equalTo(themeBottomLine.snp.bottom).offset(bounds.height * 0.01)
         }
         
         logoutButton.snp.makeConstraints {
