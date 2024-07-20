@@ -313,7 +313,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
         
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchMakeOn")
-        qrmakeontoggleButton.isOn = isSwitchOn
+        qrMakeOntoggleButton.isOn = isSwitchOn
         
         let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
         clockToggleButton.isOn = isClockOn
@@ -472,9 +472,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             clockText,
             clockDescription,
             clockToggleButton,
-            qrmakeonText,
-            qrmakeonDescription,
-            qrmakeontoggleButton,
+            qrMakeOnText,
+            qrMakeOnDescription,
+            qrMakeOntoggleButton,
             themeTopLine,
             themeBottomLine,
             logoutButton,
@@ -552,7 +552,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         themeBottomLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(qrmakeonDescription.snp.bottom).offset(24)
+            $0.top.equalTo(qrMakeOnDescription.snp.bottom).offset(24)
         }
         
         themeChangText.snp.makeConstraints {
@@ -603,21 +603,21 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
         
-        qrmakeonText.snp.makeConstraints {
+        qrMakeOnText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(clockDescription.snp.leading)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
         
-        qrmakeonDescription.snp.makeConstraints {
+        qrMakeOnDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
-            $0.leading.equalTo(qrmakeonText.snp.leading)
-            $0.top.equalTo(qrmakeonText.snp.bottom)
+            $0.leading.equalTo(qrMakeOnText.snp.leading)
+            $0.top.equalTo(qrMakeOnText.snp.bottom)
         }
         
-        qrmakeontoggleButton.snp.makeConstraints {
+        qrMakeOntoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
