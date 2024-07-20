@@ -316,7 +316,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         qrmakeontoggleButton.isOn = isSwitchOn
         
         let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
-        clocktoggleButton.isOn = isClockOn
+        clockToggleButton.isOn = isClockOn
         
         profileViewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
@@ -471,7 +471,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             userProfilePencil,
             clockText,
             clockDescription,
-            clocktoggleButton,
+            clockToggleButton,
             qrmakeonText,
             qrmakeonDescription,
             qrmakeontoggleButton,
@@ -598,7 +598,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalTo(clockText.snp.bottom)
         }
         
-        clocktoggleButton.snp.makeConstraints {
+        clockToggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
