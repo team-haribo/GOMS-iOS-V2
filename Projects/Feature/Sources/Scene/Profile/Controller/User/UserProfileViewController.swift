@@ -402,7 +402,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         }
         
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
-        cameranowontoggleButton.isOn = isSwitchOn
+        cameraNowOntoggleButton.isOn = isSwitchOn
         
         let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
         clocktoggleButton.isOn = isClockOn
@@ -495,9 +495,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             passwordResetButton,
             themeTopLine,
             themeBottomLine,
-            cameranowonText,
-            cameranowonDescription,
-            cameranowontoggleButton,
+            cameraNowOnText,
+            cameraNowOnDescription,
+            cameraNowOntoggleButton,
             clockText,
             clockDescription,
             clocktoggleButton,
@@ -574,7 +574,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         themeBottomLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(cameranowonDescription.snp.bottom).offset(24)
+            $0.top.equalTo(cameraNowOnDescription.snp.bottom).offset(24)
         }
         
         themeChangText.snp.makeConstraints {
@@ -624,21 +624,21 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
         
-        cameranowonText.snp.makeConstraints {
+        cameraNowOnText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(clockDescription.snp.leading)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
         
-        cameranowonDescription.snp.makeConstraints {
+        cameraNowOnDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
-            $0.leading.equalTo(cameranowonText.snp.leading)
-            $0.top.equalTo(cameranowonText.snp.bottom)
+            $0.leading.equalTo(cameraNowOnText.snp.leading)
+            $0.top.equalTo(cameraNowOnText.snp.bottom)
         }
         
-        cameranowontoggleButton.snp.makeConstraints {
+        cameraNowOntoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
