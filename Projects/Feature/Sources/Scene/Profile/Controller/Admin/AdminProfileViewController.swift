@@ -102,7 +102,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.font = .pretendard(size: 12, weight: .regular)
     }
     
-    let clocktoggleButton: UISwitch = UISwitch().then {
+    let clockToggleButton: UISwitch = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
