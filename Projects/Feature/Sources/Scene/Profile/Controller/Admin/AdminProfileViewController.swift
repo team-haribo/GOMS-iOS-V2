@@ -63,7 +63,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
-    let line1View = UIView().then {
+    let themeTopLine = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
     
@@ -480,7 +480,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             qrmakeonText,
             qrmakeonDescription,
             qrmakeontoggleButton,
-            line1View,
+            themeTopLine,
             line2View,
             repasswordRight,
             logoutButton,
@@ -564,7 +564,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         themeChangText.snp.makeConstraints {
             $0.width.equalTo(93)
             $0.height.equalTo(28)
-            $0.top.equalTo(line1View.snp.top).offset(24)
+            $0.top.equalTo(themeTopLine.snp.top).offset(24)
             $0.leading.equalToSuperview().inset(28)
         }
         
