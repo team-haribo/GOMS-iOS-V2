@@ -28,11 +28,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
     }
     
-    let rePasswordRight = UIButton().then {
-        $0.setImage(.image.gomsRightButton.image, for: .normal)
-        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
-    }
-    
     let userName = UILabel().then {
         $0.text = ""
         $0.textColor = .color.gomsTextDefault.color
@@ -482,7 +477,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             qrmakeontoggleButton,
             themeTopLine,
             themeBottomLine,
-            repasswordRight,
             logoutButton,
             themeChangText,
             themeChangRec,
