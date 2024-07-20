@@ -85,13 +85,13 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.layer.borderWidth = 1.0
     }
     
-    let themesettingText = UILabel().then {
+    let themeSettingText = UILabel().then {
         $0.text = ""
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
     
-    let themesettingImg = UIImageView().then {
+    let themeSettingImg = UIImageView().then {
         $0.image = .image.gomsBottomButton.image
     }
     
