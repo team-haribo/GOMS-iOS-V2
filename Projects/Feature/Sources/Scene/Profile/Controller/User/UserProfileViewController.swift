@@ -491,7 +491,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             perceptionCount,
             perceptionNum,
             perceptionText,
-            userProfilepencil,
+            userProfilePencil,
             passwordResetButton,
             line1View,
             line2View,
@@ -526,7 +526,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalToSuperview().inset(16)
         }
         
-        userProfilepencil.snp.makeConstraints {
+        userProfilePencil.snp.makeConstraints {
             $0.top.equalTo(userGradeDepartment.snp.top)
             $0.trailing.equalTo(userProfile.snp.trailing)
         }
