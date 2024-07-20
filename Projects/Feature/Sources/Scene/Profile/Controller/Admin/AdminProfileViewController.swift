@@ -28,7 +28,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
     }
     
-    let repasswordRight = UIButton().then {
+    let rePasswordRight = UIButton().then {
         $0.setImage(.image.gomsRightButton.image, for: .normal)
         $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
     }
