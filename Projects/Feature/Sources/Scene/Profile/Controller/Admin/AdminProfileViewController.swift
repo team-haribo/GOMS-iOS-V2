@@ -110,20 +110,20 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.isOn = false
     }
     
-    let qrmakeonText = UILabel().then {
+    let qrMakeOnText = UILabel().then {
         $0.text = "QR 생성 바로 켜기"
         $0.textColor = .color.gomsTextDefault.color
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
-    let qrmakeonDescription = UILabel().then {
+    let qrMakeOnDescription = UILabel().then {
         $0.text = "앱을 실행하면 즉시 QR코드를 생성해요"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
         
     }
     
-    let qrmakeontoggleButton: UISwitch = UISwitch().then {
+    let qrMakeOntoggleButton: UISwitch = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
