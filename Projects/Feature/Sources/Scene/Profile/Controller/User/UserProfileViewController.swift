@@ -23,7 +23,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    let userProfilepencil = UIButton().then {
+    let userProfilePencil = UIButton().then {
         $0.setImage(.image.gomsProfilePencil.image, for: .normal)
         $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
     }
