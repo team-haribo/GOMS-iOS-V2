@@ -95,19 +95,19 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.image = .image.gomsBottomButton.image
     }
     
-    let cameranowonText = UILabel().then {
+    let cameraNowOnText = UILabel().then {
         $0.text = "카메라 바로 켜기"
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 16, weight: .semibold)
     }
     
-    let cameranowonDescription = UILabel().then {
+    let cameraNowOnDescription = UILabel().then {
         $0.text = "앱을 실행하면 즉시 카메라가 켜져요"
         $0.textColor = .color.gomsTertiary.color
         $0.font = .pretendard(size: 12, weight: .regular)
     }
     
-    let cameranowontoggleButton: UISwitch = UISwitch().then {
+    let cameraNowOntoggleButton: UISwitch = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsPrimary.color
         $0.tintColor = .color.gomsTertiary.color
