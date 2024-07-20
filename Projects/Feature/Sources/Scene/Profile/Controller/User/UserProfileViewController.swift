@@ -58,7 +58,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
-    let line1View = UIView().then {
+    let themeTopLine = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
     
