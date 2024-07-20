@@ -135,24 +135,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.isOn = false
     }
     
-    let lightmodeText = UILabel().then {
-        $0.text = "라이트 모드 켜기"
-        $0.textColor = .white
-        $0.font = .pretendard(size: 16, weight: .semibold)
-    }
-    
-    let lightmodeDescription = UILabel().then {
-        $0.text = "앱 테마를 라이트 모드로 만들어요"
-        $0.textColor = .color.gomsTertiary.color
-        $0.font = .pretendard(size: 12, weight: .regular)
-    }
-    
-    let lightmodetoggleButton: UISwitch = UISwitch().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.onTintColor = .color.gomsPrimary.color
-        $0.tintColor = .color.gomsTertiary.color
-    }
-    
     lazy var passwordResetButton = ProfileButton(icon: .image.passwordReset.image, title: "비밀번호 재설정").then {
         $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
     }
