@@ -473,7 +473,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             perceptionCount,
             perceptionNum,
             perceptionText,
-            userProfilepencil,
+            userProfilePencil,
             clockText,
             clockDescription,
             clocktoggleButton,
@@ -510,7 +510,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalToSuperview().inset(16)
         }
         
-        userProfilepencil.snp.makeConstraints {
+        userProfilePencil.snp.makeConstraints {
             $0.top.equalTo(userGradeDepartment.snp.top)
             $0.trailing.equalTo(userProfile.snp.trailing)
         }
