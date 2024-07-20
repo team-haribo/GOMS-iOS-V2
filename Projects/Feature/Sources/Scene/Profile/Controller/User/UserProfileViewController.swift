@@ -494,7 +494,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             userProfilePencil,
             passwordResetButton,
             themeTopLine,
-            line2View,
+            themeBottomLine,
             cameranowonText,
             cameranowonDescription,
             cameranowontoggleButton,
@@ -571,7 +571,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.trailing.equalToSuperview().inset(20)
         }
         
-        line2View.snp.makeConstraints {
+        themeBottomLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(cameranowonDescription.snp.bottom).offset(24)
@@ -646,7 +646,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         passwordResetButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(bounds.height * 0.08)
-            $0.top.equalTo(line2View.snp.bottom).offset(bounds.height * 0.01)
+            $0.top.equalTo(themeBottomLine.snp.bottom).offset(bounds.height * 0.01)
         }
         
         logoutButton.snp.makeConstraints {
