@@ -253,7 +253,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     private func setTheme(_ style: UIUserInterfaceStyle, themeText: String) {
         if let window = UIApplication.shared.windows.first {
             window.overrideUserInterfaceStyle = style
-            themesettingText.text = themeText
+            themeSettingText.text = themeText
             
             UserDefaults.standard.set(style.rawValue, forKey: "selectedTheme")
             UserDefaults.standard.set(themeText, forKey: "themeText")
@@ -261,7 +261,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     public func updateThemeText() {
-        self.themesettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
+        self.themeSettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
     }
     
     @objc func logoutButtonTapped() {
@@ -312,9 +312,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     
     @objc func updateImage(isActionSheetShowing: Bool) {
         if isActionSheetShowing {
-            themesettingImg.image = UIImage.image.gomsTopButton.image
+            themeSettingImg.image = UIImage.image.gomsTopButton.image
         } else {
-            themesettingImg.image = UIImage.image.gomsBottomButton.image
+            themeSettingImg.image = UIImage.image.gomsBottomButton.image
         }
     }
     
@@ -504,8 +504,8 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             logoutButton,
             themeChangText,
             themeChangRec,
-            themesettingImg,
-            themesettingText,
+            themeSettingImg,
+            themeSettingText,
             themeChangLine,
             logoutButton,
             withdrawalButton
@@ -591,14 +591,14 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.leading.trailing.equalToSuperview().inset(20)
         }
         
-        themesettingText.snp.makeConstraints {
+        themeSettingText.snp.makeConstraints {
             $0.width.equalTo(106)
             $0.height.equalTo(28)
             $0.top.equalTo(themeChangRec.snp.top).offset(18)
             $0.leading.equalTo(themeChangRec.snp.leading).offset(12)
         }
         
-        themesettingImg.snp.makeConstraints {
+        themeSettingImg.snp.makeConstraints {
             $0.width.equalTo(24)
             $0.height.equalTo(24)
             $0.top.equalTo(themeChangRec.snp.top).offset(20)
