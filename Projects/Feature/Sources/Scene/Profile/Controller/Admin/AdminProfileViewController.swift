@@ -23,14 +23,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    let userProfilepencil = UIButton().then {
+    let userProfilePencil = UIButton().then {
         $0.setImage(.image.gomsProfilePencil.image, for: .normal)
         $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
-    }
-    
-    let repasswordRight = UIButton().then {
-        $0.setImage(.image.gomsRightButton.image, for: .normal)
-        $0.addTarget(self, action: #selector(passwordResetPage), for: .touchUpInside)
     }
     
     let userName = UILabel().then {
@@ -63,11 +58,11 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
-    let line1View = UIView().then {
+    let themeTopLine = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
     
-    let line2View = UIView().then {
+    let themeBottomLine = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
     
@@ -85,13 +80,13 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.layer.borderWidth = 1.0
     }
     
-    let themesettingText = UILabel().then {
+    let themeSettingText = UILabel().then {
         $0.text = ""
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
     
-    let themesettingImg = UIImageView().then {
+    let themeSettingImg = UIImageView().then {
         $0.image = .image.gomsBottomButton.image
     }
     
@@ -107,7 +102,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.font = .pretendard(size: 12, weight: .regular)
     }
     
-    let clocktoggleButton: UISwitch = UISwitch().then {
+    let clockToggleButton: UISwitch = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
@@ -115,20 +110,20 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         $0.isOn = false
     }
     
-    let qrmakeonText = UILabel().then {
+    let qrMakeOnText = UILabel().then {
         $0.text = "QR 생성 바로 켜기"
         $0.textColor = .color.gomsTextDefault.color
         $0.font = UIFont.pretendard(size: 16, weight: .semibold)
     }
     
-    let qrmakeonDescription = UILabel().then {
+    let qrMakeOnDescription = UILabel().then {
         $0.text = "앱을 실행하면 즉시 QR코드를 생성해요"
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
         
     }
     
-    let qrmakeontoggleButton: UISwitch = UISwitch().then {
+    let qrMakeOntoggleButton: UISwitch = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsAdmin.color
         $0.tintColor = .color.gomsTertiary.color
@@ -221,7 +216,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     private func setTheme(_ style: UIUserInterfaceStyle, themeText: String) {
         if let window = UIApplication.shared.windows.first {
             window.overrideUserInterfaceStyle = style
-            themesettingText.text = themeText
+            themeSettingText.text = themeText
             
             UserDefaults.standard.set(style.rawValue, forKey: "selectedTheme")
             UserDefaults.standard.set(themeText, forKey: "themeText")
@@ -229,7 +224,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     }
     
     public func updateThemeText() {
-        self.themesettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
+        self.themeSettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
     }
     
     @objc func withdrawalButtonTapped() {
@@ -292,9 +287,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     @objc func updateImage(isActionSheetShowing: Bool) {
         if isActionSheetShowing {
-            themesettingImg.image = UIImage.image.gomsTopButton.image
+            themeSettingImg.image = UIImage.image.gomsTopButton.image
         } else {
-            themesettingImg.image = UIImage.image.gomsBottomButton.image
+            themeSettingImg.image = UIImage.image.gomsBottomButton.image
         }
     }
     
@@ -318,10 +313,10 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
         
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchMakeOn")
-        qrmakeontoggleButton.isOn = isSwitchOn
+        qrMakeOntoggleButton.isOn = isSwitchOn
         
         let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
-        clocktoggleButton.isOn = isClockOn
+        clockToggleButton.isOn = isClockOn
         
         profileViewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
@@ -473,21 +468,20 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             perceptionCount,
             perceptionNum,
             perceptionText,
-            userProfilepencil,
+            userProfilePencil,
             clockText,
             clockDescription,
-            clocktoggleButton,
-            qrmakeonText,
-            qrmakeonDescription,
-            qrmakeontoggleButton,
-            line1View,
-            line2View,
-            repasswordRight,
+            clockToggleButton,
+            qrMakeOnText,
+            qrMakeOnDescription,
+            qrMakeOntoggleButton,
+            themeTopLine,
+            themeBottomLine,
             logoutButton,
             themeChangText,
             themeChangRec,
-            themesettingText,
-            themesettingImg,
+            themeSettingText,
+            themeSettingImg,
             borderView,
             logoutButton,
             withdrawalButton,
@@ -510,7 +504,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalToSuperview().inset(16)
         }
         
-        userProfilepencil.snp.makeConstraints {
+        userProfilePencil.snp.makeConstraints {
             $0.top.equalTo(userGradeDepartment.snp.top)
             $0.trailing.equalTo(userProfile.snp.trailing)
         }
@@ -548,23 +542,23 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
         
-        line1View.snp.makeConstraints {
+        themeTopLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.bottom.equalTo(userProfile.snp.bottom).offset(32)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().inset(20)
         }
         
-        line2View.snp.makeConstraints {
+        themeBottomLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(qrmakeonDescription.snp.bottom).offset(24)
+            $0.top.equalTo(qrMakeOnDescription.snp.bottom).offset(24)
         }
         
         themeChangText.snp.makeConstraints {
             $0.width.equalTo(93)
             $0.height.equalTo(28)
-            $0.top.equalTo(line1View.snp.top).offset(24)
+            $0.top.equalTo(themeTopLine.snp.top).offset(24)
             $0.leading.equalToSuperview().inset(28)
         }
         
@@ -576,14 +570,14 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.trailing.equalToSuperview().inset(20)
         }
         
-        themesettingText.snp.makeConstraints {
+        themeSettingText.snp.makeConstraints {
             $0.width.equalTo(106)
             $0.height.equalTo(28)
             $0.top.equalTo(themeChangRec.snp.top).offset(18)
             $0.leading.equalTo(themeChangRec.snp.leading).offset(12)
         }
         
-        themesettingImg.snp.makeConstraints {
+        themeSettingImg.snp.makeConstraints {
             $0.width.equalTo(24)
             $0.height.equalTo(24)
             $0.top.equalTo(themeChangRec.snp.top).offset(20)
@@ -604,26 +598,26 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.top.equalTo(clockText.snp.bottom)
         }
         
-        clocktoggleButton.snp.makeConstraints {
+        clockToggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
         
-        qrmakeonText.snp.makeConstraints {
+        qrMakeOnText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(clockDescription.snp.leading)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
         
-        qrmakeonDescription.snp.makeConstraints {
+        qrMakeOnDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
-            $0.leading.equalTo(qrmakeonText.snp.leading)
-            $0.top.equalTo(qrmakeonText.snp.bottom)
+            $0.leading.equalTo(qrMakeOnText.snp.leading)
+            $0.top.equalTo(qrMakeOnText.snp.bottom)
         }
         
-        qrmakeontoggleButton.snp.makeConstraints {
+        qrMakeOntoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
@@ -631,7 +625,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         passwordResetButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(bounds.height * 0.08)
-            $0.top.equalTo(line2View.snp.bottom).offset(bounds.height * 0.01)
+            $0.top.equalTo(themeBottomLine.snp.bottom).offset(bounds.height * 0.01)
         }
         
         logoutButton.snp.makeConstraints {

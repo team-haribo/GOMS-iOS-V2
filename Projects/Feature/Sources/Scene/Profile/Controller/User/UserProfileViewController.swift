@@ -23,7 +23,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    let userProfilepencil = UIButton().then {
+    let userProfilePencil = UIButton().then {
         $0.setImage(.image.gomsProfilePencil.image, for: .normal)
         $0.addTarget(self, action: #selector(ShowActionSheetProfilImageChange), for: .touchUpInside)
     }
@@ -58,11 +58,11 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
-    let line1View = UIView().then {
+    let themeTopLine = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
     
-    let line2View = UIView().then {
+    let themeBottomLine = UIView().then {
         $0.backgroundColor = .color.gomsDivider.color
     }
     
@@ -85,29 +85,29 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.layer.cornerRadius = 12
     }
     
-    let themesettingText = UILabel().then {
+    let themeSettingText = UILabel().then {
         $0.text = ""
         $0.textColor = .color.gomsSecondary.color
         $0.font = .pretendard(size: 16, weight: .regular)
     }
     
-    let themesettingImg = UIImageView().then {
+    let themeSettingImg = UIImageView().then {
         $0.image = .image.gomsBottomButton.image
     }
     
-    let cameranowonText = UILabel().then {
+    let cameraNowOnText = UILabel().then {
         $0.text = "카메라 바로 켜기"
         $0.textColor = .color.gomsTextDefault.color
         $0.font = .pretendard(size: 16, weight: .semibold)
     }
     
-    let cameranowonDescription = UILabel().then {
+    let cameraNowOnDescription = UILabel().then {
         $0.text = "앱을 실행하면 즉시 카메라가 켜져요"
         $0.textColor = .color.gomsTertiary.color
         $0.font = .pretendard(size: 12, weight: .regular)
     }
     
-    let cameranowontoggleButton: UISwitch = UISwitch().then {
+    let cameraNowOntoggleButton: UISwitch = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsPrimary.color
         $0.tintColor = .color.gomsTertiary.color
@@ -127,30 +127,12 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         $0.font = .pretendard(size: 12, weight: .regular)
     }
     
-    let clocktoggleButton: UISwitch = UISwitch().then {
+    let clockToggleButton: UISwitch = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.onTintColor = .color.gomsPrimary.color
         $0.tintColor = .color.gomsTertiary.color
         $0.addTarget(self, action: #selector(switchClockOn(_:)), for: .valueChanged)
         $0.isOn = false
-    }
-    
-    let lightmodeText = UILabel().then {
-        $0.text = "라이트 모드 켜기"
-        $0.textColor = .white
-        $0.font = .pretendard(size: 16, weight: .semibold)
-    }
-    
-    let lightmodeDescription = UILabel().then {
-        $0.text = "앱 테마를 라이트 모드로 만들어요"
-        $0.textColor = .color.gomsTertiary.color
-        $0.font = .pretendard(size: 12, weight: .regular)
-    }
-    
-    let lightmodetoggleButton: UISwitch = UISwitch().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.onTintColor = .color.gomsPrimary.color
-        $0.tintColor = .color.gomsTertiary.color
     }
     
     lazy var passwordResetButton = ProfileButton(icon: .image.passwordReset.image, title: "비밀번호 재설정").then {
@@ -253,7 +235,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     private func setTheme(_ style: UIUserInterfaceStyle, themeText: String) {
         if let window = UIApplication.shared.windows.first {
             window.overrideUserInterfaceStyle = style
-            themesettingText.text = themeText
+            themeSettingText.text = themeText
             
             UserDefaults.standard.set(style.rawValue, forKey: "selectedTheme")
             UserDefaults.standard.set(themeText, forKey: "themeText")
@@ -261,7 +243,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     public func updateThemeText() {
-        self.themesettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
+        self.themeSettingText.text = UserDefaults.standard.string(forKey: "themeText") ?? "시스템 테마 설정"
     }
     
     @objc func logoutButtonTapped() {
@@ -312,9 +294,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     
     @objc func updateImage(isActionSheetShowing: Bool) {
         if isActionSheetShowing {
-            themesettingImg.image = UIImage.image.gomsTopButton.image
+            themeSettingImg.image = UIImage.image.gomsTopButton.image
         } else {
-            themesettingImg.image = UIImage.image.gomsBottomButton.image
+            themeSettingImg.image = UIImage.image.gomsBottomButton.image
         }
     }
     
@@ -402,10 +384,10 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         }
         
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
-        cameranowontoggleButton.isOn = isSwitchOn
+        cameraNowOntoggleButton.isOn = isSwitchOn
         
         let isClockOn = UserDefaults.standard.bool(forKey: "isClockOn")
-        clocktoggleButton.isOn = isClockOn
+        clockToggleButton.isOn = isClockOn
         
         profileViewModel.$profileInfo.sink { [weak self] profileInfo in
             guard let profileInfo = profileInfo else { return }
@@ -491,21 +473,21 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             perceptionCount,
             perceptionNum,
             perceptionText,
-            userProfilepencil,
+            userProfilePencil,
             passwordResetButton,
-            line1View,
-            line2View,
-            cameranowonText,
-            cameranowonDescription,
-            cameranowontoggleButton,
+            themeTopLine,
+            themeBottomLine,
+            cameraNowOnText,
+            cameraNowOnDescription,
+            cameraNowOntoggleButton,
             clockText,
             clockDescription,
-            clocktoggleButton,
+            clockToggleButton,
             logoutButton,
             themeChangText,
             themeChangRec,
-            themesettingImg,
-            themesettingText,
+            themeSettingImg,
+            themeSettingText,
             themeChangLine,
             logoutButton,
             withdrawalButton
@@ -526,7 +508,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalToSuperview().inset(16)
         }
         
-        userProfilepencil.snp.makeConstraints {
+        userProfilePencil.snp.makeConstraints {
             $0.top.equalTo(userGradeDepartment.snp.top)
             $0.trailing.equalTo(userProfile.snp.trailing)
         }
@@ -564,23 +546,23 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
         
-        line1View.snp.makeConstraints {
+        themeTopLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.bottom.equalTo(userProfile.snp.bottom).offset(32)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().inset(20)
         }
         
-        line2View.snp.makeConstraints {
+        themeBottomLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.top.equalTo(cameranowonDescription.snp.bottom).offset(24)
+            $0.top.equalTo(cameraNowOnDescription.snp.bottom).offset(24)
         }
         
         themeChangText.snp.makeConstraints {
             $0.width.equalTo(93)
             $0.height.equalTo(28)
-            $0.top.equalTo(line1View.snp.top).offset(24)
+            $0.top.equalTo(themeTopLine.snp.top).offset(24)
             $0.leading.equalToSuperview().inset(28)
         }
         
@@ -591,14 +573,14 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.leading.trailing.equalToSuperview().inset(20)
         }
         
-        themesettingText.snp.makeConstraints {
+        themeSettingText.snp.makeConstraints {
             $0.width.equalTo(106)
             $0.height.equalTo(28)
             $0.top.equalTo(themeChangRec.snp.top).offset(18)
             $0.leading.equalTo(themeChangRec.snp.leading).offset(12)
         }
         
-        themesettingImg.snp.makeConstraints {
+        themeSettingImg.snp.makeConstraints {
             $0.width.equalTo(24)
             $0.height.equalTo(24)
             $0.top.equalTo(themeChangRec.snp.top).offset(20)
@@ -619,26 +601,26 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(clockText.snp.bottom)
         }
         
-        clocktoggleButton.snp.makeConstraints {
+        clockToggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
         
-        cameranowonText.snp.makeConstraints {
+        cameraNowOnText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(clockDescription.snp.leading)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
         
-        cameranowonDescription.snp.makeConstraints {
+        cameraNowOnDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
-            $0.leading.equalTo(cameranowonText.snp.leading)
-            $0.top.equalTo(cameranowonText.snp.bottom)
+            $0.leading.equalTo(cameraNowOnText.snp.leading)
+            $0.top.equalTo(cameraNowOnText.snp.bottom)
         }
         
-        cameranowontoggleButton.snp.makeConstraints {
+        cameraNowOntoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
@@ -646,7 +628,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         passwordResetButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(bounds.height * 0.08)
-            $0.top.equalTo(line2View.snp.bottom).offset(bounds.height * 0.01)
+            $0.top.equalTo(themeBottomLine.snp.bottom).offset(bounds.height * 0.01)
         }
         
         logoutButton.snp.makeConstraints {
