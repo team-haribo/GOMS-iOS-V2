@@ -44,7 +44,6 @@ public final class OutingViewModel: BaseViewModel {
                     } catch(let err) {
                         print(String(describing: err))
                     }
-                    print("success")
                 case 401:
                     self.gomsRefreshToken.tokenReissuance()
                 case 404:

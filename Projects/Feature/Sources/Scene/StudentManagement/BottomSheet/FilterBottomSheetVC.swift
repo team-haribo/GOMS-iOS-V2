@@ -152,14 +152,14 @@ public final class FilterBottomSheetVC: BaseViewController {
             adminButton.isSelected = false
             blackListButton.isSelected = false
             if studentButton.isSelected == true {
-                viewModel.setupAuthority(authority: "ROLE_STUDENT")
+                viewModel.setupAuthority(authority: Authority.student.rawValue)
             }
         case "학생회":
             studentButton.isSelected = false
             adminButton.isSelected.toggle()
             blackListButton.isSelected = false
             if adminButton.isSelected == true {
-                viewModel.setupAuthority(authority: "ROLE_STUDENT_COUNCIL")
+                viewModel.setupAuthority(authority: Authority.admin.rawValue)
             }
         case "외출금지":
             studentButton.isSelected = false
@@ -222,13 +222,13 @@ public final class FilterBottomSheetVC: BaseViewController {
             manButton.isSelected.toggle()
             womanButton.isSelected = false
             if manButton.isSelected == true {
-                viewModel.setupGender(gender: "MAN")
+                viewModel.setupGender(gender: Gender.man.rawValue)
             }
         case "여성":
             manButton.isSelected = false
             womanButton.isSelected.toggle()
             if womanButton.isSelected == true {
-                viewModel.setupGender(gender: "WOMAN")
+                viewModel.setupGender(gender: Gender.woman.rawValue)
             }
         default:
             break
@@ -248,21 +248,21 @@ public final class FilterBottomSheetVC: BaseViewController {
             iotButton.isSelected = false
             aiButton.isSelected = false
             if swButton.isSelected == true {
-                viewModel.setupMajor(major: "SW_DEVELOP")
+                viewModel.setupMajor(major: Major.sw.rawValue)
             }
         case "IoT":
             swButton.isSelected = false
             iotButton.isSelected.toggle()
             aiButton.isSelected = false
             if iotButton.isSelected == true {
-                viewModel.setupMajor(major: "SMART_IOT")
+                viewModel.setupMajor(major: Major.iot.rawValue)
             }
         case "AI":
             swButton.isSelected = false
             iotButton.isSelected = false
             aiButton.isSelected.toggle()
             if aiButton.isSelected == true {
-                viewModel.setupMajor(major: "AI")
+                viewModel.setupMajor(major: Major.ai.rawValue)
             }
         default:
             break

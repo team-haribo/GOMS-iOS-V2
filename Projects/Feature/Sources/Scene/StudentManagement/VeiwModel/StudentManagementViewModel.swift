@@ -98,10 +98,10 @@ public final class StudentManagementViewModel: BaseViewModel {
             let currentAuthority = user.authority
             var newAuthority: String = ""
             
-            if currentAuthority == "ROLE_STUDENT" {
-                newAuthority = "ROLE_STUDENT_COUNCIL"
+            if currentAuthority == Authority.student.rawValue {
+                newAuthority = Authority.admin.rawValue
             } else {
-                newAuthority = "ROLE_STUDENT"
+                newAuthority = Authority.student.rawValue
             }
             
             let param = AuthorityRequest(accountIdx: accountIdx, authority: newAuthority)
@@ -169,7 +169,6 @@ public final class StudentManagementViewModel: BaseViewModel {
                     let statusCode = result.statusCode
                     switch statusCode {
                     case 205:
-                        print("Reset content")
                         completion(self.userListDatas)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance()

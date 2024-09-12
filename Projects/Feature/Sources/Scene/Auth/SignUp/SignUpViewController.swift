@@ -73,13 +73,13 @@ public final class SignUpViewController: BaseViewController {
         let menAction = UIAlertAction(title: "남성", style: .default) { _ in
             self.genderTextField.setTitle("남성", for: .normal)
             self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
-            self.viewModel.setupGender(gender: "MAN")
+            self.viewModel.setupGender(gender: Gender.man.rawValue)
             self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         let womanAction = UIAlertAction(title: "여성", style: .default) { _ in
             self.genderTextField.setTitle("여성", for: .normal)
             self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
-            self.viewModel.setupGender(gender: "WOMAN")
+            self.viewModel.setupGender(gender: Gender.man.rawValue)
             self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         
@@ -94,19 +94,19 @@ public final class SignUpViewController: BaseViewController {
         let swAction = UIAlertAction(title: "SW개발과", style: .default) { _ in
             self.majorTextField.setTitle("SW개발과", for: .normal)
             self.majorTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
-            self.viewModel.setupMajor(major: "SW_DEVELOP")
+            self.viewModel.setupMajor(major: Major.sw.rawValue)
             self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         let iotAction = UIAlertAction(title: "스마트IoT과", style: .default) { _ in
             self.majorTextField.setTitle("스마트IoT과", for: .normal)
             self.majorTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
-            self.viewModel.setupMajor(major: "SMART_IOT")
+            self.viewModel.setupMajor(major: Major.iot.rawValue)
             self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         let aiAction = UIAlertAction(title: "AI개발과", style: .default) { _ in
             self.majorTextField.setTitle("AI개발과", for: .normal)
             self.majorTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
-            self.viewModel.setupMajor(major: "AI")
+            self.viewModel.setupMajor(major: Major.ai.rawValue)
             self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         
