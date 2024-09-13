@@ -11,6 +11,17 @@ import UIKit
 final class QRResultViewController: BaseViewController {
     
     // MARK: Propertices
+    private let resultType: QRResultType
+    
+    init(resultType: QRResultType) {
+        self.resultType = resultType
+        super.init(nibName: nil, bundle: nil)
+    }
+        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+        
     private let image = UIImageView()
     
     private let mainLabel = UILabel().then {
@@ -33,6 +44,7 @@ final class QRResultViewController: BaseViewController {
     // MARK: - Life Cycel
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
     }
     
     // MARK: - Navigation
@@ -72,6 +84,13 @@ final class QRResultViewController: BaseViewController {
             $0.centerX.equalToSuperview()
             $0.bottom.equalTo(-bounds.height * 0.07)
         }
+    }
+    
+    // MARK: - Method
+    private func setupUI() {
+        image.image = resultType.image
+        mainLabel.text = resultType.mainText
+        descriptionLabel.text = resultType.descriptionText
     }
 
     // MARK: - Selector

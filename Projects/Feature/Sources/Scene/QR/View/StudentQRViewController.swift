@@ -74,16 +74,16 @@ public class StudentQRViewController: BaseViewController, AVCaptureVideoDataOutp
     
     func qrScanResult(result: String) {
         if result == "comeback" {
-            let vc = QRResultViewController()
+            let vc = QRResultViewController(resultType: .comeback)
             self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "outing" {
-            let vc = QRResultViewController()
+            let vc = QRResultViewController(resultType: .outing)
             self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "blackList" {
-            let vc = QRResultViewController()
+            let vc = QRResultViewController(resultType: .blacklist)
             self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "uuidError" {
-            let vc = QRResultViewController()
+            let vc = QRResultViewController(resultType: .qrError)
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
