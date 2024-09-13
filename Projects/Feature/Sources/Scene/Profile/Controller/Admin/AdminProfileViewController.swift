@@ -326,9 +326,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
                 
                 let majorText: String
                 switch profileInfo.major {
-                case "SW_DEVELOP":
+                case Major.sw.rawValue:
                     majorText = "SW"
-                case "SMART_IOT":
+                case Major.iot.rawValue:
                     majorText = "IoT"
                 default:
                     majorText = "AI"

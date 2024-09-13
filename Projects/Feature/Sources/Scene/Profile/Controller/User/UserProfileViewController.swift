@@ -167,7 +167,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     @objc func switchQROn(_ sender: UISwitch) {
-        print("QR카메라 바로켜기: \(sender.isOn ? "On" : "Off")")
         UserDefaults.standard.set(sender.isOn, forKey: "isSwitchOn")
         
         let defaults = UserDefaults.standard
@@ -175,7 +174,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     @objc func switchClockOn(_ sender: UISwitch) {
-        print("시계 나타내기: \(sender.isOn ? "On" : "Off")")
         UserDefaults.standard.set(sender.isOn, forKey: "isClockOn")
         
         let defaults = UserDefaults.standard
@@ -397,9 +395,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                 
                 let majorText: String
                 switch profileInfo.major {
-                case "SW_DEVELOP":
+                case Major.sw.rawValue:
                     majorText = "SW"
-                case "SMART_IOT":
+                case Major.iot.rawValue:
                     majorText = "IoT"
                 default:
                     majorText = "AI"

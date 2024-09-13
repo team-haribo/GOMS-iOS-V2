@@ -90,15 +90,15 @@ public final class StudentCollectionViewCell: UICollectionViewCell {
         }
         nameLabel.text = userData.name
         
-        if userData.major == "SW_DEVELOP" {
+        if userData.major == Major.sw.rawValue {
             studentInfoLabel.text = "\(userData.grade)기 | SW개발"
-        } else if userData.major == "SMART_IOT" {
+        } else if userData.major == Major.iot.rawValue {
             studentInfoLabel.text = "\(userData.grade)기 | IoT"
         } else {
             studentInfoLabel.text = "\(userData.grade)기 | AI"
         }
         
-        if userData.authority == "ROLE_STUDENT_COUNCIL" {
+        if userData.authority == Authority.admin.rawValue {
             profileImageView.layer.borderColor = UIColor(red: 0.706, green: 0.525, blue: 0.976, alpha: 1).cgColor
         } else if userData.isBlackList == true {
             profileImageView.layer.borderColor = UIColor(red: 0.895, green: 0.213, blue: 0.125, alpha: 1).cgColor

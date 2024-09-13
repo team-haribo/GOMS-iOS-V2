@@ -186,22 +186,18 @@ public final class AuthViewModel: BaseViewModel {
                     print("NO CONTENT")
                     print(statusCode)
                     completion(true, statusCode)
-                    print("금방찍음")
                 case 404:
                     print("존재하지 않는 사용자일때")
                     completion(false, statusCode)
                     print(statusCode)
-                    print("금방찍음")
                 case 400:
                     print("변경하려는 비밀번호가 이전 비밀번호와 같을 때")
                     completion(false, statusCode)
                     print(statusCode)
-                    print("금방찍음")
                 case 500:
                     print("SERVER ERROR")
                     print(statusCode)
                     completion(false, statusCode)
-                    print("금방찍음")
                 default:
                     print(result)
                     completion(false, statusCode)

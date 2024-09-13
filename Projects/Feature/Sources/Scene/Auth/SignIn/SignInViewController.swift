@@ -129,10 +129,10 @@ public final class SignInViewController: BaseViewController {
                         
                         if success {
                             if let authority = self.profileModel.profileInfo?.authority {
-                                if authority == "ROLE_STUDENT_COUNCIL" {
+                                if authority == Authority.admin.rawValue {
                                     let mainVC = AdminMainViewController()
                                     self.navigationController?.setViewControllers([mainVC], animated: true)
-                                } else if authority == "ROLE_STUDENT" {
+                                } else if authority == Authority.student.rawValue {
                                     let mainVC = MainViewController()
                                     self.navigationController?.setViewControllers([mainVC], animated: true)
                                 } else {

@@ -167,10 +167,10 @@ public final class MainViewController: BaseViewController {
                         
                         if success {
                             if let authority = self.profileViewModel.profileInfo?.authority {
-                                if authority == "ROLE_STUDENT_COUNCIL" {
+                                if authority == Authority.admin.rawValue {
                                     let mainVC = AdminMainViewController()
                                     self.navigationController?.setViewControllers([mainVC], animated: false)
-                                } else if authority == "ROLE_STUDENT" {
+                                } else if authority == Authority.student.rawValue {
                                     let mainVC = MainViewController()
                                     self.navigationController?.setViewControllers([mainVC], animated: false)
                                 } else {
@@ -180,7 +180,6 @@ public final class MainViewController: BaseViewController {
                         } else {
                             print("프로필 정보를 불러오는데 실패했습니다.")
                         }
-
                     }
                 case 400:
                    print("400")
@@ -280,10 +279,10 @@ public final class MainViewController: BaseViewController {
         
       basicsProfileView.nameLabel.text = mainViewModel.profileData?.name
         profileView.nameLabel.text = mainViewModel.profileData?.name
-        if mainViewModel.profileData?.major == "SW_DEVELOP" {
+        if mainViewModel.profileData?.major == Major.sw.rawValue {
             profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | SW개발"
-        } else if mainViewModel.profileData?.major == "SMART_IOT" {
+        } else if mainViewModel.profileData?.major == Major.iot.rawValue {
             profileView.studentInformationLabel.text = "\(grade)기 | IoT"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | IoT"
         } else {

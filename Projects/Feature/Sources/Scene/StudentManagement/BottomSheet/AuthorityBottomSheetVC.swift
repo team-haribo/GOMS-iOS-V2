@@ -109,7 +109,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             blackListSwitch.isOn = false
         }
         
-        if let userData = userData, userData.authority == "ROLE_STUDENT_COUNCIL" {
+        if let userData = userData, userData.authority == Authority.admin.rawValue {
             adminSwitch.isOn = true
         } else {
             adminSwitch.isOn = false
