@@ -3,6 +3,7 @@ import AVFoundation
 import Vision
 
 public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+    
     let viewModel = QRCodeViewModel()
     
     let captureSession = AVCaptureSession()
