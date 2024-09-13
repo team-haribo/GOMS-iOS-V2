@@ -95,7 +95,7 @@ extension AdminMenuViewController: UICollectionViewDelegate {
         
         switch indexPath.row {
         case 0:
-            let adminQRVC = AdminQRCodeViewController()
+            let adminQRVC = AdminQRViewController()
             navigationController?.pushViewController(adminQRVC, animated: true)
         case 1:
             let studentManagementVC = StudentManagementViewController()

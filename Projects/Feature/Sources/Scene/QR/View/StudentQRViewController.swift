@@ -2,7 +2,7 @@ import UIKit
 import AVFoundation
 import Vision
 
-public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+public class StudentQRViewController: BaseViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     let viewModel = QRCodeViewModel()
     
