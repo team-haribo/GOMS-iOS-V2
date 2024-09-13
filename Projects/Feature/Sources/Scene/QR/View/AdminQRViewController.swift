@@ -3,7 +3,7 @@ import UIKit
 import QRCode
 import CoreImage
 
-public class AdminQRCodeViewController: BaseViewController {
+public class AdminQRViewController: BaseViewController {
     
     // MARK: Propertices
     let viewModel = QRCodeViewModel()

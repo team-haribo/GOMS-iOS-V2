@@ -2,7 +2,8 @@ import UIKit
 import AVFoundation
 import Vision
 
-public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+public class StudentQRViewController: BaseViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+    
     let viewModel = QRCodeViewModel()
     
     let captureSession = AVCaptureSession()
@@ -73,16 +74,16 @@ public class QRCodeViewController: BaseViewController, AVCaptureVideoDataOutputS
     
     func qrScanResult(result: String) {
         if result == "comeback" {
-            let vc = CombackScuccessVC()
+            let vc = QRResultViewController(resultType: .comeback)
             self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "outing" {
-            let vc = OutingSuccessVC()
+            let vc = QRResultViewController(resultType: .outing)
             self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "blackList" {
-            let vc = BlackListVC()
+            let vc = QRResultViewController(resultType: .blacklist)
             self.navigationController?.pushViewController(vc, animated: true)
         } else if result == "uuidError" {
-            let vc = QRErrorVC()
+            let vc = QRResultViewController(resultType: .qrError)
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

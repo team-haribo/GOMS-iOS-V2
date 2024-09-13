@@ -23,13 +23,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             if authority == "ROLE_STUDENT_COUNCIL" {
                 if adminIsSwitchOn {
-                    self.window?.rootViewController = UINavigationController(rootViewController: AdminQRCodeViewController())
+                    self.window?.rootViewController = UINavigationController(rootViewController: AdminQRViewController())
                 } else {
                     self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
                 }
             } else if authority == "ROLE_STUDENT" {
                 if isSwitchOn {
-                    self.window?.rootViewController = UINavigationController(rootViewController: QRCodeViewController())
+                    self.window?.rootViewController = UINavigationController(rootViewController: StudentQRViewController())
                 } else {
                     self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
                 }

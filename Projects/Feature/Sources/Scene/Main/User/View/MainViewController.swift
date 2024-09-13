@@ -107,7 +107,7 @@ public final class MainViewController: BaseViewController {
     }
     
     @objc func qrButtonTapped() {
-        let qrCodeVC = QRCodeViewController()
+        let qrCodeVC = StudentQRViewController()
         self.navigationController?.pushViewController(qrCodeVC, animated: true)
     }
 

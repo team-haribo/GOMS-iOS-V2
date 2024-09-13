@@ -276,10 +276,10 @@ public class AdminMainViewController: BaseViewController {
         
         profileView.nameLabel.text = viewModel.profileData?.name
         basicsProfileView.nameLabel.text = viewModel.profileData?.name
-        if viewModel.profileData?.major == "SW_DEVELOP" {
+        if viewModel.profileData?.major == Major.sw.rawValue {
             profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | SW개발"
-        } else if viewModel.profileData?.major == "SMART_IOT" {
+        } else if viewModel.profileData?.major == Major.iot.rawValue {
             profileView.studentInformationLabel.text = "\(grade)기 | IoT"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | IoT"
         } else {
@@ -295,7 +295,7 @@ public class AdminMainViewController: BaseViewController {
     }
     
     @objc func qrButtonTapped() {
-        let qrCodeVC = AdminQRCodeViewController()
+        let qrCodeVC = AdminQRViewController()
         self.navigationController?.pushViewController(qrCodeVC, animated: true)
     }
     
