@@ -25,7 +25,7 @@ public final class QRCodeViewModel: BaseViewModel {
                 let statusCode = result.statusCode
                 switch statusCode {
                 case 204:
-                    self.profileViewModel.loadProfileInfo { success in
+                    self.profileViewModel.loadProfileInfo { success, authority in
                         if success {
                             if let profileInfo = self.profileViewModel.profileInfo {
                                 if profileInfo.isOuting == true {
@@ -41,7 +41,7 @@ public final class QRCodeViewModel: BaseViewModel {
                         }
                     }
                 case 400:
-                    self.profileViewModel.loadProfileInfo { success in
+                    self.profileViewModel.loadProfileInfo { success, authority in
                         if success {
                             if let profileInfo = self.profileViewModel.profileInfo {
                                 if profileInfo.isBlackList == true {

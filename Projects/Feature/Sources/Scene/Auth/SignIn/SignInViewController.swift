@@ -126,7 +126,7 @@ public final class SignInViewController: BaseViewController {
                     UserDefaults.standard.set(self.emailTextField.text, forKey: "localEmail")
 
                     // 프로필 로드 후 화면 전환
-                    self.profileModel.loadProfileInfo { [weak self] success in
+                    self.profileModel.loadProfileInfo { [weak self] success, authority in
                         guard let self = self else { return }
 
                         if success {

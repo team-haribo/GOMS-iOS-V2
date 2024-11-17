@@ -120,13 +120,33 @@ public class AdminMainViewController: BaseViewController {
         setupScrollView()
         setupProfileView()
     }
-    
-    func configureRefreshControl () {
-        scrollView.refreshControl = refreshControl
-        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+
+    func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()  // 화면 전체를 scrollView로 만듦
+        }
+
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)  // 스크롤을 할 수 있도록 설정
+        }
+
+        addView()  // 내용 추가
     }
-    
+
+    func configureRefreshControl () {
+        // 기존에 scrollView의 refreshControl을 설정하는 부분을 수정하여,
+        // 전체 화면을 대상으로 새로 고침 범위를 적용
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+        scrollView.refreshControl = refreshControl
+    }
+
     @objc func handleRefreshControl() {
+        fetchData()
+        
         guard
             let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
             let isLocalPass = UserDefaults.standard.string(forKey: "localPass")
@@ -145,7 +165,7 @@ public class AdminMainViewController: BaseViewController {
             DispatchQueue.main.async {
                 switch statusCode {
                 case 200:
-                    self.profileViewModel.loadProfileInfo { [weak self] success in
+                    self.profileViewModel.loadProfileInfo { [weak self] success, authority in
                         guard let self = self else { return }
                         
                         if success {
@@ -214,22 +234,7 @@ public class AdminMainViewController: BaseViewController {
     }
     
     
-    func setupScrollView() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        contentView.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView)
-            make.width.equalTo(scrollView)
-        }
-        
-        addView()
-    }
-    
+
     // MARK: - Setting
     func setup() {
         if self.viewModel.lateListDatas.count >= 1 {

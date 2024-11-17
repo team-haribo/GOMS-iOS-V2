@@ -115,6 +115,56 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
 
     @objc func handleRefreshControl() {
         fetchData()
+
+        guard
+            let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
+            let isLocalPass = UserDefaults.standard.string(forKey: "localPass")
+        else {
+            print("localEmail 또는 localPass 값이 없습니다.")
+            self.refreshControl.endRefreshing()
+            return
+        }
+
+        authViewModel.setupEmail(email: isLocalEmail)
+        authViewModel.setupPassword(password: isLocalPass)
+
+        authViewModel.signIn { [weak self] statusCode, _ in
+            guard let self = self else { return }
+
+            DispatchQueue.main.async {
+                switch statusCode {
+                case 200:
+                    self.profileViewModel.loadProfileInfo { [weak self] success, authority in
+                        guard let self = self else { return }
+
+                        if success {
+                            if let authority = self.profileViewModel.profileInfo?.authority {
+                                if authority == "ROLE_STUDENT_COUNCIL" {
+                                    let mainVC = AdminMainViewController()
+                                    self.navigationController?.setViewControllers([mainVC], animated: false)
+                                } else if authority == "ROLE_STUDENT" {
+                                    let mainVC = MainViewController()
+                                    self.navigationController?.setViewControllers([mainVC], animated: false)
+                                } else {
+                                    print("권한이 없습니다.")
+                                }
+                            }
+                        } else {
+                            print("프로필 정보를 불러오는데 실패했습니다.")
+                        }
+
+                    }
+                case 400:
+                   print("400")
+                case 404:
+                   print("404")
+
+                default:
+                    print("error")
+                }
+            }
+        }
+
     }
 
     private func fetchData() {
@@ -133,6 +183,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
             }
         }
     }
+
 
     private func setupViewComponents() {
         self.setup()
