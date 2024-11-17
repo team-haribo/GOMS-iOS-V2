@@ -9,28 +9,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        
+
         let defaults = UserDefaults.standard
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
         let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
-        
+
         applySavedTheme()
-        
+
         if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
             refreshTokenManager.tokenReissuance()
-            
+
             let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
-            
+
+            print("Authority: \(authority ?? "")")
+
             if authority == "ROLE_STUDENT_COUNCIL" {
                 if adminIsSwitchOn {
+                    print("Admin Screen: AdminQRViewController")
                     self.window?.rootViewController = UINavigationController(rootViewController: AdminQRViewController())
                 } else {
+                    print("Admin Screen: AdminMainViewController")
                     self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
                 }
             } else if authority == "ROLE_STUDENT" {
                 if isSwitchOn {
+                    print("Student Screen: StudentQRViewController")
                     self.window?.rootViewController = UINavigationController(rootViewController: StudentQRViewController())
                 } else {
+                    print("Student Screen: MainViewController")
                     self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
                 }
             } else {
@@ -39,9 +45,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else {
             self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
         }
-        
+
         self.window?.makeKeyAndVisible()
     }
+
     
     private func applySavedTheme() {
         let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
