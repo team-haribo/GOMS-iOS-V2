@@ -105,29 +105,37 @@ public final class SignInViewController: BaseViewController {
         navigationController?.pushViewController(findPasswordVC, animated: true)
     }
     
+    private var isTransitioning = false // 화면 전환 중인 상태를 추적하는 변수
+
     @objc func signInButtonTapped() {
         viewModel.setupEmail(email: emailTextField.text ?? "")
         viewModel.setupPassword(password: passwordTextField.text ?? "")
-    
-        
+
         DispatchQueue.main.async {
             self.present(self.loader, animated: true)
         }
-        
+
         viewModel.signIn { [weak self] statusCode, _ in
             guard let self = self else { return }
-            
+
             DispatchQueue.main.async {
                 switch statusCode {
                 case 200:
                     self.signInSuccessUI()
                     UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
                     UserDefaults.standard.set(self.emailTextField.text, forKey: "localEmail")
-                    
+
+                    // 프로필 로드 후 화면 전환
                     self.profileModel.loadProfileInfo { [weak self] success in
                         guard let self = self else { return }
-                        
+
                         if success {
+                            if self.isTransitioning {
+                                return // 이미 화면 전환이 진행 중이면 종료
+                            }
+
+                            self.isTransitioning = true // 화면 전환 시작
+
                             if let authority = self.profileModel.profileInfo?.authority {
                                 if authority == Authority.admin.rawValue {
                                     let mainVC = AdminMainViewController()
@@ -143,6 +151,7 @@ public final class SignInViewController: BaseViewController {
                             print("프로필 정보를 불러오는데 실패했습니다.")
                         }
                         self.loader.dismiss(animated: true)
+                        self.isTransitioning = false // 화면 전환 완료 후 상태 초기화
                     }
                 case 400:
                     self.passwordErrorUI()
@@ -150,7 +159,7 @@ public final class SignInViewController: BaseViewController {
                 case 404:
                     self.emailErrorUI()
                     self.loader.dismiss(animated: true)
-                    
+
                 default:
                     print("error")
                     self.loader.dismiss(animated: true)
