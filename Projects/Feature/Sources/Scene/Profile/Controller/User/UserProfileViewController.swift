@@ -565,7 +565,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         }
         
         themeChangRec.snp.makeConstraints {
-            $0.width.equalTo(335)
+            $0.width.equalTo(360)
             $0.height.equalTo(64)
             $0.top.equalTo(themeChangText.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(20)
