@@ -1,7 +1,7 @@
 import UIKit
 
-public class AdminMainViewController: BaseViewController {
-    
+public class AdminMainViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
     // MARK: - Properties
     private let viewModel = MainViewModel()
     private let basicsProfileView = ProfileCardView()
@@ -126,22 +126,25 @@ public class AdminMainViewController: BaseViewController {
         scrollView.addSubview(contentView)
 
         scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()  // 화면 전체를 scrollView로 만듦
+            make.edges.equalToSuperview()
         }
 
         contentView.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView)
-            make.width.equalTo(scrollView)  // 스크롤을 할 수 있도록 설정
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
         }
 
-        addView()  // 내용 추가
+        contentView.snp.makeConstraints { make in
+            make.height.greaterThanOrEqualTo(view.snp.height).priority(.low)
+        }
+
+        addView()
     }
 
-    func configureRefreshControl () {
-        // 기존에 scrollView의 refreshControl을 설정하는 부분을 수정하여,
-        // 전체 화면을 대상으로 새로 고침 범위를 적용
-        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+
+    func configureRefreshControl() {
         scrollView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
     }
 
     @objc func handleRefreshControl() {
@@ -232,13 +235,10 @@ public class AdminMainViewController: BaseViewController {
         self.view.layoutIfNeeded()
         self.setupCountLable()
         self.setCollectionView()
-        self.setup()
         self.setupProfileView()
         self.latecomerCollectionView.reloadData()
         self.outingStatusCollectionView.reloadData()
     }
-    
-    
 
     // MARK: - Setting
     func setup() {
@@ -327,22 +327,25 @@ public class AdminMainViewController: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [profileView, basicsProfileView, latecomerLabel, moreLateButton, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.content.addSubview($0) }
-        [logo, adminMenuButton, content].forEach { view.addSubview($0) }
+        [profileView, basicsProfileView, latecomerLabel, moreLateButton, lateNilView, latecomerCollectionView, outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView, qrButton].forEach { self.contentView.addSubview($0) }
+        [logo, adminMenuButton, content].forEach { self.contentView.addSubview($0) }
+        contentView.bringSubviewToFront(qrButton)
+        contentView.bringSubviewToFront(moreOutingStatusButton)
+        contentView.bringSubviewToFront(moreLateButton)
     }
     
     // MARK: - Layout
     override func setLayout() {
         logo.snp.makeConstraints {
-            $0.top.equalTo(bounds.height * 0.07)
-            $0.leading.equalTo(bounds.width * 0.05)
+            $0.leading.equalToSuperview().inset(20)
+            $0.top.equalToSuperview().inset(20)
             $0.height.equalTo(24)
             $0.width.equalTo(87)
         }
-        
+
         adminMenuButton.snp.makeConstraints {
-            $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(bounds.height * 0.07)
+            $0.top.equalToSuperview().inset(20)
+            $0.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(18)
             $0.width.equalTo(20)
         }
@@ -357,19 +360,19 @@ public class AdminMainViewController: BaseViewController {
         updateLayout()
         
         lateNilView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(40)
             $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
         }
         
         latecomerCollectionView.snp.makeConstraints {
             $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(136)
         }
         
         outingStatusLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview()
+            $0.leading.equalToSuperview().inset(20)
             $0.height.equalTo(32)
             $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
         }
@@ -382,7 +385,7 @@ public class AdminMainViewController: BaseViewController {
         
         moreOutingStatusButton.snp.makeConstraints {
             $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(28)
-            $0.trailing.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(20)
             $0.width.equalTo(48)
             $0.height.equalTo(24)
         }
@@ -394,45 +397,77 @@ public class AdminMainViewController: BaseViewController {
         }
         
         qrButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview()
-            $0.bottom.equalTo(-(bounds.height * 0.06))
+            $0.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset(130)
             $0.height.width.equalTo(64)
         }
     }
-}
 
-// MARK: - MainViewController Extension
-extension AdminMainViewController: UICollectionViewDataSource {
+    func updateLayout() {
+        profileView.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(84)
+            $0.top.equalTo(logo.snp.bottom).offset(20)
+        }
+
+        latecomerLabel.snp.remakeConstraints {
+            $0.top.equalTo(profileView.snp.bottom).offset(24)
+            $0.leading.equalToSuperview().inset(20)
+            $0.height.equalTo(32)
+        }
+
+        moreLateButton.snp.makeConstraints {
+            $0.top.equalTo(profileView.snp.bottom).offset(24)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.width.equalTo(48)
+            $0.height.equalTo(24)
+        }
+
+        basicsProfileView.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(84)
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview()
+        }
+
+        if isClockOn {
+            profileView.isHidden = false
+            basicsProfileView.isHidden = true
+        } else {
+            profileView.isHidden = true
+            basicsProfileView.isHidden = false
+        }
+
+        view.layoutIfNeeded()
+    }
+
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == outingStatusCollectionView {
-            return viewModel.outingListDatas.count
-        } else if collectionView == latecomerCollectionView {
+        if collectionView == latecomerCollectionView {
             return viewModel.lateListDatas.count
+        } else if collectionView == outingStatusCollectionView {
+            return viewModel.outingListDatas.count
         }
         return 0
     }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == outingStatusCollectionView {
-            let cell = outingStatusCollectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as! OutingStatusCollectionViewCell
-            
-            let outingData = viewModel.outingListDatas[indexPath.row]
-            cell.setupData(with: outingData)
-            
-            return cell
-        } else if collectionView == latecomerCollectionView {
-            let cell = latecomerCollectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as! LateCell
 
-            let lateData = viewModel.lateListDatas[indexPath.row]
-            cell.setupData(with: lateData)
-            
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == latecomerCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LateCell.identifier, for: indexPath) as? LateCell else { return UICollectionViewCell() }
+            let data = viewModel.lateListDatas[indexPath.row]
+            cell.configure(with: data)
+            return cell
+        } else if collectionView == outingStatusCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OutingStatusCollectionViewCell.identifier, for: indexPath) as? OutingStatusCollectionViewCell else { return UICollectionViewCell() }
+            let data = viewModel.outingListDatas[indexPath.row]
+            cell.configure(with: data)
             return cell
         }
         return UICollectionViewCell()
     }
 }
 
-extension AdminMainViewController: UICollectionViewDelegateFlowLayout {
+// MARK: - UICollectionViewDelegateFlowLayout
+extension AdminMainViewController {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == latecomerCollectionView {
             let width = bounds.width * 0.27
@@ -445,7 +480,7 @@ extension AdminMainViewController: UICollectionViewDelegateFlowLayout {
         }
         return CGSize(width: 0, height: 0)
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         if collectionView == latecomerCollectionView {
             return bounds.width * 0.03
@@ -453,44 +488,5 @@ extension AdminMainViewController: UICollectionViewDelegateFlowLayout {
             return 0
         }
         return 0
-    }
-    
-    func updateLayout() {
-        profileView.snp.remakeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(84)
-            $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview()
-        }
-        
-        latecomerLabel.snp.remakeConstraints {
-            $0.top.equalTo(profileView.snp.bottom).offset(24)
-            $0.leading.equalToSuperview()
-            $0.height.equalTo(32)
-        }
-        
-        moreLateButton.snp.makeConstraints {
-            $0.top.equalTo(profileView.snp.bottom).offset(24)
-            $0.trailing.equalToSuperview()
-            $0.width.equalTo(48)
-            $0.height.equalTo(24)
-        }
-        
-        basicsProfileView.snp.remakeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(84)
-            $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview()
-        }
-        
-        if isClockOn {
-            profileView.isHidden = false
-            basicsProfileView.isHidden = true
-        } else {
-            profileView.isHidden = true
-            basicsProfileView.isHidden = false
-        }
-        
-        view.layoutIfNeeded()
     }
 }

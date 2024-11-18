@@ -17,7 +17,6 @@ public class GOMSRefreshToken {
     private var reissuanceData: SignInResponse?
     private lazy var refreshToken = "Bearer " + (keychain.read(key: Const.KeyChainKey.refreshToken) ?? "")
 
-    // 토큰 재발급
     public func tokenReissuance(completion: @escaping (Bool) -> Void) {
         authProvider.request(.refreshToken(refreshToken: refreshToken)) { [weak self] response in
             guard let self = self else {
