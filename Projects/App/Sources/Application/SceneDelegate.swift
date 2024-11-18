@@ -5,7 +5,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     private let refreshTokenManager = GOMSRefreshToken.shared
-    
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
@@ -17,12 +17,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         applySavedTheme()
 
         if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
-            refreshTokenManager.tokenReissuance()
+            refreshTokenManager.tokenReissuance { [weak self] success in
+                guard let self = self else { return }
+                if success {
+                    self.setRootViewControllerBasedOnAuthority(isSwitchOn: isSwitchOn, adminIsSwitchOn: adminIsSwitchOn)
+                } else {
+                    self.showLoginScreen()
+                }
+            }
+        } else {
+            showLoginScreen()
+        }
 
-            let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
+        self.window?.makeKeyAndVisible()
+    }
 
-            print("Authority: \(authority ?? "")")
+    private func setRootViewControllerBasedOnAuthority(isSwitchOn: Bool, adminIsSwitchOn: Bool) {
+        let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
 
+        DispatchQueue.main.async {
             if authority == "ROLE_STUDENT_COUNCIL" {
                 if adminIsSwitchOn {
                     print("Admin Screen: AdminQRViewController")
@@ -40,26 +53,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
                 }
             } else {
-                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+                self.showLoginScreen()
             }
-        } else {
-            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
         }
-
-        self.window?.makeKeyAndVisible()
     }
 
-    
+    private func showLoginScreen() {
+        DispatchQueue.main.async {
+            self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+        }
+    }
+
     private func applySavedTheme() {
         let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
         let savedTheme = UIUserInterfaceStyle(rawValue: savedThemeValue) ?? .unspecified
         window?.overrideUserInterfaceStyle = savedTheme
-        
+
         if let rootViewController = window?.rootViewController as? UserProfileViewController {
             rootViewController.updateThemeText()
         }
     }
-    
+
     private func checkForUpdates(completion: @escaping (Bool) -> Void) {
         guard let bundleID = Bundle.main.bundleIdentifier else {
             completion(false)

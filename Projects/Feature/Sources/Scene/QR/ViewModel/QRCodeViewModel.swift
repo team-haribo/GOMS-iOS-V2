@@ -57,7 +57,7 @@ public final class QRCodeViewModel: BaseViewModel {
                         }
                     }
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                 case 500:
                     print("SERVER ERROR")
                 default:
@@ -89,7 +89,7 @@ public final class QRCodeViewModel: BaseViewModel {
                         print(error.localizedDescription)
                     }
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                 case 403:
                     print("학생회 계정이 아닌데 요청할 경우")
                     completion(false)

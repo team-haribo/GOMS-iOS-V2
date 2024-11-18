@@ -13,13 +13,18 @@ public class GOMSRefreshToken {
     public static let shared = GOMSRefreshToken()
     private let authProvider = MoyaProvider<AuthServices>()
     private let keychain = KeyChain()
-    var statusCode: Int = 0
-    var reissuanceData: SignInResponse?
+    private var statusCode: Int = 0
+    private var reissuanceData: SignInResponse?
     private lazy var refreshToken = "Bearer " + (keychain.read(key: Const.KeyChainKey.refreshToken) ?? "")
 
     // 토큰 재발급
-    public func tokenReissuance() {
-        authProvider.request(.refreshToken(refreshToken: refreshToken)) { response in
+    public func tokenReissuance(completion: @escaping (Bool) -> Void) {
+        authProvider.request(.refreshToken(refreshToken: refreshToken)) { [weak self] response in
+            guard let self = self else {
+                completion(false)
+                return
+            }
+
             switch response {
             case .success(let result):
                 self.statusCode = result.statusCode
@@ -28,22 +33,26 @@ public class GOMSRefreshToken {
                     do {
                         self.reissuanceData = try result.map(SignInResponse.self)
                         self.updateKeychainToken()
+                        completion(true)
                     } catch(let err) {
                         print(String(describing: err))
+                        completion(false)
                     }
-                    print("update token")
                 case 400, 401, 404:
                     print("token error")
+                    completion(false)
                 default:
                     print("token error")
+                    completion(false)
                 }
             case .failure(let err):
                 print(String(describing: err))
+                completion(false)
             }
         }
     }
-    
-    func updateKeychainToken() {
+
+    private func updateKeychainToken() {
         let accessTokenUpdated = self.keychain.updateItem(
             token: self.reissuanceData?.accessToken ?? "",
             key: Const.KeyChainKey.accessToken
@@ -56,11 +65,11 @@ public class GOMSRefreshToken {
             token: self.reissuanceData?.authority ?? "",
             key: Const.KeyChainKey.authority
         )
-        
+
         if accessTokenUpdated && refreshTokenUpdated && authorityUpdated {
             print("keychain update success")
         } else {
-            print("keychain update faild")
+            print("keychain update failed")
         }
     }
 }
