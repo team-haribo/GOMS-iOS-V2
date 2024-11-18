@@ -19,39 +19,50 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
+
     let contentView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
+
     var isClockOn: Bool = UserDefaults.standard.bool(forKey: "isClockOn") {
         didSet {
             updateLayout()
         }
     }
+
     let content = UIView()
+
     private let logo = UIImageView(image: .image.gomsLightGrayLogo.image)
+
     private lazy var settingButton = ExpandableButton().then {
         $0.setBackgroundImage(.image.gomsSetting.image, for: .normal)
         $0.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
         $0.expandedTouchArea = 30
     }
+
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
+
     lazy var lateNilView = LateNilView()
+
     private lazy var latecomerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = false
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = true
         $0.backgroundColor = .clear
     }
+
     private let outingView = UIView()
+
     private let outingStatusLabel = UILabel().then {
         $0.text = "외출현황"
         $0.setDynamicTextColor(darkModeColor: .white, lightModeColor: .black)
         $0.font = UIFont.pretendard(size: 19, weight: .bold)
     }
+
     private lazy var moreOutingStatusButton = UIButton().then {
         $0.backgroundColor = .color.gomsTextDefault.color.withAlphaComponent(0.1)
         $0.setTitle("더보기", for: .normal)
@@ -61,10 +72,12 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         $0.layer.masksToBounds = true
         $0.addTarget(self, action: #selector(moreOutingStatusButtonTapped), for: .touchUpInside)
     }
+
     let outingCountLabel = UILabel().then {
         $0.textColor = .color.gomsTertiary.color
         $0.font = UIFont.pretendard(size: 12, weight: .regular)
     }
+
     lazy var outingStatusCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init()).then {
         $0.isScrollEnabled = true
         $0.showsHorizontalScrollIndicator = false
@@ -72,6 +85,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -0)
         $0.backgroundColor = .clear
     }
+
     private lazy var qrButton = QRButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64), backgroundColor: .color.gomsPrimary.color).then {
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
@@ -188,7 +202,6 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         }
     }
 
-
     private func setupViewComponents() {
         self.setup()
         self.view.layoutIfNeeded()
@@ -271,8 +284,6 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
                 basicsProfileView.myOutingStatusLabel.textColor = .color.gomsSecondary.color
             }
         }
-
-
     }
 
     private func setCollectionView() {
@@ -312,48 +323,58 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
             $0.height.equalTo(24)
             $0.width.equalTo(87)
         }
+
         settingButton.snp.makeConstraints {
             $0.top.equalToSuperview().inset(20)
             $0.trailing.equalToSuperview().inset(20)
             $0.width.height.equalTo(24)
         }
+
         updateLayout()
+
         lateNilView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(40)
             $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
         }
+
         latecomerCollectionView.snp.makeConstraints {
             $0.top.equalTo(latecomerLabel.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(136)
         }
+
         outingView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
             $0.bottom.equalTo(contentView.snp.bottom).offset(-100) // 여유 공간 추가
         }
+
         outingStatusLabel.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(20)
             $0.height.equalTo(32)
             $0.top.equalToSuperview()
         }
+
         outingCountLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.leading.equalTo(outingStatusLabel.snp.trailing).offset(8)
             $0.height.equalTo(32)
         }
+
         moreOutingStatusButton.snp.makeConstraints {
             $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(28)
             $0.trailing.equalToSuperview().inset(20)
             $0.width.equalTo(48)
             $0.height.equalTo(24)
         }
+
         outingStatusCollectionView.snp.makeConstraints {
             $0.top.equalTo(outingStatusLabel.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview()
         }
+
         qrButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview().inset(130)
@@ -367,17 +388,20 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
             $0.height.equalTo(84)
             $0.top.equalTo(logo.snp.bottom).offset(20)
         }
+
         latecomerLabel.snp.remakeConstraints {
             $0.top.equalTo(profileView.snp.bottom).offset(24)
             $0.leading.equalToSuperview().inset(20)
             $0.height.equalTo(32)
         }
+
         basicsProfileView.snp.remakeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(84)
             $0.centerX.equalToSuperview()
             $0.top.equalToSuperview()
         }
+
         if isClockOn {
             profileView.isHidden = false
             basicsProfileView.isHidden = true
@@ -385,6 +409,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
             profileView.isHidden = true
             basicsProfileView.isHidden = false
         }
+        
         view.layoutIfNeeded()
     }
 
