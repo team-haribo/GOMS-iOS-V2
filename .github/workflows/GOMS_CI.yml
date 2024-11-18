@@ -1,4 +1,4 @@
-name: Expo CI
+name: GOMS CI
 
 on:
   pull_request:
