@@ -79,7 +79,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                         print(String(describing: err))
                     }
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                 case 403:
                     print("학생회 계정이 아닐 경우")
                 default:
@@ -115,7 +115,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                         print(result)
                         completion(self.userListDatas)
                     case 401:
-                        self.gomsRefreshToken.tokenReissuance()
+                        self.gomsRefreshToken.tokenReissuance(){ success in}
                     case 403:
                         print("학생회 계정이 아닌데 요청할 경우")
                     case 404:
@@ -144,7 +144,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     case 201:
                         completion(self.userListDatas)
                     case 401:
-                        self.gomsRefreshToken.tokenReissuance()
+                        self.gomsRefreshToken.tokenReissuance(){ success in}
                     case 403:
                         print("학생회 계정이 아닌데 요청할 경우")
                     case 404:
@@ -171,7 +171,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     case 205:
                         completion(self.userListDatas)
                     case 401:
-                        self.gomsRefreshToken.tokenReissuance()
+                        self.gomsRefreshToken.tokenReissuance(){ success in}
                     case 403:
                         print("학생회 계정이 아닌데 요청할 경우")
                     case 404:
@@ -212,7 +212,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case 200:
                     print("ok")
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                 case 403:
                     print("학생회 계정이 아닌데 요청할 경우")
                 default:

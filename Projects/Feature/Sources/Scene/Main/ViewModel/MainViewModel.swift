@@ -63,7 +63,7 @@ public final class MainViewModel: BaseViewModel {
                 case 200:
                     print("OK")
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                 case 404:
                     print("지각자 없음")
                 case 500:
@@ -94,7 +94,7 @@ public final class MainViewModel: BaseViewModel {
                 case 200:
                     print("OK")
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                 case 404:
                     print("외출한 사람이 없을 경우")
                 case 500:
@@ -131,7 +131,7 @@ public final class MainViewModel: BaseViewModel {
                         completion(nil)
                     }
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                     completion(nil)
                 default:
                     print(result)

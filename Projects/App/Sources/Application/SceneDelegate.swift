@@ -5,54 +5,75 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     private let refreshTokenManager = GOMSRefreshToken.shared
-    
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        
+
         let defaults = UserDefaults.standard
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
         let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
-        
+
         applySavedTheme()
-        
+
         if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
-            refreshTokenManager.tokenReissuance()
-            
-            let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
-            
+            refreshTokenManager.tokenReissuance { [weak self] success in
+                guard let self = self else { return }
+                if success {
+                    self.setRootViewControllerBasedOnAuthority(isSwitchOn: isSwitchOn, adminIsSwitchOn: adminIsSwitchOn)
+                } else {
+                    self.showLoginScreen()
+                }
+            }
+        } else {
+            showLoginScreen()
+        }
+
+        self.window?.makeKeyAndVisible()
+    }
+
+    private func setRootViewControllerBasedOnAuthority(isSwitchOn: Bool, adminIsSwitchOn: Bool) {
+        let authority = KeyChain.shared.read(key: Const.KeyChainKey.authority)
+
+        DispatchQueue.main.async {
             if authority == "ROLE_STUDENT_COUNCIL" {
                 if adminIsSwitchOn {
+                    print("Admin Screen: AdminQRViewController")
                     self.window?.rootViewController = UINavigationController(rootViewController: AdminQRViewController())
                 } else {
+                    print("Admin Screen: AdminMainViewController")
                     self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
                 }
             } else if authority == "ROLE_STUDENT" {
                 if isSwitchOn {
+                    print("Student Screen: StudentQRViewController")
                     self.window?.rootViewController = UINavigationController(rootViewController: StudentQRViewController())
                 } else {
+                    print("Student Screen: MainViewController")
                     self.window?.rootViewController = UINavigationController(rootViewController: MainViewController())
                 }
             } else {
-                self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
+                self.showLoginScreen()
             }
-        } else {
+        }
+    }
+
+    private func showLoginScreen() {
+        DispatchQueue.main.async {
             self.window?.rootViewController = UINavigationController(rootViewController: IntroViewController())
         }
-        
-        self.window?.makeKeyAndVisible()
     }
-    
+
     private func applySavedTheme() {
         let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
         let savedTheme = UIUserInterfaceStyle(rawValue: savedThemeValue) ?? .unspecified
         window?.overrideUserInterfaceStyle = savedTheme
-        
+
         if let rootViewController = window?.rootViewController as? UserProfileViewController {
             rootViewController.updateThemeText()
         }
     }
-    
+
     private func checkForUpdates(completion: @escaping (Bool) -> Void) {
         guard let bundleID = Bundle.main.bundleIdentifier else {
             completion(false)

@@ -45,7 +45,7 @@ public final class OutingViewModel: BaseViewModel {
                         print(String(describing: err))
                     }
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                 case 404:
                     print("외출한 사람이 없을 경우")
                 default:
@@ -74,7 +74,7 @@ public final class OutingViewModel: BaseViewModel {
                 case 200:
                     print("success")
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                 default:
                     print(result)
                 }
@@ -95,7 +95,7 @@ public final class OutingViewModel: BaseViewModel {
                 case 205:
                     completion()
                 case 401:
-                    self.gomsRefreshToken.tokenReissuance()
+                    self.gomsRefreshToken.tokenReissuance(){ success in}
                 case 403:
                     print("학생회 계정이 아닌데 요청할 경우")
                 default:

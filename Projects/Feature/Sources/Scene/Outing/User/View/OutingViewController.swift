@@ -110,7 +110,7 @@ public final class OutingViewController: BaseViewController {
     }
 
     @objc private func handleRefreshControl() {
-        viewModel.gomsRefreshToken.tokenReissuance()
+        viewModel.gomsRefreshToken.tokenReissuance(){ success in}
         viewModel.getOutingList {
             self.outingList = self.viewModel.outingListDatas
             DispatchQueue.main.async {

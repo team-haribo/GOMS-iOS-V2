@@ -373,7 +373,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         super.viewDidLoad()
         applySavedTheme()
         self.navigationController?.navigationBar.prefersLargeTitles = false
-        profileViewModel.loadProfileInfo { success in
+        profileViewModel.loadProfileInfo { success, authority in
             if success {
                 print("완료")
             } else {
@@ -444,7 +444,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     }
     
     @objc func handleRefreshControl() {
-        profileViewModel.loadProfileInfo { success in
+        profileViewModel.loadProfileInfo { success, authority in
             if success {
                 print("완료")
             } else {

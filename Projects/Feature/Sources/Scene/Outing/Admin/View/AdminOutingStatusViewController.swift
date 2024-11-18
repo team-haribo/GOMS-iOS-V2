@@ -95,7 +95,8 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     }
 
     @objc private func handleRefreshControl() {
-        viewModel.gomsRefreshToken.tokenReissuance()
+        viewModel.gomsRefreshToken.tokenReissuance { success in
+        }
         viewModel.getOutingList {
             self.outingList = self.viewModel.outingListDatas
             DispatchQueue.main.async {
