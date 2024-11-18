@@ -146,37 +146,39 @@ public class AdminMainViewController: BaseViewController {
 
     @objc func handleRefreshControl() {
         fetchData()
-        
-        guard
-            let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
-            let isLocalPass = UserDefaults.standard.string(forKey: "localPass")
-        else {
+        guard let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
+              let isLocalPass = UserDefaults.standard.string(forKey: "localPass") else {
             print("localEmail 또는 localPass 값이 없습니다.")
             self.refreshControl.endRefreshing()
             return
         }
-        
+
         authViewModel.setupEmail(email: isLocalEmail)
         authViewModel.setupPassword(password: isLocalPass)
-        
+
         authViewModel.signIn { [weak self] statusCode, _ in
             guard let self = self else { return }
-            
             DispatchQueue.main.async {
                 switch statusCode {
                 case 200:
                     self.profileViewModel.loadProfileInfo { [weak self] success, authority in
                         guard let self = self else { return }
-                        
                         if success {
                             if let authority = self.profileViewModel.profileInfo?.authority {
-                                if authority == "ROLE_STUDENT_COUNCIL" {
-                                    let mainVC = AdminMainViewController()
-                                    self.navigationController?.setViewControllers([mainVC], animated: false)
-                                } else if authority == "ROLE_STUDENT" {
-                                    let mainVC = MainViewController()
-                                    self.navigationController?.setViewControllers([mainVC], animated: false)
-                                } else {
+                                let currentVC = self.navigationController?.viewControllers.last
+
+                                switch authority {
+                                case "ROLE_STUDENT":
+                                    if !(currentVC is MainViewController) {
+                                        let mainVC = MainViewController()
+                                        self.navigationController?.setViewControllers([mainVC], animated: false)
+                                    }
+                                case "ROLE_STUDENT_COUNCIL":
+                                    if !(currentVC is AdminMainViewController) {
+                                        let adminVC = AdminMainViewController()
+                                        self.navigationController?.setViewControllers([adminVC], animated: false)
+                                    }
+                                default:
                                     print("권한이 없습니다.")
                                 }
                             }
@@ -184,19 +186,22 @@ public class AdminMainViewController: BaseViewController {
                             print("프로필 정보를 불러오는데 실패했습니다.")
                         }
 
+                        self.refreshControl.endRefreshing()
                     }
                 case 400:
-                   print("400")
+                    print("400")
+                    self.refreshControl.endRefreshing()
                 case 404:
-                   print("404")
-                    
+                    print("404")
+                    self.refreshControl.endRefreshing()
                 default:
                     print("error")
+                    self.refreshControl.endRefreshing()
                 }
             }
         }
-
     }
+
 
     private func fetchData() {
         viewModel.getLateList { [weak self] in
