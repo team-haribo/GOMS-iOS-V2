@@ -24,6 +24,7 @@ public extension Project {
             destinations: destinations,
             product: product,
             bundleId: "\(organizationName).\(name)",
+            deploymentTargets: .iOS("16.0"),
             infoPlist: infoPlist,
             sources: sources,
             resources: resources,
