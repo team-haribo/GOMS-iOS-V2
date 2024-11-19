@@ -383,9 +383,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             }
         }
 
-        refreshControl.beginRefreshing()
-        handleRefreshControl()
-
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
         cameraNowOntoggleButton.isOn = isSwitchOn
         

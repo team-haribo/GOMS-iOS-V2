@@ -311,9 +311,6 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
                 print("Failed to load profile information.")
             }
         }
-        
-        refreshControl.beginRefreshing()
-        handleRefreshControl()
 
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchMakeOn")
         qrMakeOntoggleButton.isOn = isSwitchOn
