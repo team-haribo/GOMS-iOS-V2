@@ -119,6 +119,9 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         configureRefreshControl()
         setupScrollView()
         setupProfileView()
+
+        refreshControl.beginRefreshing()
+        handleRefreshControl()
     }
 
     func setupScrollView() {
@@ -303,13 +306,23 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
     }
 
     @objc func qrButtonTapped() {
-        let qrCodeVC = AdminQRViewController()
-        self.navigationController?.pushViewController(qrCodeVC, animated: true)
+        qrButton.isUserInteractionEnabled = false
+        let adminQRVC = AdminQRViewController()
+        navigationController?.pushViewController(adminQRVC, animated: true)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.qrButton.isUserInteractionEnabled = true
+            }
     }
 
     @objc func adminMenuButtonTapped() {
+        adminMenuButton.isUserInteractionEnabled = false
         let adminMenuVC = AdminMenuViewController()
         self.navigationController?.pushViewController(adminMenuVC, animated: true)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.adminMenuButton.isUserInteractionEnabled = true
+        }
     }
 
     @objc func moreLateButtonTapped() {
@@ -424,8 +437,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         basicsProfileView.snp.remakeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(84)
-            $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview()
+            $0.top.equalTo(logo.snp.bottom).offset(20)
         }
 
         if isClockOn {
