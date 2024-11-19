@@ -92,8 +92,14 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
 
     // MARK: - Selectors
     @objc func settingButtonTapped() {
+        settingButton.isUserInteractionEnabled = false
+
         let profileVC = UserProfileViewController()
         navigationController?.pushViewController(profileVC, animated: true)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.settingButton.isUserInteractionEnabled = true
+        }
     }
 
     @objc func moreOutingStatusButtonTapped() {
@@ -102,8 +108,14 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     }
 
     @objc func qrButtonTapped() {
+        qrButton.isUserInteractionEnabled = false
+
         let qrCodeVC = StudentQRViewController()
         self.navigationController?.pushViewController(qrCodeVC, animated: true)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.qrButton.isUserInteractionEnabled = true
+        }
     }
 
     // MARK: - Life Cycle
@@ -120,6 +132,9 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         setupProfileView()
         configureRefreshControl()
         setupScrollView()
+
+        refreshControl.beginRefreshing()
+        handleRefreshControl()
     }
 
     func configureRefreshControl() {
@@ -132,6 +147,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         guard let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
               let isLocalPass = UserDefaults.standard.string(forKey: "localPass") else {
             print("localEmail 또는 localPass 값이 없습니다.")
+            let adminVC = SignInViewController(viewModel: AuthViewModel())
+            self.navigationController?.setViewControllers([adminVC], animated: false)
             self.refreshControl.endRefreshing()
             return
         }
@@ -385,8 +402,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     func updateLayout() {
         profileView.snp.remakeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(84)
             $0.top.equalTo(logo.snp.bottom).offset(20)
+            $0.height.equalTo(84)
         }
 
         latecomerLabel.snp.remakeConstraints {
@@ -398,8 +415,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         basicsProfileView.snp.remakeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(84)
-            $0.centerX.equalToSuperview()
-            $0.top.equalToSuperview()
+            $0.top.equalTo(logo.snp.bottom).offset(20)
         }
 
         if isClockOn {

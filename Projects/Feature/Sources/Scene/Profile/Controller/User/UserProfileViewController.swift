@@ -13,6 +13,8 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isUserInteractionEnabled = true
+        //$0.contentSize = view.bounds.size
+        $0.alwaysBounceHorizontal = false
     }
     
     let userProfile = UIImageView().then {
@@ -380,7 +382,10 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
                 print("Failed to load profile information.")
             }
         }
-        
+
+        refreshControl.beginRefreshing()
+        handleRefreshControl()
+
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchOn")
         cameraNowOntoggleButton.isOn = isSwitchOn
         
@@ -563,7 +568,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             $0.top.equalTo(themeTopLine.snp.top).offset(24)
             $0.leading.equalToSuperview().inset(28)
         }
-        
+
         themeChangRec.snp.makeConstraints {
             $0.width.equalTo(360)
             $0.height.equalTo(64)

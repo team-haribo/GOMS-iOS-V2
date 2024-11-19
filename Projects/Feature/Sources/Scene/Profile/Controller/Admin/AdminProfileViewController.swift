@@ -312,6 +312,9 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             }
         }
         
+        refreshControl.beginRefreshing()
+        handleRefreshControl()
+
         let isSwitchOn = UserDefaults.standard.bool(forKey: "isSwitchMakeOn")
         qrMakeOntoggleButton.isOn = isSwitchOn
         
