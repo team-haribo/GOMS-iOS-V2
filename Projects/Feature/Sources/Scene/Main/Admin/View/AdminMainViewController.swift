@@ -7,6 +7,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
     private let basicsProfileView = ProfileCardView()
     private let authViewModel = AuthViewModel()
     private let profileViewModel = ProfileViewModel()
+    private let profileView = MainProfileView()
     let refreshControl = UIRefreshControl()
 
     let scrollView = UIScrollView().then {
@@ -32,8 +33,6 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         $0.addTarget(self, action: #selector(adminMenuButtonTapped), for: .touchUpInside)
         $0.expandedTouchArea = 30
     }
-
-    private let profileView = MainProfileView()
 
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
@@ -321,6 +320,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
 
         profileView.nameLabel.text = viewModel.profileData?.name
         basicsProfileView.nameLabel.text = viewModel.profileData?.name
+
         if viewModel.profileData?.major == Major.sw.rawValue {
             profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | SW개발"
@@ -331,6 +331,13 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
             profileView.studentInformationLabel.text = "\(grade)기 | AI"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | AI"
         }
+
+        if let authority = viewModel.profileData?.authority {
+            if authority == "ROLE_STUDENT_COUNCIL" {
+                profileView.profileStatus.text = "학생회"
+                basicsProfileView.myOutingStatusLabel.text = "학생회"
+            }
+        }
     }
 
     // MARK: - Selector
@@ -339,7 +346,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         navigationController?.pushViewController(outingVC, animated: true)
     }
 
-    @objc func qrButtonTapped() {
+    @objc public func qrButtonTapped() {
         qrButton.isUserInteractionEnabled = false
         let adminQRVC = AdminQRViewController()
         navigationController?.pushViewController(adminQRVC, animated: true)

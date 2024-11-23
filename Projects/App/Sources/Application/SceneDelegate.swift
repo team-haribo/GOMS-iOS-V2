@@ -15,13 +15,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
 
         checkForUpdates { needsUpdate in
-                if needsUpdate {
-                    print("업데이트 필요")
-                    self.showUpdatePopup()
-                } else {
-                    print("최신 버전입니다")
-                }
+            if needsUpdate {
+                print("업데이트 필요")
+                self.showUpdatePopup()
+            } else {
+                print("최신 버전입니다")
             }
+        }
 
         applySavedTheme()
 
@@ -47,9 +47,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DispatchQueue.main.async {
             if authority == "ROLE_STUDENT_COUNCIL" {
                 if adminIsSwitchOn {
-                    print("Admin Screen: AdminQRViewController")
-                    self.window?.rootViewController = UINavigationController(rootViewController: AdminQRViewController())
-                } else {
+                    print("Admin Screen: AdminMainViewController")
+
+                    let adminMainVC = AdminMainViewController()
+                    let navigationController = UINavigationController(rootViewController: adminMainVC)
+                    self.window?.rootViewController = navigationController
+
+                    DispatchQueue.main.async {
+                        let adminQRVC = AdminQRViewController()
+
+                        UIView.performWithoutAnimation {
+                            navigationController.pushViewController(adminQRVC, animated: false)
+                        }
+                    }
+                }
+
+
+                else {
                     print("Admin Screen: AdminMainViewController")
                     self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
                 }
@@ -88,7 +102,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             completion(false)
             return
         }
-        
+
         let url = URL(string: "https://itunes.apple.com/lookup?bundleId=\(bundleID)")!
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
@@ -99,7 +113,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let results = json["results"] as? [[String: Any]],
                    let appStoreVersion = results.first?["version"] as? String {
-                    
+
                     let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                     if let currentVersion = currentVersion, currentVersion.compare(appStoreVersion, options: .numeric) == .orderedAscending {
                         completion(true)
@@ -115,36 +129,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         task.resume()
     }
-    
+
     private func showUpdatePopup() {
         let alertController = UIAlertController(
             title: "업데이트 알림",
             message: "더 나은 서비스를 위해 곰스가 수정되었어요!\n업데이트해 주시겠어요?",
             preferredStyle: .alert
         )
-        
+
         let updateAction = UIAlertAction(title: "확인", style: .default) { _ in
             if let url = URL(string: "https://apps.apple.com/kr/app/goms/id6502936560") {
                 UIApplication.shared.open(url)
             }
         }
-        
+
         alertController.addAction(updateAction)
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.window?.rootViewController?.present(alertController, animated: true) {
                 print("업데이트 팝업 표시됨")
             }
         }
     }
-    
+
     func sceneDidDisconnect(_ scene: UIScene) {}
-    
+
     func sceneDidBecomeActive(_ scene: UIScene) {}
-    
+
     func sceneWillResignActive(_ scene: UIScene) {}
-    
+
     func sceneWillEnterForeground(_ scene: UIScene) {}
-    
+
     func sceneDidEnterBackground(_ scene: UIScene) {}
 }
