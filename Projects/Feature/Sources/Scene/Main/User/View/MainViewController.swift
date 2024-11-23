@@ -129,12 +129,12 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setupProfileView()
+        self.latecomerCollectionView.reloadData()
+        self.outingStatusCollectionView.reloadData()
+        handleRefreshControl()
         configureRefreshControl()
         setupScrollView()
-
         refreshControl.beginRefreshing()
-        handleRefreshControl()
     }
 
     func configureRefreshControl() {
@@ -147,8 +147,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         guard let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
               let isLocalPass = UserDefaults.standard.string(forKey: "localPass") else {
             print("localEmail 또는 localPass 값이 없습니다.")
-            let adminVC = SignInViewController(viewModel: AuthViewModel())
-            self.navigationController?.setViewControllers([adminVC], animated: false)
+            let introVC = IntroViewController()
+            self.navigationController?.setViewControllers([introVC], animated: false)
             self.refreshControl.endRefreshing()
             return
         }
@@ -205,19 +205,28 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     private func fetchData() {
         mainViewModel.getLateList { [weak self] in
             guard let self = self else { return }
+
             self.mainViewModel.getProfile { [weak self] _ in
                 guard let self = self else { return }
-                self.setupProfileView()
-                self.mainViewModel.getOutingList { [weak self] in
-                    guard let self = self else { return }
-                    self.setupViewComponents()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.refreshControl.endRefreshing()
+
+                DispatchQueue.main.async {
+                    self.setupProfileView()
+                    self.mainViewModel.getOutingList { [weak self] in
+                        guard let self = self else { return }
+
+                        DispatchQueue.main.async {
+                            self.setupViewComponents()
+                            self.latecomerCollectionView.reloadData()
+                            self.outingStatusCollectionView.reloadData()
+                            self.refreshControl.endRefreshing()
+                        }
                     }
                 }
             }
         }
     }
+
+
 
     private func setupViewComponents() {
         self.setup()

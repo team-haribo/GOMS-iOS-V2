@@ -13,7 +13,6 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isUserInteractionEnabled = true
-        //$0.contentSize = view.bounds.size
         $0.alwaysBounceHorizontal = false
     }
     

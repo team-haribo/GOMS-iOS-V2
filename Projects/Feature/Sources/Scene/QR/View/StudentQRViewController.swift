@@ -41,8 +41,7 @@ public class StudentQRViewController: BaseViewController, AVCaptureVideoDataOutp
 
     // MARK: - Selector
     @objc func closeButtonDidTap() {
-        let mainVC = MainViewController()
-        self.navigationController?.pushViewController(mainVC, animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
 
     // MARK: - Add View

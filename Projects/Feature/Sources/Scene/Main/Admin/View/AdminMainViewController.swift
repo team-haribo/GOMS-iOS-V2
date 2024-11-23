@@ -116,12 +116,12 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.latecomerCollectionView.reloadData()
+        self.outingStatusCollectionView.reloadData()
+        handleRefreshControl()
         configureRefreshControl()
         setupScrollView()
-        setupProfileView()
-
         refreshControl.beginRefreshing()
-        handleRefreshControl()
     }
 
     func setupScrollView() {
@@ -151,9 +151,12 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
 
     @objc func handleRefreshControl() {
         fetchData()
+
         guard let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
               let isLocalPass = UserDefaults.standard.string(forKey: "localPass") else {
             print("localEmail 또는 localPass 값이 없습니다.")
+            let introVC = IntroViewController()
+            self.navigationController?.setViewControllers([introVC], animated: false)
             self.refreshControl.endRefreshing()
             return
         }
@@ -214,17 +217,17 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
             self.viewModel.getProfile { [weak self] _ in
                 guard let self = self else { return }
 
-                self.setupProfileView()
-                self.view.layoutIfNeeded()
+                DispatchQueue.main.async {
+                    self.setupProfileView()
+                    self.viewModel.getOutingList { [weak self] in
+                        guard let self = self else { return }
 
-                self.viewModel.getOutingList { [weak self] in
-                    guard let self = self else { return }
-
-                    self.setupViewComponents()
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.refreshControl.endRefreshing()
-                        self.view.frame.origin.y = 0
+                        DispatchQueue.main.async {
+                            self.setupViewComponents()
+                            self.latecomerCollectionView.reloadData()
+                            self.outingStatusCollectionView.reloadData()
+                            self.refreshControl.endRefreshing()
+                        }
                     }
                 }
             }

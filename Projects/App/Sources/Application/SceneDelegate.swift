@@ -14,6 +14,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
         let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
 
+        checkForUpdates { needsUpdate in
+                if needsUpdate {
+                    print("업데이트 필요")
+                    self.showUpdatePopup()
+                } else {
+                    print("최신 버전입니다")
+                }
+            }
+
         applySavedTheme()
 
         if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken), !accessToken.isEmpty {
