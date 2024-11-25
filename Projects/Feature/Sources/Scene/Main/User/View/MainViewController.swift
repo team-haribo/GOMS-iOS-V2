@@ -1,9 +1,3 @@
-// MainViewController.swift
-// Feature
-//
-// Created by 새미 on 1/10/24.
-// Copyright © 2024 HARIBO. All rights reserved.
-
 import UIKit
 import Kingfisher
 import Service
@@ -90,6 +84,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
 
+    private var isVisible: Bool = false // 추가된 플래그
+
     // MARK: - Selectors
     @objc func settingButtonTapped() {
         settingButton.isUserInteractionEnabled = false
@@ -121,20 +117,27 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        isVisible = true // 뷰 컨트롤러가 나타남
         fetchData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.hidesBackButton = true
         self.navigationController?.navigationBar.isHidden = true
     }
 
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        isVisible = false // 뷰 컨트롤러가 사라짐
+        refreshControl.endRefreshing() // 새로고침 종료
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setupProfileView()
+        self.latecomerCollectionView.reloadData()
+        self.outingStatusCollectionView.reloadData()
+        handleRefreshControl()
         configureRefreshControl()
         setupScrollView()
-
         refreshControl.beginRefreshing()
-        handleRefreshControl()
     }
 
     func configureRefreshControl() {
@@ -147,8 +150,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         guard let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
               let isLocalPass = UserDefaults.standard.string(forKey: "localPass") else {
             print("localEmail 또는 localPass 값이 없습니다.")
-            let adminVC = SignInViewController(viewModel: AuthViewModel())
-            self.navigationController?.setViewControllers([adminVC], animated: false)
+            let introVC = IntroViewController()
+            self.navigationController?.setViewControllers([introVC], animated: false)
             self.refreshControl.endRefreshing()
             return
         }
@@ -159,34 +162,46 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         authViewModel.signIn { [weak self] statusCode, _ in
             guard let self = self else { return }
             DispatchQueue.main.async {
+                guard self.isVisible else {
+                    self.refreshControl.endRefreshing()
+                    return
+                }
+
                 switch statusCode {
                 case 200:
                     self.profileViewModel.loadProfileInfo { [weak self] success, authority in
                         guard let self = self else { return }
-                        if success {
-                            if let authority = self.profileViewModel.profileInfo?.authority {
-                                let currentVC = self.navigationController?.viewControllers.last
-
-                                switch authority {
-                                case "ROLE_STUDENT_COUNCIL":
-                                    if !(currentVC is AdminMainViewController) {
-                                        let adminVC = AdminMainViewController()
-                                        self.navigationController?.setViewControllers([adminVC], animated: false)
-                                    }
-                                case "ROLE_STUDENT":
-                                    if !(currentVC is MainViewController) {
-                                        let mainVC = MainViewController()
-                                        self.navigationController?.setViewControllers([mainVC], animated: false)
-                                    }
-                                default:
-                                    print("권한이 없습니다.")
-                                }
+                        DispatchQueue.main.async {
+                            guard self.isVisible else {
+                                self.refreshControl.endRefreshing()
+                                return
                             }
-                        } else {
-                            print("프로필 정보를 불러오는데 실패했습니다.")
-                        }
 
-                        self.refreshControl.endRefreshing()
+                            if success {
+                                if let authority = self.profileViewModel.profileInfo?.authority {
+                                    let currentVC = self.navigationController?.viewControllers.last
+
+                                    switch authority {
+                                    case "ROLE_STUDENT_COUNCIL":
+                                        if !(currentVC is AdminMainViewController) {
+                                            let adminVC = AdminMainViewController()
+                                            self.navigationController?.setViewControllers([adminVC], animated: false)
+                                        }
+                                    case "ROLE_STUDENT":
+                                        if !(currentVC is MainViewController) {
+                                            let mainVC = MainViewController()
+                                            self.navigationController?.setViewControllers([mainVC], animated: false)
+                                        }
+                                    default:
+                                        print("권한이 없습니다.")
+                                    }
+                                }
+                            } else {
+                                print("프로필 정보를 불러오는데 실패했습니다.")
+                            }
+
+                            self.refreshControl.endRefreshing()
+                        }
                     }
                 case 400:
                     print("400")
@@ -205,14 +220,31 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     private func fetchData() {
         mainViewModel.getLateList { [weak self] in
             guard let self = self else { return }
+
             self.mainViewModel.getProfile { [weak self] _ in
                 guard let self = self else { return }
-                self.setupProfileView()
-                self.mainViewModel.getOutingList { [weak self] in
-                    guard let self = self else { return }
-                    self.setupViewComponents()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+
+                DispatchQueue.main.async {
+                    guard self.isVisible else {
                         self.refreshControl.endRefreshing()
+                        return
+                    }
+
+                    self.setupProfileView()
+                    self.mainViewModel.getOutingList { [weak self] in
+                        guard let self = self else { return }
+
+                        DispatchQueue.main.async {
+                            guard self.isVisible else {
+                                self.refreshControl.endRefreshing()
+                                return
+                            }
+
+                            self.setupViewComponents()
+                            self.latecomerCollectionView.reloadData()
+                            self.outingStatusCollectionView.reloadData()
+                            self.refreshControl.endRefreshing()
+                        }
                     }
                 }
             }
@@ -270,7 +302,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
             basicsProfileView.profileImageView.image = .image.gomsProfile.image
         }
 
-      basicsProfileView.nameLabel.text = mainViewModel.profileData?.name
+        basicsProfileView.nameLabel.text = mainViewModel.profileData?.name
         profileView.nameLabel.text = mainViewModel.profileData?.name
         if mainViewModel.profileData?.major == Major.sw.rawValue {
             profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
@@ -329,7 +361,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     // MARK: - Add View
     override func addView() {
         [outingStatusLabel, moreOutingStatusButton, outingCountLabel, outingStatusCollectionView].forEach { self.outingView.addSubview($0) }
-        [logo, settingButton,profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.contentView.addSubview($0) }
+        [logo, settingButton, profileView, basicsProfileView, latecomerLabel, lateNilView, latecomerCollectionView, outingView, qrButton].forEach { self.contentView.addSubview($0) }
     }
 
     // MARK: - Layout
@@ -380,7 +412,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         }
 
         moreOutingStatusButton.snp.makeConstraints {
-            $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(28)
+            $0.top.equalToSuperview().offset(4)
             $0.trailing.equalToSuperview().inset(20)
             $0.width.equalTo(48)
             $0.height.equalTo(24)
@@ -425,7 +457,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
             profileView.isHidden = true
             basicsProfileView.isHidden = false
         }
-        
+
         view.layoutIfNeeded()
     }
 

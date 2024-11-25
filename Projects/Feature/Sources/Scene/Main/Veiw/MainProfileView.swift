@@ -31,7 +31,7 @@ public final class MainProfileView: UIView {
     }
 
     let profileStatus = UILabel().then {
-        $0.text = "학생회"
+        $0.text = ""
         $0.textColor = .color.gomsAdmin.color
         $0.font = UIFont.pretendard(size: 16, weight: .bold)
     }

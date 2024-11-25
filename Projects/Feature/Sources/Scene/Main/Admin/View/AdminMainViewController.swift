@@ -7,6 +7,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
     private let basicsProfileView = ProfileCardView()
     private let authViewModel = AuthViewModel()
     private let profileViewModel = ProfileViewModel()
+    private let profileView = MainProfileView()
     let refreshControl = UIRefreshControl()
 
     let scrollView = UIScrollView().then {
@@ -32,8 +33,6 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         $0.addTarget(self, action: #selector(adminMenuButtonTapped), for: .touchUpInside)
         $0.expandedTouchArea = 30
     }
-
-    private let profileView = MainProfileView()
 
     private let latecomerLabel = UILabel().then {
         $0.text = "지각자 TOP 3"
@@ -93,16 +92,19 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
 
+    private var isVisible: Bool = false // 추가된 플래그
+
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.getProfile {_ in
-            self.setupProfileView()
+        isVisible = true // 뷰 컨트롤러가 나타남
+        viewModel.getProfile { [weak self] _ in
+            self?.setupProfileView()
         }
 
-        viewModel.getLateList {
-            self.viewModel.getOutingList {
-                self.setup()
+        viewModel.getLateList { [weak self] in
+            self?.viewModel.getOutingList { [weak self] in
+                self?.setup()
             }
         }
 
@@ -114,14 +116,20 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         self.navigationController?.navigationBar.isHidden = true
     }
 
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        isVisible = false // 뷰 컨트롤러가 사라짐
+        refreshControl.endRefreshing() // 새로고침 종료
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.latecomerCollectionView.reloadData()
+        self.outingStatusCollectionView.reloadData()
+        handleRefreshControl()
         configureRefreshControl()
         setupScrollView()
-        setupProfileView()
-
         refreshControl.beginRefreshing()
-        handleRefreshControl()
     }
 
     func setupScrollView() {
@@ -151,9 +159,12 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
 
     @objc func handleRefreshControl() {
         fetchData()
+
         guard let isLocalEmail = UserDefaults.standard.string(forKey: "localEmail"),
               let isLocalPass = UserDefaults.standard.string(forKey: "localPass") else {
             print("localEmail 또는 localPass 값이 없습니다.")
+            let introVC = IntroViewController()
+            self.navigationController?.setViewControllers([introVC], animated: false)
             self.refreshControl.endRefreshing()
             return
         }
@@ -164,34 +175,46 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         authViewModel.signIn { [weak self] statusCode, _ in
             guard let self = self else { return }
             DispatchQueue.main.async {
+                guard self.isVisible else {
+                    self.refreshControl.endRefreshing()
+                    return
+                }
+
                 switch statusCode {
                 case 200:
                     self.profileViewModel.loadProfileInfo { [weak self] success, authority in
                         guard let self = self else { return }
-                        if success {
-                            if let authority = self.profileViewModel.profileInfo?.authority {
-                                let currentVC = self.navigationController?.viewControllers.last
-
-                                switch authority {
-                                case "ROLE_STUDENT":
-                                    if !(currentVC is MainViewController) {
-                                        let mainVC = MainViewController()
-                                        self.navigationController?.setViewControllers([mainVC], animated: false)
-                                    }
-                                case "ROLE_STUDENT_COUNCIL":
-                                    if !(currentVC is AdminMainViewController) {
-                                        let adminVC = AdminMainViewController()
-                                        self.navigationController?.setViewControllers([adminVC], animated: false)
-                                    }
-                                default:
-                                    print("권한이 없습니다.")
-                                }
+                        DispatchQueue.main.async {
+                            guard self.isVisible else {
+                                self.refreshControl.endRefreshing()
+                                return
                             }
-                        } else {
-                            print("프로필 정보를 불러오는데 실패했습니다.")
-                        }
 
-                        self.refreshControl.endRefreshing()
+                            if success {
+                                if let authority = self.profileViewModel.profileInfo?.authority {
+                                    let currentVC = self.navigationController?.viewControllers.last
+
+                                    switch authority {
+                                    case "ROLE_STUDENT":
+                                        if !(currentVC is MainViewController) {
+                                            let mainVC = MainViewController()
+                                            self.navigationController?.setViewControllers([mainVC], animated: false)
+                                        }
+                                    case "ROLE_STUDENT_COUNCIL":
+                                        if !(currentVC is AdminMainViewController) {
+                                            let adminVC = AdminMainViewController()
+                                            self.navigationController?.setViewControllers([adminVC], animated: false)
+                                        }
+                                    default:
+                                        print("권한이 없습니다.")
+                                    }
+                                }
+                            } else {
+                                print("프로필 정보를 불러오는데 실패했습니다.")
+                            }
+
+                            self.refreshControl.endRefreshing()
+                        }
                     }
                 case 400:
                     print("400")
@@ -214,17 +237,27 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
             self.viewModel.getProfile { [weak self] _ in
                 guard let self = self else { return }
 
-                self.setupProfileView()
-                self.view.layoutIfNeeded()
-
-                self.viewModel.getOutingList { [weak self] in
-                    guard let self = self else { return }
-
-                    self.setupViewComponents()
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.async {
+                    guard self.isVisible else {
                         self.refreshControl.endRefreshing()
-                        self.view.frame.origin.y = 0
+                        return
+                    }
+
+                    self.setupProfileView()
+                    self.viewModel.getOutingList { [weak self] in
+                        guard let self = self else { return }
+
+                        DispatchQueue.main.async {
+                            guard self.isVisible else {
+                                self.refreshControl.endRefreshing()
+                                return
+                            }
+
+                            self.setupViewComponents()
+                            self.latecomerCollectionView.reloadData()
+                            self.outingStatusCollectionView.reloadData()
+                            self.refreshControl.endRefreshing()
+                        }
                     }
                 }
             }
@@ -287,6 +320,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
 
         profileView.nameLabel.text = viewModel.profileData?.name
         basicsProfileView.nameLabel.text = viewModel.profileData?.name
+
         if viewModel.profileData?.major == Major.sw.rawValue {
             profileView.studentInformationLabel.text = "\(grade)기 | SW개발"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | SW개발"
@@ -297,6 +331,13 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
             profileView.studentInformationLabel.text = "\(grade)기 | AI"
             basicsProfileView.studentInformationLabel.text = "\(grade)기 | AI"
         }
+
+        if let authority = viewModel.profileData?.authority {
+            if authority == "ROLE_STUDENT_COUNCIL" {
+                profileView.profileStatus.text = "학생회"
+                basicsProfileView.myOutingStatusLabel.text = "학생회"
+            }
+        }
     }
 
     // MARK: - Selector
@@ -305,14 +346,14 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         navigationController?.pushViewController(outingVC, animated: true)
     }
 
-    @objc func qrButtonTapped() {
+    @objc public func qrButtonTapped() {
         qrButton.isUserInteractionEnabled = false
         let adminQRVC = AdminQRViewController()
         navigationController?.pushViewController(adminQRVC, animated: true)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-                self?.qrButton.isUserInteractionEnabled = true
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.qrButton.isUserInteractionEnabled = true
+        }
     }
 
     @objc func adminMenuButtonTapped() {
