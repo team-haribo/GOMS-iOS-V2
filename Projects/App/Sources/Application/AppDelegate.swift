@@ -79,7 +79,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         print("APNS token: \(deviceToken)")
         Messaging.messaging().apnsToken = deviceToken
 
-        // APNS 토큰을 설정한 후 FCM 토큰 요청
         Messaging.messaging().token { token, error in
             if let error = error {
                 print("Error fetching FCM registration token: \(error)")
