@@ -30,7 +30,7 @@ public extension Project {
             resources: resources,
             dependencies: dependencies
         )
-        
+
         let targets: [Target] = [appTarget]
 
         return Project(
