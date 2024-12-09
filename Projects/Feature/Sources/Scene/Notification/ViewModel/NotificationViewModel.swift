@@ -17,7 +17,7 @@ public final class NotificationViewModel: ObservableObject {
 
     public let providerNotification = MoyaProvider<NotificationServices>(plugins: [NetworkLoggerPlugin()])
 
-    func getOutingStatus(completion: @escaping (Result<Bool, Error>) -> Void) {
+    public func getOutingStatus(completion: @escaping (Result<Bool, Error>) -> Void) {
         providerNotification.request(.getOuting) { result in
             switch result {
             case let .success(response):

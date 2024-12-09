@@ -1,9 +1,12 @@
 import UIKit
 import Firebase
 import UserNotifications
+import Feature
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    let notificationViewModel = NotificationViewModel()
 
     func application(
         _ application: UIApplication,
@@ -18,8 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             options: authOptions,
             completionHandler: { granted, _ in
                 if granted {
-                    self.scheduleWeeklyNotifications()
-                    self.scheduleFiveMinutesBeforeNotification()
+                    self.checkOutingStatusAndScheduleNotifications()
                 }
             }
         )
@@ -30,6 +32,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
+
+    func checkOutingStatusAndScheduleNotifications() {
+            notificationViewModel.getOutingStatus { result in
+                switch result {
+                case .success(let isOuting):
+                    if isOuting {
+                        self.scheduleWeeklyNotifications()
+                        self.scheduleFiveMinutesBeforeNotification()
+                    } else {
+                        self.scheduleNoOutingNotification()
+                    }
+                case .failure(let error):
+                    print("외출제 상태를 가져오지 못함: \(error)")
+                }
+            }
+        }
 
     // MARK: UISceneSession Lifecycle
     func application(
@@ -98,6 +116,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+
+    func scheduleNoOutingNotification() {
+        let center = UNUserNotificationCenter.current()
+
+        let daysOfWeek = [2, 4]
+
+        for day in daysOfWeek {
+            let content = UNMutableNotificationContent()
+            content.title = "[GOMS] 개발팀"
+            content.body = "❌ㅣ오늘은 외출제를 시행하지 않아요!\n외출하시면 무단 외출 처리입니다"
+            content.sound = .default
+
+            var dateComponents = DateComponents()
+            dateComponents.hour = 16
+            dateComponents.minute = 20
+            dateComponents.weekday = day
+
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            let request = UNNotificationRequest(identifier: "weeklyNotification\(day)", content: content, trigger: trigger)
+
+            center.add(request) { (error) in
+                if let error = error {
+                    print("Error scheduling weekly notification: \(error)")
+                }
+            }
+        }
+    }
+
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
