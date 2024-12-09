@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             completionHandler: { granted, _ in
                 if granted {
                     self.scheduleWeeklyNotifications()
+                    self.scheduleFiveMinutesBeforeNotification()
                 }
             }
         )
@@ -58,6 +59,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             var dateComponents = DateComponents()
             dateComponents.hour = 16
             dateComponents.minute = 20
+            dateComponents.weekday = day
+
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            let request = UNNotificationRequest(identifier: "weeklyNotification\(day)", content: content, trigger: trigger)
+
+            center.add(request) { (error) in
+                if let error = error {
+                    print("Error scheduling weekly notification: \(error)")
+                }
+            }
+        }
+    }
+
+    func scheduleFiveMinutesBeforeNotification() {
+        let center = UNUserNotificationCenter.current()
+
+        let daysOfWeek = [2, 4]
+
+        for day in daysOfWeek {
+            let content = UNMutableNotificationContent()
+            content.title = "[GOMS] 개발팀"
+            content.body = "잠시 후에 외출제가 시작해요!\n외출하시겠어요?"
+            content.sound = .default
+
+            var dateComponents = DateComponents()
+            dateComponents.hour = 18
+            dateComponents.minute = 35
             dateComponents.weekday = day
 
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
