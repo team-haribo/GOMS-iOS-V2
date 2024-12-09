@@ -11,25 +11,19 @@ import Service
 import Moya
 
 public final class NotificationViewModel: ObservableObject {
-    @Published public var notificationModel: NotificationModel?
-
     public init() {}
 
     public let providerNotification = MoyaProvider<NotificationServices>(plugins: [NetworkLoggerPlugin()])
 
-    public func getOutingStatus(completion: @escaping (Result<Bool, Error>) -> Void) {
-        providerNotification.request(.getOuting) { result in
+    public func postFcmToken(fcmToken: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        providerNotification.request(.postFcmToken(param: NotificationRequest(fcmToken: fcmToken))) { result in
             switch result {
-            case let .success(response):
-                do {
-                    let notificationModel = try response.map(NotificationModel.self)
-                    self.notificationModel = notificationModel
-                    print(notificationModel.data.outingStatus)
-                    completion(.success(notificationModel.data.outingStatus))
-                } catch {
-                    completion(.failure(error))
-                }
-            case let .failure(error):
+            case .success(_):
+                print("SuccessㅣFCM Token 전송")
+                completion(.success(()))
+            case .failure(let error):
+                print("FailureㅣFCM Token 전송 실패")
+                print(error.localizedDescription)
                 completion(.failure(error))
             }
         }

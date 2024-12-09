@@ -10,7 +10,7 @@ import Foundation
 import Moya
 
 public enum NotificationServices {
-    case getOuting
+    case postFcmToken(param: NotificationRequest)
 }
 
 extension NotificationServices: TargetType {
@@ -20,22 +20,22 @@ extension NotificationServices: TargetType {
 
     public var path: String {
         switch self {
-        case .getOuting:
+        case .postFcmToken:
             return "/date"
         }
     }
 
     public var method: Moya.Method {
         switch self {
-        case .getOuting:
-            return .get
+        case .postFcmToken:
+            return .post
         }
     }
 
     public var task: Task {
         switch self {
-        case .getOuting:
-            return .requestPlain
+        case .postFcmToken(let param):
+            return .requestJSONEncodable(param)
         }
     }
 
