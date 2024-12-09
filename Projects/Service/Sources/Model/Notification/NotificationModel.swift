@@ -9,7 +9,7 @@
 import Foundation
 
 public struct NotificationModel: Codable {
-    let data: NotificationResponse
+    public let data: NotificationResponse
 }
 
 public struct NotificationResponse: Codable {
