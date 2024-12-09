@@ -10,7 +10,7 @@
 
 ㅤ  
 
-# 🛠️ㅣ기술스택
+# 🛠️ㅣTechStack
 - Uikit  
 - Tuist  
 - Mvvm  
