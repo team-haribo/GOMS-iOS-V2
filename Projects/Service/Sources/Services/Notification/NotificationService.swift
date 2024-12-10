@@ -10,18 +10,18 @@ import Foundation
 import Moya
 
 public enum NotificationServices {
-    case postFcmToken(param: NotificationRequest)
+    case postFcmToken(fcmToken: String, authorization: String)
 }
 
 extension NotificationServices: TargetType {
     public var baseURL: URL {
-        return URL(string: "https://port-0-goms-backend-v2-12fhqa2bln49rbi0.sel5.cloudtype.app/api/v2/outing")!
+        return URL(string: "https://port-0-goms-backend-v2-12fhqa2bln49rbi0.sel5.cloudtype.app/api/v2/notification/token")!
     }
 
     public var path: String {
         switch self {
-        case .postFcmToken:
-            return "/date"
+        case .postFcmToken(let fcmToken, _):
+            return "\(fcmToken)"
         }
     }
 
@@ -34,15 +34,15 @@ extension NotificationServices: TargetType {
 
     public var task: Task {
         switch self {
-        case .postFcmToken(let param):
-            return .requestJSONEncodable(param)
+        case .postFcmToken:
+            return .requestPlain
         }
     }
 
     public var headers: [String : String]? {
         switch self {
-        default:
-            return ["Content-Type": "application/json"]
+        case .postFcmToken(_, let authorization):
+            return ["Content-Type": "application/json", "Authorization": authorization]
         }
     }
 }

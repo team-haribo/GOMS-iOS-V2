@@ -20,7 +20,8 @@ public final class AuthViewModel: BaseViewModel {
     var userData: SignInModel?
     private var email: String = ""
     public let profileModel = ProfileViewModel()
-    
+    public let notificationViewModel = NotificationViewModel()
+
     private var password: String = ""
     private var authCode: String = ""
     private var newPassword: String = ""
@@ -76,7 +77,7 @@ public final class AuthViewModel: BaseViewModel {
         authProvider.request(.signIn(param: param)) { [weak self] response in
             guard let self = self else { return }
             
-            DispatchQueue.global().async {
+            DispatchQueue.global().async { [self] in
                 var authority: String? = nil
                 switch response {
                 case .success(let result):
@@ -90,7 +91,19 @@ public final class AuthViewModel: BaseViewModel {
                             self.keyChain.create(key: Const.KeyChainKey.refreshToken, token: signInResponse.refreshToken)
                             self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
                             authority = signInResponse.authority
-                            
+
+                            if let savedToken = UserDefaults.standard.string(forKey: "FCMToken") {
+                                self.notificationViewModel.setupFcmToken(fcmToken: savedToken)
+                                self.notificationViewModel.setupaccessToken(accessToken: Const.KeyChainKey.accessToken)
+                                self.notificationViewModel.postFcmToken { success in
+                                    if success {
+                                        print("FCM 토큰 전송 성공")
+                                    } else {
+                                        print("FCM 토큰 전송 실패")
+                                    }
+                                }
+                                        }
+
                             completion(statusCode, authority)
                         default:
                             break

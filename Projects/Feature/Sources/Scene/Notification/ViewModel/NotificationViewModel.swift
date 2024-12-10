@@ -14,17 +14,28 @@ public final class NotificationViewModel: ObservableObject {
     public init() {}
 
     public let providerNotification = MoyaProvider<NotificationServices>(plugins: [NetworkLoggerPlugin()])
+    private var fcmToken: String = ""
+    private var accessToken: String = ""
 
-    public func postFcmToken(fcmToken: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        providerNotification.request(.postFcmToken(param: NotificationRequest(fcmToken: fcmToken))) { result in
+    public func setupaccessToken(accessToken: String) {
+        self.accessToken = accessToken
+    }
+
+    public func setupFcmToken(fcmToken: String) {
+        self.fcmToken = fcmToken
+    }
+
+    public func postFcmToken(completion: @escaping (Bool) -> Void) {
+        providerNotification.request(.postFcmToken(fcmToken: fcmToken, authorization: accessToken)) { result in
             switch result {
             case .success(_):
+                print(self.accessToken)
                 print("SuccessㅣFCM Token 전송")
-                completion(.success(()))
+                completion(true)
             case .failure(let error):
                 print("FailureㅣFCM Token 전송 실패")
                 print(error.localizedDescription)
-                completion(.failure(error))
+                completion(false)
             }
         }
     }

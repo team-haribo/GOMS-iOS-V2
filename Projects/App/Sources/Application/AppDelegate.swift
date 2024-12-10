@@ -58,15 +58,8 @@ extension AppDelegate: MessagingDelegate {
         print("Firebase registration token: \(String(describing: fcmToken))")
 
         if let token = fcmToken {
-            notificationViewModel.postFcmToken(fcmToken: token) { result in
-                switch result {
-                case .success():
-                    print("SuccessㅣFCM Token 전송")
-                case .failure(let error):
-                    print("FailureㅣFCM Token 전송 실패")
-                    print(error.localizedDescription)
-                }
-            }
+            UserDefaults.standard.set(token, forKey: "FCMToken")
+            print("FCM 토큰이 로컬에 저장되었습니다: \(token)")
         }
     }
 }
