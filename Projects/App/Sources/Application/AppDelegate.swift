@@ -28,14 +28,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return
             }
             if granted {
+                print("푸시 알림 권한이 허용되었습니다.")
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
             } else {
-                print("알림 권한이 거부되었습니다.")
+                print("푸시 알림 권한이 거부되었습니다.")
             }
         }
     }
+
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
