@@ -21,7 +21,7 @@ extension NotificationServices: TargetType {
     public var path: String {
         switch self {
         case .postFcmToken(let fcmToken, _):
-            return "\(fcmToken)"
+            return "/\(fcmToken)"
         }
     }
 
