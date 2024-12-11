@@ -16,6 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         UNUserNotificationCenter.current().delegate = self
 
+        Messaging.messaging().delegate = self
+
         requestNotificationAuthorization()
 
         return true
@@ -38,18 +40,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
-
-        Messaging.messaging().token { token, error in
-            if let error = error {
-                print("Error fetching FCM registration token: \(error)")
-            } else if let token = token {
-                print("FCM registration token: \(token)")
-                UserDefaults.standard.set(token, forKey: "FCMToken")
-            }
-        }
     }
 
     // MARK: UISceneSession Lifecycle
@@ -70,5 +62,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound])
+    }
+}
+
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        print("Firebase registration token: \(String(describing: fcmToken))")
+
+        if let token = fcmToken {
+            UserDefaults.standard.set(token, forKey: "FCMToken")
+        } else {
+            print("토큰이 없습니다.")
+        }
     }
 }

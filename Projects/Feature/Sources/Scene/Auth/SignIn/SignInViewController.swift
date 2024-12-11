@@ -15,7 +15,8 @@ public final class SignInViewController: BaseViewController {
     private var viewModel = AuthViewModel()
     private var listModel : StudentListModel?
     private var profileModel = ProfileViewModel()
-    
+    private let notificationViewModel = NotificationViewModel()
+
     private let loader = LoaderViewController()
     
     init(viewModel: AuthViewModel) {
@@ -121,7 +122,28 @@ public final class SignInViewController: BaseViewController {
             DispatchQueue.main.async {
                 switch statusCode {
                 case 200:
-                    
+                    if let savedToken = UserDefaults.standard.string(forKey: "FCMToken") {
+                        if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken) {
+                            self.notificationViewModel.setupFcmToken(fcmToken: savedToken)
+                            self.notificationViewModel.setupaccessToken(accessToken: accessToken)
+                            self.notificationViewModel.postFcmToken { success in
+                                if success {
+                                    print("FCM 토큰 전송 성공")
+                                    print("FcmToken: \(savedToken)")
+                                    print("AccessToken: \(accessToken)")
+                                } else {
+                                    print("FCM 토큰 전송 실패")
+                                    print("FcmToken: \(savedToken)")
+                                    print("AccessToken: \(accessToken)")
+                                }
+                            }
+                        } else {
+                            print("액세스 토큰을 찾을 수 없습니다.")
+                        }
+                    } else {
+                        print("FCM 토큰을 찾을 수 없습니다.")
+                    }
+
                     self.signInSuccessUI()
                     UserDefaults.standard.set(self.passwordTextField.text, forKey: "localPass")
                     UserDefaults.standard.set(self.emailTextField.text, forKey: "localEmail")
