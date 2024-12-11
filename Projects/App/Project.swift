@@ -15,6 +15,10 @@ let project = Project.makeModule(
     dependencies: [
         .project(target: "Feature", path: .relativeToRoot("Projects/Feature"))
     ],
-    resources: ["Resources/**"],
+    resources: [
+        "Resources/**",
+        "Support/GoogleService-Info.plist"
+    ],
     infoPlist: .file(path: "Support/Info.plist")
 )
+
