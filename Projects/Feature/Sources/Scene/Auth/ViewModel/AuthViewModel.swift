@@ -92,18 +92,6 @@ public final class AuthViewModel: BaseViewModel {
                             self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
                             authority = signInResponse.authority
 
-                            if let savedToken = UserDefaults.standard.string(forKey: "FCMToken") {
-                                self.notificationViewModel.setupFcmToken(fcmToken: savedToken)
-                                self.notificationViewModel.setupaccessToken(accessToken: Const.KeyChainKey.accessToken)
-                                self.notificationViewModel.postFcmToken { success in
-                                    if success {
-                                        print("FCM 토큰 전송 성공")
-                                    } else {
-                                        print("FCM 토큰 전송 실패")
-                                    }
-                                }
-                                        }
-
                             completion(statusCode, authority)
                         default:
                             break
