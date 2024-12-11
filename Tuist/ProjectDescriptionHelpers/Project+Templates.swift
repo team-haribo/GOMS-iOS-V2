@@ -13,7 +13,7 @@ public extension Project {
         infoPlist: InfoPlist = .default
     ) -> Project {
         let settings: Settings = .settings(
-            base: [:],
+            base: ["OTHER_LDFLAGS": ["-all_load", "-ObjC"]],
             configurations: [
                 .debug(name: .debug),
                 .release(name: .release)

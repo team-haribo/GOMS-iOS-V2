@@ -19,6 +19,6 @@ let package = Package(
         .package(url: "https://github.com/GSM-MSG/GAuthSignin-Swift", from: "0.0.3"),
         .package(url: "https://github.com/dmrschmidt/QRCode", from: "1.0.0"),
         .package(url: "https://github.com/yannickl/QRCodeReader.swift.git", from: "10.1.0"),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "11.5.0")
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "11.6.0")
     ]
 )
