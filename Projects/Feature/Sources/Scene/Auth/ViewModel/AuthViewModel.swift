@@ -92,6 +92,29 @@ public final class AuthViewModel: BaseViewModel {
                             self.keyChain.create(key: Const.KeyChainKey.authority, token: signInResponse.authority)
                             authority = signInResponse.authority
 
+                            if let savedToken = UserDefaults.standard.string(forKey: "FCMToken") {
+                                if let accessToken = KeyChain.shared.read(key: Const.KeyChainKey.accessToken) {
+                                    self.notificationViewModel.setupFcmToken(fcmToken: savedToken)
+                                    self.notificationViewModel.setupaccessToken(accessToken: accessToken)
+                                    self.notificationViewModel.postFcmToken { success in
+                                        if success {
+                                            print("FCM 토큰 전송 성공")
+                                            print("FcmToken: \(savedToken)")
+                                            print("AccessToken: \(accessToken)")
+                                        } else {
+                                            print("FCM 토큰 전송 실패")
+                                            print("FcmToken: \(savedToken)")
+                                            print("AccessToken: \(accessToken)")
+                                        }
+                                    }
+                                } else {
+                                    print("액세스 토큰을 찾을 수 없습니다.")
+                                }
+                            } else {
+                                print("FCM 토큰을 찾을 수 없습니다.")
+                            }
+
+
                             completion(statusCode, authority)
                         default:
                             break
