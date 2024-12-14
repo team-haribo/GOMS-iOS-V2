@@ -62,6 +62,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound, .list])
+
+        let impact = UIImpactFeedbackGenerator(style: .medium)
+        impact.impactOccurred()
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        completionHandler()
     }
 }
 
@@ -71,8 +78,18 @@ extension AppDelegate: MessagingDelegate {
 
         if let token = fcmToken {
             UserDefaults.standard.set(token, forKey: "FCMToken")
+            // FCM 토큰을 서버에 전송
+            notificationViewModel.setupFcmToken(fcmToken: token)
+            notificationViewModel.postFcmToken { success in
+                if success {
+                    print("FCM 토큰 전송 성공")
+                } else {
+                    print("FCM 토큰 전송 실패")
+                }
+            }
         } else {
             print("토큰이 없습니다.")
         }
     }
 }
+
