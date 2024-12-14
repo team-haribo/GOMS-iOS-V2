@@ -9,6 +9,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     private let profileView = MainProfileView()
     private let basicsProfileView = ProfileCardView()
     private let authViewModel = AuthViewModel()
+    private let lateCell = LateCell()
+
     let refreshControl = UIRefreshControl()
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -84,7 +86,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
 
-    private var isVisible: Bool = false // 추가된 플래그
+    private var isVisible: Bool = false
 
     // MARK: - Selectors
     @objc func settingButtonTapped() {
@@ -117,7 +119,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        isVisible = true // 뷰 컨트롤러가 나타남
+        isVisible = true
         fetchData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.hidesBackButton = true
@@ -126,8 +128,8 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
 
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        isVisible = false // 뷰 컨트롤러가 사라짐
-        refreshControl.endRefreshing() // 새로고침 종료
+        isVisible = false
+        refreshControl.endRefreshing()
     }
 
     public override func viewDidLoad() {
@@ -259,6 +261,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         self.setupProfileView()
         self.latecomerCollectionView.reloadData()
         self.outingStatusCollectionView.reloadData()
+
     }
 
     func setupScrollView() {
@@ -396,7 +399,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
         outingView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.top.equalTo(latecomerCollectionView.snp.bottom).offset(24)
-            $0.bottom.equalTo(contentView.snp.bottom).offset(-100) // 여유 공간 추가
+            $0.bottom.equalTo(contentView.snp.bottom).offset(-100)
         }
 
         outingStatusLabel.snp.makeConstraints {

@@ -30,17 +30,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             refreshTokenManager.tokenReissuance { [weak self] success in
                 guard let self = self else { return }
                 if success {
-//                    if let savedToken = UserDefaults.standard.string(forKey: "FCMToken") {
-//                        notificationViewModel.setupFcmToken(fcmToken: savedToken)
-//                        notificationViewModel.setupaccessToken(accessToken: accessToken)
-//                        notificationViewModel.postFcmToken { success in
-//                            if success {
-//                                print("FCM 토큰 전송 성공")
-//                            } else {
-//                                print("FCM 토큰 전송 실패")
-//                            }
-//                        }
-//                                }
                     self.setRootViewControllerBasedOnAuthority(isSwitchOn: isSwitchOn, adminIsSwitchOn: adminIsSwitchOn)
                 } else {
                     self.showLoginScreen()

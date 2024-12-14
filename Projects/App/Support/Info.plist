@@ -28,8 +28,6 @@
 	<string>Korea</string>
 	<key>NSCameraUsageDescription</key>
 	<string>QR 스캔을 위해 카메라를 허용해주세요.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string></string>
 	<key>SERVER_HOST</key>
 	<string> ${SERVER_HOST}</string>
 	<key>UIApplicationSceneManifest</key>

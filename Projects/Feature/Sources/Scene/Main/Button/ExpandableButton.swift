@@ -9,7 +9,7 @@
 import UIKit
 
 class ExpandableButton: UIButton {
-    var expandedTouchArea: CGFloat = 20 // 기본 확장 크기
+    var expandedTouchArea: CGFloat = 20
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let bounds = self.bounds

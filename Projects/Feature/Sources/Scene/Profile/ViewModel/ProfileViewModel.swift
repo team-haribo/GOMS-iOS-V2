@@ -40,7 +40,6 @@ public final class ProfileViewModel: ObservableObject {
                     self.profileInfo = profileModel
                     self.isDataLoaded = true
 
-                    // ProfileResponse에 authority 값이 있다면 이를 completion으로 전달
                     completion(true, profileModel.authority)
                 } catch {
                     self.errorMessage = "Failed to decode JSON response"
