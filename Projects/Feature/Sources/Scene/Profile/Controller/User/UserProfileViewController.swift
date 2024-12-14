@@ -12,10 +12,12 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isUserInteractionEnabled = true
-        $0.alwaysBounceHorizontal = false
     }
-    
+
+    let contentView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+
     let userProfile = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
         $0.contentMode = .scaleAspectFill
