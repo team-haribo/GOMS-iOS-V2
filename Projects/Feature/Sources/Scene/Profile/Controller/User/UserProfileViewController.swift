@@ -371,7 +371,27 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
-    
+
+    func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
+        }
+
+        contentView.snp.makeConstraints { make in
+            make.height.greaterThanOrEqualTo(view.snp.height).priority(.low)
+        }
+
+        addView()
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         applySavedTheme()
