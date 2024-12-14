@@ -484,7 +484,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     
     override func addView() {
         view.addSubview(scrollView)
-        
+
         [
             userProfile,
             userName,
@@ -510,12 +510,12 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             logoutButton,
             withdrawalButton,
             passwordResetButton
-            
+
         ].forEach {
             self.scrollView.addSubview($0)
         }
     }
-    
+
     override func setLayout() {
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -527,137 +527,135 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
             $0.leading.equalToSuperview().inset(20)
             $0.top.equalToSuperview().inset(16)
         }
-        
+
         userProfilePencil.snp.makeConstraints {
             $0.top.equalTo(userGradeDepartment.snp.top)
             $0.trailing.equalTo(userProfile.snp.trailing)
         }
-        
+
         userName.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(32)
-            $0.leading.equalTo(userProfile.snp.trailing).inset(-16)
+            $0.leading.equalTo(userProfile.snp.trailing).offset(16)
             $0.top.equalTo(userProfile.snp.top)
         }
-        
+
         userGradeDepartment.snp.makeConstraints {
             $0.height.equalTo(28)
-            $0.top.equalTo(userName.snp.bottom).offset(4)
             $0.leading.equalTo(userName.snp.leading)
+            $0.top.equalTo(userName.snp.bottom).offset(4)
         }
-        
+
         perceptionCount.snp.makeConstraints {
             $0.width.equalTo(60)
             $0.height.equalTo(28)
             $0.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(userName.snp.top).inset(0)
         }
-        
+
         perceptionNum.snp.makeConstraints {
             $0.height.equalTo(32)
             $0.trailing.equalTo(perceptionText.snp.leading).inset(-1)
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
-        
+
         perceptionText.snp.makeConstraints {
             $0.width.equalTo(17)
             $0.height.equalTo(32)
             $0.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(perceptionCount.snp.bottom).offset(4)
         }
-        
+
         themeTopLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.bottom.equalTo(userProfile.snp.bottom).offset(32)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().inset(20)
         }
-        
+
         themeBottomLine.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(qrMakeOnDescription.snp.bottom).offset(24)
         }
-        
+
         themeChangText.snp.makeConstraints {
             $0.width.equalTo(93)
             $0.height.equalTo(28)
             $0.top.equalTo(themeTopLine.snp.top).offset(24)
             $0.leading.equalToSuperview().inset(28)
         }
-        
+
         themeChangRec.snp.makeConstraints {
-            $0.width.equalTo(360)
             $0.height.equalTo(64)
+            $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(themeChangText.snp.bottom).offset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
         }
-        
+
         themeSettingText.snp.makeConstraints {
             $0.width.equalTo(106)
             $0.height.equalTo(28)
             $0.top.equalTo(themeChangRec.snp.top).offset(18)
             $0.leading.equalTo(themeChangRec.snp.leading).offset(12)
         }
-        
+
         themeSettingImg.snp.makeConstraints {
             $0.width.equalTo(24)
             $0.height.equalTo(24)
             $0.top.equalTo(themeChangRec.snp.top).offset(20)
             $0.trailing.equalToSuperview().inset(32)
         }
-        
+
         clockText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalToSuperview().inset(28)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
-        
+
         clockDescription.snp.makeConstraints {
             $0.width.equalTo(200)
             $0.height.equalTo(20)
             $0.leading.equalTo(clockText.snp.leading)
             $0.top.equalTo(clockText.snp.bottom)
         }
-        
+
         clockToggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
         }
-        
+
         qrMakeOnText.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(28)
             $0.leading.equalTo(clockDescription.snp.leading)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
-        
+
         qrMakeOnDescription.snp.makeConstraints {
             $0.width.equalTo(184)
             $0.height.equalTo(20)
             $0.leading.equalTo(qrMakeOnText.snp.leading)
             $0.top.equalTo(qrMakeOnText.snp.bottom)
         }
-        
+
         qrMakeOntoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
             $0.top.equalTo(clockDescription.snp.bottom).offset(25)
         }
-        
+
         passwordResetButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(bounds.height * 0.08)
             $0.top.equalTo(themeBottomLine.snp.bottom).offset(bounds.height * 0.01)
         }
-        
+
         logoutButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.leading.trailing.equalToSuperview().inset(22)
             $0.height.equalTo(bounds.height * 0.08)
             $0.top.equalTo(passwordResetButton.snp.bottom)
         }
-        
+
         withdrawalButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(bounds.height * 0.08)
@@ -665,4 +663,3 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
     }
 }
-
