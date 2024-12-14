@@ -12,8 +12,10 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     
     let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isUserInteractionEnabled = true
-        $0.alwaysBounceHorizontal = false
+    }
+
+    let contentView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     let userProfile = UIImageView().then {
@@ -373,7 +375,12 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     public override func viewDidLoad() {
         super.viewDidLoad()
         applySavedTheme()
+        setupScrollView()
         self.navigationController?.navigationBar.prefersLargeTitles = false
+
+        scrollView.alwaysBounceHorizontal = false
+        scrollView.showsHorizontalScrollIndicator = false
+
         profileViewModel.loadProfileInfo { success, authority in
             if success {
                 print("완료")
@@ -461,7 +468,27 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
             self.view.frame.origin.y = 0
         }
     }
-    
+
+    func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
+        }
+
+        contentView.snp.makeConstraints { make in
+            make.height.greaterThanOrEqualTo(view.snp.height).priority(.low)
+        }
+
+        addView()
+    }
+
     override func addView() {
         view.addSubview(scrollView)
         
@@ -515,18 +542,17 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         userName.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(32)
-            $0.leading.equalTo(userProfile.snp.trailing).inset(-16)
+            $0.leading.equalTo(userProfile.snp.trailing).offset(16)
             $0.top.equalTo(userProfile.snp.top)
         }
         
         userGradeDepartment.snp.makeConstraints {
             $0.height.equalTo(28)
-            $0.top.equalTo(userName.snp.bottom).offset(4)
             $0.leading.equalTo(userName.snp.leading)
+            $0.top.equalTo(userName.snp.bottom).offset(4)
         }
         
         perceptionCount.snp.makeConstraints {
-            $0.width.equalTo(60)
             $0.height.equalTo(28)
             $0.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(userName.snp.top).inset(0)
@@ -566,10 +592,9 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         }
 
         themeChangRec.snp.makeConstraints {
-            $0.width.equalTo(360)
             $0.height.equalTo(64)
-            $0.top.equalTo(themeChangText.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(themeChangText.snp.bottom).offset(8)
         }
         
         themeSettingText.snp.makeConstraints {
@@ -643,5 +668,3 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         }
     }
 }
-
-
