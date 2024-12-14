@@ -2,6 +2,7 @@ import UIKit
 import Firebase
 import UserNotifications
 import Feature
+import AudioToolbox
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func requestNotificationAuthorization() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound, .carPlay]) { granted, error in
             if let error = error {
                 print("Error requesting notification authorization: \(error.localizedDescription)")
                 return
@@ -62,6 +63,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound, .list])
+
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        completionHandler()
     }
 }
 
@@ -71,6 +78,14 @@ extension AppDelegate: MessagingDelegate {
 
         if let token = fcmToken {
             UserDefaults.standard.set(token, forKey: "FCMToken")
+            notificationViewModel.setupFcmToken(fcmToken: token)
+            notificationViewModel.postFcmToken { success in
+                if success {
+                    print("FCM 토큰 전송 성공")
+                } else {
+                    print("FCM 토큰 전송 실패")
+                }
+            }
         } else {
             print("토큰이 없습니다.")
         }
