@@ -536,16 +536,16 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         userName.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(32)
-            $0.leading.equalTo(userProfile.snp.trailing).inset(-16)
+            $0.leading.equalTo(userProfile.snp.trailing).offset(16)
             $0.top.equalTo(userProfile.snp.top)
         }
-        
+
         userGradeDepartment.snp.makeConstraints {
             $0.height.equalTo(28)
-            $0.top.equalTo(userName.snp.bottom).offset(4)
             $0.leading.equalTo(userName.snp.leading)
+            $0.top.equalTo(userName.snp.bottom).offset(4)
         }
-        
+
         perceptionCount.snp.makeConstraints {
             $0.width.equalTo(60)
             $0.height.equalTo(28)
@@ -587,13 +587,11 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
         
         themeChangRec.snp.makeConstraints {
-            $0.width.equalTo(360)
             $0.height.equalTo(64)
+            $0.leading.trailing.equalToSuperview().inset(20)
             $0.top.equalTo(themeChangText.snp.bottom).offset(8)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
         }
-        
+
         themeSettingText.snp.makeConstraints {
             $0.width.equalTo(106)
             $0.height.equalTo(28)
@@ -653,7 +651,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
         
         logoutButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.leading.trailing.equalToSuperview().inset(22)
             $0.height.equalTo(bounds.height * 0.08)
             $0.top.equalTo(passwordResetButton.snp.bottom)
         }

@@ -656,7 +656,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         }
         
         logoutButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.leading.trailing.equalToSuperview().inset(22)
             $0.height.equalTo(bounds.height * 0.08)
             $0.top.equalTo(passwordResetButton.snp.bottom)
         }

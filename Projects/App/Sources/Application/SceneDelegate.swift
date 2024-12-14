@@ -58,26 +58,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         DispatchQueue.main.async {
             if authority == "ROLE_STUDENT_COUNCIL" {
+                let adminMainVC = AdminMainViewController()
+                let navigationController = UINavigationController(rootViewController: adminMainVC)
+                self.window?.rootViewController = navigationController
+
                 if adminIsSwitchOn {
+                    print("Admin Screen: AdminMainViewController with AdminQRViewController")
+                    let adminQRVC = AdminQRViewController()
+                    navigationController.pushViewController(adminQRVC, animated: false)
+                } else {
                     print("Admin Screen: AdminMainViewController")
-
-                    let adminMainVC = AdminMainViewController()
-                    let navigationController = UINavigationController(rootViewController: adminMainVC)
-                    self.window?.rootViewController = navigationController
-
-                    DispatchQueue.main.async {
-                        let adminQRVC = AdminQRViewController()
-
-                        UIView.performWithoutAnimation {
-                            navigationController.pushViewController(adminQRVC, animated: false)
-                        }
-                    }
-                }
-
-
-                else {
-                    print("Admin Screen: AdminMainViewController")
-                    self.window?.rootViewController = UINavigationController(rootViewController: AdminMainViewController())
                 }
             } else if authority == "ROLE_STUDENT" {
                 if isSwitchOn {
@@ -92,6 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
     }
+
 
     private func showLoginScreen() {
         DispatchQueue.main.async {
