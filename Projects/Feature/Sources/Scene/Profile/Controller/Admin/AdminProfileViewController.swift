@@ -10,11 +10,10 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     var cancellables = Set<AnyCancellable>()
     let refreshControl = UIRefreshControl()
     
-    lazy var scrollView = UIScrollView().then {
+    let scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isUserInteractionEnabled = true
     }
-    
+
     let userProfile = UIImageView().then {
         $0.image = .image.gomsBasicProfile.image
         $0.contentMode = .scaleAspectFill
