@@ -326,6 +326,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     public override func viewDidLoad() {
         super.viewDidLoad()
         applySavedTheme()
+        setupScrollView()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         profileViewModel.loadProfileInfo { success, authority in
             if success {
