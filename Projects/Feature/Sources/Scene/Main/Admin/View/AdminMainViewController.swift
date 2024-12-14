@@ -92,12 +92,12 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
 
-    private var isVisible: Bool = false // 추가된 플래그
+    private var isVisible: Bool = false
 
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        isVisible = true // 뷰 컨트롤러가 나타남
+        isVisible = true
         viewModel.getProfile { [weak self] _ in
             self?.setupProfileView()
         }
@@ -118,8 +118,8 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
 
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        isVisible = false // 뷰 컨트롤러가 사라짐
-        refreshControl.endRefreshing() // 새로고침 종료
+        isVisible = false
+        refreshControl.endRefreshing()
     }
 
     public override func viewDidLoad() {
