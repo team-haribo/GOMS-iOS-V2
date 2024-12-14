@@ -64,7 +64,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound, .list])
 
-        // 진동 추가
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
     }
 
@@ -79,7 +78,6 @@ extension AppDelegate: MessagingDelegate {
 
         if let token = fcmToken {
             UserDefaults.standard.set(token, forKey: "FCMToken")
-            // FCM 토큰을 서버에 전송
             notificationViewModel.setupFcmToken(fcmToken: token)
             notificationViewModel.postFcmToken { success in
                 if success {

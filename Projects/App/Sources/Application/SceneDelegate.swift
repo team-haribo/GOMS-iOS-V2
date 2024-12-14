@@ -5,7 +5,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     private let refreshTokenManager = GOMSRefreshToken.shared
-    //public let notificationViewModel = NotificationViewModel()
+    public let notificationViewModel = NotificationViewModel()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -30,17 +30,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             refreshTokenManager.tokenReissuance { [weak self] success in
                 guard let self = self else { return }
                 if success {
-//                    if let savedToken = UserDefaults.standard.string(forKey: "FCMToken") {
-//                        notificationViewModel.setupFcmToken(fcmToken: savedToken)
-//                        notificationViewModel.setupaccessToken(accessToken: accessToken)
-//                        notificationViewModel.postFcmToken { success in
-//                            if success {
-//                                print("FCM 토큰 전송 성공")
-//                            } else {
-//                                print("FCM 토큰 전송 실패")
-//                            }
-//                        }
-//                                }
+                    if let savedToken = UserDefaults.standard.string(forKey: "FCMToken") {
+                        notificationViewModel.setupFcmToken(fcmToken: savedToken)
+                        notificationViewModel.setupaccessToken(accessToken: accessToken)
+                        notificationViewModel.postFcmToken { success in
+                            if success {
+                                print("FCM 토큰 전송 성공")
+                            } else {
+                                print("FCM 토큰 전송 실패")
+                            }
+                        }
+                                }
                     self.setRootViewControllerBasedOnAuthority(isSwitchOn: isSwitchOn, adminIsSwitchOn: adminIsSwitchOn)
                 } else {
                     self.showLoginScreen()
@@ -157,7 +157,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidDisconnect(_ scene: UIScene) {}
 
-    func sceneDidBecomeActive(_ scene: UIScene) {}
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        UIApplication.shared.applicationIconBadgeNumber = 0
+    }
 
     func sceneWillResignActive(_ scene: UIScene) {}
 
