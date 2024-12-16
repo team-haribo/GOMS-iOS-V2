@@ -1,4 +1,4 @@
-![GOMS _ Cover2222](https://github.com/user-attachments/assets/979bea0f-a868-431d-84b4-45efc478ba2a)
+![GOMS_Cover1](https://github.com/user-attachments/assets/979bea0f-a868-431d-84b4-45efc478ba2a)
 
 ㅤ  
 ㅤ  
@@ -20,10 +20,29 @@
 <span>6. 외출제 여부를 푸시알람 </span><br>
 
 
-![ㅇㅈㅇㅈ](https://github.com/user-attachments/assets/d4fadd42-6797-4de3-855e-b06e7de1870e)  
+![GOMS_Cover2](https://github.com/user-attachments/assets/d4fadd42-6797-4de3-855e-b06e7de1870e)  
+ㅤ    
+ㅤ    
 
+## ScreenㅣUSER
+<p align="leading">
+  <img src="https://github.com/user-attachments/assets/3acafde8-7f29-49f6-8c76-c775f34d9ebf" width="24%" alt="유저1" />
+  <img src="https://github.com/user-attachments/assets/983f3a0b-acac-4612-8699-0fbd9656dd20" width="24%" alt="유저2" />
+  <img src="https://github.com/user-attachments/assets/035f0bbc-efd1-444a-94bb-e8c4439d3d30" width="24%" alt="유저3" />
+  <img src="https://github.com/user-attachments/assets/697ae729-cfc1-436a-b413-b2f74cff2439" width="24%" alt="유저4" />
+</p>
+ㅤ    
+ㅤ    
 
-ㅤ  
+## ScreenㅣADMIN
+<p align="leading">
+  <img src="https://github.com/user-attachments/assets/e2866321-06a3-4bb0-8fe4-55c0b31fc465" width="24%" alt="어드민1" />
+  <img src="https://github.com/user-attachments/assets/418721f9-3ae6-47ab-9cf6-9e16d124c55f" width="24%" alt="어드민2" />
+  <img src="https://github.com/user-attachments/assets/9b18e939-fb31-4a66-83a6-872aca777700" width="24%" alt="어드민3" />
+  <img src="https://github.com/user-attachments/assets/10d54b0a-3738-40a8-80b8-797d00b7a850" width="24%" alt="어드민4" />
+</p>
+ㅤ    
+ㅤ    
 
 # 🛠️ㅣTechStack
 - Uikit  
