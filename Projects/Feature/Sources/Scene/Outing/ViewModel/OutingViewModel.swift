@@ -108,9 +108,9 @@ public final class OutingViewModel: BaseViewModel {
     }
 
     func forceOutingStudent(user: OutingListData, completion: @escaping () -> Void) {
-        let deleteStudent = user.id
+        let forceOutingStudent = user.id
 
-        studentCouncilProvider.request(.forceOuting(authorization: accessToken, accountIdx: deleteStudent)) { response in
+        studentCouncilProvider.request(.forceOuting(authorization: accessToken, accountIdx: forceOutingStudent)) { response in
             switch response {
             case .success(let result):
                 let statusCode = result.statusCode
@@ -125,7 +125,7 @@ public final class OutingViewModel: BaseViewModel {
                     print(result)
                 }
             case .failure(let err):
-                print("외출자 삭제 중 오류 발생: \(err.localizedDescription)")
+                print("외출자 외출 중 오류 발생: \(err.localizedDescription)")
             }
         }
     }
