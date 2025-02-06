@@ -4,6 +4,7 @@ import Moya
 public enum StudentCouncilServices {
     case makeQRCode(authorization: String)
     case deleteOuting(authorization: String, accountIdx: UUID)
+    case forceOuting(authorization: String, accountIdx: UUID)
     case studentList(authorization: String)
     case editAuthority(authorization: String, param: AuthorityRequest)
     case changeBlackList(authorization: String, accountIdx: UUID)
@@ -21,7 +22,7 @@ extension StudentCouncilServices: TargetType {
         switch self {
         case .makeQRCode:
             return "/student-council/outing"
-        case .deleteOuting(_ , let accountIdx):
+        case .deleteOuting(_ , let accountIdx), .forceOuting(_ , let accountIdx):
             return "/student-council/outing/\(accountIdx)"
         case .studentList:
             return "/student-council/accounts"
@@ -41,7 +42,8 @@ extension StudentCouncilServices: TargetType {
     public var method: Moya.Method {
         switch self {
         case .makeQRCode,
-             .changeBlackList:
+             .changeBlackList,
+             .forceOuting:
             return .post
         case .deleteOuting,
              .cancelBlackList:
@@ -66,7 +68,8 @@ extension StudentCouncilServices: TargetType {
              .deleteOuting,
              .studentList,
              .changeBlackList,
-             .cancelBlackList:
+             .cancelBlackList,
+             .forceOuting:
             return .requestPlain
         case .editAuthority(_, let param):
             return .requestJSONEncodable(param)
@@ -94,7 +97,8 @@ extension StudentCouncilServices: TargetType {
              .changeBlackList(let authorization, _),
              .cancelBlackList(let authorization, _),
              .searchStudent(let authorization, _),
-             .lateList(let authorization, _):
+             .lateList(let authorization, _),
+             .forceOuting(let authorization, _):
             return ["Content-Type" :"application/json", "Authorization" : authorization]
         }
     }

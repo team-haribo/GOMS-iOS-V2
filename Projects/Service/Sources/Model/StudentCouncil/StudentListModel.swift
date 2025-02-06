@@ -21,4 +21,5 @@ public struct StudentListResponse: Codable {
     public let profileUrl: String?
     public let authority: String
     public let isBlackList: Bool
+    public let isOuting: Bool
 }
