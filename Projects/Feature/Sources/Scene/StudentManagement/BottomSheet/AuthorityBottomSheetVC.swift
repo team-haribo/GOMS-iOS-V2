@@ -184,7 +184,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.top.bottom.equalToSuperview()
         }
-        
+
 //        bottomSheetView.snp.makeConstraints {
 //            $0.leading.trailing.equalToSuperview()
 //            $0.height.equalTo(bounds.height * 0.34)
@@ -193,7 +193,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
 
         bottomSheetView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(bounds.height * 0.4)
+            $0.height.equalTo(bounds.height * 0.43)
             $0.bottom.equalToSuperview()
         }
 

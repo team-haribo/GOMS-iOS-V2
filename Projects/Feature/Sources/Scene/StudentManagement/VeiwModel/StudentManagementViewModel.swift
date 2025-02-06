@@ -19,6 +19,7 @@ struct UserData {
     let major: String
     let authority: String
     let isBlackList: Bool
+    let isOuting: Bool
 }
 
 public final class StudentManagementViewModel: BaseViewModel {
@@ -30,6 +31,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     private var grade: Int?
     private var gender: String?
     private var isBlackList: Bool?
+    private var isOuting: Bool?
     private var authority: String?
     private var major: String?
     
@@ -41,7 +43,11 @@ public final class StudentManagementViewModel: BaseViewModel {
     func setupGender(gender: String?) {
         self.gender = gender!
     }
-    
+
+    func setupIsOuting(gender: Bool?) {
+        self.isOuting = isOuting!
+    }
+
     func setupIsBlackList(isBlackList: Bool?) {
         self.isBlackList = isBlackList!
     }
@@ -60,6 +66,7 @@ public final class StudentManagementViewModel: BaseViewModel {
         self.isBlackList = nil
         self.authority = nil
         self.major = nil
+        self.isOuting = nil
     }
     
     // MARK: - Get User List
@@ -73,7 +80,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                 case 200:
                     do {
                         self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
-                        self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
+                        self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList, isOuting: $0.isOuting) }
                         completion()
                     } catch(let err) {
                         print(String(describing: err))
@@ -202,7 +209,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                 let responseData = result.data
                 do {
                     self.userList = try JSONDecoder().decode([StudentListResponse].self, from: responseData)
-                    self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList) }
+                    self.userListDatas = self.userList.map { UserData(id: $0.accountIdx, name: $0.name, profileImageURL: $0.profileUrl, gender: $0.gender, grade: $0.grade, major: $0.major, authority: $0.authority, isBlackList: $0.isBlackList, isOuting: $0.isOuting) }
                     completion(self.userListDatas)
                 } catch(let err) {
                     print(String(describing: err))
