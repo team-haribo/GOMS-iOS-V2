@@ -223,7 +223,6 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             }
         }
 
-
         blackListTitle.snp.makeConstraints {
             $0.height.equalTo(28)
             $0.leading.equalTo(bounds.width * 0.05)
