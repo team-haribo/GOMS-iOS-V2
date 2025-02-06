@@ -97,6 +97,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         isVisible = true
         viewModel.getProfile { [weak self] _ in
             self?.setupProfileView()
