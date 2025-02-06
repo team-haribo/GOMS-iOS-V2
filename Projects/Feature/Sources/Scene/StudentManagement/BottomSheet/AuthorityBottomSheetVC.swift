@@ -51,7 +51,19 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         $0.backgroundColor = .clear
         $0.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
-    
+
+    private let forceOutingTitle = UILabel().then {
+        $0.text = "강제외출"
+        $0.textColor = .color.gomsTextDefault.color
+        $0.font = .pretendard(size: 16, weight: .semibold)
+    }
+
+    private let forceOutingLabel = UILabel().then {
+        $0.text = "이 학생은 현재 외출중이에요"
+        $0.textColor = .color.gomsTertiary.color
+        $0.font = .pretendard(size: 12, weight: .regular)
+    }
+
     private let blackListTitle = UILabel().then {
         $0.text = "외출금지"
         $0.textColor = .color.gomsTextDefault.color
@@ -155,7 +167,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [titleLabel, closeButton, blackListTitle, blackListLabel, blackListSwitch, adminTitle, adminLabel, adminSwitch].forEach { self.bottomSheetView.addSubview($0) }
+        [titleLabel, closeButton, forceOutingTitle, forceOutingLabel, blackListTitle, blackListLabel, blackListSwitch, adminTitle, adminLabel, adminSwitch].forEach { self.bottomSheetView.addSubview($0) }
         dimmedView.addSubview(bottomSheetView)
         view.addSubview(dimmedView)
     }
