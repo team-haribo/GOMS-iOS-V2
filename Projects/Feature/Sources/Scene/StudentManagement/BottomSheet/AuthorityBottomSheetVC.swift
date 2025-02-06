@@ -75,7 +75,13 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         $0.textColor = .color.gomsTertiary.color
         $0.font = .pretendard(size: 12, weight: .regular)
     }
-    
+
+    private lazy var forceOutingButton = UIButton().then {
+        $0.setBackgroundImage(.image.forceOutingIcon.image, for: .normal)
+        $0.backgroundColor = .clear
+        $0.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+    }
+
     lazy var blackListSwitch = UISwitch().then {
         $0.onTintColor = .color.gomsAdmin.color
         $0.addTarget(self, action: #selector(blackListSwitchValueChanged), for: .valueChanged)
@@ -167,7 +173,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     
     // MARK: - Add View
     override func addView() {
-        [titleLabel, closeButton, forceOutingTitle, forceOutingLabel, blackListTitle, blackListLabel, blackListSwitch, adminTitle, adminLabel, adminSwitch].forEach { self.bottomSheetView.addSubview($0) }
+        [titleLabel, closeButton, forceOutingTitle, forceOutingLabel, forceOutingButton, blackListTitle, blackListLabel, blackListSwitch, adminTitle, adminLabel, adminSwitch].forEach { self.bottomSheetView.addSubview($0) }
         dimmedView.addSubview(bottomSheetView)
         view.addSubview(dimmedView)
     }
@@ -179,12 +185,18 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             $0.top.bottom.equalToSuperview()
         }
         
+//        bottomSheetView.snp.makeConstraints {
+//            $0.leading.trailing.equalToSuperview()
+//            $0.height.equalTo(bounds.height * 0.34)
+//            $0.bottom.equalToSuperview()
+//        }
+
         bottomSheetView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(bounds.height * 0.34)
+            $0.height.equalTo(bounds.height * 0.4)
             $0.bottom.equalToSuperview()
         }
-        
+
         titleLabel.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
             $0.height.equalTo(32)
@@ -209,6 +221,11 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             $0.top.equalTo(forceOutingTitle.snp.bottom)
         }
 
+        forceOutingButton.snp.makeConstraints {
+            $0.trailing.equalTo(-bounds.width * 0.07)
+            $0.top.equalTo(closeButton.snp.bottom).offset(44)
+        }
+
         blackListTitle.snp.makeConstraints {
             $0.height.equalTo(28)
             $0.leading.equalTo(bounds.width * 0.05)
@@ -223,7 +240,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         
         blackListSwitch.snp.makeConstraints {
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(closeButton.snp.bottom).offset(44)
+            $0.top.equalTo(forceOutingButton.snp.bottom).offset(52)
         }
         
         adminTitle.snp.makeConstraints {
