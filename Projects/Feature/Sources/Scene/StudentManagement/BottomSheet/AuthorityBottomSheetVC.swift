@@ -118,6 +118,10 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.studentManagementVC.configureRefreshControl()
+
+        viewModel.getUserList {
+            self.userList = self.viewModel.userListDatas
+        }
     }
 
     func setupSwitch() {
@@ -173,6 +177,8 @@ public final class AuthorityBottomSheetVC: BaseViewController {
                     self.updateUserList(newList)
                     self.studentManagementVC.searchController.searchBar.text = ""
                 }
+
+                self.dismiss(animated: false, completion: nil)
             }))
 
             present(alertController, animated: true, completion: nil)
@@ -184,6 +190,8 @@ public final class AuthorityBottomSheetVC: BaseViewController {
                     self.updateUserList(newList)
                     self.studentManagementVC.searchController.searchBar.text = ""
                 }
+
+                self.dismiss(animated: false, completion: nil)
             }))
 
             present(alertController, animated: true, completion: nil)
