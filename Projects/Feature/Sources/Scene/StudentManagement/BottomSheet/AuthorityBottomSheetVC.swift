@@ -185,17 +185,12 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             $0.top.bottom.equalToSuperview()
         }
 
-//        bottomSheetView.snp.makeConstraints {
-//            $0.leading.trailing.equalToSuperview()
-//            $0.height.equalTo(bounds.height * 0.34)
-//            $0.bottom.equalToSuperview()
-//        }
-
-        bottomSheetView.snp.makeConstraints {
+        bottomSheetView.snp.remakeConstraints {
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(bounds.height * 0.43)
+            $0.height.equalTo(bounds.height * (userData?.isOuting == true ? 0.34 : 0.43))
             $0.bottom.equalToSuperview()
         }
+
 
         titleLabel.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
@@ -209,27 +204,30 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             $0.width.height.equalTo(24)
         }
 
-        forceOutingTitle.snp.makeConstraints {
-            $0.height.equalTo(28)
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.top.equalTo(titleLabel.snp.bottom).offset(32)
+        if userData?.isOuting == false {
+            forceOutingTitle.snp.makeConstraints {
+                $0.height.equalTo(28)
+                $0.leading.equalTo(bounds.width * 0.05)
+                $0.top.equalTo(titleLabel.snp.bottom).offset(32)
+            }
+
+            forceOutingLabel.snp.makeConstraints {
+                $0.leading.equalTo(bounds.width * 0.05)
+                $0.height.equalTo(20)
+                $0.top.equalTo(forceOutingTitle.snp.bottom)
+            }
+
+            forceOutingButton.snp.makeConstraints {
+                $0.trailing.equalTo(-bounds.width * 0.07)
+                $0.top.equalTo(closeButton.snp.bottom).offset(44)
+            }
         }
 
-        forceOutingLabel.snp.makeConstraints {
-            $0.leading.equalTo(bounds.width * 0.05)
-            $0.height.equalTo(20)
-            $0.top.equalTo(forceOutingTitle.snp.bottom)
-        }
-
-        forceOutingButton.snp.makeConstraints {
-            $0.trailing.equalTo(-bounds.width * 0.07)
-            $0.top.equalTo(closeButton.snp.bottom).offset(44)
-        }
 
         blackListTitle.snp.makeConstraints {
             $0.height.equalTo(28)
             $0.leading.equalTo(bounds.width * 0.05)
-            $0.top.equalTo(forceOutingLabel.snp.bottom).offset(32)
+            $0.top.equalTo((userData!.isOuting ? titleLabel : forceOutingLabel).snp.bottom).offset(32)
         }
         
         blackListLabel.snp.makeConstraints {
@@ -240,7 +238,9 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         
         blackListSwitch.snp.makeConstraints {
             $0.trailing.equalTo(-bounds.width * 0.05)
-            $0.top.equalTo(forceOutingButton.snp.bottom).offset(52)
+            $0.top.equalTo((userData!.isOuting ? closeButton : forceOutingButton).snp.bottom)
+                .offset(userData!.isOuting ? 44 : 52)
+
         }
         
         adminTitle.snp.makeConstraints {
