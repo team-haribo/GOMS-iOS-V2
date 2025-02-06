@@ -79,7 +79,7 @@ public final class AuthorityBottomSheetVC: BaseViewController {
     private lazy var forceOutingButton = UIButton().then {
         $0.setBackgroundImage(.image.forceOutingIcon.image, for: .normal)
         $0.backgroundColor = .clear
-        $0.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(forceOutingTapped), for: .touchUpInside)
     }
 
     lazy var blackListSwitch = UISwitch().then {
@@ -145,7 +145,18 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         self.studentManagementVC.studentCollectionView.reloadData()
         self.dismiss(animated: false, completion: nil)
     }
-    
+
+    @objc func forceOutingTapped() {
+        guard let userData = userData else { return }
+        viewModel.forceOutingStudent(user: userData) { newList in
+            self.updateUserList(newList)
+            self.studentManagementVC.searchController.searchBar.text = ""
+        }
+
+        self.studentManagementVC.studentCollectionView.reloadData()
+        self.dismiss(animated: false, completion: nil)
+    }
+
     @objc func blackListSwitchValueChanged(_ sender: UISwitch) {
         guard let userData = userData else { return }
             
