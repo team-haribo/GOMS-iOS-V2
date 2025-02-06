@@ -196,11 +196,23 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             $0.top.equalToSuperview().inset(20)
             $0.width.height.equalTo(24)
         }
-        
-        blackListTitle.snp.makeConstraints {
+
+        forceOutingTitle.snp.makeConstraints {
             $0.height.equalTo(28)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.top.equalTo(titleLabel.snp.bottom).offset(32)
+        }
+
+        forceOutingLabel.snp.makeConstraints {
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.height.equalTo(20)
+            $0.top.equalTo(forceOutingTitle.snp.bottom)
+        }
+
+        blackListTitle.snp.makeConstraints {
+            $0.height.equalTo(28)
+            $0.leading.equalTo(bounds.width * 0.05)
+            $0.top.equalTo(forceOutingLabel.snp.bottom).offset(32)
         }
         
         blackListLabel.snp.makeConstraints {
