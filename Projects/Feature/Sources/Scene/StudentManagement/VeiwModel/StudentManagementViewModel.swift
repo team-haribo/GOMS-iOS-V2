@@ -194,7 +194,7 @@ public final class StudentManagementViewModel: BaseViewModel {
     }
 
     func forceOutingStudent(user: UserData, completion: @escaping ([UserData]) -> Void) {
-        self.getUserList {  // 최신 유저 리스트를 가져옴
+        self.getUserList {
             let forceOutingStudent = user.id
 
             self.studentCouncilProvider.request(.forceOuting(authorization: self.accessToken, accountIdx: forceOutingStudent)) { response in
@@ -203,7 +203,7 @@ public final class StudentManagementViewModel: BaseViewModel {
                     let statusCode = result.statusCode
                     switch statusCode {
                     case 205:
-                        completion(self.userListDatas)  // ✅ 최신 유저 리스트 반환
+                        completion(self.userListDatas)
                     case 401:
                         self.gomsRefreshToken.tokenReissuance { success in }
                     case 403:
@@ -217,7 +217,6 @@ public final class StudentManagementViewModel: BaseViewModel {
             }
         }
     }
-
 
     // MARK: - Search User
     func serachStudent(searchString: String?, completion: @escaping ([UserData]) -> Void) {

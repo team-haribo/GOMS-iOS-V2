@@ -192,8 +192,6 @@ public final class AuthorityBottomSheetVC: BaseViewController {
         self.studentManagementVC.studentCollectionView.reloadData()
     }
 
-
-
     @objc func blackListSwitchValueChanged(_ sender: UISwitch) {
         guard let userData = userData else { return }
 
@@ -238,7 +236,6 @@ public final class AuthorityBottomSheetVC: BaseViewController {
             $0.height.equalTo(bounds.height * (userData?.isOuting == true ? 0.34 : 0.43))
             $0.bottom.equalToSuperview()
         }
-
 
         titleLabel.snp.makeConstraints {
             $0.leading.equalTo(bounds.width * 0.05)
