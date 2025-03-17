@@ -53,84 +53,84 @@ public final class ProfileViewModel: ObservableObject {
         }
     }
 
-        func submitProfileImage(imageData: Data) -> Future<Void, Error> {
-            Future { promise in
-                self.providerProfile.request(.submit(authorization: self.accessToken, imageData: imageData)) { result in
-                    switch result {
-                    case .success:
-                        promise(.success(()))
-                    case let .failure(err):
-                        promise(.failure(err))
-                    }
-                }
-            }
-        }
-
-        func updateProfileImage(imageData: Data) -> Future<Void, Error> {
-            Future { promise in
-                self.providerProfile.request(.update(authorization: self.accessToken, imageData: imageData)) { result in
-                    switch result {
-                    case .success:
-                        promise(.success(()))
-                    case let .failure(err):
-                        promise(.failure(err))
-                    }
-                }
-            }
-        }
-
-        func deleteProfileImage() -> Future<Void, Error> {
-            Future { promise in
-                self.providerProfile.request(.delete(authorization: self.accessToken)) { result in
-                    switch result {
-                    case .success:
-                        promise(.success(()))
-                    case let .failure(err):
-                        promise(.failure(err))
-                    }
-                }
-            }
-        }
-
-        func profileLogout(completion: @escaping (Bool) -> Void) {
-            providerAuth.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
+    func submitProfileImage(imageData: Data) -> Future<Void, Error> {
+        Future { promise in
+            self.providerProfile.request(.submit(authorization: self.accessToken, imageData: imageData)) { result in
                 switch result {
                 case .success:
-                    self?.keyChain.delete(key: Const.KeyChainKey.accessToken)
-                    print("Logout successfully")
-
+                    promise(.success(()))
                 case let .failure(err):
-                    self?.errorMessage = "Network request failed: \(err.localizedDescription)"
-                    print("Network request failed: \(err)")
-                }
-            }
-            completion(true)
-        }
-
-        public func withdraw(completion: @escaping (Bool) -> Void) {
-            providerAuccount.request(.withdraw(password: self.password, authorization: accessToken)) { response in
-                switch response {
-                case .success(let result):
-                    let statusCode = result.statusCode
-                    switch statusCode {
-                    case 205:
-                        print(result.data)
-                        completion(true)
-                    case 404:
-                        print(result.data)
-                        completion(false)
-                    case 400:
-                        print("현재 비밀번호 입력 String: \(self.password)")
-                        print(result.data)
-                        completion(false)
-                    default:
-                        print(result)
-                        completion(false)
-                    }
-                case .failure(let err):
-                    print(err.localizedDescription)
-                    completion(false)
+                    promise(.failure(err))
                 }
             }
         }
     }
+
+    func updateProfileImage(imageData: Data) -> Future<Void, Error> {
+        Future { promise in
+            self.providerProfile.request(.update(authorization: self.accessToken, imageData: imageData)) { result in
+                switch result {
+                case .success:
+                    promise(.success(()))
+                case let .failure(err):
+                    promise(.failure(err))
+                }
+            }
+        }
+    }
+
+    func deleteProfileImage() -> Future<Void, Error> {
+        Future { promise in
+            self.providerProfile.request(.delete(authorization: self.accessToken)) { result in
+                switch result {
+                case .success:
+                    promise(.success(()))
+                case let .failure(err):
+                    promise(.failure(err))
+                }
+            }
+        }
+    }
+
+    func profileLogout(completion: @escaping (Bool) -> Void) {
+        providerAuth.request(.logoutToken(refreshToken: refreshToken)) { [weak self] result in
+            switch result {
+            case .success:
+                self?.keyChain.delete(key: Const.KeyChainKey.accessToken)
+                print("Logout successfully")
+
+            case let .failure(err):
+                self?.errorMessage = "Network request failed: \(err.localizedDescription)"
+                print("Network request failed: \(err)")
+            }
+        }
+        completion(true)
+    }
+
+    public func withdraw(completion: @escaping (Bool) -> Void) {
+        providerAuccount.request(.withdraw(password: self.password, authorization: accessToken)) { response in
+            switch response {
+            case .success(let result):
+                let statusCode = result.statusCode
+                switch statusCode {
+                case 205:
+                    print(result.data)
+                    completion(true)
+                case 404:
+                    print(result.data)
+                    completion(false)
+                case 400:
+                    print("현재 비밀번호 입력 String: \(self.password)")
+                    print(result.data)
+                    completion(false)
+                default:
+                    print(result)
+                    completion(false)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(false)
+            }
+        }
+    }
+}

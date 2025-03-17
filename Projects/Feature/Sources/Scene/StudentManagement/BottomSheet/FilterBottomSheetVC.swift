@@ -188,7 +188,7 @@ public final class FilterBottomSheetVC: BaseViewController {
             grade2Button.isSelected = false
             grade3Button.isSelected = false
             if grade1Button.isSelected == true {
-                viewModel.setupGrade(grade: 8)
+                viewModel.setupGrade(grade: 9)
             }
             
         case "2학년":
@@ -196,14 +196,14 @@ public final class FilterBottomSheetVC: BaseViewController {
             grade2Button.isSelected.toggle()
             grade3Button.isSelected = false
             if grade2Button.isSelected == true {
-                viewModel.setupGrade(grade: 7)
+                viewModel.setupGrade(grade: 8)
             }
         case "3학년":
             grade1Button.isSelected = false
             grade2Button.isSelected = false
             grade3Button.isSelected.toggle()
             if grade3Button.isSelected == true {
-                viewModel.setupGrade(grade: 6)
+                viewModel.setupGrade(grade: 7)
             }
         default:
             break

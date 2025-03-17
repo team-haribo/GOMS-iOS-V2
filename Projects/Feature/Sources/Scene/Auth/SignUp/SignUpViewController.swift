@@ -128,9 +128,19 @@ public final class SignUpViewController: BaseViewController {
             
             DispatchQueue.main.async {
                 if susccess {
-                    let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
-                    self.navigationController?.pushViewController(authCodeVC, animated: true)
-                    self.loader.dismiss(animated: true)
+                    switch statusCode {
+                    case 200:
+                        let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
+                        self.navigationController?.pushViewController(authCodeVC, animated: true)
+                        self.loader.dismiss(animated: true)
+                    default:
+                        let alert = UIAlertController(title: "서버오류", message: "GOMS 서버  운영팀에게 문의주세요.", preferredStyle: .alert)
+
+                        let check = UIAlertAction(title: "확인", style: .cancel)
+                        alert.addAction(check)
+                        self.present(alert, animated: true)
+                        self.loader.dismiss(animated: true)
+                    }
                 } else {
                     switch statusCode {
                     case 429:

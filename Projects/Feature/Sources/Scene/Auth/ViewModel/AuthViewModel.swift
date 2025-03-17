@@ -177,6 +177,9 @@ public final class AuthViewModel: BaseViewModel {
                     case 200..<300:
                         print("OK")
                         completion(true)
+                    case 401:
+                        print("401 Unauthorized")
+                        completion(false)
                     case 404:
                         print("인증 코드를 찾을 수 없을때 / 인증되지 않은 사용자일때 / 찾을 수 없는 사용자 일때")
                         completion(false)
