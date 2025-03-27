@@ -536,7 +536,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
         }
 
         userName.snp.makeConstraints {
-            $0.width.equalTo(50)
+            $0.width.equalTo(100)
             $0.height.equalTo(32)
             $0.leading.equalTo(userProfile.snp.trailing).offset(16)
             $0.top.equalTo(userProfile.snp.top)
