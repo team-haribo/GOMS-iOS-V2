@@ -633,7 +633,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
 
         qrMakeOnDescription.snp.makeConstraints {
-            $0.width.equalTo(184)
+            $0.width.equalTo(200)
             $0.height.equalTo(20)
             $0.leading.equalTo(qrMakeOnText.snp.leading)
             $0.top.equalTo(qrMakeOnText.snp.bottom)
