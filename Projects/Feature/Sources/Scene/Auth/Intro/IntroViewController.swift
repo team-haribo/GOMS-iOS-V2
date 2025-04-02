@@ -17,14 +17,14 @@ public final class IntroViewController: BaseViewController {
     
     private let mainLable = UILabel().then {
         let range = NSRange(location: 0, length: 6)
-        $0.text = "수요 외출제 관리 서비스"
+        $0.text = "외출제 관리 서비스"
         $0.textColor = .color.gomsTextDefault.color
         $0.setTextColor(.color.gomsPrimary.color, range: range)
         $0.font = .pretendard(size: 19, weight: .semibold)
     }
     
     private let descriptionLabel = UILabel().then {
-        $0.text = "앱으로 간편하게 GSM의\n수요 외출제를 이용해 보세요!"
+        $0.text = "앱으로 간편하게 GSM의\n외출제를 이용해 보세요!"
         $0.numberOfLines = 2
         $0.setLineSpacing(spacing: 8)
         $0.textAlignment = .center
