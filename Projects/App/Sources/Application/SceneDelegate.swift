@@ -40,7 +40,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                                 print("FCM 토큰 전송 실패")
                             }
                         }
-                                }
+                    }
                     self.setRootViewControllerBasedOnAuthority(isSwitchOn: isSwitchOn, adminIsSwitchOn: adminIsSwitchOn)
                 } else {
                     self.showLoginScreen()
@@ -82,7 +82,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
     }
-
 
     private func showLoginScreen() {
         DispatchQueue.main.async {
@@ -136,7 +135,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func showUpdatePopup() {
         let alertController = UIAlertController(
             title: "업데이트 알림",
-            message: "더 나은 서비스를 위해 곰스가 수정되었어요!\n업데이트해 주시겠어요?",
+            message: "더 나은 서비스를 위해 곰스가 수정되었어요!\n원활한 사용을 위해 업데이트 후 이용해주세요!",
             preferredStyle: .alert
         )
 
@@ -157,7 +156,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidDisconnect(_ scene: UIScene) {}
 
-    func sceneDidBecomeActive(_ scene: UIScene) {}
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        checkForUpdates { needsUpdate in
+            if needsUpdate {
+                DispatchQueue.main.async {
+                    self.showUpdatePopup()
+                }
+            }
+        }
+    }
 
     func sceneWillResignActive(_ scene: UIScene) {}
 

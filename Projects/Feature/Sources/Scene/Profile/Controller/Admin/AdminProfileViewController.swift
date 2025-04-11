@@ -622,7 +622,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
 
         clockToggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(themeChangRec.snp.bottom).offset(25)
+            $0.top.equalTo(themeChangRec.snp.bottom).offset(32)
         }
 
         qrMakeOnText.snp.makeConstraints {
@@ -633,7 +633,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
         }
 
         qrMakeOnDescription.snp.makeConstraints {
-            $0.width.equalTo(184)
+            $0.width.equalTo(200)
             $0.height.equalTo(20)
             $0.leading.equalTo(qrMakeOnText.snp.leading)
             $0.top.equalTo(qrMakeOnText.snp.bottom)
@@ -641,7 +641,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
 
         qrMakeOntoggleButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(28)
-            $0.top.equalTo(clockDescription.snp.bottom).offset(25)
+            $0.top.equalTo(clockDescription.snp.bottom).offset(35)
         }
 
         passwordResetButton.snp.makeConstraints {
