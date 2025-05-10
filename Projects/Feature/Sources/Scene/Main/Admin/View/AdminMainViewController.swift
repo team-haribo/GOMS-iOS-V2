@@ -104,22 +104,8 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isVisible = true
-
-        viewModel.getProfile { [weak self] _ in
-            self?.setupProfileView()
-        }
-
-        viewModel.getLateList { [weak self] in
-            self?.viewModel.getOutingList { [weak self] in
-                self?.setupViewComponents()
-                self?.latecomerCollectionView.reloadData()
-                self?.outingStatusCollectionView.reloadData()
-            }
-        }
-
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationItem.hidesBackButton = true
-        self.navigationController?.navigationBar.isHidden = true
+        fetchData()
+        setupNavigationBar()
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
