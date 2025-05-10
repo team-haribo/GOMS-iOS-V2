@@ -120,6 +120,13 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isVisible = true
+
+        mainViewModel.getLateList { [weak self] in
+            self?.mainViewModel.getOutingList { [weak self] in
+                self?.setup()
+            }
+        }
+
         fetchData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.hidesBackButton = true
@@ -220,38 +227,36 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     }
 
     private func fetchData() {
+        let group = DispatchGroup()
+
+        group.enter()
         mainViewModel.getLateList { [weak self] in
-            guard let self = self else { return }
+            group.leave()
+        }
 
-            self.mainViewModel.getProfile { [weak self] _ in
-                guard let self = self else { return }
+        group.enter()
+        mainViewModel.getProfile { [weak self] _ in
+            group.leave()
+        }
 
-                DispatchQueue.main.async {
-                    guard self.isVisible else {
-                        self.refreshControl.endRefreshing()
-                        return
-                    }
+        group.enter()
+        mainViewModel.getOutingList { [weak self] in
+            group.leave()
+        }
 
-                    self.setupProfileView()
-                    self.mainViewModel.getOutingList { [weak self] in
-                        guard let self = self else { return }
-
-                        DispatchQueue.main.async {
-                            guard self.isVisible else {
-                                self.refreshControl.endRefreshing()
-                                return
-                            }
-
-                            self.setupViewComponents()
-                            self.latecomerCollectionView.reloadData()
-                            self.outingStatusCollectionView.reloadData()
-                            self.refreshControl.endRefreshing()
-                        }
-                    }
-                }
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self, self.isVisible else {
+                self?.refreshControl.endRefreshing()
+                return
             }
+            self.setupProfileView()
+            self.setupViewComponents()
+            self.latecomerCollectionView.reloadData()
+            self.outingStatusCollectionView.reloadData()
+            self.refreshControl.endRefreshing()
         }
     }
+
 
     private func setupViewComponents() {
         self.setup()

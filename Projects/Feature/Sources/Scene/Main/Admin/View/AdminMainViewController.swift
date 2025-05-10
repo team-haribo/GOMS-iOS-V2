@@ -92,29 +92,20 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
 
+    private func setupNavigationBar() {
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.navigationBar.isHidden = true
+    }
+
     private var isVisible: Bool = false
 
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         isVisible = true
-        viewModel.getProfile { [weak self] _ in
-            self?.setupProfileView()
-        }
-
-        viewModel.getLateList { [weak self] in
-            self?.viewModel.getOutingList { [weak self] in
-                self?.setup()
-            }
-        }
-
-        latecomerCollectionView.reloadData()
-        outingStatusCollectionView.reloadData()
-
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationItem.hidesBackButton = true
-        self.navigationController?.navigationBar.isHidden = true
+        fetchData()
+        setupNavigationBar()
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
@@ -232,38 +223,30 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
     }
 
     private func fetchData() {
-        viewModel.getLateList { [weak self] in
-            guard let self = self else { return }
+        let group = DispatchGroup()
 
-            self.viewModel.getProfile { [weak self] _ in
-                guard let self = self else { return }
+        group.enter()
+        viewModel.getLateList { [weak self] in group.leave() }
 
-                DispatchQueue.main.async {
-                    guard self.isVisible else {
-                        self.refreshControl.endRefreshing()
-                        return
-                    }
+        group.enter()
+        viewModel.getProfile { [weak self] _ in group.leave() }
 
-                    self.setupProfileView()
-                    self.viewModel.getOutingList { [weak self] in
-                        guard let self = self else { return }
+        group.enter()
+        viewModel.getOutingList { [weak self] in group.leave() }
 
-                        DispatchQueue.main.async {
-                            guard self.isVisible else {
-                                self.refreshControl.endRefreshing()
-                                return
-                            }
-
-                            self.setupViewComponents()
-                            self.latecomerCollectionView.reloadData()
-                            self.outingStatusCollectionView.reloadData()
-                            self.refreshControl.endRefreshing()
-                        }
-                    }
-                }
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self, self.isVisible else {
+                self?.refreshControl.endRefreshing()
+                return
             }
+            self.setupProfileView()
+            self.setupViewComponents()
+            self.latecomerCollectionView.reloadData()
+            self.outingStatusCollectionView.reloadData()
+            self.refreshControl.endRefreshing()
         }
     }
+
 
     private func setupViewComponents() {
         self.setup()
