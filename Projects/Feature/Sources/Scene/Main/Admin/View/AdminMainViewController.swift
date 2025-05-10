@@ -92,6 +92,12 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         $0.addTarget(self, action: #selector(qrButtonTapped), for: .touchUpInside)
     }
 
+    private func setupNavigationBar() {
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.navigationBar.isHidden = true
+    }
+
     private var isVisible: Bool = false
 
     // MARK: - Life Cycle
