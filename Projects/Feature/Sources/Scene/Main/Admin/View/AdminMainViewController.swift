@@ -97,24 +97,19 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
     // MARK: - Life Cycle
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         isVisible = true
+
         viewModel.getProfile { [weak self] _ in
             self?.setupProfileView()
         }
 
         viewModel.getLateList { [weak self] in
             self?.viewModel.getOutingList { [weak self] in
-                self?.setup()
+                self?.setupViewComponents()
+                self?.latecomerCollectionView.reloadData()
+                self?.outingStatusCollectionView.reloadData()
             }
         }
-
-        latecomerCollectionView.reloadData()
-        outingStatusCollectionView.reloadData()
-
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationItem.hidesBackButton = true
-        self.navigationController?.navigationBar.isHidden = true
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
@@ -232,38 +227,32 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
     }
 
     private func fetchData() {
-        viewModel.getLateList { [weak self] in
-            guard let self = self else { return }
+        let group = DispatchGroup()
 
-            self.viewModel.getProfile { [weak self] _ in
-                guard let self = self else { return }
+        let tasks: [(@escaping () -> Void) -> Void] = [
+            viewModel.getLateList,
+            { completion in self.viewModel.getProfile { _ in completion() } },
+            viewModel.getOutingList
+        ]
 
-                DispatchQueue.main.async {
-                    guard self.isVisible else {
-                        self.refreshControl.endRefreshing()
-                        return
-                    }
-
-                    self.setupProfileView()
-                    self.viewModel.getOutingList { [weak self] in
-                        guard let self = self else { return }
-
-                        DispatchQueue.main.async {
-                            guard self.isVisible else {
-                                self.refreshControl.endRefreshing()
-                                return
-                            }
-
-                            self.setupViewComponents()
-                            self.latecomerCollectionView.reloadData()
-                            self.outingStatusCollectionView.reloadData()
-                            self.refreshControl.endRefreshing()
-                        }
-                    }
-                }
+        for task in tasks {
+            group.enter()
+            task {
+                group.leave()
             }
         }
+
+        group.notify(queue: .main) {
+            guard self.isVisible else {
+                self.refreshControl.endRefreshing()
+                return
+            }
+
+            self.setupViewComponents()
+            self.refreshControl.endRefreshing()
+        }
     }
+
 
     private func setupViewComponents() {
         self.setup()

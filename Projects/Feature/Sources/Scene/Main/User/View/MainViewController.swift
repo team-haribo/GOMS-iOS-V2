@@ -120,6 +120,13 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isVisible = true
+
+        mainViewModel.getLateList { [weak self] in
+            self?.mainViewModel.getOutingList { [weak self] in
+                self?.setup()
+            }
+        }
+
         fetchData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.hidesBackButton = true
