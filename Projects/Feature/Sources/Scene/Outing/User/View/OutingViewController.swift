@@ -107,6 +107,7 @@ public final class OutingViewController: BaseViewController {
     private func configureRefreshControl() {
         outingListCollectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+        refreshControl.tintColor = .color.gomsPrimary.color
     }
 
     @objc private func handleRefreshControl() {

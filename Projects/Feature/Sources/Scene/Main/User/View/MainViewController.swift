@@ -152,6 +152,7 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
     func configureRefreshControl() {
         scrollView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+        refreshControl.tintColor = .color.gomsPrimary.color
     }
 
     @objc func handleRefreshControl() {

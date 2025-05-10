@@ -92,6 +92,7 @@ public final class AdminOutingViewController: BaseViewController, AdminOutingCel
     private func configureRefreshControl() {
         outingListCollectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+        refreshControl.tintColor = .color.gomsAdmin.color
     }
 
     @objc private func handleRefreshControl() {

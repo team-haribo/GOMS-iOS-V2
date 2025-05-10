@@ -400,6 +400,7 @@ public class AdminProfileViewController: BaseViewController,UIImagePickerControl
     func configureRefreshControl () {
         scrollView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+        refreshControl.tintColor = .color.gomsAdmin.color
     }
     
     @objc func handleRefreshControl() {
