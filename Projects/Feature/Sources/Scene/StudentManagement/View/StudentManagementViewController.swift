@@ -78,6 +78,7 @@ public final class StudentManagementViewController: BaseViewController {
     func configureRefreshControl() {
         studentCollectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+        refreshControl.tintColor = .color.gomsAdmin.color
     }
 
     @objc private func handleRefreshControl() {

@@ -465,6 +465,7 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     func configureRefreshControl () {
         scrollView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(handleRefreshControl), for: .valueChanged)
+        refreshControl.tintColor = .color.gomsPrimary.color
     }
     
     @objc func handleRefreshControl() {
