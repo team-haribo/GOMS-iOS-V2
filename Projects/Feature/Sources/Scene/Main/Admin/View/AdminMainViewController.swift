@@ -110,6 +110,10 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
                 self?.outingStatusCollectionView.reloadData()
             }
         }
+
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.navigationBar.isHidden = true
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
@@ -229,26 +233,24 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
     private func fetchData() {
         let group = DispatchGroup()
 
-        let tasks: [(@escaping () -> Void) -> Void] = [
-            viewModel.getLateList,
-            { completion in self.viewModel.getProfile { _ in completion() } },
-            viewModel.getOutingList
-        ]
+        group.enter()
+        viewModel.getLateList { [weak self] in group.leave() }
 
-        for task in tasks {
-            group.enter()
-            task {
-                group.leave()
-            }
-        }
+        group.enter()
+        viewModel.getProfile { [weak self] _ in group.leave() }
 
-        group.notify(queue: .main) {
-            guard self.isVisible else {
-                self.refreshControl.endRefreshing()
+        group.enter()
+        viewModel.getOutingList { [weak self] in group.leave() }
+
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self, self.isVisible else {
+                self?.refreshControl.endRefreshing()
                 return
             }
-
+            self.setupProfileView()
             self.setupViewComponents()
+            self.latecomerCollectionView.reloadData()
+            self.outingStatusCollectionView.reloadData()
             self.refreshControl.endRefreshing()
         }
     }
