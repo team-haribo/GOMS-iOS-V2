@@ -101,13 +101,13 @@ public final class ProfileViewModel: ObservableObject {
             case .success:
                 self?.keyChain.delete(key: Const.KeyChainKey.accessToken)
                 print("Logout successfully")
-
+                completion(true)
             case let .failure(err):
                 self?.errorMessage = "Network request failed: \(err.localizedDescription)"
                 print("Network request failed: \(err)")
+                completion(false)
             }
         }
-        completion(true)
     }
 
     public func withdraw(completion: @escaping (Bool) -> Void) {
