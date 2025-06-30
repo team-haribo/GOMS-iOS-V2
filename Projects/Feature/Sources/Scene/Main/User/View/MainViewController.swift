@@ -250,6 +250,40 @@ public final class MainViewController: BaseViewController, UICollectionViewDataS
                 self?.refreshControl.endRefreshing()
                 return
             }
+
+            self.setupProfileView()
+            self.setupViewComponents()
+            self.latecomerCollectionView.reloadData()
+            self.outingStatusCollectionView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
+    }
+
+
+
+    private func fetchData1() {
+        let group = DispatchGroup()
+
+        group.enter()
+        mainViewModel.getLateList { [weak self] in
+            group.leave()
+        }
+
+        group.enter()
+        mainViewModel.getProfile { [weak self] _ in
+            group.leave()
+        }
+
+        group.enter()
+        mainViewModel.getOutingList { [weak self] in
+            group.leave()
+        }
+
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self, self.isVisible else {
+                self?.refreshControl.endRefreshing()
+                return
+            }
             self.setupProfileView()
             self.setupViewComponents()
             self.latecomerCollectionView.reloadData()

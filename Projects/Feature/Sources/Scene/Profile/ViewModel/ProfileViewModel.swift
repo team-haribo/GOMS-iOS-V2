@@ -16,7 +16,10 @@ public final class ProfileViewModel: ObservableObject {
     let providerAuth = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
 
-    public lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
+    public var accessToken: String {
+        "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
+    }
+
     private lazy var refreshToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.refreshToken) ?? "")
 
     private var password: String = ""
@@ -98,13 +101,13 @@ public final class ProfileViewModel: ObservableObject {
             case .success:
                 self?.keyChain.delete(key: Const.KeyChainKey.accessToken)
                 print("Logout successfully")
-
+                completion(true)
             case let .failure(err):
                 self?.errorMessage = "Network request failed: \(err.localizedDescription)"
                 print("Network request failed: \(err)")
+                completion(false)
             }
         }
-        completion(true)
     }
 
     public func withdraw(completion: @escaping (Bool) -> Void) {
