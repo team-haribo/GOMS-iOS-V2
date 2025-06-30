@@ -16,7 +16,10 @@ public final class ProfileViewModel: ObservableObject {
     let providerAuth = MoyaProvider<AuthServices>(plugins: [NetworkLoggerPlugin()])
     let keyChain = KeyChain()
 
-    public lazy var accessToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
+    public var accessToken: String {
+        "Bearer " + (keyChain.read(key: Const.KeyChainKey.accessToken) ?? "")
+    }
+
     private lazy var refreshToken = "Bearer " + (keyChain.read(key: Const.KeyChainKey.refreshToken) ?? "")
 
     private var password: String = ""

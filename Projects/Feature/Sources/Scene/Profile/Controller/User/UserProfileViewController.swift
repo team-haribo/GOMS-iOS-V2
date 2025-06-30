@@ -190,30 +190,34 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     
     @IBAction private func ShowActionSheetClick(_ sender: UIButton) {
         updateImage(isActionSheetShowing: true)
-        
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
+
         actionSheet.addAction(UIAlertAction(title: "다크(기본)", style: .default, handler: { [weak self] _ in
             self?.setTheme(.dark, themeText: "다크(기본)")
             self?.updateImage(isActionSheetShowing: false)
         }))
-        
         actionSheet.addAction(UIAlertAction(title: "라이트", style: .default, handler: { [weak self] _ in
             self?.setTheme(.light, themeText: "라이트")
             self?.updateImage(isActionSheetShowing: false)
         }))
-        
         actionSheet.addAction(UIAlertAction(title: "시스템 테마 설정", style: .default, handler: { [weak self] _ in
             self?.setTheme(.unspecified, themeText: "시스템 테마 설정")
             self?.updateImage(isActionSheetShowing: false)
         }))
-        
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
             self?.updateImage(isActionSheetShowing: false)
         }))
-        
+
+        // iPad 대응: popover anchor 지정
+        if let popover = actionSheet.popoverPresentationController {
+            popover.sourceView = sender
+            popover.sourceRect = sender.bounds
+            popover.permittedArrowDirections = .any
+        }
+
         self.present(actionSheet, animated: true, completion: nil)
     }
+
     
     private func applySavedTheme() {
         let savedThemeValue = UserDefaults.standard.integer(forKey: "selectedTheme")
@@ -311,24 +315,29 @@ public class UserProfileViewController: BaseViewController, UIImagePickerControl
     @IBAction func ShowActionSheetProfilImageChange(_ sender: UIButton) {
         updateImage(isActionSheetShowing: true)
         let actionSheet = UIAlertController(title: "프로필 사진 선택", message: nil, preferredStyle: .actionSheet)
-        
+
         actionSheet.addAction(UIAlertAction(title: "갤러리에서 선택", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
             self?.presentGallery()
         }))
-        
         actionSheet.addAction(UIAlertAction(title: "기본 프로필 사용", style: .default, handler: { [weak self] (ACTION:UIAlertAction) in
             self?.userProfile.image = .image.gomsBasicProfile.image
             let viewModel = ProfileViewModel()
             viewModel.deleteProfileImage()
-            
         }))
-        
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { [weak self] _ in
             self?.updateImage(isActionSheetShowing: false)
         }))
-        
+
+        // iPad 대응: popover anchor 지정
+        if let popover = actionSheet.popoverPresentationController {
+            popover.sourceView = sender
+            popover.sourceRect = sender.bounds
+            popover.permittedArrowDirections = .any
+        }
+
         self.present(actionSheet, animated: true, completion: nil)
     }
+
     
     func presentGallery() {
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
