@@ -79,7 +79,7 @@ Tuist/Dependencies
 .DS_Store
 .AppleDouble
 .LSOverride
-XCConfig/*.xcconfig
+*.xcconfig
 
 # Icon must end with two \r
 Icon
