@@ -29,7 +29,7 @@ extension ProfileServices: TargetType {
         case .update:
             return "/account/image"
         case .delete:
-            return ""
+            return "/account"
         }
     }
     
