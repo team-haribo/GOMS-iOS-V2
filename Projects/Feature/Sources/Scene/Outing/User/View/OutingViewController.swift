@@ -125,7 +125,7 @@ public final class OutingViewController: BaseViewController {
         searchController.searchBar.placeholder = "학생 검색"
         searchController.searchResultsUpdater = self
     }
-    
+
     private func setupCollectionView() {
         self.outingListCollectionView.dataSource = self
         self.outingListCollectionView.delegate = self

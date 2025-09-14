@@ -1,0 +1,15 @@
+//
+//  Release.xcconfig
+//  GOMS-iOS-V2
+//
+//  Created by 서지완 on 9/14/25.
+//  Copyright © 2025 HARIBO. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// 학교서버 BaseURL (GOMS V2 Release)
+SchoolBaseURL = http:/$()/gsmsv-1.yujun.kr:23235/api/v2
+// 클라우드타입 BaseURL (GOMS V2 Test)
+CloudTypeBaseURL = https:/$()/port-0-goms-backend-v2-12fhqa2bln49rbi0.sel5.cloudtype.app
