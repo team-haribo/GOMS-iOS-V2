@@ -12,11 +12,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Import Swift GPG key
+        run: |
+          curl -sSL https://swift.org/keys/all-keys.asc | gpg --import -
+
       - name: Setup Swift
         uses: swift-actions/setup-swift@v1
         with:
           swift-version: '5.9'
-          verify-signature: false
 
       - name: Build Project
         run: swift build
