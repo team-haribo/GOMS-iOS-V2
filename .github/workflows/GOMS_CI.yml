@@ -16,6 +16,7 @@ jobs:
         uses: swift-actions/setup-swift@v1
         with:
           swift-version: '5.9'
+          verify-signature: false
 
       - name: Build Project
         run: swift build
