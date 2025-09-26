@@ -15,9 +15,13 @@ public enum LateService {
 
 extension LateService: TargetType {
     public var baseURL: URL {
-        return URL(string: "https://port-0-goms-backend-v2-12fhqa2bln49rbi0.sel5.cloudtype.app/api/v2")!
+        guard let urlString = Bundle.main.infoDictionary?["SchoolBaseURL"] as? String,
+              let url = URL(string: urlString) else {
+            fatalError("LateAPIㅣURL을 불러올 수 없습니다.")
+        }
+        return url
     }
-    
+
     public var path: String {
         switch self {
         case .lateRank:
