@@ -80,6 +80,7 @@ Tuist/Dependencies
 .AppleDouble
 .LSOverride
 *.xcconfig
+Release.xcconfig
 
 # Icon must end with two \r
 Icon
