@@ -20,7 +20,7 @@ public final class MainViewController: BaseViewController {
         $0.textColor = .white
         $0.font = UIFont.pretendard(size: 19, weight: .semibold)
     }
-    
+     
     let studentIDLabel = UILabel().then {
         $0.text = "1학년 5반 1번"
         $0.font = UIFont.pretendard(size: 16, weight: .regular)
@@ -47,7 +47,7 @@ public final class MainViewController: BaseViewController {
         $0.font = UIFont.pretendard(size: 24, weight: .bold)
     }
     
-    private let moreOutingStatusButton = UIButton()
+    private let moreOutingStatusButton = UIButton() 
     
     private let dividingLineView = UIView()
     
