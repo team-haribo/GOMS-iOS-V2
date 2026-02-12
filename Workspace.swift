@@ -2,7 +2,7 @@
 //  Workspace.swift
 //  ProjectDescriptionHelpers
 //
-//  Created by 준표 on 2/12/26.
+//  Created by 새미 on 1/10/24.
 //
 
 import ProjectDescription
@@ -13,4 +13,3 @@ let workspace = Workspace(
         "Projects/App"
     ]
 )
-
