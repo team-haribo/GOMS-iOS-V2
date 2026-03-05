@@ -20,28 +20,29 @@ public enum AuthServices {
 
 extension AuthServices: TargetType {
     public var baseURL: URL {
-        guard let urlString = Bundle.main.infoDictionary?["SchoolBaseURL"] as? String,
-              let url = URL(string: urlString) else {
-            fatalError("AuthAPIㅣURL을 불러올 수 없습니다.")
-        }
+        let url = URL(string: "http://gsmsv-1.yujun.kr:23346/api/v2")!
         return url
     }
 
     public var path: String {
+        let p: String
+
         switch self {
         case .signUp:
-            return "/auth/signup"
+            p = "/auth/signup"
         case .signIn:
-            return "/auth/signin"
+            p = "/auth/signin"
         case .refreshToken:
-            return "/auth/"
+            p = "/auth/"
         case .sendAuthCode:
-            return "/auth/email/send"
+            p = "/auth/email/send"
         case .verifyAuthNumber:
-            return "/auth/email/verify"
+            p = "/auth/email/verify"
         case .logoutToken:
-            return "/"
+            p = "/auth"
         }
+
+        return p
     }
     
     public var method: Moya.Method {
@@ -94,5 +95,4 @@ extension AuthServices: TargetType {
         }
     }
 }
-
 
