@@ -3,9 +3,13 @@ import Firebase
 import UserNotifications
 import Feature
 import AudioToolbox
+import FirebaseMessaging
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    
+    
 
     let notificationViewModel = NotificationViewModel()
 
@@ -13,11 +17,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        
+    
+        
+        
         FirebaseApp.configure()
 
         UNUserNotificationCenter.current().delegate = self
-
         Messaging.messaging().delegate = self
+
+        Messaging.messaging().token { token, error in
+            if let token = token {
+                print("FCM", token)
+            }
+        }
 
         requestNotificationAuthorization()
 
@@ -25,6 +38,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func requestNotificationAuthorization() {
+        
+    
+
+        print("빌드 버전:",
+              Bundle.main.infoDictionary?["CFBundleVersion"] ?? "nil")
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound, .carPlay]) { granted, error in
             if let error = error {
                 print("Error requesting notification authorization: \(error.localizedDescription)")

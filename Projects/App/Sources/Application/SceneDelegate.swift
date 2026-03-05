@@ -15,14 +15,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let isSwitchOn = defaults.bool(forKey: "isSwitchOn")
         let adminIsSwitchOn = defaults.bool(forKey: "isSwitchMakeOn")
 
-        checkForUpdates { needsUpdate in
-            if needsUpdate {
-                print("업데이트 필요")
-                self.showUpdatePopup()
-            } else {
-                print("최신 버전입니다")
-            }
-        }
+        //*checkForUpdates { needsUpdate in
+         //   if needsUpdate {
+        //        print("업데이트 필요")
+        //        self.showUpdatePopup()
+        //    } else {
+         //       print("최신 버전입니다")
+          //  }
+       // }
 
         applySavedTheme()
 
@@ -133,24 +133,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func showUpdatePopup() {
-        let alertController = UIAlertController(
-            title: "업데이트 알림",
-            message: "더 나은 서비스를 위해 곰스가 수정되었어요!\n원활한 사용을 위해 업데이트 후 이용해주세요!",
-            preferredStyle: .alert
-        )
+        DispatchQueue.main.async {
 
-        let updateAction = UIAlertAction(title: "확인", style: .default) { _ in
-            if let url = URL(string: "https://apps.apple.com/kr/app/goms/id6502936560") {
-                UIApplication.shared.open(url)
-            }
-        }
+            guard let rootVC = self.window?.rootViewController else { return }
 
-        alertController.addAction(updateAction)
+            // 이미 다른 VC를 present 중이면 중복 방지
+            if rootVC.presentedViewController != nil { return }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.window?.rootViewController?.present(alertController, animated: true) {
-                print("업데이트 팝업 표시됨")
-            }
+            let alertController = UIAlertController(
+                title: "업데이트 알림",
+                message: "원활한 사용을 위해 업데이트 후 이용해주세요!",
+                preferredStyle: .alert
+            )
+
+            alertController.addAction(UIAlertAction(title: "업데이트", style: .default) { _ in
+                if let url = URL(string: "앱스토어URL") {
+                    UIApplication.shared.open(url)
+                }
+            })
+
+            rootVC.present(alertController, animated: true)
         }
     }
 

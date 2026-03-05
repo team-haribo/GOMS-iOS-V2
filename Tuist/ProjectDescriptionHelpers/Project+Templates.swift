@@ -13,22 +13,29 @@ public extension Project {
         infoPlist: InfoPlist = .default
     ) -> Project {
         let settings: Settings = .settings(
-            base: ["OTHER_LDFLAGS": ["-all_load", "-ObjC"]],
+            base: [
+                "OTHER_LDFLAGS": ["-all_load", "-ObjC"],
+                "MARKETING_VERSION": "1.5.6",
+                "CURRENT_PROJECT_VERSION": "6"
+            ],
             configurations: [
                 .debug(name: .debug),
                 .release(name: .release)
-            ], defaultSettings: .recommended)
+            ],
+            defaultSettings: .recommended
+        )
 
         let appTarget: Target = .target(
             name: name,
             destinations: destinations,
             product: product,
-            bundleId: "\(organizationName).\(name)",
+            bundleId: "HARIBO.GOMS-iOS-V2",
             deploymentTargets: .iOS("16.0"),
             infoPlist: infoPlist,
             sources: sources,
             resources: resources,
-            dependencies: dependencies
+            dependencies: dependencies,
+            settings: settings
         )
 
         let targets: [Target] = [appTarget]
