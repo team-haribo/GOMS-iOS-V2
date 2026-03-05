@@ -100,6 +100,7 @@ public final class ProfileViewModel: ObservableObject {
             switch result {
             case .success:
                 self?.keyChain.delete(key: Const.KeyChainKey.accessToken)
+                self?.keyChain.delete(key: Const.KeyChainKey.refreshToken)
                 print("Logout successfully")
                 completion(true)
             case let .failure(err):

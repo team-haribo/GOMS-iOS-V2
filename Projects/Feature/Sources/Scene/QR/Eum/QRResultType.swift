@@ -32,6 +32,7 @@ extension QRResultType {
         }
     }
     
+    
     var mainText: String {
         switch self {
         case .outing:

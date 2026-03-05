@@ -17,13 +17,15 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5.1</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CloudTypeBaseURL</key>
 	<string>$(CloudTypeBaseURL)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<true/>
+	<key>LSApplicationCategoryType</key>
+	<string>http://gsmsv-1.yujun.kr:23346</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>Localization native development region</key>
@@ -32,13 +34,15 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
+		<key>NSAllowsArbitraryLoadsUsageDescription</key>
+		<false/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>QR 스캔을 위해 카메라를 허용해주세요.</string>
 	<key>SERVER_HOST</key>
 	<string> ${SERVER_HOST}</string>
 	<key>SchoolBaseURL</key>
-	<string>$(SchoolBaseURL)</string>
+	<string>http://gsmsv-1.yujun.kr:23346/api/v2</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -82,5 +86,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

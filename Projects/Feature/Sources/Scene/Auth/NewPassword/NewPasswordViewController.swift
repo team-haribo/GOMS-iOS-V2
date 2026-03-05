@@ -87,53 +87,68 @@ public final class NewPasswordViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func doneButtonTapped() {
-        let defaults = UserDefaults.standard
-        let localPassword = defaults.string(forKey: "localPass")
-        self.validatePassword()
-        let isValidPassword = self.validatePassword()
-            
-        viewModel.setupEmail(email: self.email)
-        viewModel.setupNewServePassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
-        viewModel.setupPassword(password: localPassword ?? "")
-        viewModel.newPassword { [self] success, statusCode in
-            if !isValidPassword {
-                        self.passwordWrongRegularExpressionUI()
-                    
-        } else if passwordTextField.text != checkPasswordTextField.text {
-            self.passwordErrorUI()
-            conditionsLabel.isHidden = true
-        } else if passwordTextField.text == "" {
-            self.passwordErrorUI()
+
+
+        print("🚨 DONE BUTTON TAPPED")
+        print("🚨 VC email:", email)
+
+        let isValidPassword = validatePassword()
+
+        if !isValidPassword {
+            passwordWrongRegularExpressionUI()
+            return
         }
-            else if !success {
+
+        if passwordTextField.text != checkPasswordTextField.text {
+            passwordErrorUI()
+            conditionsLabel.isHidden = true
+            return
+        }
+
+        if passwordTextField.text == "" {
+            passwordErrorUI()
+            return
+        }
+
+        viewModel.setupNewServePassword(
+            newPassword: passwordTextField.text ?? "",
+            checkPassword: checkPasswordTextField.text ?? ""
+        )
+
+        print("🚨 CALLING newPassword API")
+
+        viewModel.newPassword { [self] success, statusCode in
+
+            if !success {
                 switch statusCode {
+
                 case 400:
                     print("400")
                     self.passwordOverlapErrorUI()
                     conditionsLabel.isHidden = false
+
                 case 404:
                     print("404")
+
                 default:
                     print("Error: \(statusCode)")
                 }
-            } else if success {
-                let defaults = UserDefaults.standard
+
+            } else {
+
                 UserDefaults.standard.set(self.checkPasswordTextField.text, forKey: "localPass")
-                let alert = UIAlertController(title: "재설정 완료", message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.", preferredStyle: .alert)
-                
-                let check = UIAlertAction(title: "확인", style: .default) { action in
+
+                let alert = UIAlertController(
+                    title: "재설정 완료",
+                    message: "비밀번호가 재설정되었습니다.\n로그인 화면으로 돌아갑니다.",
+                    preferredStyle: .alert
+                )
+
+                let check = UIAlertAction(title: "확인", style: .default) { _ in
                     let loginVC = IntroViewController()
                     self.navigationController?.pushViewController(loginVC, animated: true)
                 }
-                
-                passwordOverlapErrorLabel.isHidden = true
-                passwordTextField.layer.borderWidth = 0
-                passwordTextField.setPlaceholderColor(.color.gomsTertiary.color)
-                
-                passwordErrorLabel.isHidden = true
-                checkPasswordTextField.layer.borderWidth = 0
-                checkPasswordTextField.setPlaceholderColor(.color.gomsTertiary.color)
-                
+
                 alert.addAction(check)
                 self.present(alert, animated: true)
             }

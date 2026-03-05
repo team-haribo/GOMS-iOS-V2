@@ -38,9 +38,12 @@ public final class AuthViewModel: BaseViewModel {
     }
     
     func setupEmail(email: String) {
-        self.email = "\(email)@gsm.hs.kr"
+        if email.contains("@gsm.hs.kr") {
+            self.email = email
+        } else {
+            self.email = "\(email)@gsm.hs.kr"
+        }
     }
-    
     func setupPassword(password: String) {
         self.password = password
     }
@@ -48,6 +51,7 @@ public final class AuthViewModel: BaseViewModel {
     func setupAuthCode(authCode: String) {
         self.authCode = authCode
     }
+    
     
     func setupNewPassword(newPassword: String, checkPassword: String) {
         guard newPassword == checkPassword else { return }
@@ -72,16 +76,19 @@ public final class AuthViewModel: BaseViewModel {
     }
     
     // MARK: - Sign In
+    
+    
     func signIn(completion: @escaping (Int, String?) -> Void) {
         let param = SignInRequest(email: email, password: password)
         authProvider.request(.signIn(param: param)) { [weak self] response in
             guard let self = self else { return }
             
-            DispatchQueue.global().async { [self] in
-                var authority: String? = nil
+            var authority: String? = nil
+            var statusCode: Int = 0
+            
                 switch response {
                 case .success(let result):
-                    let statusCode = result.statusCode
+                    statusCode = result.statusCode
                     do {
                         switch statusCode {
                         case 200:
@@ -115,7 +122,6 @@ public final class AuthViewModel: BaseViewModel {
                             }
 
 
-                            completion(statusCode, authority)
                         default:
                             break
                         }
@@ -134,33 +140,24 @@ public final class AuthViewModel: BaseViewModel {
                 }
             }
         }
-    }
+    
 
     // MARK: - Send Auth Code
     func sendAuthCode(completion: @escaping (Bool, Int) -> Void) {
-        let param  = SendAuthCodeRequest(email: email, emailStatus: emailStatus)
+        let param = SendAuthCodeRequest(email: email, emailStatus: emailStatus)
+        
+        print("📦 email:", email)
+        print("📦 emailStatus:", emailStatus)
+        
+        
         authProvider.request(.sendAuthCode(param: param)) { response in
             switch response {
             case .success(let result):
-                do {
-                    let statusCode = result.statusCode
-                    switch statusCode {
-                    case 204:
-                        print("success")
-                        completion(true, statusCode)
-                    case 404:
-                        print("존재하지 않는 사용자일때")
-                        completion(false, statusCode)
-                    case 429:
-                        print("이메일 요청이 5번을 초과할 경우")
-                        completion(false, statusCode)
-                    default:
-                        print(result)
-                        completion(false, statusCode)
-                    }
-                }
-            case .failure(let err):
-                print(err.localizedDescription)
+                print("🔥 statusCode:", result.statusCode)
+                print("🔥 data:", String(data: result.data, encoding: .utf8) ?? "")
+                completion((200...299).contains(result.statusCode), result.statusCode)
+            case .failure(let error):
+                print("❌ error:", error)
                 completion(false, 0)
             }
         }
@@ -203,7 +200,13 @@ public final class AuthViewModel: BaseViewModel {
     
     // MARK: - New Password
     func newPassword(completion: @escaping (Bool, Int) -> Void) {
-        let param = NewPasswordRequest.init(email: email, newPassword: newServePassword)
+
+        print("🔥 FINAL EMAIL:", email)
+        print("🔥 FINAL PASSWORD:", newServePassword)
+
+        let param = NewPasswordRequest(email: email, newPassword: newServePassword)
+        print("🔥 REQUEST:", param)
+
         accountProvider.request(.newPassword(param: param)) { response in
             switch response {
             case .success(let result):
@@ -269,22 +272,51 @@ public final class AuthViewModel: BaseViewModel {
     
     // MARK: - Sign Up
     func signUp(completion: @escaping (Bool) -> Void) {
-        let param = SignUpRequest.init(email: email, password: newPassword, name: name, gender: gender, major: major)
+
+        print("📦 email:", email)
+        print("📦 password:", newPassword)
+        print("📦 name:", name)
+        print("📦 gender:", gender)
+        print("📦 major:", major)
+
+        if name.isEmpty || gender.isEmpty || major.isEmpty {
+            print("🚨 회원가입 정보 누락")
+            completion(false)
+            return
+        }
+
+        let param = SignUpRequest(
+            email: email,
+            password: newPassword,
+            name: name,
+            gender: gender,
+            major: major
+        )
+
         authProvider.request(.signUp(param: param)) { response in
             switch response {
             case .success(let result):
                 let statusCode = result.statusCode
+
                 switch statusCode {
                 case 201:
                     print("Created")
                     completion(true)
+
+                case 400:
+                    print("🚨 서버 validation 실패")
+                    print(String(data: result.data, encoding: .utf8) ?? "")
+                    completion(false)
+
                 case 500:
                     print("SERVER ERROR")
                     completion(false)
+
                 default:
                     print(result)
                     completion(false)
                 }
+
             case .failure(let err):
                 print(err.localizedDescription)
                 completion(false)
@@ -292,4 +324,3 @@ public final class AuthViewModel: BaseViewModel {
         }
     }
 }
-

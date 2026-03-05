@@ -57,7 +57,13 @@ public final class FindPasswordViewController: BaseViewController {
             viewModel.sendAuthCode { success, statusCode in
                 if statusCode == 204 {
                     self.successUI()
-                    let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
+                    let email = self.emailTextField.text ?? ""
+
+                    let authCodeVC = AuthCodeViewController(
+                        viewModel: self.viewModel,
+                        previousViewController: self,
+                        email: email
+                    )
                     self.navigationController?.pushViewController(authCodeVC, animated: true)
                 } else if statusCode == 404 {
                     self.nonExistentUser()
@@ -166,8 +172,7 @@ public final class FindPasswordViewController: BaseViewController {
 extension FindPasswordViewController: UITextFieldDelegate {
     public func textFieldDidChange(_ textField: UITextField) {
         if textField == emailTextField {
-            viewModel.setupEmail(email: emailTextField.text ?? "")
-        }
+            viewModel.setupEmail(email: emailTextField.text ?? "")      }
     }
 
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
