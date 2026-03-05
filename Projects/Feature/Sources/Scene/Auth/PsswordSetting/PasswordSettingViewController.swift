@@ -73,21 +73,49 @@ public final class PasswordSettingViewController: BaseViewController {
     
     // MARK: - Seletors
     @objc func signUpButtonTapped() {
-        viewModel.setupNewPassword(newPassword: passwordTextField.text ?? "", checkPassword: checkPasswordTextField.text ?? "")
-        
+
+        view.endEditing(true)
+
+        let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let confirmPassword = checkPasswordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        print("password:", password)
+        print("confirm:", confirmPassword)
+
+        guard password == confirmPassword else {
+            passwordErrorUI()
+            return
+        }
+
+        viewModel.setupNewPassword(newPassword: password, checkPassword: confirmPassword)
+
         DispatchQueue.main.async {
             self.present(self.loader, animated: true)
         }
-        
-        viewModel.signUp { success in
-            if success {
-                self.signUpSuccessUI()
-                let signInVC = SignInViewController(viewModel: self.viewModel)
-                self.navigationController?.pushViewController(signInVC, animated: true)
-                self.loader.dismiss(animated: true)
-            } else {
-                self.passwordErrorUI()
-                self.loader.dismiss(animated: true)
+
+        viewModel.signUp { [weak self] success in
+            guard let self = self else { return }
+
+            DispatchQueue.main.async {
+
+                self.loader.dismiss(animated: true) {
+
+                    if success {
+
+                        self.signUpSuccessUI()
+
+                        let signInVC = SignInViewController(viewModel: AuthViewModel())
+
+                        self.navigationController?.setViewControllers([signInVC], animated: true)
+
+                    } else {
+
+                        self.passwordErrorUI()
+
+                    }
+
+                }
+
             }
         }
     }

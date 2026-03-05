@@ -79,7 +79,7 @@ public final class SignUpViewController: BaseViewController {
         let womanAction = UIAlertAction(title: "여성", style: .default) { _ in
             self.genderTextField.setTitle("여성", for: .normal)
             self.genderTextField.setTitleColor(.color.gomsTextDefault.color, for: .normal)
-            self.viewModel.setupGender(gender: Gender.man.rawValue)
+            self.viewModel.setupGender(gender: Gender.woman.rawValue)
             self.authCodeButton.isEnabled = self.shouldEnableAuthCodeButton()
         }
         
@@ -119,7 +119,8 @@ public final class SignUpViewController: BaseViewController {
             self.present(self.loader, animated: true)
         }
         
-        viewModel.setupEmail(email: emailTextField.text ?? "")
+        let email = (emailTextField.text ?? "") + "@gsm.hs.kr"
+        viewModel.setupEmail(email: email)
         viewModel.setupName(name: nameTextField.text ?? "")
         viewModel.setupEmailStatus(emailStatus: "BEFORE_SIGNUP")
         
@@ -129,17 +130,28 @@ public final class SignUpViewController: BaseViewController {
             DispatchQueue.main.async {
                 if susccess {
                     switch statusCode {
-                    case 200:
-                        let authCodeVC = AuthCodeViewController(viewModel: self.viewModel, previousViewController: self, email: self.emailTextField.text ?? "")
-                        self.navigationController?.pushViewController(authCodeVC, animated: true)
-                        self.loader.dismiss(animated: true)
-                    default:
-                        let alert = UIAlertController(title: "서버오류", message: "GOMS 서버  운영팀에게 문의주세요.", preferredStyle: .alert)
+                    case 200..<300:
+                        let authCodeVC = AuthCodeViewController(
+                            viewModel: self.viewModel,
+                            previousViewController: self,
+                            email: email
+                        )
 
+                        self.loader.dismiss(animated: true) {
+                            self.navigationController?.pushViewController(authCodeVC, animated: true)
+                        }
+
+                    default:
+                        let alert = UIAlertController(
+                            title: "서버오류",
+                            message: "GOMS 서버 운영팀에게 문의주세요.",
+                            preferredStyle: .alert
+                        )
                         let check = UIAlertAction(title: "확인", style: .cancel)
                         alert.addAction(check)
-                        self.present(alert, animated: true)
-                        self.loader.dismiss(animated: true)
+                        self.loader.dismiss(animated: true) {
+                            self.present(alert, animated: true)
+                        }
                     }
                 } else {
                     switch statusCode {
@@ -148,15 +160,17 @@ public final class SignUpViewController: BaseViewController {
                         
                         let check = UIAlertAction(title: "확인", style: .cancel)
                         alert.addAction(check)
-                        self.present(alert, animated: true)
-                        self.loader.dismiss(animated: true)
+                        self.loader.dismiss(animated: true) {
+                            self.present(alert, animated: true)
+                        }
                     default:
                         let alert = UIAlertController(title: "인증코드 발송 실패", message: "인증코드 발송에 실패했습니다.\n다시 시도해 주세요.", preferredStyle: .alert)
                         
                         let check = UIAlertAction(title: "확인", style: .cancel)
                         alert.addAction(check)
-                        self.present(alert, animated: true)
-                        self.loader.dismiss(animated: true)
+                        self.loader.dismiss(animated: true) {
+                            self.present(alert, animated: true)
+                        }
                     }
                 }
             }
@@ -224,7 +238,8 @@ extension SignUpViewController: UITextFieldDelegate {
         if textField == nameTextField {
             viewModel.setupName(name: self.nameTextField.text ?? "")
         } else if textField == emailTextField {
-            viewModel.setupEmail(email: self.emailTextField.text ?? "")
+            let email = (self.emailTextField.text ?? "") + "@gsm.hs.kr"
+            viewModel.setupEmail(email: email)
         }
     
         authCodeButton.isEnabled = shouldEnableAuthCodeButton()
