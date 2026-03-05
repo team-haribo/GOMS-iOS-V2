@@ -118,10 +118,8 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         super.viewDidLoad()
         self.latecomerCollectionView.reloadData()
         self.outingStatusCollectionView.reloadData()
-        handleRefreshControl()
         configureRefreshControl()
         setupScrollView()
-        refreshControl.beginRefreshing()
     }
 
     func setupScrollView() {
@@ -185,23 +183,24 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
 
                             if success {
                                 if let authority = self.profileViewModel.profileInfo?.authority {
-                                    let currentVC = self.navigationController?.viewControllers.last
 
-                                    switch authority {
-                                    case "ROLE_STUDENT":
-                                        if !(currentVC is MainViewController) {
-                                            let mainVC = MainViewController()
-                                            self.navigationController?.setViewControllers([mainVC], animated: false)
-                                        }
-                                    case "ROLE_STUDENT_COUNCIL":
-                                        if !(currentVC is AdminMainViewController) {
-                                            let adminVC = AdminMainViewController()
-                                            self.navigationController?.setViewControllers([adminVC], animated: false)
-                                        }
-                                    default:
-                                        print("권한이 없습니다.")
+
+                                    if authority.contains("ROLE_STUDENT_COUNCIL") {
+                                        
+                                        print("Admin 유지")
+
+                                    } else if authority.contains("ROLE_STUDENT") {
+                                        let mainVC = MainViewController()
+                                        self.navigationController?.setViewControllers([mainVC], animated: false)
+
+                                    } else {
+                                        print("권한이 없습니다. authority:", authority)
                                     }
+
+                                } else {
+                                    print("authority 값이 없습니다.")
                                 }
+
                             } else {
                                 print("프로필 정보를 불러오는데 실패했습니다.")
                             }
@@ -318,7 +317,7 @@ public class AdminMainViewController: BaseViewController, UICollectionViewDataSo
         }
 
         if let authority = viewModel.profileData?.authority {
-            if authority == "ROLE_STUDENT_COUNCIL" {
+            if authority.contains("ROLE_STUDENT_COUNCIL") {
                 profileView.profileStatus.text = "학생회"
                 basicsProfileView.myOutingStatusLabel.text = "학생회"
             }

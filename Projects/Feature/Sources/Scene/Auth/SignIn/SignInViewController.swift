@@ -130,28 +130,37 @@ public final class SignInViewController: BaseViewController {
                         guard let self = self else { return }
 
                         if success {
-                            if self.isTransitioning {
+                            if self.isTransitioning { return }
+                            self.isTransitioning = true
+
+                            guard let authority = authority else {
+                                print("authority nil")
+                                self.loader.dismiss(animated: true) {
+                                    self.isTransitioning = false
+                                }
                                 return
                             }
 
-                            self.isTransitioning = true
+                            print("authority:", authority)
 
-                            if let authority = self.profileModel.profileInfo?.authority {
-                                if authority == Authority.admin.rawValue {
+                            self.loader.dismiss(animated: true) {
+                                if authority == "ROLE_STUDENT_COUNCIL" {
                                     let mainVC = AdminMainViewController()
                                     self.navigationController?.setViewControllers([mainVC], animated: true)
-                                } else if authority == Authority.student.rawValue {
+                                } else if authority == "ROLE_STUDENT" {
                                     let mainVC = MainViewController()
                                     self.navigationController?.setViewControllers([mainVC], animated: true)
                                 } else {
-                                    print("권한이 없습니다.")
+                                    print("권한이 없습니다. authority:", authority)
                                 }
+                                self.isTransitioning = false
                             }
                         } else {
                             print("프로필 정보를 불러오는데 실패했습니다.")
+                            self.loader.dismiss(animated: true) {
+                                self.isTransitioning = false
+                            }
                         }
-                        self.loader.dismiss(animated: true)
-                        self.isTransitioning = false
                     }
                 case 400:
                     self.passwordErrorUI()
@@ -192,7 +201,7 @@ public final class SignInViewController: BaseViewController {
     @objc override func keyboardWillHide(_ sender: Notification) {
         self.signInButton.isEnabled = true
         
-        signInButton.snp.makeConstraints {
+        signInButton.snp.remakeConstraints {
             $0.height.equalTo(48)
             $0.leading.equalTo(bounds.width * 0.05)
             $0.trailing.equalTo(-bounds.width * 0.05)
